@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.StringRes
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -22,16 +21,19 @@ internal class DebugNotificationInteractorImpl(
 ): DebugNotificationInteractor {
 
     override fun showDebugNotification() {
+        val channelId = context.getString(R.string.notification_debug_channel_id)
+
         createChannel(
-            channelId = R.string.notification_debug_channel_id,
-            channelName = R.string.notification_debug_channel_name,
-            channelDescription = R.string.notification_debug_channel_description
+            channelId = channelId,
+            channelName = context.getString(R.string.notification_debug_channel_name),
+            channelDescription = context.getString(R.string.notification_debug_channel_description)
         )
 
         val notification = NotificationCompat.Builder(
             context,
-            context.getString(R.string.notification_debug_channel_id)
+            channelId
         ).apply {
+            priority = NotificationCompat.PRIORITY_MIN
             setContentTitle(context.getString(R.string.notification_debug_title))
             setContentText(context.getString(R.string.notification_debug_description))
             setSmallIcon(MoviesAndroidIcons.MovieFilter24)
@@ -41,8 +43,9 @@ internal class DebugNotificationInteractorImpl(
             setGroup(GROUP_NAME)
             setContentIntent(pendingIntent())
             setAutoCancel(true)
-            priority = NotificationCompat.PRIORITY_LOW
             setSound(null)
+            setVibrate(null)
+            setSilent(true)
         }.build()
 
         if (context.isPostNotificationsPermissionGranted) {
@@ -51,17 +54,17 @@ internal class DebugNotificationInteractorImpl(
     }
 
     private fun createChannel(
-        @StringRes channelId: Int,
-        @StringRes channelName: Int,
-        @StringRes channelDescription: Int
+        channelId: String,
+        channelName: String,
+        channelDescription: String
     ) {
         val notificationChannel = NotificationChannelCompat.Builder(
-            context.getString(channelId),
-            NotificationManagerCompat.IMPORTANCE_HIGH
+            channelId,
+            NotificationManagerCompat.IMPORTANCE_MIN
         ).apply {
-            setName(context.getString(channelName))
-            setDescription(context.getString(channelDescription))
-            setShowBadge(true)
+            setName(channelName)
+            setDescription(channelDescription)
+            setShowBadge(false)
         }.build()
         context.notificationManager.createNotificationChannel(notificationChannel)
     }
@@ -70,7 +73,9 @@ internal class DebugNotificationInteractorImpl(
         return PendingIntent.getActivity(
             context,
             ID,
-            Intent(context, DebugActivity::class.java),
+            Intent(context, DebugActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+            },
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }

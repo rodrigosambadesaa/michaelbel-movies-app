@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
-import java.util.Locale
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
@@ -14,6 +13,7 @@ import org.michaelbel.movies.analytics.event.SelectLanguageEvent
 import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.entity.AppLanguage
+import java.util.Locale
 
 internal class LocaleInteractorImpl(
     private val context: Context,

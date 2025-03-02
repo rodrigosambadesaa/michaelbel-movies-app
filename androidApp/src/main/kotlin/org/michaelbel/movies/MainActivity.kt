@@ -21,6 +21,9 @@ import org.michaelbel.movies.ui.ktx.supportUnregisterScreenCaptureCallback
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
+/**
+ * BiometricPrompt needs FragmentActivity.
+ */
 internal class MainActivity: FragmentActivity() {
 
     private val viewModel: MainViewModel by viewModel()

@@ -7,7 +7,6 @@ import org.michaelbel.movies.gallery.GalleryViewModel
 
 @Composable
 expect fun GalleryRoute(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = koinViewModel()
 )

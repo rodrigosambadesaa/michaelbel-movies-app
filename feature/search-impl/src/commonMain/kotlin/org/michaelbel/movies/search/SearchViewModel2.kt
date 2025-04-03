@@ -25,6 +25,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Query
+import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class SearchViewModel2(
     private val interactor: Interactor,
@@ -92,6 +93,10 @@ class SearchViewModel2(
 
     fun onClearSearchHistory() = scope.launch {
         interactor.removeMovies(MoviePojo.MOVIES_SEARCH_HISTORY)
+    }
+
+    fun back() = scope.launch {
+        MainNavigator.back()
     }
 
     private fun loadSuggestions() = scope.launch {

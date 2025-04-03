@@ -10,7 +10,6 @@ import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 
 @Composable
 fun AccountRoute(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel = koinViewModel()
 ) {
@@ -19,8 +18,8 @@ fun AccountRoute(
     AccountScreenContent(
         account = account.orEmpty,
         loading = viewModel.loading,
-        onBackClick = onBackClick,
-        onLogoutClick = { viewModel.onLogoutClick(onBackClick) },
+        onBackClick = viewModel::back,
+        onLogoutClick = viewModel::onLogoutClick,
         modifier = modifier
     )
 }

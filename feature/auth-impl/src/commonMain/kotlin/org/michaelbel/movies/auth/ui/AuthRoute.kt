@@ -7,7 +7,6 @@ import org.michaelbel.movies.auth.AuthViewModel
 
 @Composable
 fun AuthRoute(
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AuthViewModel = koinViewModel()
 ) {
@@ -16,9 +15,9 @@ fun AuthRoute(
         signInLoading = viewModel.signInLoading,
         loginLoading = viewModel.loginLoading,
         requestToken = viewModel.requestToken,
-        onBackClick = onBackClick,
+        onBackClick = viewModel::back,
         onSignInClick = { username, password ->
-            viewModel.onSignInClick(username, password, onBackClick)
+            viewModel.onSignInClick(username, password, viewModel::back)
         },
         onLoginClick = viewModel::onLoginClick,
         onResetRequestToken = viewModel::onResetRequestToken,

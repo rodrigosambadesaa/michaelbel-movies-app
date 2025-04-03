@@ -1,6 +1,5 @@
 package org.michaelbel.movies.search
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
@@ -10,7 +9,6 @@ import org.michaelbel.movies.search.ui.SearchRoute
 import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SEARCH
 
 fun NavGraphBuilder.searchGraph(
-    navigateBack: () -> Unit,
     navigateToDetails: (PagingKey, MovieId) -> Unit,
 ) {
     composable<SearchDestination>(
@@ -19,12 +17,7 @@ fun NavGraphBuilder.searchGraph(
         )
     ) {
         SearchRoute(
-            onBackClick = navigateBack,
             onNavigateToDetails = navigateToDetails
         )
     }
-}
-
-fun NavController.navigateToSearch() {
-    navigate(SearchDestination)
 }

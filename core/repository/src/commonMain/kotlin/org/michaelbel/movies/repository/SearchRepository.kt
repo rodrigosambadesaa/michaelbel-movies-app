@@ -7,9 +7,5 @@ import org.michaelbel.movies.persistence.database.typealiases.Query
 
 interface SearchRepository {
 
-    suspend fun searchMoviesResult(
-        query: Query,
-        language: String,
-        page: Page
-    ): Result<MovieResponse>
+    suspend fun searchMoviesResult(query: Query, language: String, page: Page): Result<MovieResponse>
 }

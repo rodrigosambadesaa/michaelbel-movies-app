@@ -1,12 +1,9 @@
 package org.michaelbel.movies.details
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import org.michaelbel.movies.details.ui.DetailsRoute
-import org.michaelbel.movies.persistence.database.typealiases.MovieId
-import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
 fun NavGraphBuilder.detailsGraph(
     navigateBack: () -> Unit,
@@ -23,8 +20,4 @@ fun NavGraphBuilder.detailsGraph(
             onNavigateToGallery = navigateToGallery
         )
     }
-}
-
-fun NavController.navigateToDetails(pagingKey: PagingKey, movieId: MovieId) {
-    navigate(DetailsDestination(pagingKey, movieId))
 }

@@ -11,6 +11,7 @@ import org.michaelbel.movies.common.exceptions.DeleteSessionException
 import org.michaelbel.movies.common.viewmodel.BaseViewModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
+import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AccountViewModel(
     private val interactor: Interactor
@@ -32,10 +33,13 @@ class AccountViewModel(
         }
     }
 
-    fun onLogoutClick(onResult: () -> Unit) = scope.launch {
+    fun onLogoutClick() = scope.launch {
         loading = true
-
         interactor.deleteSession()
-        onResult()
+        MainNavigator.back()
+    }
+
+    fun back() = scope.launch {
+        MainNavigator.back()
     }
 }

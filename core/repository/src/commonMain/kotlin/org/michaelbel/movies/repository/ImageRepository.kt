@@ -6,11 +6,7 @@ import org.michaelbel.movies.persistence.database.typealiases.MovieId
 
 interface ImageRepository {
 
-    fun imagesFlow(
-        movieId: MovieId
-    ): Flow<List<ImagePojo>>
+    fun imagesFlow(movieId: MovieId): Flow<List<ImagePojo>>
 
-    suspend fun images(
-        movieId: MovieId
-    )
+    suspend fun images(movieId: MovieId)
 }

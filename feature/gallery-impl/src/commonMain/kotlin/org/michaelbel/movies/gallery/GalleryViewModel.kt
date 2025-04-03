@@ -12,6 +12,7 @@ import org.michaelbel.movies.common.viewmodel.BaseViewModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
+import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.work.WorkInfoState
 import org.michaelbel.movies.work.WorkManagerInteractor
 
@@ -41,6 +42,10 @@ class GalleryViewModel(
         workManagerInteractor.downloadImage(image).collect { workInfoState ->
             _workInfoStateFlow.emit(workInfoState)
         }
+    }
+
+    fun back() = scope.launch {
+        MainNavigator.back()
     }
 
     private fun loadMovieImages(movieId: MovieId) = scope.launch {

@@ -11,7 +11,6 @@ import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 
 @Composable
 actual fun SearchRoute(
-    onBackClick: () -> Unit,
     onNavigateToDetails: (PagingKey, MovieId) -> Unit,
     modifier: Modifier,
     viewModel: SearchViewModel2
@@ -29,7 +28,7 @@ actual fun SearchRoute(
         currentFeedView = currentFeedView,
         suggestions = suggestions,
         searchHistoryMovies = searchHistoryMovies,
-        onBackClick = onBackClick,
+        onBackClick = viewModel::back,
         onNavigateToDetails = onNavigateToDetails,
         onChangeSearchQuery = viewModel::onChangeSearchQuery,
         onSaveMovieToHistory = viewModel::onSaveToHistory,

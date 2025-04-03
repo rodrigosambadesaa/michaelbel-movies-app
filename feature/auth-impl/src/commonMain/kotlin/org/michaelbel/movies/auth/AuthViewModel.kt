@@ -12,6 +12,7 @@ import org.michaelbel.movies.common.viewmodel.BaseViewModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
+import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AuthViewModel(
     private val interactor: Interactor
@@ -60,5 +61,9 @@ class AuthViewModel(
     fun onResetRequestToken() {
         loginLoading = false
         requestToken = null
+    }
+
+    fun back() {
+        scope.launch { MainNavigator.back() }
     }
 }

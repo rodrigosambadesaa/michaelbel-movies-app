@@ -5,7 +5,7 @@ import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
 @Serializable
-internal class DetailsDestination(
+class DetailsDestination(
     val movieList: PagingKey?,
     val movieId: MovieId
 )

@@ -8,7 +8,6 @@ import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 
 @Composable
 actual fun GalleryRoute(
-    onBackClick: () -> Unit,
     modifier: Modifier,
     viewModel: GalleryViewModel
 ) {
@@ -18,7 +17,7 @@ actual fun GalleryRoute(
     GalleryScreenContent(
         movieImages = movieImages,
         workInfoState = workInfoState,
-        onBackClick = onBackClick,
+        onBackClick = viewModel::back,
         onDownloadClick = viewModel::downloadImage,
         modifier = modifier
     )

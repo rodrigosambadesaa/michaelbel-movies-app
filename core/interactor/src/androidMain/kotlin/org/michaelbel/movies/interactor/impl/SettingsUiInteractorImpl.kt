@@ -1,9 +1,9 @@
 package org.michaelbel.movies.interactor.impl
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ChecksSdkIntAtLeast
@@ -100,6 +100,7 @@ class SettingsUiInteractorImpl(
         onPermissionDenied: () -> Unit
     ): () -> Unit {
         val context = LocalContext.current
+        val activity = LocalActivity.current
         val postNotificationsPermissionLauncher = rememberLauncherForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { granted ->
@@ -107,9 +108,8 @@ class SettingsUiInteractorImpl(
                 granted -> onPermissionGranted()
                 else -> {
                     if (Build.VERSION.SDK_INT >= 33) {
-                        val shouldRequest = (context as Activity).shouldShowRequestPermissionRationale(
-                            Manifest.permission.POST_NOTIFICATIONS)
-                        if (!shouldRequest) {
+                        val shouldRequest = activity?.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+                        if (shouldRequest == false) {
                             onPermissionDenied()
                         }
                     }
@@ -118,11 +118,9 @@ class SettingsUiInteractorImpl(
         }
         val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
         return {
-            if (areNotificationsEnabled) {
-                val intent = context.appNotificationSettingsIntent
-                resultContract.launch(intent)
-            } else if (Build.VERSION.SDK_INT >= 33) {
-                postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            when {
+                areNotificationsEnabled -> resultContract.launch(context.appNotificationSettingsIntent)
+                Build.VERSION.SDK_INT >= 33 -> postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }

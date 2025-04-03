@@ -9,7 +9,6 @@ import org.michaelbel.movies.search.SearchViewModel2
 
 @Composable
 expect fun SearchRoute(
-    onBackClick: () -> Unit,
     onNavigateToDetails: (PagingKey, MovieId) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchViewModel2 = koinViewModel()

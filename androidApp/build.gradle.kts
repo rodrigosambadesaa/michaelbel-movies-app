@@ -123,6 +123,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
@@ -134,6 +135,7 @@ val gmsImplementation by configurations
 val hmsImplementation by configurations
 val fossImplementation by configurations
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(projects.feature.mainImpl)
     gmsImplementation(projects.core.platformServices.injectAndroid)
     hmsImplementation(projects.core.platformServices.injectAndroid)

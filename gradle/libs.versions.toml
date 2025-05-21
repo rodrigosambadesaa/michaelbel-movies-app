@@ -29,13 +29,14 @@ androidx-activity = "1.10.1"
 androidx-benchmark = "1.3.4"
 androidx-biometric-ktx = "1.2.0-alpha05"
 androidx-browser = "1.8.0"
-androidx-compose-animation = "1.7.7"
-androidx-compose-foundation = "1.7.7"
-androidx-compose-runtime = "1.7.7"
-androidx-compose-ui = "1.7.7"
+androidx-compose-animation = "1.7.7" # crash ios
+androidx-compose-foundation = "1.7.7" # crash ios
+androidx-compose-runtime = "1.7.7" # crash ios
+androidx-compose-ui = "1.7.7" # crash ios
 androidx-compose-ui-tooling-preview-desktop = "1.7.0"
-androidx-compose-material = "1.7.7"
-androidx-compose-material3 = "1.3.1"
+androidx-compose-material = "1.7.7" # crash ios
+androidx-compose-material-icons = "1.7.8"
+androidx-compose-material3 = "1.3.1" # crash ios
 androidx-core-ktx = "1.16.0"
 androidx-core-splashscreen = "1.0.1"
 androidx-datastore = "1.1.7"
@@ -51,12 +52,12 @@ androidx-test-uiautomator = "2.3.0"
 androidx-test-espresso = "3.6.1"
 androidx-test-espresso-device = "1.0.1"
 androidx-work = "2.10.1"
-compose = "1.7.3"
-jetbrains-androidx-navigation-compose = "2.8.0-alpha12"
+compose = "1.7.3" # crash ios
+jetbrains-androidx-navigation-compose = "2.8.0-alpha12" # crash ios
 jetbrains-androidx-core-bundle = "1.0.1"
 detekt = "1.23.8"
 coil = "2.7.0"
-coil3 = "3.1.0" # jvm crash
+coil3 = "3.1.0" # crash jvm
 okhttp = "4.12.0"
 chucker = "4.1.0"
 timber = "5.0.1"
@@ -99,7 +100,7 @@ androidx-compose-animation = { module = "androidx.compose.animation:animation", 
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "androidx-compose-foundation" }
 androidx-compose-foundation-layout = { module = "androidx.compose.foundation:foundation-layout", version.ref = "androidx-compose-foundation" }
 androidx-compose-material-ripple = { module = "androidx.compose.material:material-ripple", version.ref = "androidx-compose-material" }
-androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "androidx-compose-material" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "androidx-compose-material-icons" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "androidx-compose-material3" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "androidx-compose-runtime" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose-ui" }

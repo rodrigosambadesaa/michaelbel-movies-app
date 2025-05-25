@@ -29,18 +29,17 @@ androidx-activity = "1.10.1"
 androidx-benchmark = "1.3.4"
 androidx-biometric-ktx = "1.2.0-alpha05"
 androidx-browser = "1.8.0"
-androidx-compose-animation = "1.7.7" # crash ios
-androidx-compose-foundation = "1.7.7" # crash ios
-androidx-compose-runtime = "1.7.7" # crash ios
-androidx-compose-ui = "1.7.7" # crash ios
+androidx-compose-animation = "1.8.2"
+androidx-compose-foundation = "1.8.2"
+androidx-compose-runtime = "1.8.2"
+androidx-compose-ui = "1.8.2"
 androidx-compose-ui-tooling-preview-desktop = "1.7.0"
-androidx-compose-material = "1.7.7" # crash ios
+androidx-compose-material = "1.8.2"
 androidx-compose-material-icons = "1.7.8"
-androidx-compose-material3 = "1.3.1" # crash ios
+androidx-compose-material3 = "1.3.2"
 androidx-core-ktx = "1.16.0"
 androidx-core-splashscreen = "1.0.1"
 androidx-datastore = "1.1.7"
-androidx-lifecycle = "2.9.0"
 androidx-glance = "1.1.1"
 androidx-palette-ktx = "1.0.0"
 androidx-paging = "3.3.6"
@@ -52,12 +51,14 @@ androidx-test-uiautomator = "2.3.0"
 androidx-test-espresso = "3.6.1"
 androidx-test-espresso-device = "1.0.1"
 androidx-work = "2.10.1"
-compose = "1.8.1" # crash ios
-jetbrains-androidx-navigation-compose = "2.9.0-beta02" # crash ios
+compose = "1.8.1"
+jetbrains-androidx-lifecycle = "2.9.0"
+jetbrains-androidx-navigation-compose = "2.9.0-beta02"
 jetbrains-androidx-core-bundle = "1.0.1"
+jetbrains-androidx-savedstate = "1.3.0"
 detekt = "1.23.8"
 coil = "2.7.0"
-coil3 = "3.2.0" # crash jvm
+coil3 = "3.2.0"
 okhttp = "4.12.0"
 chucker = "4.1.0"
 timber = "5.0.1"
@@ -67,7 +68,7 @@ palantir-git = "3.3.0"
 flaker = "0.1.2"
 ktor = "3.1.3"
 leakcanary = "3.0-alpha-8"
-koin = "4.0.4"
+koin = "4.1.0-Beta10"
 okio = "3.11.0"
 buildkonfig = "0.17.1"
 napier = "2.7.1"
@@ -116,9 +117,6 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "androidx-datastore" }
 androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "androidx-glance" }
 androidx-glance-material3 = { module = "androidx.glance:glance-material3", version.ref = "androidx-glance" }
-androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-lifecycle" }
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "androidx-palette-ktx" }
 androidx-paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "androidx-paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
@@ -134,8 +132,10 @@ androidx-test-espresso-device = { module = "androidx.test.espresso:espresso-devi
 androidx-test-espresso-idling-resource = { module = "androidx.test.espresso:espresso-idling-resource", version.ref = "androidx-test-espresso" }
 androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androidx-test-uiautomator" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+jetbrains-androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrains-androidx-lifecycle" }
 jetbrains-androidx-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "jetbrains-androidx-navigation-compose" }
 jetbrains-androidx-core-bundle = { module = "org.jetbrains.androidx.core:core-bundle", version.ref = "jetbrains-androidx-core-bundle" }
+jetbrains-androidx-savedstate = { module = "org.jetbrains.androidx.savedstate:savedstate", version.ref = "jetbrains-androidx-savedstate" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil3-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil3" }
@@ -178,18 +178,19 @@ kotlinx-datetime-common = [
 kotlinx-serialization-common = [
     "kotlinx-serialization-json"
 ]
-jetbrains-androidx-navigation-compose-common = [
+jetbrains-androidx-lifecycle-common = [
+    "jetbrains-androidx-lifecycle-runtime-compose",
+    "jetbrains-androidx-savedstate",
+]
+jetbrains-androidx-navigation-common = [
     "jetbrains-androidx-navigation-compose"
 ]
-jetbrains-androidx-core-bundle-common = [
+jetbrains-androidx-core-common = [
     "jetbrains-androidx-core-bundle"
 ]
 datastore-common = [
     "androidx-datastore-core",
     "androidx-datastore-preferences-core"
-]
-lifecycle-common = [
-    "androidx-lifecycle-common"
 ]
 room-common = [
     "androidx-room-runtime",
@@ -275,10 +276,6 @@ datastore-android = [
 glance-android = [
     "androidx-glance-appwidget",
     "androidx-glance-material3"
-]
-lifecycle-android = [
-    "androidx-lifecycle-runtime-compose",
-    "androidx-lifecycle-process"
 ]
 paging-android = [
     "androidx-paging-compose"

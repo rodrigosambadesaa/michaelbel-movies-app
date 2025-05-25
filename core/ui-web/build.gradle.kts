@@ -20,8 +20,8 @@ kotlin {
         commonMain.dependencies {
             api(projects.core.common)
             api(libs.bundles.coil.common)
-            api(libs.bundles.jetbrains.androidx.navigation.compose.common)
-            api(libs.bundles.jetbrains.androidx.core.bundle.common)
+            api(libs.bundles.jetbrains.androidx.navigation.common)
+            api(libs.bundles.jetbrains.androidx.core.common)
             api(compose.animation)
             api(compose.foundation)
             api(compose.runtime)

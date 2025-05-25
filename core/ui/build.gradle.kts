@@ -17,8 +17,9 @@ kotlin {
         commonMain.dependencies {
             api(projects.core.persistence)
             api(libs.bundles.coil.common)
-            api(libs.bundles.jetbrains.androidx.navigation.compose.common)
-            api(libs.bundles.jetbrains.androidx.core.bundle.common)
+            api(libs.bundles.jetbrains.androidx.lifecycle.common)
+            api(libs.bundles.jetbrains.androidx.navigation.common)
+            api(libs.bundles.jetbrains.androidx.core.common)
             api(compose.animation)
             api(compose.foundation)
             api(compose.runtime)
@@ -29,7 +30,6 @@ kotlin {
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
             implementation(compose.materialIconsExtended)
-            implementation(libs.bundles.lifecycle.common)
         }
         androidMain.dependencies {
             api(libs.bundles.core.splashscreen.android)

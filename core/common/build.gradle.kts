@@ -1,6 +1,5 @@
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalWasmDsl::class)
 
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -27,13 +26,13 @@ kotlin {
         commonMain.dependencies {
             api(libs.bundles.kotlinx.coroutines.common)
             api(libs.bundles.kotlinx.datetime.common)
+            api(libs.bundles.jetbrains.androidx.lifecycle.common)
             api(libs.bundles.koin.common)
             api(libs.bundles.napier.common)
             implementation(compose.material3)
         }
         androidMain.dependencies {
             api(libs.bundles.kotlinx.coroutines.android)
-            api(libs.bundles.lifecycle.android)
             api(libs.bundles.activity.android)
             api(libs.bundles.biometric.android)
             api(libs.bundles.core.android)

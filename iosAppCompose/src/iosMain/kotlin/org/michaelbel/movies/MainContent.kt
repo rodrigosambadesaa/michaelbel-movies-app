@@ -61,12 +61,8 @@ private fun rememberComposeViewModelStoreOwner(): ViewModelStoreOwner {
 @Composable
 internal fun withViewModelStoreOwner(content: @Composable () -> Unit) {
     if (LocalViewModelStoreOwner.current != null) {
-        // Normal case: use system-provided owner
         content()
     } else {
-        // Fallback case: use ViewModelStoreOwner with scope of this composable.
-        // It's required for Compose Multiplatform for now because it's not providing default value yet.
-        // Expected to be fixed in Compose Multiplatform 1.7.0
         CompositionLocalProvider(
             LocalViewModelStoreOwner provides rememberComposeViewModelStoreOwner(),
             content = content

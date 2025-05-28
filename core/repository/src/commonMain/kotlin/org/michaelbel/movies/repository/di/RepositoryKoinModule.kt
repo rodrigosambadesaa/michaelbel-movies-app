@@ -29,7 +29,7 @@ val repositoryKoinModule = module {
     includes(
         networkKoinModule,
         persistenceKoinModule,
-        moviesPreferencesKoinModule,
+        moviesPreferencesKoinModule
     )
     singleOf(::AccountRepositoryImpl) { bind<AccountRepository>() }
     singleOf(::AuthenticationRepositoryImpl) { bind<AuthenticationRepository>() }

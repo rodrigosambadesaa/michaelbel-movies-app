@@ -1,8 +1,9 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.michaelbel.movies.repository.impl
 
 import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Clock
 import org.michaelbel.movies.common.exceptions.MovieDetailsException
 import org.michaelbel.movies.common.exceptions.MoviesUpcomingException
 import org.michaelbel.movies.common.list.MovieList
@@ -21,6 +22,8 @@ import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 import org.michaelbel.movies.repository.MovieRepository
 import org.michaelbel.movies.repository.ktx.checkApiKeyNotNullException
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class MovieRepositoryImpl(
     private val movieNetworkService: MovieNetworkService,
@@ -70,7 +73,7 @@ internal class MovieRepositoryImpl(
     ): MoviePojo {
         return try {
             moviePersistence.movieById(pagingKey, movieId) ?: movieNetworkService.movie(movieId, language).moviePojo
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             throw MovieDetailsException
         }
     }
@@ -93,7 +96,7 @@ internal class MovieRepositoryImpl(
             moviePersistence.removeMovies(MoviePojo.MOVIES_WIDGET)
             moviePersistence.insertMovies(moviesDb)
             moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE)
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE).ifEmpty {
                 throw MoviesUpcomingException
             }

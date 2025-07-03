@@ -40,7 +40,7 @@ class MoviesDatabaseWorker(
                     }
                 }
                 Result.success()
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
                 Result.failure()
             }
         }

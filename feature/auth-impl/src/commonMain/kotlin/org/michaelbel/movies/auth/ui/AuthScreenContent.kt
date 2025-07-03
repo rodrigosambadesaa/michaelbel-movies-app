@@ -28,8 +28,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -122,7 +125,8 @@ internal fun AuthScreenContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 8.dp, end = 16.dp),
+                .padding(start = 16.dp, top = 8.dp, end = 16.dp)
+                .semantics { contentType = ContentType.Username },
             label = {
                 Text(
                     text = stringResource(MoviesStrings.auth_label_username)
@@ -144,7 +148,8 @@ internal fun AuthScreenContent(
             onValueChange = { value -> password = Password(value.filterNot(Char::isWhitespace)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 8.dp, end = 16.dp),
+                .padding(start = 16.dp, top = 8.dp, end = 16.dp)
+                .semantics { contentType = ContentType.Password },
             label = {
                 Text(
                     text = stringResource(MoviesStrings.auth_label_password)

@@ -29,7 +29,7 @@ internal class AuthenticationRepositoryImpl(
                 throw CreateRequestTokenException(loginViaTmdb)
             }
             token
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             throw CreateRequestTokenException(loginViaTmdb)
         }
     }
@@ -51,7 +51,7 @@ internal class AuthenticationRepositoryImpl(
                 throw CreateSessionWithLoginException
             }
             token
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             throw CreateSessionWithLoginException
         }
     }
@@ -67,7 +67,7 @@ internal class AuthenticationRepositoryImpl(
                 throw CreateSessionException
             }
             session
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             throw CreateSessionException
         }
     }

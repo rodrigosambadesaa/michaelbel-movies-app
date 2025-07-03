@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalCoroutinesApi::class)
+@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 
 package org.michaelbel.movies.repository.impl
 
@@ -6,7 +6,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.datetime.Clock
 import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.network.AccountNetworkService
 import org.michaelbel.movies.persistence.database.AccountPersistence
@@ -15,6 +14,8 @@ import org.michaelbel.movies.persistence.database.ktx.accountPojo
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AccountRepository
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class AccountRepositoryImpl(
     private val accountNetworkService: AccountNetworkService,

@@ -1,9 +1,12 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.michaelbel.movies.repository.impl
 
-import kotlinx.datetime.Clock
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.NotificationRepository
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 internal class NotificationRepositoryImpl(
     private val preferences: MoviesPreferences

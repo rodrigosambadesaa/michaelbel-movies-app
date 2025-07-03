@@ -28,7 +28,7 @@ class AccountUpdateWorker(
                 interactor.accountDetails()
             }
             Result.success()
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             Result.failure()
         }
     }

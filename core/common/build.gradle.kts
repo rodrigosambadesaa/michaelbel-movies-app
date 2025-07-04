@@ -15,12 +15,8 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-    js {
-        browser {}
-    }
-    wasmJs {
-        browser {}
-    }
+    js { browser {} }
+    wasmJs { browser {} }
 
     sourceSets {
         commonMain.dependencies {

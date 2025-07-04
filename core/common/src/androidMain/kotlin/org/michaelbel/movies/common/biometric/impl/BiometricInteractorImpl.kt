@@ -33,12 +33,8 @@ internal class BiometricInteractorImpl(
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     when (errorCode) {
-                        BiometricPrompt.ERROR_USER_CANCELED -> {
-                            biometricListener.onCancel()
-                        }
-                        BiometricPrompt.ERROR_NEGATIVE_BUTTON -> {
-                            biometricListener.onCancel()
-                        }
+                        BiometricPrompt.ERROR_USER_CANCELED -> biometricListener.onCancel()
+                        BiometricPrompt.ERROR_NEGATIVE_BUTTON -> biometricListener.onCancel()
                         else -> Unit
                     }
                 }

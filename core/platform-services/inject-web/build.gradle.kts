@@ -7,9 +7,7 @@ plugins {
 }
 
 kotlin {
-    js {
-        browser {}
-    }
+    js { browser {} }
     wasmJs {
         outputModuleName = "composeApp"
         browser {

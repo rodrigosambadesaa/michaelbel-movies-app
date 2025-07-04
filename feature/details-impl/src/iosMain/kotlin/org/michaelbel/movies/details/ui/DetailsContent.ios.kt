@@ -42,7 +42,7 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 @Composable
 internal fun DetailsContent(
     movie: MoviePojo,
-    onNavigateToGallery: (Int) -> Unit,
+    onNavigateToGallery: () -> Unit,
     modifier: Modifier = Modifier,
     isThemeAmoled: Boolean = false,
     onContainerColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,

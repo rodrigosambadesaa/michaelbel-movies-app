@@ -13,7 +13,7 @@ class ImagePersistence internal constructor(
         return moviesDatabase.imageDao.imagesFlow(movieId)
     }
 
-    suspend fun insert(images: List<ImagePojo>) {
-        moviesDatabase.imageDao.insert(images.map(ImagePojo::imageDb))
+    suspend fun upsert(images: List<ImagePojo>) {
+        moviesDatabase.imageDao.upsert(images.map(ImagePojo::imageDb))
     }
 }

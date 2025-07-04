@@ -1,54 +1,48 @@
 package org.michaelbel.movies.gallery
 
 import androidx.lifecycle.SavedStateHandle
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import androidx.navigation.toRoute
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.michaelbel.movies.common.ktx.require
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.gallery.intent.GalleryIntent
+import org.michaelbel.movies.gallery.model.GalleryModel
+import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.interactor.Interactor
-import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
-import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.ui.navigation.MainNavigator
-import org.michaelbel.movies.work.WorkInfoState
 import org.michaelbel.movies.work.WorkManagerInteractor
 
 class GalleryViewModel(
     savedStateHandle: SavedStateHandle,
     private val interactor: Interactor,
     private val workManagerInteractor: WorkManagerInteractor
-): BaseViewModel() {
+): MoviesViewModel<GalleryModel, GalleryIntent>(GalleryModel()) {
 
-    private val movieId: Int = savedStateHandle.require("movieId")
-
-    val movieImagesFlow: StateFlow<List<ImagePojo>> = interactor.imagesFlow(movieId)
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = emptyList()
-        )
-
-    private val _workInfoStateFlow: MutableStateFlow<WorkInfoState> = MutableStateFlow(WorkInfoState.None)
-    val workInfoStateFlow: StateFlow<WorkInfoState> get() = _workInfoStateFlow.asStateFlow()
+    private val dest: GalleryDestination = savedStateHandle.toRoute()
 
     init {
-        loadMovieImages(movieId)
+        dispatch(GalleryIntent.CollectMovieImages)
+        dispatch(GalleryIntent.LoadMovieImages)
     }
 
-    fun downloadImage(image: ImagePojo) = scope.launch {
-        workManagerInteractor.downloadImage(image).collect { workInfoState ->
-            _workInfoStateFlow.emit(workInfoState)
+    override fun dispatch(intent: GalleryIntent) {
+        when (intent) {
+            is GalleryIntent.CollectMovieImages -> {
+                launch {
+                    interactor.imagesFlow(dest.movieId).collectLatest { movieImages ->
+                        reduce { it.copy(movieImages = movieImages) }
+                    }
+                }
+            }
+            is GalleryIntent.BackClick -> launch { MainNavigator.back() }
+            is GalleryIntent.LoadMovieImages -> launch { interactor.images(dest.movieId) }
+            is GalleryIntent.DownloadClick -> {
+                launch {
+                    workManagerInteractor.downloadImage(intent.image).collectLatest { workInfoState ->
+                        reduce { it.copy(workInfoState = workInfoState) }
+                    }
+                }
+            }
         }
-    }
-
-    fun back() = scope.launch {
-        MainNavigator.back()
-    }
-
-    private fun loadMovieImages(movieId: MovieId) = scope.launch {
-        interactor.images(movieId)
     }
 }

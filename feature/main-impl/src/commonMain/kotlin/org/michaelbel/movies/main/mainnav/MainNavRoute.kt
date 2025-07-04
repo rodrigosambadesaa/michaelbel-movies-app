@@ -25,24 +25,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
-import org.michaelbel.movies.feed.FeedDestination
 import org.michaelbel.movies.feed.feedGraph
-import org.michaelbel.movies.settings.SettingsDestination
+import org.michaelbel.movies.feed.navigation.FeedDestination
 import org.michaelbel.movies.settings.settingsGraph
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
+import org.michaelbel.movies.ui.ktx.collectAsStateCommon
+import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 @Composable
 fun MainNavRoute(
-    navigateToSearch: () -> Unit,
-    navigateToAuth: () -> Unit,
-    navigateToAccount: () -> Unit,
-    navigateToSettings: () -> Unit,
-    onRequestReview: () -> Unit,
-    onRequestUpdate: () -> Unit,
-    navigateToDetails: (String, Int) -> Unit,
     viewModel: MainNavViewModel = koinViewModel()
 ) {
+    val state by viewModel.stateFlow.collectAsStateCommon()
     val navHostController = rememberNavController()
     val layoutDirection = LocalLayoutDirection.current
     var selectedTab: Any by remember { mutableStateOf(FeedDestination()) }
@@ -105,18 +100,8 @@ fun MainNavRoute(
                 bottom = innerPadding.calculateBottomPadding()
             )
         ) {
-            feedGraph(
-                navigateToSearch = navigateToSearch,
-                navigateToAuth = navigateToAuth,
-                navigateToAccount = navigateToAccount,
-                navigateToSettings = navigateToSettings,
-                navigateToDetails = navigateToDetails
-            )
-            settingsGraph(
-                navigateBack = {},
-                onRequestReview = onRequestReview,
-                onRequestUpdate = onRequestUpdate
-            )
+            feedGraph()
+            settingsGraph()
         }
     }
 

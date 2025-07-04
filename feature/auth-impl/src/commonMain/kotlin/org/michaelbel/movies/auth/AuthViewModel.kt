@@ -1,69 +1,68 @@
 package org.michaelbel.movies.auth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
+import org.michaelbel.movies.auth.intent.AuthIntent
+import org.michaelbel.movies.auth.model.AuthModel
 import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.interactor.Interactor
-import org.michaelbel.movies.interactor.entity.Password
-import org.michaelbel.movies.interactor.entity.Username
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AuthViewModel(
     private val interactor: Interactor
-): BaseViewModel() {
+): MoviesViewModel<AuthModel, AuthIntent>(AuthModel()) {
 
-    var signInLoading by mutableStateOf(false)
-    var loginLoading by mutableStateOf(false)
-    var error: Throwable? by mutableStateOf(null)
-    var requestToken: String? by mutableStateOf(null)
+    override fun dispatch(intent: AuthIntent) {
+        when (intent) {
+            is AuthIntent.BackClick -> {
+                launch { MainNavigator.back() }
+            }
+            is AuthIntent.LoginClick -> {
+                val job = launch {
+                    reduce { it.copy(error = null) }
+                    val requestToken = interactor.createRequestToken(loginViaTmdb = true).requestToken
+                    reduce { it.copy(requestToken = requestToken) }
+                }
+                reduce { it.copy(loginJob = job) }
+            }
+            is AuthIntent.ResetRequestToken -> {
+                stateFlow.value.loginJob?.cancel()
+                reduce { it.copy(requestToken = null, loginJob = null) }
+            }
+            is AuthIntent.SignInClick -> {
+                val job = launch {
+                    reduce { it.copy(error = null) }
+                    val token = interactor.createRequestToken(loginViaTmdb = false)
+                    val sessionToken = interactor.createSessionWithLogin(intent.username, intent.password, token.requestToken)
+                    interactor.run {
+                        createSession(sessionToken.requestToken)
+                        accountDetails()
+                    }
+                    dispatch(AuthIntent.BackClick)
+                }
+                reduce { it.copy(signInJob = job) }
+            }
+        }
+    }
 
-    override fun handleError(throwable: Throwable) {
-        signInLoading = false
+    override fun catch(throwable: Throwable) {
+        stateFlow.value.signInJob?.cancel()
+        reduce { it.copy(requestToken = null, signInJob = null) }
 
         when (throwable) {
             is CreateRequestTokenException -> {
                 when {
-                    throwable.loginViaTmdb -> onResetRequestToken()
-                    else -> error = throwable
+                    throwable.loginViaTmdb -> dispatch(AuthIntent.ResetRequestToken)
+                    else -> reduce { it.copy(error = throwable) }
                 }
             }
-            is CreateSessionWithLoginException -> error = throwable
-            is CreateSessionException -> error = throwable
-            is AccountDetailsException -> error = throwable
-            else -> super.handleError(throwable)
+            is CreateSessionWithLoginException -> reduce { it.copy(error = throwable) }
+            is CreateSessionException -> reduce { it.copy(error = throwable) }
+            is AccountDetailsException -> reduce { it.copy(error = throwable) }
+            else -> super.catch(throwable)
         }
-    }
-
-    fun onSignInClick(username: Username, password: Password, onResult: () -> Unit) = scope.launch {
-        error = null
-        signInLoading = true
-        val token = interactor.createRequestToken(loginViaTmdb = false)
-        val sessionToken = interactor.createSessionWithLogin(username, password, token.requestToken)
-        interactor.run {
-            createSession(sessionToken.requestToken)
-            accountDetails()
-        }
-        onResult()
-    }
-
-    fun onLoginClick() = scope.launch {
-        error = null
-        loginLoading = true
-        requestToken = interactor.createRequestToken(loginViaTmdb = true).requestToken
-    }
-
-    fun onResetRequestToken() {
-        loginLoading = false
-        requestToken = null
-    }
-
-    fun back() {
-        scope.launch { MainNavigator.back() }
     }
 }

@@ -23,9 +23,9 @@ internal class AccountRepositoryImpl(
     private val preferences: MoviesPreferences
 ): AccountRepository {
 
-    override val account: Flow<AccountPojo?> = preferences.accountIdFlow
+    override val accountPojoFlow: Flow<AccountPojo> = preferences.accountIdFlow
         .map { accountId -> accountId.orEmpty() }
-        .flatMapLatest(accountPersistence::accountById)
+        .flatMapLatest(accountPersistence::accountByIdFlow)
 
     override suspend fun accountId(): Int {
         return preferences.accountId()
@@ -43,7 +43,7 @@ internal class AccountRepositoryImpl(
                 setValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey, account.id)
                 setValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey, Clock.System.now().toEpochMilliseconds())
             }
-            accountPersistence.insert(account.accountPojo)
+            accountPersistence.upsert(account.accountPojo)
         }.onFailure {
             throw AccountDetailsException
         }

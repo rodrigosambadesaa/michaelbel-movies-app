@@ -49,7 +49,7 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 @Composable
 internal fun DetailsContent(
     movie: MoviePojo,
-    onNavigateToGallery: (Int) -> Unit,
+    onNavigateToGallery: () -> Unit,
     onGenerateColors: (Int, Int?, Int?) -> Unit,
     modifier: Modifier = Modifier,
     isThemeAmoled: Boolean = false,
@@ -106,7 +106,7 @@ internal fun DetailsContent(
                 )
                 .clickable(
                     enabled = !placeholder && !isNoImageVisible,
-                    onClick = { onNavigateToGallery(movie.movieId) }
+                    onClick = onNavigateToGallery
                 ),
             onState = { state ->
                 isNoImageVisible = movie.isNotEmpty && (state is AsyncImagePainter.State.Error || state is AsyncImagePainter.State.Empty)

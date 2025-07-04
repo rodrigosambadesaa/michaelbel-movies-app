@@ -6,8 +6,7 @@ import androidx.compose.ui.Modifier
 import org.michaelbel.movies.gallery.GalleryViewModel
 
 @Composable
-actual fun GalleryRoute(
-    modifier: Modifier,
+actual fun GalleryScreen(
     viewModel: GalleryViewModel
 ) {
     Text(

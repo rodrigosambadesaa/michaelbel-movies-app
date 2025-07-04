@@ -3,21 +3,15 @@ package org.michaelbel.movies.details
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import org.michaelbel.movies.details.ui.DetailsRoute
+import org.michaelbel.movies.ui.navigation.DetailsDestination
 
-fun NavGraphBuilder.detailsGraph(
-    navigateBack: () -> Unit,
-    navigateToGallery: (Int) -> Unit
-) {
+fun NavGraphBuilder.detailsGraph() {
     composable<DetailsDestination>(
         deepLinks = listOf(
             navDeepLink { uriPattern = "https://www.themoviedb.org/movie/{movieId}" },
             navDeepLink { uriPattern = "movies://details/{movieId}" }
         )
     ) {
-        DetailsRoute(
-            onBackClick = navigateBack,
-            onNavigateToGallery = navigateToGallery
-        )
+        DetailsScreen()
     }
 }

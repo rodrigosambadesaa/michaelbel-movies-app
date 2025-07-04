@@ -2,22 +2,9 @@ package org.michaelbel.movies.feed
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import org.michaelbel.movies.feed.ui.FeedRoute
+import org.michaelbel.movies.feed.navigation.FeedDestination
+import org.michaelbel.movies.feed.ui.FeedScreen
 
-fun NavGraphBuilder.feedGraph(
-    navigateToSearch: () -> Unit,
-    navigateToAuth: () -> Unit,
-    navigateToAccount: () -> Unit,
-    navigateToSettings: () -> Unit,
-    navigateToDetails: (String, Int) -> Unit
-) {
-    composable<FeedDestination> {
-        FeedRoute(
-            onNavigateToSearch = navigateToSearch,
-            onNavigateToAccount = navigateToAccount,
-            onNavigateToAuth = navigateToAuth,
-            onNavigateToSettings = navigateToSettings,
-            onNavigateToDetails = navigateToDetails
-        )
-    }
+fun NavGraphBuilder.feedGraph() {
+    composable<FeedDestination> { FeedScreen() }
 }

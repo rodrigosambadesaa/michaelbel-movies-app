@@ -45,6 +45,6 @@ internal class ImageRepositoryImpl(
                 position = posters.count().plus(backdrops.count()).plus(index)
             )
         }
-        imagePersistence.insert(posters + backdrops + logos)
+        imagePersistence.upsert(posters + backdrops + logos)
     }
 }

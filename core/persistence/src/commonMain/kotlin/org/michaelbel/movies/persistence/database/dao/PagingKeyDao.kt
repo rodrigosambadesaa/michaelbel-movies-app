@@ -1,10 +1,9 @@
 package org.michaelbel.movies.persistence.database.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import org.michaelbel.movies.persistence.database.entity.PagingKeyDb
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
@@ -27,6 +26,6 @@ interface PagingKeyDao {
     suspend fun removePagingKey(pagingKey: PagingKey)
 
     @Transaction
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPagingKey(pagingKey: PagingKeyDb)
+    @Upsert
+    suspend fun upsertPagingKey(pagingKey: PagingKeyDb)
 }

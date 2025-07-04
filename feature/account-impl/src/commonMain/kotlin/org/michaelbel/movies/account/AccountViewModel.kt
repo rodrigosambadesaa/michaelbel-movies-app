@@ -1,45 +1,46 @@
 package org.michaelbel.movies.account
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.michaelbel.movies.account.intent.AccountIntent
+import org.michaelbel.movies.account.model.AccountModel
 import org.michaelbel.movies.common.exceptions.DeleteSessionException
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.interactor.Interactor
-import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AccountViewModel(
     private val interactor: Interactor
-): BaseViewModel() {
+): MoviesViewModel<AccountModel, AccountIntent>(AccountModel()) {
 
-    var loading by mutableStateOf(false)
+    init {
+        dispatch(AccountIntent.CollectAccountPojo)
+    }
 
-    val account: StateFlow<AccountPojo?> = interactor.account
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = null
-        )
-
-    override fun handleError(throwable: Throwable) {
-        when (throwable) {
-            is DeleteSessionException -> loading = false
-            else -> super.handleError(throwable)
+    override fun dispatch(intent: AccountIntent) {
+        when (intent) {
+            is AccountIntent.CollectAccountPojo -> {
+                launch {
+                    interactor.accountPojoFlow.collectLatest { accountPojo ->
+                        reduce { it.copy(accountPojo = accountPojo) }
+                    }
+                }
+            }
+            is AccountIntent.BackClick -> launch { MainNavigator.back() }
+            is AccountIntent.LogoutClick -> {
+                val job = launch {
+                    interactor.deleteSession()
+                    MainNavigator.back()
+                }
+                reduce { it.copy(logoutJob = job) }
+            }
         }
     }
 
-    fun onLogoutClick() = scope.launch {
-        loading = true
-        interactor.deleteSession()
-        MainNavigator.back()
-    }
-
-    fun back() = scope.launch {
-        MainNavigator.back()
+    override fun catch(throwable: Throwable) {
+        when (throwable) {
+            is DeleteSessionException -> reduce { it.copy(logoutJob = null) }
+            else -> super.catch(throwable)
+        }
     }
 }

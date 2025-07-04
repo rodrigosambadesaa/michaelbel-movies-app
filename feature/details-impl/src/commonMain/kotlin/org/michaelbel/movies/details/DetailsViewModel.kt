@@ -1,73 +1,76 @@
 package org.michaelbel.movies.details
 
 import androidx.lifecycle.SavedStateHandle
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import androidx.navigation.toRoute
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.MovieDetailsException
-import org.michaelbel.movies.common.ktx.require
-import org.michaelbel.movies.common.theme.AppTheme
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.details.intent.DetailsIntent
+import org.michaelbel.movies.details.model.DetailsModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.network.config.ScreenState
 import org.michaelbel.movies.network.connectivity.NetworkManager
-import org.michaelbel.movies.network.connectivity.NetworkStatus
-import org.michaelbel.movies.persistence.database.typealiases.MovieId
-import org.michaelbel.movies.persistence.database.typealiases.PagingKey
+import org.michaelbel.movies.ui.navigation.DetailsDestination
+import org.michaelbel.movies.ui.navigation.GalleryDestination
+import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class DetailsViewModel(
     savedStateHandle: SavedStateHandle,
-    networkManager: NetworkManager,
-    private val interactor: Interactor
-): BaseViewModel() {
+    private val interactor: Interactor,
+    private val networkManager: NetworkManager
+): MoviesViewModel<DetailsModel, DetailsIntent>(DetailsModel()) {
 
-    private val movieList: PagingKey? = savedStateHandle["movieList"]
-    private val movieId: MovieId = savedStateHandle.require("movieId")
-
-    private val _detailsState = MutableStateFlow<ScreenState>(ScreenState.Loading)
-    val detailsState: StateFlow<ScreenState> get() = _detailsState.asStateFlow()
-
-    val networkStatus: StateFlow<NetworkStatus> = networkManager.status
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = NetworkStatus.Unavailable
-        )
-
-    val currentTheme: StateFlow<AppTheme> = interactor.currentTheme
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = AppTheme.FollowSystem
-        )
+    private val dest: DetailsDestination = savedStateHandle.toRoute()
 
     init {
-        loadMovie()
+        dispatch(DetailsIntent.CollectAppTheme)
+        dispatch(DetailsIntent.CollectNetworkStatus)
+        dispatch(DetailsIntent.LoadMovie)
     }
 
-    override fun handleError(throwable: Throwable) {
-        when (throwable) {
-            is MovieDetailsException -> _detailsState.value = ScreenState.Failure(throwable)
-            else -> super.handleError(throwable)
-        }
-    }
-
-    fun retry() = loadMovie()
-
-    fun onGenerateColors(movieId: MovieId, containerColor: Int?, onContainerColor: Int?) = scope.launch {
-        if (containerColor != null && onContainerColor != null) {
-            interactor.updateMovieColors(movieId, containerColor, onContainerColor)
-            if (movieList != null) {
-                _detailsState.value = ScreenState.Content(interactor.movie(movieList, movieId))
+    override fun dispatch(intent: DetailsIntent) {
+        when (intent) {
+            is DetailsIntent.CollectAppTheme -> {
+                launch {
+                    interactor.currentTheme.collectLatest { appTheme ->
+                        reduce { it.copy(appTheme = appTheme) }
+                    }
+                }
+            }
+            is DetailsIntent.CollectNetworkStatus -> {
+                launch {
+                    networkManager.status.collectLatest { networkStatus ->
+                        reduce { it.copy(networkStatus = networkStatus) }
+                    }
+                }
+            }
+            is DetailsIntent.LoadMovie -> {
+                launch {
+                    val movieDb = interactor.movieDetails(dest.movieList.orEmpty(), dest.movieId)
+                    reduce { it.copy(detailsState = ScreenState.Content(movieDb)) }
+                }
+            }
+            is DetailsIntent.BackClick -> launch { MainNavigator.back() }
+            is DetailsIntent.GalleryClick -> launch { MainNavigator.forward(GalleryDestination(dest.movieId)) }
+            is DetailsIntent.GenerateColors -> {
+                launch {
+                    if (intent.containerColor != null && intent.onContainerColor != null) {
+                        interactor.updateMovieColors(dest.movieId, intent.containerColor, intent.onContainerColor)
+                        if (dest.movieList != null) {
+                            val moviePojo = interactor.movie(dest.movieList.orEmpty(), dest.movieId)
+                            reduce { it.copy(detailsState = ScreenState.Content(moviePojo)) }
+                        }
+                    }
+                }
             }
         }
     }
 
-    private fun loadMovie() = scope.launch {
-        val movieDb = interactor.movieDetails(movieList.orEmpty(), movieId)
-        _detailsState.value = ScreenState.Content(movieDb)
+    override fun catch(throwable: Throwable) {
+        when (throwable) {
+            is MovieDetailsException -> reduce { it.copy(detailsState = ScreenState.Failure(throwable)) }
+            else -> super.catch(throwable)
+        }
     }
 }

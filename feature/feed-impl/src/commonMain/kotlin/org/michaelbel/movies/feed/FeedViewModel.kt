@@ -11,67 +11,52 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.common.list.MovieList
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.feed.intent.FeedIntent
+import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.ktx.nameOrLocalList
 import org.michaelbel.movies.network.connectivity.NetworkManager
-import org.michaelbel.movies.network.connectivity.NetworkStatus
 import org.michaelbel.movies.notifications.NotificationClient
-import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
+import org.michaelbel.movies.ui.navigation.AccountDestination
+import org.michaelbel.movies.ui.navigation.AuthDestination
+import org.michaelbel.movies.ui.navigation.DetailsDestination
+import org.michaelbel.movies.ui.navigation.MainNavigator
+import org.michaelbel.movies.ui.navigation.SearchDestination
+import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 class FeedViewModel(
     private val interactor: Interactor,
     private val notificationClient: NotificationClient,
-    networkManager: NetworkManager
-): BaseViewModel() {
+    private val networkManager: NetworkManager
+): MoviesViewModel<FeedModel, FeedIntent>(FeedModel()) {
 
-    val account: StateFlow<AccountPojo?> = interactor.account
+    private val currentMovieList: StateFlow<MovieList> = interactor.currentMovieList
         .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = AccountPojo.Empty
-        )
-
-    val networkStatus: StateFlow<NetworkStatus> = networkManager.status
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = NetworkStatus.Unavailable
-        )
-
-    val currentFeedView: StateFlow<FeedView> = interactor.currentFeedView
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.Lazily,
-            initialValue = runBlocking { interactor.currentFeedView.first() }
-        )
-
-    val currentMovieList: StateFlow<MovieList> = interactor.currentMovieList
-        .stateIn(
-            scope = scope,
+            scope = this,
             started = SharingStarted.Lazily,
             initialValue = runBlocking { interactor.currentMovieList.first() }
         )
 
     val pagingDataFlow: Flow<PagingData<MoviePojo>> = currentMovieList
         .flatMapLatest { movieList -> interactor.moviesPagingData(movieList) }
-        .cachedIn(scope)
+        .cachedIn(this)
 
     val pagingDataFlow2: StateFlow<List<MoviePojo>> = currentMovieList.flatMapLatest { movieList ->
         flowOf(interactor.moviesResult(movieList.nameOrLocalList))
     }.catch {
         emptyList<List<MoviePojo>>()
     }.stateIn(
-        scope = scope,
+        scope = this,
         started = SharingStarted.Lazily,
         initialValue = emptyList()
     )
@@ -80,18 +65,60 @@ class FeedViewModel(
     val notificationsPermissionRequired: StateFlow<Boolean> get() = _notificationsPermissionRequired.asStateFlow()
 
     init {
-        subscribeNotificationsPermissionRequired()
+        dispatch(FeedIntent.CollectAccountPojo)
+        dispatch(FeedIntent.CollectFeedView)
+        dispatch(FeedIntent.CollectMovieList)
+        dispatch(FeedIntent.CollectNetworkStatus)
+        dispatch(FeedIntent.SubscribeNotificationsPermissionRequired)
     }
 
-    fun onNotificationBottomSheetHide() = scope.launch {
-        _notificationsPermissionRequired.tryEmit(false)
-        notificationClient.updateNotificationExpireTime()
-    }
-
-    private fun subscribeNotificationsPermissionRequired() = scope.launch {
-        _notificationsPermissionRequired.tryEmit(
-            notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY)
-        )
+    override fun dispatch(intent: FeedIntent) {
+        when (intent) {
+            is FeedIntent.CollectAccountPojo -> {
+                launch {
+                    interactor.accountPojoFlow.collectLatest { accountPojo ->
+                        reduce { it.copy(accountPojo = accountPojo) }
+                    }
+                }
+            }
+            is FeedIntent.CollectFeedView -> {
+                launch {
+                    interactor.currentFeedView.collectLatest { feedView ->
+                        reduce { it.copy(feedView = feedView) }
+                    }
+                }
+            }
+            is FeedIntent.CollectMovieList -> {
+                launch {
+                    interactor.currentMovieList.collectLatest { movieList ->
+                        reduce { it.copy(movieList = movieList) }
+                    }
+                }
+            }
+            is FeedIntent.CollectNetworkStatus -> {
+                launch {
+                    networkManager.status.collectLatest { networkStatus ->
+                        reduce { it.copy(networkStatus = networkStatus) }
+                    }
+                }
+            }
+            is FeedIntent.HideNotificationDialog -> {
+                launch {
+                    _notificationsPermissionRequired.tryEmit(false)
+                    notificationClient.updateNotificationExpireTime()
+                }
+            }
+            is FeedIntent.SubscribeNotificationsPermissionRequired -> {
+                launch {
+                    _notificationsPermissionRequired.tryEmit(notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY))
+                }
+            }
+            is FeedIntent.SettingsClick -> launch { MainNavigator.forward(SettingsDestination) }
+            is FeedIntent.SearchClick -> launch { MainNavigator.forward(SearchDestination) }
+            is FeedIntent.AuthClick -> launch { MainNavigator.forward(AuthDestination) }
+            is FeedIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
+            is FeedIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
+        }
     }
 
     private companion object {

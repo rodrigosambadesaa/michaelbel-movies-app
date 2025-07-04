@@ -29,12 +29,12 @@ class MoviePersistence internal constructor(
         return moviesDatabase.movieDao.moviesMini(pagingKey, limit)
     }
 
-    suspend fun insertMovies(movies: List<MoviePojo>) {
-        moviesDatabase.movieDao.insertMovies(movies.map(MoviePojo::movieDb))
+    suspend fun upsert(movies: List<MoviePojo>) {
+        moviesDatabase.movieDao.upsert(movies.map(MoviePojo::movieDb))
     }
 
-    suspend fun insertMovie(movie: MoviePojo) {
-        moviesDatabase.movieDao.insertMovie(movie.movieDb)
+    suspend fun upsert(movie: MoviePojo) {
+        moviesDatabase.movieDao.upsert(movie.movieDb)
     }
 
     suspend fun removeMovies(pagingKey: PagingKey) {
@@ -49,7 +49,7 @@ class MoviePersistence internal constructor(
         return moviesDatabase.movieDao.movieById(pagingKey, movieId)
     }
 
-    suspend fun maxPosition(pagingKey: PagingKey): Int? {
+    suspend fun maxPosition(pagingKey: PagingKey): Int {
         return moviesDatabase.movieDao.maxPosition(pagingKey)
     }
 

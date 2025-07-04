@@ -13,7 +13,7 @@ internal class AccountInteractorImpl(
     private val accountRepository: AccountRepository
 ): AccountInteractor {
 
-    override val account: Flow<AccountPojo?> = accountRepository.account
+    override val accountPojoFlow: Flow<AccountPojo> = accountRepository.accountPojoFlow
 
     override suspend fun accountId(): AccountId {
         return withContext(dispatchers.io) { accountRepository.accountId() }

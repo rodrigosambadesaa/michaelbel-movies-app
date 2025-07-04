@@ -13,7 +13,7 @@ import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.viewmodel.CoroutineViewModel
 import org.michaelbel.movies.debug.DebugNotificationInteractor
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.platform.config.ConfigService
@@ -33,7 +33,7 @@ class MainViewModel(
     private val configService: ConfigService,
     private val reviewService: ReviewService,
     private val updateService: UpdateService,
-): BaseViewModel() {
+): CoroutineViewModel() {
 
     private val _authenticateFlow = Channel<Unit>()
     val authenticateFlow: Flow<Unit> get() = _authenticateFlow.receiveAsFlow()
@@ -46,14 +46,14 @@ class MainViewModel(
 
     val themeData: StateFlow<ThemeData> = interactor.themeData
         .stateIn(
-            scope = scope,
+            scope = this,
             started = SharingStarted.Lazily,
             initialValue = ThemeData.Default
         )
 
     val isScreenshotBlockEnabled: StateFlow<Boolean> = interactor.isScreenshotBlockEnabled
         .stateIn(
-            scope = scope,
+            scope = this,
             started = SharingStarted.Lazily,
             initialValue = false
         )
@@ -82,7 +82,7 @@ class MainViewModel(
             }
 
             override fun onCancel() {
-                scope.launch { _cancelFlow.send(Unit) }
+                launch { _cancelFlow.send(Unit) }
             }
         }
         biometricController.authenticate(activity, biometricListener)
@@ -96,7 +96,7 @@ class MainViewModel(
         updateService.startUpdate(activity)
     }
 
-    private fun fetchBiometric() = scope.launch {
+    private fun fetchBiometric() = launch {
         val isBiometricEnabled = interactor.isBiometricEnabledAsync()
         _splashLoading.value = isBiometricEnabled
         if (isBiometricEnabled) {
@@ -104,7 +104,7 @@ class MainViewModel(
         }
     }
 
-    private fun fetchRemoteConfig() = scope.launch {
+    private fun fetchRemoteConfig() = launch {
         configService.fetchAndActivate()
     }
 

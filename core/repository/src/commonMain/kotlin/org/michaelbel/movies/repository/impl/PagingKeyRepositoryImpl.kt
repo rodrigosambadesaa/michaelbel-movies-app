@@ -39,7 +39,7 @@ internal class PagingKeyRepositoryImpl(
         page: Page,
         totalPages: Int
     ) {
-        pagingKeyPersistence.insertPagingKey(
+        pagingKeyPersistence.upsertPagingKey(
             PagingKeyPojo(
                 pagingKey = pagingKey,
                 page = page,

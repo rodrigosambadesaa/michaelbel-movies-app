@@ -44,8 +44,4 @@ compose.desktop {
     }
 }
 
-tasks.register("printVersionName") {
-    doLast {
-        println(compose.desktop.application.nativeDistributions.packageVersion)
-    }
-}
+tasks.register("printVersionName") { doLast { println(compose.desktop.application.nativeDistributions.packageVersion) } }

@@ -6,7 +6,7 @@ import org.michaelbel.movies.persistence.database.typealiases.AccountId
 
 interface AccountInteractor {
 
-    val account: Flow<AccountPojo?>
+    val accountPojoFlow: Flow<AccountPojo>
 
     suspend fun accountId(): AccountId?
 

@@ -2,11 +2,10 @@ package org.michaelbel.movies.persistence.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.persistence.database.entity.MovieDb
 import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
@@ -35,13 +34,12 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE movieList = :pagingKey ORDER BY position ASC LIMIT :limit")
     suspend fun moviesMini(pagingKey: PagingKey, limit: Limit): List<MovieDbMini>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovies(movies: List<MovieDb>)
+    @Upsert
+    suspend fun upsert(movies: List<MovieDb>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movie: MovieDb)
+    @Upsert
+    suspend fun upsert(movie: MovieDb)
 
-    @Transaction
     @Query("DELETE FROM movies WHERE movieList = :pagingKey")
     suspend fun removeMovies(pagingKey: PagingKey)
 
@@ -51,9 +49,8 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE movieList = :pagingKey AND movieId = :movieId")
     suspend fun movieById(pagingKey: PagingKey, movieId: MovieId): MoviePojo?
 
-    @Transaction
-    @Query("SELECT MAX(position) FROM movies WHERE movieList = :pagingKey")
-    suspend fun maxPosition(pagingKey: PagingKey): Int?
+    @Query("SELECT COALESCE(MAX(position), 0) FROM movies WHERE movieList = :pagingKey")
+    suspend fun maxPosition(pagingKey: PagingKey): Int
 
     @Query("SELECT (SELECT COUNT(*) FROM movies WHERE movieList = :pagingKey) == 0")
     suspend fun isEmpty(pagingKey: PagingKey): Boolean

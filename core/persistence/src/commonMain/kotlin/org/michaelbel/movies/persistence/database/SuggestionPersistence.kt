@@ -9,11 +9,11 @@ class SuggestionPersistence internal constructor(
 ) {
 
     fun suggestionsFlow(): Flow<List<SuggestionPojo>> {
-        return moviesDatabase.suggestionDao.suggestionsFlow()
+        return moviesDatabase.suggestionDao.selectFlow()
     }
 
     suspend fun insert(suggestions: List<SuggestionPojo>) {
-        moviesDatabase.suggestionDao.insert(suggestions.map(SuggestionPojo::suggestionDb))
+        moviesDatabase.suggestionDao.upsert(suggestions.map(SuggestionPojo::suggestionDb))
     }
 
     suspend fun removeAll() {

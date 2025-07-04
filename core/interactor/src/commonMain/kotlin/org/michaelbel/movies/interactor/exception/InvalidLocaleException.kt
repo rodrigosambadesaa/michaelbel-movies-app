@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package org.michaelbel.movies.interactor.exception
 
 internal data object InvalidLocaleException: Exception("Invalid locale") {

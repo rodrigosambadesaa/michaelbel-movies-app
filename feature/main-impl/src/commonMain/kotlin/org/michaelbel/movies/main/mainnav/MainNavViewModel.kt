@@ -7,13 +7,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
-import org.michaelbel.movies.common.viewmodel.BaseViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.main.intent.MainIntent
+import org.michaelbel.movies.main.model.MainModel
 
 class MainNavViewModel(
     savedStateHandle: SavedStateHandle,
     private val interactor: Interactor
-): BaseViewModel() {
+): MoviesViewModel<MainModel, MainIntent>(MainModel()) {
 
     private val requestToken: String? = savedStateHandle["requestToken"]
     private val approved: String? = savedStateHandle["approved"]
@@ -25,21 +27,19 @@ class MainNavViewModel(
         authorizeAccount(requestToken, approved.toBoolean())
     }
 
-    override fun handleError(throwable: Throwable) {
+    override fun dispatch(intent: MainIntent) {}
+
+    override fun catch(throwable: Throwable) {
         when (throwable) {
-            is CreateSessionException -> {
-                scope.launch { _snackbarMessage.send("Failure while signing in. Wrong token or no approval") }
-            }
-            is AccountDetailsException -> {
-                scope.launch { _snackbarMessage.send("Failure while signing in. Wrong token or no approval") }
-            }
-            else -> super.handleError(throwable)
+            is CreateSessionException -> launch { _snackbarMessage.send("Failure while signing in. Wrong token or no approval") }
+            is AccountDetailsException -> launch { _snackbarMessage.send("Failure while signing in. Wrong token or no approval") }
+            else -> super.catch(throwable)
         }
     }
 
     private fun authorizeAccount(requestToken: String?, approved: Boolean?) {
         if (requestToken == null || approved == null) return
-        scope.launch {
+        launch {
             interactor.run {
                 createSession(requestToken)
                 accountDetails()

@@ -94,7 +94,7 @@ internal class MovieRepositoryImpl(
                 )
             }
             moviePersistence.removeMovies(MoviePojo.MOVIES_WIDGET)
-            moviePersistence.insertMovies(moviesDb)
+            moviePersistence.upsert(moviesDb)
             moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE)
         } catch (_: Exception) {
             moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE).ifEmpty {
@@ -116,7 +116,7 @@ internal class MovieRepositoryImpl(
         page: Page,
         movies: List<MovieResponse>
     ) {
-        val maxPosition = moviePersistence.maxPosition(pagingKey).orEmpty()
+        val maxPosition = moviePersistence.maxPosition(pagingKey)
         val moviesDb = movies.mapIndexed { index, movieResponse ->
             movieResponse.moviePojo(
                 movieList = pagingKey,
@@ -124,12 +124,12 @@ internal class MovieRepositoryImpl(
                 position = if (maxPosition == 0) index else maxPosition.plus(index).plus(1)
             )
         }
-        moviePersistence.insertMovies(moviesDb)
+        moviePersistence.upsert(moviesDb)
     }
 
     override suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo) {
-        val maxPosition = moviePersistence.maxPosition(pagingKey).orEmpty()
-        moviePersistence.insertMovie(
+        val maxPosition = moviePersistence.maxPosition(pagingKey)
+        moviePersistence.upsert(
             movie.copy(
                 movieList = pagingKey,
                 dateAdded = Clock.System.now().toEpochMilliseconds(),

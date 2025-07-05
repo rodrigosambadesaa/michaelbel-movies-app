@@ -13,7 +13,7 @@ internal class NotificationRepositoryImpl(
 ): NotificationRepository {
 
     override suspend fun notificationExpireTime(): Long {
-        return preferences.notificationExpireTime().orEmpty()
+        return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceNotificationExpireTimeKey).orEmpty()
     }
 
     override suspend fun updateNotificationExpireTime() {

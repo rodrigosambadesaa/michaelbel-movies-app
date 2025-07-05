@@ -10,7 +10,7 @@ class ImagePersistence internal constructor(
 ) {
 
     fun imagesFlow(movieId: MovieId): Flow<List<ImagePojo>> {
-        return moviesDatabase.imageDao.imagesFlow(movieId)
+        return moviesDatabase.imageDao.selectFlow(movieId)
     }
 
     suspend fun upsert(images: List<ImagePojo>) {

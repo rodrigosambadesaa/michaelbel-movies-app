@@ -11,6 +11,7 @@ import org.michaelbel.movies.network.model.SessionRequest
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.network.model.Username
 import org.michaelbel.movies.persistence.database.AccountPersistence
+import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AuthenticationRepository
 
@@ -20,25 +21,15 @@ internal class AuthenticationRepositoryImpl(
     private val preferences: MoviesPreferences
 ): AuthenticationRepository {
 
-    override suspend fun createRequestToken(
-        loginViaTmdb: Boolean
-    ): Token {
+    override suspend fun createRequestToken(loginViaTmdb: Boolean): Token {
         return try {
             val token = authenticationNetworkService.createRequestToken()
-            if (!token.success) {
-                throw CreateRequestTokenException(loginViaTmdb)
-            }
+            if (!token.success) throw CreateRequestTokenException(loginViaTmdb)
             token
-        } catch (_: Exception) {
-            throw CreateRequestTokenException(loginViaTmdb)
-        }
+        } catch (_: Exception) { throw CreateRequestTokenException(loginViaTmdb) }
     }
 
-    override suspend fun createSessionWithLogin(
-        username: String,
-        password: String,
-        requestToken: String
-    ): Token {
+    override suspend fun createSessionWithLogin(username: String, password: String, requestToken: String): Token {
         return try {
             val token = authenticationNetworkService.createSessionWithLogin(
                 username = Username(
@@ -47,18 +38,12 @@ internal class AuthenticationRepositoryImpl(
                     requestToken = requestToken
                 )
             )
-            if (!token.success) {
-                throw CreateSessionWithLoginException
-            }
+            if (!token.success) throw CreateSessionWithLoginException
             token
-        } catch (_: Exception) {
-            throw CreateSessionWithLoginException
-        }
+        } catch (_: Exception) { throw CreateSessionWithLoginException }
     }
 
-    override suspend fun createSession(
-        token: String
-    ): Session {
+    override suspend fun createSession(token: String): Session {
         return try {
             val session = authenticationNetworkService.createSession(RequestToken(token))
             if (session.success) {
@@ -67,17 +52,15 @@ internal class AuthenticationRepositoryImpl(
                 throw CreateSessionException
             }
             session
-        } catch (_: Exception) {
-            throw CreateSessionException
-        }
+        } catch (_: Exception) { throw CreateSessionException }
     }
 
     override suspend fun deleteSession() {
-        runCatching {
-            val sessionId = preferences.sessionId().orEmpty()
+        try {
+            val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
             val deletedSession = authenticationNetworkService.deleteSession(SessionRequest(sessionId))
             if (deletedSession.success) {
-                val accountId = preferences.accountId()
+                val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
                 accountPersistence.removeById(accountId)
                 preferences.run {
                     removeValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey)
@@ -86,8 +69,6 @@ internal class AuthenticationRepositoryImpl(
             } else {
                 throw DeleteSessionException
             }
-        }.onFailure {
-            throw DeleteSessionException
-        }
+        } catch (_: Exception) { throw DeleteSessionException }
     }
 }

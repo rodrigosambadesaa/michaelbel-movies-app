@@ -15,7 +15,7 @@ import org.michaelbel.movies.persistence.database.typealiases.MovieId
 interface ImageDao {
 
     @Query("SELECT * FROM images WHERE movieId = :movieId ORDER BY position ASC")
-    fun imagesFlow(movieId: MovieId): Flow<List<ImagePojo>>
+    fun selectFlow(movieId: MovieId): Flow<List<ImagePojo>>
 
     @Upsert
     suspend fun upsert(images: List<ImageDb>)

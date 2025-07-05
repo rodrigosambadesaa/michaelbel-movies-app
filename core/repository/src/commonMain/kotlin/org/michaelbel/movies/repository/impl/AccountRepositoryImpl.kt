@@ -23,29 +23,27 @@ internal class AccountRepositoryImpl(
     private val preferences: MoviesPreferences
 ): AccountRepository {
 
-    override val accountPojoFlow: Flow<AccountPojo> = preferences.accountIdFlow
+    override val accountPojoFlow: Flow<AccountPojo> = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
         .map { accountId -> accountId.orEmpty() }
         .flatMapLatest(accountPersistence::accountByIdFlow)
 
     override suspend fun accountId(): Int {
-        return preferences.accountId()
+        return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
     }
 
     override suspend fun accountExpireTime(): Long? {
-        return preferences.accountExpireTime()
+        return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey).orEmpty()
     }
 
     override suspend fun accountDetails() {
-        runCatching {
-            val sessionId = preferences.sessionId().orEmpty()
+        try {
+            val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
             val account = accountNetworkService.accountDetails(sessionId)
             preferences.run {
                 setValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey, account.id)
                 setValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey, Clock.System.now().toEpochMilliseconds())
             }
             accountPersistence.upsert(account.accountPojo)
-        }.onFailure {
-            throw AccountDetailsException
-        }
+        } catch (_: Exception) { throw AccountDetailsException }
     }
 }

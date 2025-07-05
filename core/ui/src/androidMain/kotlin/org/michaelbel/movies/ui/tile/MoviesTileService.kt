@@ -30,7 +30,7 @@ class MoviesTileService: TileService() {
 
     override fun onClick() {
         super.onClick()
-        runCatching {
+        try {
             val intent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -45,6 +45,6 @@ class MoviesTileService: TileService() {
             } else {
                 startActivityAndCollapse(intent)
             }
-        }
+        } catch (_: Exception) {}
     }
 }

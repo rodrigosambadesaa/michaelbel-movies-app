@@ -10,7 +10,7 @@ interface AccountInteractor {
 
     suspend fun accountId(): AccountId?
 
-    suspend fun accountExpireTime(): Long?
+    suspend fun accountExpireTime(): Long
 
     suspend fun accountDetails()
 }

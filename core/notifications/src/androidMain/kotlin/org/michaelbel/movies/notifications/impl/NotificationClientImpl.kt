@@ -1,4 +1,5 @@
 @file:SuppressLint("MissingPermission")
+@file:OptIn(ExperimentalTime::class)
 
 package org.michaelbel.movies.notifications.impl
 
@@ -22,6 +23,8 @@ import org.michaelbel.movies.notifications.R
 import org.michaelbel.movies.notifications.model.MoviesPush
 import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
 import java.util.concurrent.TimeUnit
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class NotificationClientImpl(
     private val context: Context,
@@ -30,7 +33,7 @@ class NotificationClientImpl(
 
     override suspend fun notificationsPermissionRequired(time: Long): Boolean {
         val expireTime = interactor.notificationExpireTime()
-        val currentTime = System.currentTimeMillis()
+        val currentTime = Clock.System.now().toEpochMilliseconds()
         val isTimePasses = isTimePasses(ONE_DAY_MILLS, expireTime, currentTime)
         delay(time)
         return !context.isPostNotificationsPermissionGranted && isTimePasses

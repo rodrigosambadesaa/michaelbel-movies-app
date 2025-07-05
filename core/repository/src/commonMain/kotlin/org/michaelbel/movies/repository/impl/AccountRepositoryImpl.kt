@@ -31,7 +31,7 @@ internal class AccountRepositoryImpl(
         return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
     }
 
-    override suspend fun accountExpireTime(): Long? {
+    override suspend fun accountExpireTime(): Long {
         return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey).orEmpty()
     }
 

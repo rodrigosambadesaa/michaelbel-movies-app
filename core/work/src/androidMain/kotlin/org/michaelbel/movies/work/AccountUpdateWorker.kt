@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package org.michaelbel.movies.work
 
 import android.content.Context
@@ -6,8 +8,10 @@ import androidx.work.WorkerParameters
 import org.michaelbel.movies.common.ktx.isTimePasses
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
-import org.michaelbel.movies.persistence.database.ktx.orEmpty
+import org.michaelbel.movies.persistence.database.ktx.isEmpty
 import java.util.concurrent.TimeUnit
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class AccountUpdateWorker(
     context: Context,
@@ -18,13 +22,11 @@ class AccountUpdateWorker(
     override suspend fun doWork(): Result {
         return try {
             val accountId = interactor.accountId()
-            if (isTmdbApiKeyEmpty || accountId == 0) {
-                return Result.success()
-            }
+            if (isTmdbApiKeyEmpty || accountId.isEmpty) return Result.success()
 
-            val expireTime = interactor.accountExpireTime().orEmpty()
-            val currentTime = System.currentTimeMillis()
-            if (isTimePasses(ONE_DAY_MILLS, expireTime, currentTime)) {
+            val accountExpireTime = interactor.accountExpireTime()
+            val currentTime = Clock.System.now().toEpochMilliseconds()
+            if (isTimePasses(ONE_DAY_MILLS, accountExpireTime, currentTime)) {
                 interactor.accountDetails()
             }
             Result.success()

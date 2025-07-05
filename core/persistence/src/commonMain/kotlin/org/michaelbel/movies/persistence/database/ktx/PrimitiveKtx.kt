@@ -1,5 +1,8 @@
 package org.michaelbel.movies.persistence.database.ktx
 
+val Int?.isEmpty: Boolean
+    get() = this == null || this == 0
+
 fun Int?.orEmpty(): Int {
     return this ?: 0
 }

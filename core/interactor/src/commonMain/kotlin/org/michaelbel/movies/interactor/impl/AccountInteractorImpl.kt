@@ -19,7 +19,7 @@ internal class AccountInteractorImpl(
         return withContext(dispatchers.io) { accountRepository.accountId() }
     }
 
-    override suspend fun accountExpireTime(): Long? {
+    override suspend fun accountExpireTime(): Long {
         return withContext(dispatchers.io) { accountRepository.accountExpireTime() }
     }
 

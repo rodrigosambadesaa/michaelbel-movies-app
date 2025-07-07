@@ -1,8 +1,7 @@
 import com.google.firebase.appdistribution.gradle.AppDistributionExtension
-import org.apache.commons.io.output.ByteArrayOutputStream
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
-import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 @Suppress("dsl_scope_violation")
 
@@ -14,16 +13,16 @@ plugins {
 }
 
 private val gitCommitsCount: Int by lazy {
-    when {
-        System.getProperty("os.name").contains("Windows", ignoreCase = true) -> 1
-        else -> {
-            val stdout = ByteArrayOutputStream()
-            exec {
-                commandLine("git", "rev-list", "--count", "HEAD")
-                standardOutput = stdout
-            }
-            stdout.toString(Charset.defaultCharset()).trim().toInt()
+    try {
+        val isWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)
+        val processBuilder = when {
+            isWindows -> ProcessBuilder("cmd", "/c", "git", "rev-list", "--count", "HEAD")
+            else -> ProcessBuilder("git", "rev-list", "--count", "HEAD")
         }
+        processBuilder.redirectErrorStream(true)
+        processBuilder.start().inputStream.bufferedReader(StandardCharsets.UTF_8).readLine().trim().toInt()
+    } catch (_: Exception) {
+        1
     }
 }
 
@@ -44,7 +43,6 @@ android {
         versionCode = gitCommitsCount
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-        resourceConfigurations.addAll(listOf("en", "ru"))
 
         buildConfigField("String", "VERSION_DATE", "\"$currentTime\"")
     }
@@ -185,17 +183,8 @@ tasks.register("prepareReleaseNotes") {
     }
 }
 
-tasks.register("printVersionName") {
-    doLast {
-        println(android.defaultConfig.versionName)
-    }
-}
-
-tasks.register("printVersionCode") {
-    doLast {
-        println(android.defaultConfig.versionCode.toString())
-    }
-}
+tasks.register("printVersionName") { doLast { println(android.defaultConfig.versionName) } }
+tasks.register("printVersionCode") { doLast { println(android.defaultConfig.versionCode.toString()) } }
 
 afterEvaluate {
     tasks.findByName("assembleGmsDebug")?.finalizedBy("prepareReleaseNotes")

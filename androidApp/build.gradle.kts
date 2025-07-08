@@ -116,8 +116,6 @@ android {
         }
     }
 
-    /*dynamicFeatures += setOf(":instant")*/
-
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())

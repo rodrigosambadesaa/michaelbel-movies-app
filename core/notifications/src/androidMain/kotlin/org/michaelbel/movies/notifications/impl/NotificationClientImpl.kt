@@ -138,7 +138,7 @@ class NotificationClientImpl(
         private const val TAG = "PUSH"
         private const val DOWNLOAD_IMAGE_NOTIFICATION_TAG = "DOWNLOAD_IMAGE"
         private const val GROUP_NAME = "App"
-        private val VIBRATE_PATTERN: LongArray = longArrayOf(1000)
-        private val ONE_DAY_MILLS: Long = TimeUnit.DAYS.toMillis(1)
+        private val VIBRATE_PATTERN = longArrayOf(1000)
+        private val ONE_DAY_MILLS = TimeUnit.DAYS.toMillis(1)
     }
 }

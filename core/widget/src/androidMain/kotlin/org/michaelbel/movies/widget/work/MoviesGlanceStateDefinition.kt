@@ -13,7 +13,7 @@ import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 
-internal object MoviesGlanceStateDefinition: GlanceStateDefinition<MoviesWidgetState> {
+object MoviesGlanceStateDefinition: GlanceStateDefinition<MoviesWidgetState> {
 
     private const val DATA_STORE_FILENAME = "moviesGlanceWidgetState"
 

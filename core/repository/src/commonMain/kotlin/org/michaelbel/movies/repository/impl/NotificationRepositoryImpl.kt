@@ -8,7 +8,7 @@ import org.michaelbel.movies.repository.NotificationRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-internal class NotificationRepositoryImpl(
+class NotificationRepositoryImpl(
     private val preferences: MoviesPreferences
 ): NotificationRepository {
 

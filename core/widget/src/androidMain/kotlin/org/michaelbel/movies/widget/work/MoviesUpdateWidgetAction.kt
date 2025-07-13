@@ -5,7 +5,7 @@ import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
 
-internal class MoviesUpdateWidgetAction: ActionCallback {
+class MoviesUpdateWidgetAction: ActionCallback {
 
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
         MoviesGlanceWidgetWorker.enqueue(context = context, force = true)

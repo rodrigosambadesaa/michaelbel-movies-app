@@ -15,7 +15,7 @@ import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AuthenticationRepository
 
-internal class AuthenticationRepositoryImpl(
+class AuthenticationRepositoryImpl(
     private val authenticationNetworkService: AuthenticationNetworkService,
     private val accountPersistence: AccountPersistence,
     private val preferences: MoviesPreferences
@@ -46,11 +46,8 @@ internal class AuthenticationRepositoryImpl(
     override suspend fun createSession(token: String): Session {
         return try {
             val session = authenticationNetworkService.createSession(RequestToken(token))
-            if (session.success) {
-                preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey, session.sessionId)
-            } else {
-                throw CreateSessionException
-            }
+            if (!session.success) throw CreateSessionException
+            preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey, session.sessionId)
             session
         } catch (_: Exception) { throw CreateSessionException }
     }
@@ -59,15 +56,12 @@ internal class AuthenticationRepositoryImpl(
         try {
             val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
             val deletedSession = authenticationNetworkService.deleteSession(SessionRequest(sessionId))
-            if (deletedSession.success) {
-                val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
-                accountPersistence.removeById(accountId)
-                preferences.run {
-                    removeValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey)
-                    removeValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
-                }
-            } else {
-                throw DeleteSessionException
+            if (!deletedSession.success) throw DeleteSessionException
+            val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
+            accountPersistence.removeById(accountId)
+            preferences.run {
+                removeValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey)
+                removeValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
             }
         } catch (_: Exception) { throw DeleteSessionException }
     }

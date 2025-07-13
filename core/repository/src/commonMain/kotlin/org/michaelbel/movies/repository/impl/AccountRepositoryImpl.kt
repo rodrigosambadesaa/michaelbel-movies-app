@@ -17,7 +17,7 @@ import org.michaelbel.movies.repository.AccountRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-internal class AccountRepositoryImpl(
+class AccountRepositoryImpl(
     private val accountNetworkService: AccountNetworkService,
     private val accountPersistence: AccountPersistence,
     private val preferences: MoviesPreferences

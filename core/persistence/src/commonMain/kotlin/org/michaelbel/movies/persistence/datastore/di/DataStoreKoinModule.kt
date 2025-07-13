@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.Preferences
 import okio.Path.Companion.toPath
 import org.koin.core.module.Module
 
-internal expect val dataStoreKoinModule: Module
+expect val dataStoreKoinModule: Module
 
 fun createDataStore(
     migrations: List<DataMigration<Preferences>> = emptyList(),

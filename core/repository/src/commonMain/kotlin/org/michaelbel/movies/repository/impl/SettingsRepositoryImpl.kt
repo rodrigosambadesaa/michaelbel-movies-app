@@ -12,7 +12,7 @@ import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.SettingsRepository
 import org.michaelbel.movies.repository.ktx.defaultDynamicColorsEnabled
 
-internal class SettingsRepositoryImpl(
+class SettingsRepositoryImpl(
     private val preferences: MoviesPreferences
 ): SettingsRepository {
 

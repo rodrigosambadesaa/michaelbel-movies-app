@@ -35,7 +35,6 @@ internal fun AppWidgetConfigureActivityContent(
     onBackClick: () -> Unit
 ) {
     val themeData by viewModel.themeData.collectAsStateCommon()
-
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
     MoviesTheme(

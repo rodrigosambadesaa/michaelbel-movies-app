@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import org.michaelbel.movies.widget.entity.MovieData
 
 @Serializable
-internal sealed interface MoviesWidgetState {
+sealed interface MoviesWidgetState {
 
     @Serializable
     data object Loading: MoviesWidgetState

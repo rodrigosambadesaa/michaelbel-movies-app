@@ -23,7 +23,6 @@ class AccountUpdateWorker(
         return try {
             val accountId = interactor.accountId()
             if (isTmdbApiKeyEmpty || accountId.isEmpty) return Result.success()
-
             val accountExpireTime = interactor.accountExpireTime()
             val currentTime = Clock.System.now().toEpochMilliseconds()
             if (isTimePasses(ONE_DAY_MILLS, accountExpireTime, currentTime)) {

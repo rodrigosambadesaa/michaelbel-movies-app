@@ -8,7 +8,7 @@ import org.michaelbel.movies.persistence.database.SuggestionPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 import org.michaelbel.movies.repository.SuggestionRepository
 
-internal class SuggestionRepositoryImpl(
+class SuggestionRepositoryImpl(
     private val movieNetworkService: MovieNetworkService,
     private val moviePersistence: MoviePersistence,
     private val suggestionPersistence: SuggestionPersistence
@@ -18,9 +18,7 @@ internal class SuggestionRepositoryImpl(
         return suggestionPersistence.suggestionsFlow()
     }
 
-    override suspend fun updateSuggestions(
-        language: String
-    ) {
+    override suspend fun updateSuggestions(language: String) {
         suggestionPersistence.removeAll()
 
         val nowPlayingMovies = moviePersistence.movies(Movie.NOW_PLAYING, 5)

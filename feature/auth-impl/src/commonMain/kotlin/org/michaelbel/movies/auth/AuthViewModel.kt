@@ -17,9 +17,7 @@ class AuthViewModel(
 
     override fun dispatch(intent: AuthIntent) {
         when (intent) {
-            is AuthIntent.BackClick -> {
-                launch { MainNavigator.back() }
-            }
+            is AuthIntent.BackClick -> launch { MainNavigator.back() }
             is AuthIntent.LoginClick -> {
                 val job = launch {
                     reduce { it.copy(error = null) }
@@ -33,8 +31,8 @@ class AuthViewModel(
                 reduce { it.copy(requestToken = null, loginJob = null) }
             }
             is AuthIntent.SignInClick -> {
+                reduce { it.copy(error = null) }
                 val job = launch {
-                    reduce { it.copy(error = null) }
                     val token = interactor.createRequestToken(loginViaTmdb = false)
                     val sessionToken = interactor.createSessionWithLogin(intent.username, intent.password, token.requestToken)
                     interactor.run {

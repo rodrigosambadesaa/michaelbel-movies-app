@@ -1,6 +1,5 @@
 package org.michaelbel.movies
 
-import android.app.Activity.ScreenCaptureCallback
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle

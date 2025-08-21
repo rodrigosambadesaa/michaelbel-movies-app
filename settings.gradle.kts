@@ -32,7 +32,6 @@ include(
     ":iosApp",
     ":iosAppCompose",
     ":webApp",
-    ":instant",
     ":benchmark",
 
     ":core:platform-services:gms",

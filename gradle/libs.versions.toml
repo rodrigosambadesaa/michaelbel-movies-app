@@ -3,7 +3,7 @@ min-sdk = "26"
 compile-sdk = "36"
 target-sdk = "36"
 jdk = "21"
-agp = "8.11.1"
+agp = "8.12.1"
 kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.7.1"
@@ -12,7 +12,6 @@ desugar-jdk-libs = "2.1.5"
 google-ksp = "2.2.0-2.0.2"
 google-services = "4.4.3"
 google-services-base = "18.7.2"
-google-services-instantapps = "18.2.0"
 google-material = "1.12.0"
 google-material-compose-theme-adapter = "1.2.1"
 google-firebase-analytics-ktx = "22.5.0"
@@ -81,7 +80,6 @@ kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 google-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "google-services-base" }
-google-services-instantapps = { module = "com.google.android.gms:play-services-instantapps", version.ref = "google-services-instantapps" }
 google-play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "google-play-review-ktx" }
 google-play-app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "google-play-app-update-ktx" }
 google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
@@ -323,11 +321,7 @@ google-firebase-android = [
     "google-firebase-messaging-ktx"
 ]
 google-services-android = [
-    "google-services-base",
-    "google-services-instantapps"
-]
-google-services-instantapps-android = [
-    "google-services-instantapps"
+    "google-services-base"
 ]
 google-material-android = [
     "google-material",

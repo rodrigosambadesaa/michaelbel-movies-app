@@ -181,8 +181,12 @@ tasks.register("prepareReleaseNotes") {
     }
 }
 
-tasks.register("printVersionName") { doLast { println(android.defaultConfig.versionName) } }
-tasks.register("printVersionCode") { doLast { println(android.defaultConfig.versionCode.toString()) } }
+tasks.register("printVersions") {
+    doLast {
+        println("VERSION_NAME=${android.defaultConfig.versionName}")
+        println("VERSION_CODE=${android.defaultConfig.versionCode}")
+    }
+}
 
 afterEvaluate {
     tasks.findByName("assembleGmsDebug")?.finalizedBy("prepareReleaseNotes")

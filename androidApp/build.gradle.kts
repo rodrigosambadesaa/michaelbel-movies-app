@@ -48,6 +48,13 @@ android {
     }
 
     signingConfigs {
+        getByName("debug") {
+            keyAlias = "movies"
+            keyPassword = "password"
+            storeFile = rootProject.file("config/debug-key.jks")
+            storePassword = "password"
+        }
+
         val keystoreProperties = Properties()
         val keystorePropertiesFile = rootProject.file("config/keystore.properties")
         if (keystorePropertiesFile.exists()) {
@@ -81,6 +88,7 @@ android {
             isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
+            signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = MoviesBuildType.DEBUG.applicationIdSuffix
             isDefault = true
         }

@@ -134,56 +134,59 @@ jobs:
           echo "FOSS_RELEASE_APK_PATH=$(find androidApp/build/outputs/apk/foss/release -name '*.apk' -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -d' ' -f2)" >> $GITHUB_ENV
           echo "GMS_RELEASE_AAB_PATH=$(find androidApp/build/outputs/bundle/gmsRelease -name '*.aab' -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -d' ' -f2)" >> $GITHUB_ENV
 
-      - name: send android telegram message gms debug
+      - name: telegram notify gms debug
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.GMS_DEBUG_APK_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
-      - name: send android telegram message hms debug
+      - name: telegram notify hms debug
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.HMS_DEBUG_APK_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
-      - name: send android telegram message foss debug
+      - name: telegram notify foss debug
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.FOSS_DEBUG_APK_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
       - name: send android telegram message gms release
         if: false
@@ -192,70 +195,74 @@ jobs:
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.GMS_RELEASE_APK_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
-      - name: send android telegram message hms release
+      - name: telegram notify hms release
         if: false
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.HMS_RELEASE_APK_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
-      - name: send android telegram message foss release
+      - name: telegram notify foss release
         if: false
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.FOSS_RELEASE_APK_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
-      - name: send android telegram message gms release bundle
+      - name: telegram notify gms release bundle
         if: false
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
           MESSAGE: |
-            ✅ <b>${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})</b>
-            <b>Branch:</b> <code>${{ github.ref_name }}</code>
-            <b>Commit:</b> <code>${{ env.SHORT_SHA }}</code>
+            ✅ *${{ env.VERSION_NAME }} (${{ env.VERSION_CODE }})*
+            *Repo:* [${{ github.repository }}](${{ github.server_url }}/${{ github.repository }})
+            *Branch:* [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+            *Commit:* [${{ env.SHORT_SHA }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})
         run: |
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument" \
             -F chat_id="${CHAT_ID}" \
             -F document="@${{ env.GMS_RELEASE_AAB_PATH }}" \
             -F caption="${{ env.MESSAGE }}" \
             -F message_thread_id="${THREAD_ID}" \
-            -F parse_mode="HTML"
+            -F parse_mode="Markdown"
 
   build-desktop:
     if: false

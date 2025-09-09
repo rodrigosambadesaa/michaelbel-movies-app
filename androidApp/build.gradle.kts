@@ -51,12 +51,12 @@ android {
         getByName("debug") {
             keyAlias = "movies"
             keyPassword = "password"
-            storeFile = rootProject.file("config/debug-key.jks")
+            storeFile = rootProject.file(".github/debug-key.jks")
             storePassword = "password"
         }
 
         val keystoreProperties = Properties()
-        val keystorePropertiesFile = rootProject.file("config/keystore.properties")
+        val keystorePropertiesFile = rootProject.file(".github/keystore.properties")
         if (keystorePropertiesFile.exists()) {
             keystoreProperties.load(FileInputStream(keystorePropertiesFile))
         } else {
@@ -184,7 +184,7 @@ tasks.register("prepareReleaseNotes") {
     doLast {
         exec {
             workingDir(rootDir)
-            executable("./config/scripts/gitlog.sh")
+            executable("./.github/gitlog.sh")
         }
     }
 }

@@ -1,4 +1,4 @@
-[<img align="left" src="config/images/play_store_app_icon_512x512_rounded.png" width="150" height="150">]()
+[<img align="left" src=".github/pics/play_store_app_icon_512x512_rounded.png" width="150" height="150">]()
 <div align="right">
     <a href="https://github.com/michaelbel/movies/blob/develop/readme.md">en</a>
     <a href="https://github.com/michaelbel/movies/blob/develop/readme.ru.md"><b>ru</b></a>
@@ -38,45 +38,45 @@ Movies - простой способ найти популярные фильм�
 
 **Android**
 <div align="center">
-    <img src="config/images/android/android1.png" alt="Android Image 1" width="24%">
-    <img src="config/images/android/android2.png" alt="Android Image 2" width="24%">
-    <img src="config/images/android/android3.png" alt="Android Image 3" width="24%">
-    <img src="config/images/android/android4.png" alt="Android Image 4" width="24%">
-    <img src="config/images/android/android7.gif" alt="Android Image 7" width="24%">
-    <img src="config/images/android/android8.gif" alt="Android Image 8" width="24%">
-    <img src="config/images/android/android9.gif" alt="Android Image 9" width="24%">
-    <img src="config/images/android/android10.gif" alt="Android Image 10" width="24%">
-    <img src="config/images/android/android5.png" alt="Android Image 5" width="49%">
-    <img src="config/images/android/android6.png" alt="Android Image 6" width="49%">
+    <img src=".github/pics/android/android1.png" alt="Android Image 1" width="24%">
+    <img src=".github/pics/android/android2.png" alt="Android Image 2" width="24%">
+    <img src=".github/pics/android/android3.png" alt="Android Image 3" width="24%">
+    <img src=".github/pics/android/android4.png" alt="Android Image 4" width="24%">
+    <img src=".github/pics/android/android7.gif" alt="Android Image 7" width="24%">
+    <img src=".github/pics/android/android8.gif" alt="Android Image 8" width="24%">
+    <img src=".github/pics/android/android9.gif" alt="Android Image 9" width="24%">
+    <img src=".github/pics/android/android10.gif" alt="Android Image 10" width="24%">
+    <img src=".github/pics/android/android5.png" alt="Android Image 5" width="49%">
+    <img src=".github/pics/android/android6.png" alt="Android Image 6" width="49%">
 </div>
 <br/>
 
 **iOS**
 <div align="center">
-    <img src="config/images/ios/ios1.png" alt="iOS Image 1" width="24%">
-    <img src="config/images/ios/ios2.png" alt="iOS Image 2" width="24%">
-    <img src="config/images/ios/ios3.png" alt="iOS Image 3" width="24%">
-    <img src="config/images/ios/ios4.png" alt="iOS Image 4" width="24%">
-    <img src="config/images/ios/ios5.png" alt="iOS Image 5" width="49%">
-    <img src="config/images/ios/ios6.png" alt="iOS Image 6" width="49%">
+    <img src=".github/pics/ios/ios1.png" alt="iOS Image 1" width="24%">
+    <img src=".github/pics/ios/ios2.png" alt="iOS Image 2" width="24%">
+    <img src=".github/pics/ios/ios3.png" alt="iOS Image 3" width="24%">
+    <img src=".github/pics/ios/ios4.png" alt="iOS Image 4" width="24%">
+    <img src=".github/pics/ios/ios5.png" alt="iOS Image 5" width="49%">
+    <img src=".github/pics/ios/ios6.png" alt="iOS Image 6" width="49%">
 </div>
 <br/>
 
 **macOS**
 <div align="center">
-    <img src="config/images/macos/macos1.png" alt="macOS Image 1" width="49%">
-    <img src="config/images/macos/macos2.png" alt="macOS Image 2" width="49%">
-    <img src="config/images/macos/macos3.png" alt="macOS Image 3" width="49%">
-    <img src="config/images/macos/macos4.png" alt="macOS Image 4" width="49%">
+    <img src=".github/pics/macos/macos1.png" alt="macOS Image 1" width="49%">
+    <img src=".github/pics/macos/macos2.png" alt="macOS Image 2" width="49%">
+    <img src=".github/pics/macos/macos3.png" alt="macOS Image 3" width="49%">
+    <img src=".github/pics/macos/macos4.png" alt="macOS Image 4" width="49%">
 </div>
 <br/>
 
 **Windows**
 <div align="center">
-    <img src="config/images/windows/windows1.png" alt="Windows Image 1" width="49%">
-    <img src="config/images/windows/windows2.png" alt="Windows Image 2" width="49%">
-    <img src="config/images/windows/windows3.png" alt="Windows Image 3" width="49%">
-    <img src="config/images/windows/windows4.png" alt="Windows Image 4" width="49%">
+    <img src=".github/pics/windows/windows1.png" alt="Windows Image 1" width="49%">
+    <img src=".github/pics/windows/windows2.png" alt="Windows Image 2" width="49%">
+    <img src=".github/pics/windows/windows3.png" alt="Windows Image 3" width="49%">
+    <img src=".github/pics/windows/windows4.png" alt="Windows Image 4" width="49%">
 </div>
 
 
@@ -92,7 +92,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 Выбери конфигурацию запуска для соответствующего приложения в Android Studio и запусти его.
 <br/>
 <br/>
-<img src="config/images/run-configurations.png" width="30%">
+<img src=".github/pics/run-configurations.png" width="30%">
 
 - Клонируй репозиторий используя [последнюю версию](https://d.android.com/studio) Android Studio
 - Запусти приложение на устройстве или эмуляторе
@@ -125,12 +125,12 @@ TMDB_API_KEY=your_own_tmdb_api_key
 [![](https://img.shields.io/github/downloads/michaelbel/movies/total?logo=github&label=Downloads&labelColor=212133&color=34CC2C
 )](https://github.com/michaelbel/movies/releases)
 
-[<img src="config/images/badges/badge-googleplay.svg" alt="" height="80">](https://play.google.com/store/apps/details?id=org.michaelbel.moviemade)
-[<img src="config/images/badges/badge-appgallery.svg" alt="" height="80">](https://appgallery.cloud.huawei.com/ag/n/app/C109677247)
-[<img src="config/images/badges/badge-github.svg" alt="" height="80">](https://nightly.link/michaelbel/movies/workflows/ci/develop/artifact.zip)
-[<img src="config/images/badges/badge-obtainium.svg" alt="" height="80">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/michaelbel/movies)
-[<img src="config/images/badges/badge-openapk.svg" alt="" height="80">](https://www.openapk.net/movies/org.michaelbel.movies/)
-[<img src="config/images/badges/badge-android-freeware.svg" alt="" height="80">](https://www.androidfreeware.net/download-movies-apk.html)
+[<img src=".github/pics/badges/badge-googleplay.svg" alt="" height="80">](https://play.google.com/store/apps/details?id=org.michaelbel.moviemade)
+[<img src=".github/pics/badges/badge-appgallery.svg" alt="" height="80">](https://appgallery.cloud.huawei.com/ag/n/app/C109677247)
+[<img src=".github/pics/badges/badge-github.svg" alt="" height="80">](https://nightly.link/michaelbel/movies/workflows/ci/develop/artifact.zip)
+[<img src=".github/pics/badges/badge-obtainium.svg" alt="" height="80">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/michaelbel/movies)
+[<img src=".github/pics/badges/badge-openapk.svg" alt="" height="80">](https://www.openapk.net/movies/org.michaelbel.movies/)
+[<img src=".github/pics/badges/badge-android-freeware.svg" alt="" height="80">](https://www.androidfreeware.net/download-movies-apk.html)
 
 
 ## Технологии
@@ -316,7 +316,7 @@ graph TD;
 [![](https://img.shields.io/github/license/michaelbel/movies?style=for-the-badge&logo=github&labelColor=3F464F)](license.txt)
 
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">
-  <img alt="Apache License 2.0" src="config/images/apache.png" height="110"/>
+  <img alt="Apache License 2.0" src=".github/pics/apache.png" height="110"/>
 </a>
 
     Copyright 2017 Michael Bely

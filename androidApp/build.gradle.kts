@@ -180,27 +180,9 @@ if (hasHmsDebug || hasHmsRelease || hasHmsBenchmark) {
     //apply(plugin = libs.plugins.huawei.services.get().pluginId)
 }
 
-tasks.register("prepareReleaseNotes") {
-    doLast {
-        exec {
-            workingDir(rootDir)
-            executable("./.github/gitlog.sh")
-        }
-    }
-}
-
 tasks.register("printVersions") {
     doLast {
         println("VERSION_NAME=${android.defaultConfig.versionName}")
         println("VERSION_CODE=${android.defaultConfig.versionCode}")
     }
-}
-
-afterEvaluate {
-    tasks.findByName("assembleGmsDebug")?.finalizedBy("prepareReleaseNotes")
-    tasks.findByName("assembleGmsRelease")?.finalizedBy("prepareReleaseNotes")
-    tasks.findByName("assembleHmsDebug")?.finalizedBy("prepareReleaseNotes")
-    tasks.findByName("assembleHmsRelease")?.finalizedBy("prepareReleaseNotes")
-    tasks.findByName("assembleFossDebug")?.finalizedBy("prepareReleaseNotes")
-    tasks.findByName("assembleFossRelease")?.finalizedBy("prepareReleaseNotes")
 }

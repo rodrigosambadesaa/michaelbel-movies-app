@@ -1,5 +1,4 @@
 @file:Suppress("UnstableApiUsage")
-
 pluginManagement {
     repositories {
         google()
@@ -8,9 +7,7 @@ pluginManagement {
         maven(url = "https://developer.huawei.com/repo/")
     }
 }
-
 dependencyResolutionManagement {
-    /*repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)*/
     repositories {
         google {
             content {
@@ -23,9 +20,8 @@ dependencyResolutionManagement {
         maven(url = "https://developer.huawei.com/repo/")
     }
 }
-
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "movies"
-
 include(
     ":androidApp",
     ":desktopApp",
@@ -79,5 +75,3 @@ include(
     ":feature:feed-web",
     ":feature:feed-impl-web"
 )
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

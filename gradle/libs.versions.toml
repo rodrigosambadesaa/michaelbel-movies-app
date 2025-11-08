@@ -15,7 +15,7 @@ google-services-base = "18.9.0"
 google-material = "1.13.0"
 google-material-compose-theme-adapter = "1.2.1"
 google-firebase-analytics-ktx = "22.5.0"
-google-firebase-appdistribution = "5.1.1"
+google-firebase-appdistribution = "5.2.0"
 google-firebase-config-ktx = "22.1.2"
 google-firebase-crashlytics-plugin = "3.0.6"
 google-firebase-crashlytics-ktx = "19.4.4"
@@ -37,7 +37,7 @@ androidx-compose-material = "1.9.4"
 androidx-compose-material-icons = "1.7.8"
 androidx-compose-material3 = "1.4.0"
 androidx-core-ktx = "1.17.0"
-androidx-core-splashscreen = "1.0.1"
+androidx-core-splashscreen = "1.2.0"
 androidx-datastore = "1.1.7"
 androidx-glance = "1.1.1"
 androidx-palette-ktx = "1.0.0"
@@ -90,7 +90,7 @@ google-firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crash
 google-firebase-messaging-ktx = { module = "com.google.firebase:firebase-messaging-ktx", version.ref = "google-firebase-messaging-ktx" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
 androidx-appcompat-resources = { module = "androidx.appcompat:appcompat-resources", version.ref = "androidx-appcompat" }
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref  = "androidx-activity" }
 androidx-benchmark-junit = { module = "androidx.benchmark:benchmark-junit4", version.ref = "androidx-benchmark" }
 androidx-benchmark-macro-junit = { module = "androidx.benchmark:benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 androidx-biometric-ktx = { module = "androidx.biometric:biometric-ktx", version.ref = "androidx-biometric-ktx" }

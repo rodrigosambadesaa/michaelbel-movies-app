@@ -1,4 +1,7 @@
 import com.google.firebase.appdistribution.gradle.AppDistributionExtension
+import ktx.isGmsBuild
+import ktx.isGmsReleaseBuild
+import ktx.isHmsBuild
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
@@ -11,8 +14,16 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.palantir.git)
 }
+if (isGmsBuild) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+    apply(plugin = libs.plugins.google.firebase.crashlytics.get().pluginId)
+    apply(plugin = libs.plugins.google.firebase.appdistribution.get().pluginId)
+}
+if (isHmsBuild) {
+    apply(plugin = libs.plugins.huawei.services.get().pluginId)
+}
 
-private val gitCommitsCount: Int by lazy {
+private val gitCommitsCount by lazy {
     try {
         val isWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)
         val processBuilder = when {
@@ -25,9 +36,12 @@ private val gitCommitsCount: Int by lazy {
         1
     }
 }
-
 private val currentTime by lazy {
     System.currentTimeMillis()
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jdk.get().toInt())
 }
 
 android {
@@ -125,8 +139,6 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get().toInt())
         isCoreLibraryDesugaringEnabled = true
     }
 }
@@ -153,31 +165,13 @@ dependencies {
     debugImplementation(libs.bundles.leakcanary.android)
 }
 
-val hasGmsDebug = gradle.startParameter.taskNames.any { it.contains("GmsDebug", ignoreCase = true) }
-val hasGmsRelease = gradle.startParameter.taskNames.any { it.contains("GmsRelease", ignoreCase = true) }
-val hasGmsBenchmark = gradle.startParameter.taskNames.any { it.contains("GmsBenchmark", ignoreCase = true) }
-
-if (hasGmsDebug || hasGmsRelease || hasGmsBenchmark) {
-    apply(plugin = libs.plugins.google.services.get().pluginId)
-    apply(plugin = libs.plugins.google.firebase.crashlytics.get().pluginId)
-    apply(plugin = libs.plugins.google.firebase.appdistribution.get().pluginId)
-}
-
-if (hasGmsRelease) {
+if (isGmsReleaseBuild) {
     configure<AppDistributionExtension> {
         appId = "1:770317857182:android:876190afbc53df31"
         artifactType = "APK"
         testers = "michaelbel24865@gmail.com"
         groups = "qa"
     }
-}
-
-val hasHmsDebug = gradle.startParameter.taskNames.any { it.contains("HmsDebug", ignoreCase = true) }
-val hasHmsRelease = gradle.startParameter.taskNames.any { it.contains("HmsRelease", ignoreCase = true) }
-val hasHmsBenchmark = gradle.startParameter.taskNames.any { it.contains("HmsBenchmark", ignoreCase = true) }
-
-if (hasHmsDebug || hasHmsRelease || hasHmsBenchmark) {
-    //apply(plugin = libs.plugins.huawei.services.get().pluginId)
 }
 
 tasks.register("printVersions") {

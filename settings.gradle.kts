@@ -4,7 +4,18 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
-        maven(url = "https://developer.huawei.com/repo/")
+        maven("https://developer.huawei.com/repo/") {
+            content {
+                includeGroupByRegex("com\\.huawei(\\..+)?")
+            }
+        }
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "com.huawei.agconnect") {
+                useModule("com.huawei.agconnect:agcp:${requested.version}")
+            }
+        }
     }
 }
 dependencyResolutionManagement {

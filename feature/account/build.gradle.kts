@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
     alias(libs.plugins.android.library)
@@ -14,7 +15,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.accountImpl)
+            api(projects.core.ui)
+            api(projects.core.common)
+            api(projects.core.interactor)
         }
     }
 

@@ -15,7 +15,21 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.mainImpl)
+            api(projects.feature.account)
+            api(projects.feature.auth)
+            api(projects.feature.details)
+            api(projects.feature.feed)
+            api(projects.feature.gallery)
+            api(projects.feature.search)
+            api(projects.feature.settings)
+            api(projects.feature.debug)
+            implementation(libs.jetbrains.androidx.lifecycle.viewmodel.navigation3)
+        }
+        jvmMain.dependencies {
+            implementation(projects.core.platformServices.injectJvm)
+        }
+        iosMain.dependencies {
+            implementation(projects.core.platformServices.injectIos)
         }
     }
 
@@ -33,8 +47,30 @@ android {
         compileSdk = libs.versions.compile.sdk.get().toInt()
     }
 
+    productFlavors {
+        create("gms") {
+            dimension = "version"
+            isDefault = true
+        }
+        create("hms") {
+            dimension = "version"
+        }
+        create("foss") {
+            dimension = "version"
+        }
+    }
+
     buildFeatures {
         buildConfig = true
         compose = true
+    }
+
+    val gmsImplementation by configurations
+    val hmsImplementation by configurations
+    val fossImplementation by configurations
+    dependencies {
+        gmsImplementation(projects.core.platformServices.injectAndroid)
+        hmsImplementation(projects.core.platformServices.injectAndroid)
+        fossImplementation(projects.core.platformServices.injectAndroid)
     }
 }

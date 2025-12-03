@@ -1,11 +1,16 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package org.michaelbel.movies.ui.compose
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,7 +45,7 @@ fun AccountAvatar(
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(MoviesContentDescriptionCommon.AccountAvatarImage),
-            modifier = modifier.clip(CircleShape),
+            modifier = modifier.clip(MaterialShapes.Cookie9Sided.toShape()),
             contentScale = ContentScale.Crop
         )
     } else {
@@ -48,7 +53,7 @@ fun AccountAvatar(
             modifier = modifier.border(
                 width = 2.dp,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
-                shape = CircleShape
+                shape = MaterialShapes.Cookie9Sided.toShape()
             ),
             contentAlignment = Alignment.Center
         ) {
@@ -67,10 +72,14 @@ private fun AccountAvatarPreview(
     @PreviewParameter(AccountPreviewParameterProvider::class) account: AccountPojo
 ) {
     MoviesTheme {
-        AccountAvatar(
-            account = account,
-            fontSize = account.lettersTextFontSizeSmall,
-            modifier = Modifier.size(32.dp),
-        )
+        Box(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        ) {
+            AccountAvatar(
+                account = account,
+                fontSize = account.lettersTextFontSizeSmall,
+                modifier = Modifier.size(32.dp),
+            )
+        }
     }
 }

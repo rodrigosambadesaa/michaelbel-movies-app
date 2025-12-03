@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
     alias(libs.plugins.android.library)
@@ -14,7 +15,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.settingsImpl)
+            api(projects.core.ui)
+            api(projects.core.interactor)
+            api(projects.core.widget)
+            api(projects.core.platformServices.interactor)
+            implementation(projects.core.notifications)
         }
     }
 
@@ -25,6 +30,7 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.settings"
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
@@ -32,6 +38,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }

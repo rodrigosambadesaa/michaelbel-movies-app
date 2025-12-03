@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
     alias(libs.plugins.android.library)
@@ -14,7 +15,16 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.feedImpl)
+            api(projects.core.ui)
+            api(projects.core.interactor)
+            api(projects.core.platformServices.interactor)
+            implementation(projects.core.notifications)
+        }
+        androidMain.dependencies {
+            implementation(libs.bundles.paging.android)
+        }
+        jvmMain.dependencies {
+            implementation(libs.bundles.paging.desktop)
         }
     }
 
@@ -25,6 +35,7 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.feed"
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()

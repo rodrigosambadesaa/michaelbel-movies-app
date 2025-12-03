@@ -12,7 +12,7 @@ kotlin {
     sourceSets {
         jvmMain.dependencies {
             implementation(projects.core.platformServices.injectJvm)
-            implementation(projects.feature.mainImpl)
+            implementation(projects.feature.main)
         }
     }
 }

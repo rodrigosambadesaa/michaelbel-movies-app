@@ -27,7 +27,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.platformServices.injectIos)
-            implementation(projects.feature.mainImpl)
+            implementation(projects.feature.main)
         }
     }
 }

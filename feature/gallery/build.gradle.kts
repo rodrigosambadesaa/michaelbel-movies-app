@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
     alias(libs.plugins.android.library)
@@ -14,7 +15,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.galleryImpl)
+            api(projects.core.ui)
+            api(projects.core.work)
+            api(projects.core.interactor)
         }
     }
 
@@ -25,6 +28,7 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.gallery"
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()

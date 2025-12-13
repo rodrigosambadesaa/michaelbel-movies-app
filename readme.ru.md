@@ -156,7 +156,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] [Modularization](https://d.android.com/topic/modularization)
 - [x] [MVVM](https://d.android.com/topic/architecture)
 - [x] [KTS Gradle Files](https://d.android.com/studio/build/migrate-to-kts)
-- [x] [Kotlin Symbol Processing API](https://d.android.com/studio/build/migrate-to-ksp)
+- [x] [KSP](https://d.android.com/studio/build/migrate-to-ksp)
 - [x] [Gradle Version Catalog](https://d.android.com/build/migrate-to-catalogs)
 - [x] [Build Variants](https://d.android.com/build/build-variants)
 - [x] [Product Flavors](https://d.android.com/build/build-variants#product-flavors)
@@ -166,7 +166,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] CompileSDK 36
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
 - [x] Amoled Theme
-- [x] SwipeToDismiss
+- [x] [SwipeToDismiss](https://d.android.com/develop/ui/compose/touch-input/user-interactions/swipe-to-dismiss)
 - [x] [Material You Dynamic Colors](https://d.android.com/develop/ui/views/theming/dynamic-colors)
 - [x] [Themed App Icon](https://d.android.com/develop/ui/views/launch/icon_design_adaptive)
 - [x] [Palette Colors API](https://d.android.com/develop/ui/views/graphics/palette-colors)
@@ -181,7 +181,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] [WorkManager](https://d.android.com/topic/libraries/architecture/workmanager)
 - [x] [DataStore](https://d.android.com/datastore)
 - [x] [Startup](https://d.android.com/jetpack/androidx/releases/startup)
-- [x] [Navigation](https://d.android.com/guide/navigation)
+- [x] [Navigation3](https://d.android.com/guide/navigation/navigation-3)
 - [x] [Paging3](https://d.android.com/topic/libraries/architecture/paging/v3-overview)
 - [x] [Browser](https://d.android.com/jetpack/androidx/releases/browser)
 - [x] [OkHttp](https://github.com/square/okhttp)
@@ -213,7 +213,6 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] [Tile Quick Settings](https://d.android.com/develop/ui/views/quicksettings-tiles)
 - [x] [Grammatical Gender](https://d.android.com/about/versions/14/features/grammatical-inflection)
 - [x] [Biometric Authentication Dialog](https://d.android.com/training/sign-in/biometric-auth)
-- [x] [Type safety Navigation](https://d.android.com/guide/navigation/design/type-safety)
 - [x] [LeakCanary](https://github.com/square/leakcanary)
 - [x] [Koin](https://github.com/InsertKoinIO/koin)
 - [x] [Screenshot Detection](https://d.android.com/about/versions/14/features/screenshot-detection)

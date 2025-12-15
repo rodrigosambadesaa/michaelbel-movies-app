@@ -79,7 +79,6 @@ private fun SettingsVersionBoxPreview(
     MoviesTheme {
         SettingsVersionBox(
             aboutData = SettingsData.AboutData(
-                isFeatureEnabled = true,
                 versionName = "1.0.0",
                 versionCode = 1,
                 flavor = "GMS",

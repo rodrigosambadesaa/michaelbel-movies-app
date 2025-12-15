@@ -4,11 +4,9 @@ package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -42,6 +40,7 @@ import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.interactor.entity.AppLanguage
 import org.michaelbel.movies.settings.SettingsViewModel
+import org.michaelbel.movies.settings.event.SettingsEventManager
 import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.ktx.iconSnackbarTextRes
 import org.michaelbel.movies.settings.ktx.stringText
@@ -53,6 +52,7 @@ import org.michaelbel.movies.settings.ui.common.SettingSwitchItem
 import org.michaelbel.movies.settings.ui.common.SettingsDialog
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.SettingsGenderText
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isDebug
@@ -105,50 +105,7 @@ fun SettingsScreen(
         state = state,
         dispatch = viewModel::dispatch,
         settingsData = SettingsData(
-            onBackClick = { viewModel.dispatch(SettingsIntent.BackClick) },
-            languageData = SettingsData.ListData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isLanguageFeatureEnabled,
-                current = AppLanguage.transform(stringResource(MoviesStrings.language_code)),
-                onSelect = { viewModel.dispatch(SettingsIntent.SelectLanguage(it)) }
-            ),
-            themeData = SettingsData.ListData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isThemeFeatureEnabled,
-                current = state.themeData.appTheme,
-                onSelect = { viewModel.dispatch(SettingsIntent.SelectTheme(it)) }
-            ),
-            feedViewData = SettingsData.ListData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isFeedViewFeatureEnabled,
-                current = state.feedView,
-                onSelect = { viewModel.dispatch(SettingsIntent.SelectFeedView(it)) }
-            ),
-            movieListData = SettingsData.ListData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isMovieListFeatureEnabled,
-                current = state.movieList,
-                onSelect = { viewModel.dispatch(SettingsIntent.SelectMovieList(it)) }
-            ),
-            genderData = SettingsData.ListData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isGenderFeatureEnabled,
-                current = viewModel.settingsUiInteractor.grammaticalGender,
-                onSelect = { gender -> viewModel.settingsUiInteractor.setGrammaticalGender(GrammaticalGender.value(gender)) }
-            ),
-            dynamicColorsData = SettingsData.ChangedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isDynamicColorsFeatureEnabled,
-                isEnabled = state.themeData.dynamicColors,
-                onChange = { viewModel.dispatch(SettingsIntent.SetDynamicColors(it)) }
-            ),
-            paletteColorsData = SettingsData.PaletteColorsData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isPaletteColorsFeatureEnabled,
-                isDynamicColorsEnabled = state.themeData.dynamicColors,
-                paletteKey = state.themeData.paletteKey,
-                seedColor = state.themeData.seedColor,
-                onChange = { localDynamicColors, localPaletteKey, localSeedColor ->
-                    viewModel.dispatch(SettingsIntent.SetDynamicColors(localDynamicColors))
-                    viewModel.dispatch(SettingsIntent.SetPaletteKey(localPaletteKey))
-                    viewModel.dispatch(SettingsIntent.SetSeedColor(localSeedColor))
-                }
-            ),
             notificationsData = SettingsData.NotificationsData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isNotificationsFeatureEnabled,
                 isEnabled = areNotificationsEnabled,
                 onClick = viewModel.settingsUiInteractor.rememberPostNotificationsPermissionHandler(
                     areNotificationsEnabled = areNotificationsEnabled,
@@ -156,21 +113,10 @@ fun SettingsScreen(
                     onPermissionDenied = onShowPermissionSnackbar
                 )
             ),
-            biometricData = SettingsData.ChangedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isBiometricFeatureEnabled && state.isBiometricFeatureEnabled,
-                isEnabled = state.isBiometricEnabled,
-                onChange = { viewModel.dispatch(SettingsIntent.SetBiometricEnabled(it)) }
-            ),
-            widgetData = SettingsData.RequestedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isWidgetFeatureEnabled,
-                onRequest = rememberAndPinAppWidgetProvider()
-            ),
             tileData = SettingsData.RequestedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isTileFeatureEnabled,
                 onRequest = requestTileService(onShowSnackbar)
             ),
             appIconData = SettingsData.ListData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isAppIconFeatureEnabled,
                 current = viewModel.settingsUiInteractor.enabledIcon,
                 onSelect = { icon ->
                     val message = when (icon) {
@@ -183,39 +129,22 @@ fun SettingsScreen(
                     viewModel.settingsUiInteractor.setIcon(icon)
                 }
             ),
-            screenshotData = SettingsData.ChangedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isScreenshotFeatureEnabled,
-                isEnabled = state.isScreenshotBlockEnabled,
-                onChange = { viewModel.dispatch(SettingsIntent.SetScreenshotBlockEnabled(it)) }
-            ),
             githubData = SettingsData.RequestedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isGithubFeatureEnabled,
                 onRequest = navigateToUrl
-            ),
-            reviewAppData = SettingsData.RequestedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled,
-                onRequest = { viewModel.dispatch(SettingsIntent.ReviewClick) }
-            ),
-            updateAppData = SettingsData.RequestedData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable,
-                onRequest = { viewModel.dispatch(SettingsIntent.UpdateClick) }
-            ),
-            aboutData = SettingsData.AboutData(
-                isFeatureEnabled = viewModel.settingsUiInteractor.isAboutFeatureEnabled,
-                versionName = viewModel.aboutInteractor.versionName,
-                versionCode = viewModel.aboutInteractor.versionCode,
-                flavor = state.appVersionData.flavor,
-                isDebug = isDebug
             )
         ),
-        windowInsets = viewModel.settingsUiInteractor.settingsWindowInsets,
         snackbarHostState = snackbarHostState,
-        isNavigationIconVisible = viewModel.settingsUiInteractor.isNavigationIconVisible,
-        bottomBarModifier = viewModel.settingsUiInteractor.bottomBarModifier
+        isNavigationIconVisible = viewModel.settingsUiInteractor.isNavigationIconVisible
     )
 
     OnResume {
         areNotificationsEnabled = state.areNotificationsEnabled
+    }
+
+    ObserveAsEvents(SettingsEventManager.eventFlow) { event ->
+        when (event) {
+            is SettingsEventManager.PinWidget -> {}
+        }
     }
 }
 
@@ -224,10 +153,8 @@ private fun SettingsScreenContent(
     state: SettingsModel,
     dispatch: (SettingsIntent) -> Unit,
     settingsData: SettingsData,
-    windowInsets: WindowInsets,
     snackbarHostState: SnackbarHostState,
-    isNavigationIconVisible: Boolean,
-    bottomBarModifier: Modifier
+    isNavigationIconVisible: Boolean
 ) {
     val scope = rememberCoroutineScope()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -247,19 +174,9 @@ private fun SettingsScreenContent(
             SettingsToolbar(
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 isNavigationIconVisible = isNavigationIconVisible,
-                onNavigationIconClick = settingsData.onBackClick,
+                onNavigationIconClick = { dispatch(SettingsIntent.BackClick) },
                 onClick = onScrollToTop
             )
-        },
-        bottomBar = {
-            if (settingsData.aboutData.isFeatureEnabled) {
-                SettingsVersionBox(
-                    aboutData = settingsData.aboutData,
-                    modifier = Modifier
-                        .then(bottomBarModifier)
-                        .windowInsetsPadding(windowInsets)
-                )
-            }
         },
         snackbarHost = {
             SnackbarHost(
@@ -269,13 +186,11 @@ private fun SettingsScreenContent(
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .navigationBarsPadding()
-                .windowInsetsPadding(windowInsets),
+            modifier = Modifier.fillMaxSize(),
             state = lazyListState,
             contentPadding = innerPadding
         ) {
-            if (settingsData.languageData.isFeatureEnabled) {
+            if (state.isLanguageFeatureEnabled) {
                 item {
                     var languageDialog by remember { mutableStateOf(false) }
 
@@ -284,15 +199,15 @@ private fun SettingsScreenContent(
                             icon = MoviesIcons.Language,
                             title = stringResource(MoviesStrings.settings_language),
                             items = AppLanguage.VALUES,
-                            currentItem = settingsData.languageData.current,
-                            onItemSelect = settingsData.languageData.onSelect,
+                            currentItem = AppLanguage.transform(stringResource(MoviesStrings.language_code)),
+                            onItemSelect = { dispatch(SettingsIntent.SelectLanguage(it)) },
                             onDismissRequest = { languageDialog = false }
                         )
                     }
 
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_language),
-                        description = settingsData.languageData.current.stringText,
+                        description = AppLanguage.transform(stringResource(MoviesStrings.language_code)).stringText,
                         icon = MoviesIcons.Language,
                         onClick = { languageDialog = true }
                     )
@@ -305,7 +220,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.themeData.isFeatureEnabled) {
+            if (state.isThemeFeatureEnabled) {
                 item {
                     var themeDialog by remember { mutableStateOf(false) }
 
@@ -314,15 +229,15 @@ private fun SettingsScreenContent(
                             icon = MoviesIcons.ThemeLightDark,
                             title = stringResource(MoviesStrings.settings_theme),
                             items = AppTheme.VALUES,
-                            currentItem = settingsData.themeData.current,
-                            onItemSelect = settingsData.themeData.onSelect,
+                            currentItem = state.themeData.appTheme,
+                            onItemSelect = { dispatch(SettingsIntent.SelectTheme(it)) },
                             onDismissRequest = { themeDialog = false }
                         )
                     }
 
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_theme),
-                        description = settingsData.themeData.current.stringText,
+                        description = state.themeData.appTheme.stringText,
                         icon = MoviesIcons.ThemeLightDark,
                         onClick = { themeDialog = true }
                     )
@@ -335,7 +250,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.feedViewData.isFeatureEnabled) {
+            if (state.isFeedViewFeatureEnabled) {
                 item {
                     var appearanceDialog by remember { mutableStateOf(false) }
 
@@ -344,15 +259,15 @@ private fun SettingsScreenContent(
                             icon = MoviesIcons.GridView,
                             title = stringResource(MoviesStrings.settings_appearance),
                             items = FeedView.VALUES,
-                            currentItem = settingsData.feedViewData.current,
-                            onItemSelect = settingsData.feedViewData.onSelect,
+                            currentItem = state.feedView,
+                            onItemSelect = { dispatch(SettingsIntent.SelectFeedView(it)) },
                             onDismissRequest = { appearanceDialog = false }
                         )
                     }
 
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_appearance),
-                        description = settingsData.feedViewData.current.stringText,
+                        description = state.feedView.stringText,
                         icon = MoviesIcons.GridView,
                         onClick = { appearanceDialog = true }
                     )
@@ -365,7 +280,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.movieListData.isFeatureEnabled) {
+            if (state.isMovieListFeatureEnabled) {
                 item {
                     var movieListDialog by remember { mutableStateOf(false) }
 
@@ -374,15 +289,15 @@ private fun SettingsScreenContent(
                             icon = MoviesIcons.LocalMovies,
                             title = stringResource(MoviesStrings.settings_movie_list),
                             items = MovieList.VALUES,
-                            currentItem = settingsData.movieListData.current,
-                            onItemSelect = settingsData.movieListData.onSelect,
+                            currentItem = state.movieList,
+                            onItemSelect = { dispatch(SettingsIntent.SelectMovieList(it)) },
                             onDismissRequest = { movieListDialog = false }
                         )
                     }
 
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_movie_list),
-                        description = settingsData.movieListData.current.stringText,
+                        description = state.movieList.stringText,
                         icon = MoviesIcons.LocalMovies,
                         onClick = { movieListDialog = true }
                     )
@@ -395,7 +310,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.genderData.isFeatureEnabled) {
+            if (state.isGenderFeatureEnabled) {
                 item {
                     var genderDialog by remember { mutableStateOf(false) }
                     if (genderDialog) {
@@ -403,15 +318,15 @@ private fun SettingsScreenContent(
                             icon = MoviesIcons.Cat,
                             title = stringResource(MoviesStrings.settings_gender),
                             items = GrammaticalGender.VALUES,
-                            currentItem = settingsData.genderData.current,
-                            onItemSelect = settingsData.genderData.onSelect,
+                            currentItem = state.grammaticalGender,
+                            onItemSelect = { dispatch(SettingsIntent.SetGrammaticalGender(GrammaticalGender.value(it))) },
                             onDismissRequest = { genderDialog = false }
                         )
                     }
 
                     SettingItem(
                         title = SettingsGenderText,
-                        description = settingsData.genderData.current.stringText,
+                        description = state.grammaticalGender.stringText,
                         icon = MoviesIcons.Cat,
                         onClick = { genderDialog = true }
                     )
@@ -424,14 +339,14 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.dynamicColorsData.isFeatureEnabled) {
+            if (state.isDynamicColorsFeatureEnabled) {
                 item {
                     SettingSwitchItem(
                         title = stringResource(MoviesStrings.settings_dynamic_colors),
                         description = stringResource(MoviesStrings.settings_dynamic_colors_description),
                         icon = MoviesIcons.Palette,
-                        checked = settingsData.dynamicColorsData.isEnabled,
-                        onClick = { settingsData.dynamicColorsData.onChange(!settingsData.dynamicColorsData.isEnabled) }
+                        checked = state.themeData.dynamicColors,
+                        onClick = { dispatch(SettingsIntent.SetDynamicColors(!state.themeData.dynamicColors)) }
                     )
                 }
                 item {
@@ -442,7 +357,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.paletteColorsData.isFeatureEnabled) {
+            if (state.isPaletteColorsFeatureEnabled) {
                 item {
                     Text(
                         text = stringResource(MoviesStrings.settings_palette_colors),
@@ -452,10 +367,14 @@ private fun SettingsScreenContent(
                 }
                 item {
                     SettingsPaletteColorsBox(
-                        isDynamicColorsEnabled = settingsData.paletteColorsData.isDynamicColorsEnabled,
-                        paletteKey = settingsData.paletteColorsData.paletteKey,
-                        seedColor = settingsData.paletteColorsData.seedColor,
-                        onChange = settingsData.paletteColorsData.onChange
+                        isDynamicColorsEnabled = state.themeData.dynamicColors,
+                        paletteKey = state.themeData.paletteKey,
+                        seedColor = state.themeData.seedColor,
+                        onChange = { localDynamicColors, localPaletteKey, localSeedColor ->
+                            dispatch(SettingsIntent.SetDynamicColors(localDynamicColors))
+                            dispatch(SettingsIntent.SetPaletteKey(localPaletteKey))
+                            dispatch(SettingsIntent.SetSeedColor(localSeedColor))
+                        }
                     )
                 }
                 item {
@@ -466,7 +385,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.appIconData.isFeatureEnabled) {
+            if (state.isAppIconFeatureEnabled) {
                 item {
                     Text(
                         text = stringResource(MoviesStrings.settings_app_launcher_icon),
@@ -512,7 +431,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.notificationsData.isFeatureEnabled) {
+            if (state.isNotificationsFeatureEnabled) {
                 item {
                     SettingSwitchItem(
                         title = stringResource(MoviesStrings.settings_post_notifications),
@@ -530,13 +449,13 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.widgetData.isFeatureEnabled) {
+            if (state.isWidgetFeatureEnabled) {
                 item {
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_app_widget),
                         description = stringResource(MoviesStrings.settings_app_widget_description, stringResource(MoviesStrings.appwidget_description)),
                         icon = MoviesIcons.Widgets,
-                        onClick = settingsData.widgetData.onRequest
+                        onClick = rememberAndPinAppWidgetProvider()
                     )
                 }
                 item {
@@ -547,7 +466,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.tileData.isFeatureEnabled) {
+            if (state.isTileFeatureEnabled) {
                 item {
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_tile),
@@ -564,14 +483,14 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.biometricData.isFeatureEnabled) {
+            if (state.isBiometricFeatureEnabled && state.isBiometricAvailable) {
                 item {
                     SettingSwitchItem(
                         title = stringResource(MoviesStrings.settings_lock_app),
-                        description = stringResource(if (settingsData.biometricData.isEnabled) MoviesStrings.settings_biometric_added else MoviesStrings.settings_biometric_not_added),
+                        description = stringResource(if (state.isBiometricEnabled) MoviesStrings.settings_biometric_added else MoviesStrings.settings_biometric_not_added),
                         icon = MoviesIcons.Fingerprint,
-                        checked = settingsData.biometricData.isEnabled,
-                        onClick = { settingsData.biometricData.onChange(!settingsData.biometricData.isEnabled) }
+                        checked = state.isBiometricEnabled,
+                        onClick = { dispatch(SettingsIntent.SetBiometricEnabled(!state.isBiometricEnabled)) }
                     )
                 }
                 item {
@@ -582,14 +501,14 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.screenshotData.isFeatureEnabled) {
+            if (state.isScreenshotFeatureEnabled) {
                 item {
                     SettingSwitchItem(
                         title = stringResource(MoviesStrings.settings_screenshots),
                         description = stringResource(MoviesStrings.settings_screenshots_description),
                         icon = MoviesIcons.Screenshot,
-                        checked = settingsData.screenshotData.isEnabled,
-                        onClick = { settingsData.screenshotData.onChange(!settingsData.screenshotData.isEnabled) }
+                        checked = state.isScreenshotBlockEnabled,
+                        onClick = { dispatch(SettingsIntent.SetScreenshotBlockEnabled(!state.isScreenshotBlockEnabled)) }
                     )
                 }
                 item {
@@ -600,7 +519,7 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.githubData.isFeatureEnabled) {
+            if (state.isGithubFeatureEnabled) {
                 item {
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_github),
@@ -609,7 +528,7 @@ private fun SettingsScreenContent(
                         onClick = settingsData.githubData.onRequest
                     )
                 }
-                if (settingsData.reviewAppData.isFeatureEnabled || settingsData.updateAppData.isFeatureEnabled) {
+                if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
                     item {
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
@@ -619,13 +538,13 @@ private fun SettingsScreenContent(
                     }
                 }
             }
-            if (settingsData.reviewAppData.isFeatureEnabled) {
+            if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled) {
                 item {
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_review),
                         description = stringResource(MoviesStrings.settings_review_description),
                         icon = MoviesIcons.GooglePlay,
-                        onClick = settingsData.reviewAppData.onRequest
+                        onClick = { dispatch(SettingsIntent.ReviewClick) }
                     )
                 }
                 item {
@@ -636,13 +555,32 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (settingsData.updateAppData.isFeatureEnabled) {
+            if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
                 item {
                     SettingItem(
                         title = stringResource(MoviesStrings.settings_update),
                         description = stringResource(MoviesStrings.settings_update_description),
                         icon = MoviesIcons.SystemUpdate,
-                        onClick = settingsData.updateAppData.onRequest
+                        onClick = { dispatch(SettingsIntent.UpdateClick) }
+                    )
+                }
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        thickness = .1.dp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
+            if (state.isAboutFeatureEnabled) {
+                item {
+                    SettingsVersionBox(
+                        aboutData = SettingsData.AboutData(
+                            versionName = state.versionName,
+                            versionCode = state.versionCode,
+                            flavor = state.appVersionData.flavor,
+                            isDebug = isDebug
+                        )
                     )
                 }
             }

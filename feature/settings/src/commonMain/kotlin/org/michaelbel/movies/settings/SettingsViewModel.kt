@@ -19,8 +19,8 @@ import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class SettingsViewModel(
-    val aboutInteractor: AboutInteractor,
     val settingsUiInteractor: SettingsUiInteractor,
+    private val aboutInteractor: AboutInteractor,
     private val biometricController: BiometricInteractor,
     private val notifyManager: NotifyManager,
     private val interactor: Interactor,
@@ -37,6 +37,9 @@ class SettingsViewModel(
         dispatch(SettingsIntent.CollectBiometricFeatureEnabled)
         dispatch(SettingsIntent.CollectBiometricEnabled)
         dispatch(SettingsIntent.CollectScreenshotBlockEnabled)
+        dispatch(SettingsIntent.CollectGender)
+        dispatch(SettingsIntent.CollectAbout)
+        dispatch(SettingsIntent.CollectFeaturesEnabled)
         dispatch(SettingsIntent.FetchUpdateAvailable)
     }
 
@@ -71,8 +74,8 @@ class SettingsViewModel(
             }
             is SettingsIntent.CollectBiometricFeatureEnabled -> {
                 launch {
-                    biometricController.isBiometricAvailable.collectLatest { isBiometricFeatureEnabled ->
-                        reduce { it.copy(isBiometricFeatureEnabled = isBiometricFeatureEnabled) }
+                    biometricController.isBiometricAvailable.collectLatest { isBiometricAvailable ->
+                        reduce { it.copy(isBiometricAvailable = isBiometricAvailable) }
                     }
                 }
             }
@@ -88,6 +91,40 @@ class SettingsViewModel(
                     interactor.isScreenshotBlockEnabled.collectLatest { isScreenshotBlockEnabled ->
                         reduce { it.copy(isScreenshotBlockEnabled = isScreenshotBlockEnabled) }
                     }
+                }
+            }
+            is SettingsIntent.CollectGender -> reduce { it.copy(grammaticalGender = settingsUiInteractor.grammaticalGender) }
+            is SettingsIntent.CollectAbout -> {
+                launch {
+                    reduce {
+                        it.copy(
+                            versionName = aboutInteractor.versionName,
+                            versionCode = aboutInteractor.versionCode
+                        )
+                    }
+                }
+            }
+            is SettingsIntent.CollectFeaturesEnabled -> {
+                reduce {
+                    it.copy(
+                        isLanguageFeatureEnabled = settingsUiInteractor.isLanguageFeatureEnabled,
+                        isThemeFeatureEnabled = settingsUiInteractor.isThemeFeatureEnabled,
+                        isFeedViewFeatureEnabled = settingsUiInteractor.isFeedViewFeatureEnabled,
+                        isMovieListFeatureEnabled = settingsUiInteractor.isMovieListFeatureEnabled,
+                        isGenderFeatureEnabled = settingsUiInteractor.isGenderFeatureEnabled,
+                        isDynamicColorsFeatureEnabled = settingsUiInteractor.isDynamicColorsFeatureEnabled,
+                        isPaletteColorsFeatureEnabled = settingsUiInteractor.isPaletteColorsFeatureEnabled,
+                        isNotificationsFeatureEnabled = settingsUiInteractor.isNotificationsFeatureEnabled,
+                        isBiometricFeatureEnabled = settingsUiInteractor.isBiometricFeatureEnabled,
+                        isWidgetFeatureEnabled = settingsUiInteractor.isWidgetFeatureEnabled,
+                        isTileFeatureEnabled = settingsUiInteractor.isTileFeatureEnabled,
+                        isAppIconFeatureEnabled = settingsUiInteractor.isAppIconFeatureEnabled,
+                        isScreenshotFeatureEnabled = settingsUiInteractor.isScreenshotFeatureEnabled,
+                        isGithubFeatureEnabled = settingsUiInteractor.isGithubFeatureEnabled,
+                        isReviewAppFeatureEnabled = settingsUiInteractor.isReviewAppFeatureEnabled,
+                        isUpdateAppFeatureEnabled = settingsUiInteractor.isUpdateAppFeatureEnabled,
+                        isAboutFeatureEnabled = settingsUiInteractor.isAboutFeatureEnabled,
+                    )
                 }
             }
             is SettingsIntent.FetchUpdateAvailable -> {
@@ -111,6 +148,7 @@ class SettingsViewModel(
             is SettingsIntent.SetBiometricEnabled -> launch { interactor.setBiometricEnabled(intent.enabled) }
             is SettingsIntent.SetScreenshotBlockEnabled -> launch { interactor.setScreenshotBlockEnabled(intent.enabled) }
             is SettingsIntent.SetUpdateAvailable -> { reduce { it.copy(isUpdateAvailable = intent.state) } }
+            is SettingsIntent.SetGrammaticalGender -> settingsUiInteractor.setGrammaticalGender(intent.value)
         }
     }
 }

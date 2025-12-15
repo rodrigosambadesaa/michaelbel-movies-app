@@ -15,6 +15,9 @@ sealed interface SettingsIntent: Intent {
     data object CollectBiometricFeatureEnabled: SettingsIntent
     data object CollectBiometricEnabled: SettingsIntent
     data object CollectScreenshotBlockEnabled: SettingsIntent
+    data object CollectGender: SettingsIntent
+    data object CollectAbout: SettingsIntent
+    data object CollectFeaturesEnabled: SettingsIntent
     data object FetchUpdateAvailable: SettingsIntent
     data object BackClick: SettingsIntent
     data object ReviewClick: SettingsIntent
@@ -29,4 +32,5 @@ sealed interface SettingsIntent: Intent {
     data class SetBiometricEnabled(val enabled: Boolean): SettingsIntent
     data class SetScreenshotBlockEnabled(val enabled: Boolean): SettingsIntent
     data class SetUpdateAvailable(val state: Boolean): SettingsIntent
+    data class SetGrammaticalGender(val value: Int): SettingsIntent
 }

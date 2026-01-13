@@ -3,6 +3,9 @@
 package org.michaelbel.movies.feed.ui
 
 import android.os.Build
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +28,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.launch
@@ -144,6 +149,7 @@ private fun FeedScreenContent(
         },
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
+        val layoutDirection = LocalLayoutDirection.current
         when {
             pagingItems.isLoading -> {
                 PageLoading(
@@ -180,7 +186,12 @@ private fun FeedScreenContent(
                     lazyStaggeredGridState = lazyStaggeredGridState,
                     pagingItems = pagingItems,
                     onMovieClick = { pagingKey, movieId -> dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId)) },
-                    contentPadding = innerPadding,
+                    contentPadding = PaddingValues(
+                        start = innerPadding.calculateStartPadding(layoutDirection),
+                        top = innerPadding.calculateTopPadding(),
+                        end = innerPadding.calculateEndPadding(layoutDirection),
+                        bottom = innerPadding.calculateBottomPadding() + 80.dp
+                    ),
                     modifier = Modifier.windowInsetsPadding(displayCutoutWindowInsets)
                 )
             }

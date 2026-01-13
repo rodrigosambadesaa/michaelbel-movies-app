@@ -7,6 +7,7 @@ import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.mvi.model.Model
 import org.michaelbel.movies.common.version.AppVersionData
+import org.michaelbel.movies.ui.appicon.IconAlias
 
 data class SettingsModel(
     val isLanguageFeatureEnabled: Boolean = false,
@@ -39,5 +40,6 @@ data class SettingsModel(
     val isUpdateAvailable: Boolean = false,
     val versionName: String = "",
     val versionCode: Long = 0L,
-    val grammaticalGender: SealedString = GrammaticalGender.NotSpecified()
+    val grammaticalGender: SealedString = GrammaticalGender.NotSpecified(),
+    val enabledIcon: IconAlias = IconAlias.Red
 ): Model

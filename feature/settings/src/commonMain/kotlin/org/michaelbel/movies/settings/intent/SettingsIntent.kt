@@ -5,6 +5,7 @@ import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.mvi.Intent
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.interactor.entity.AppLanguage
+import org.michaelbel.movies.ui.appicon.IconAlias
 
 sealed interface SettingsIntent: Intent {
     data object CollectThemeData: SettingsIntent
@@ -18,7 +19,11 @@ sealed interface SettingsIntent: Intent {
     data object CollectGender: SettingsIntent
     data object CollectAbout: SettingsIntent
     data object CollectFeaturesEnabled: SettingsIntent
+    data object CollectAppIcon: SettingsIntent
     data object FetchUpdateAvailable: SettingsIntent
+    data object RequestPostNotificationsPermission: SettingsIntent
+    data object RequestTileService: SettingsIntent
+    data object RequestGithub: SettingsIntent
     data object BackClick: SettingsIntent
     data object ReviewClick: SettingsIntent
     data object UpdateClick: SettingsIntent
@@ -33,4 +38,5 @@ sealed interface SettingsIntent: Intent {
     data class SetScreenshotBlockEnabled(val enabled: Boolean): SettingsIntent
     data class SetUpdateAvailable(val state: Boolean): SettingsIntent
     data class SetGrammaticalGender(val value: Int): SettingsIntent
+    data class SetAppIcon(val icon: IconAlias): SettingsIntent
 }

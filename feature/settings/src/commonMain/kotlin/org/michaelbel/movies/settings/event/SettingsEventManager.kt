@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 object SettingsEventManager {
 
     data object PinWidget
+    data object RequestPostNotificationsPermission
+    data object RequestTileService
+    data object RequestGithub
 
     private val _eventChannel = Channel<Any>()
     val eventFlow: Flow<Any> = _eventChannel.receiveAsFlow()

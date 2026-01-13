@@ -14,6 +14,7 @@ import org.michaelbel.movies.platform.Flavor
 import org.michaelbel.movies.platform.app.AppService
 import org.michaelbel.movies.platform.update.UpdateListener
 import org.michaelbel.movies.platform.update.UpdateService
+import org.michaelbel.movies.settings.event.SettingsEventManager
 import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.ui.navigation.MainNavigator
@@ -40,6 +41,7 @@ class SettingsViewModel(
         dispatch(SettingsIntent.CollectGender)
         dispatch(SettingsIntent.CollectAbout)
         dispatch(SettingsIntent.CollectFeaturesEnabled)
+        dispatch(SettingsIntent.CollectAppIcon)
         dispatch(SettingsIntent.FetchUpdateAvailable)
     }
 
@@ -127,6 +129,9 @@ class SettingsViewModel(
                     )
                 }
             }
+            is SettingsIntent.CollectAppIcon -> {
+                reduce { it.copy(enabledIcon = settingsUiInteractor.enabledIcon) }
+            }
             is SettingsIntent.FetchUpdateAvailable -> {
                 reduce { it.copy(isUpdateAvailable = true) }
                 updateService.setUpdateAvailableListener(object: UpdateListener {
@@ -134,6 +139,15 @@ class SettingsViewModel(
                         reduce { it.copy(isUpdateAvailable = result) }
                     }
                 })
+            }
+            is SettingsIntent.RequestPostNotificationsPermission -> {
+                launch { SettingsEventManager.push(SettingsEventManager.RequestPostNotificationsPermission) }
+            }
+            is SettingsIntent.RequestTileService -> {
+                launch { SettingsEventManager.push(SettingsEventManager.RequestTileService) }
+            }
+            is SettingsIntent.RequestGithub -> {
+                launch { SettingsEventManager.push(SettingsEventManager.RequestGithub) }
             }
             is SettingsIntent.BackClick -> launch { MainNavigator.back() }
             is SettingsIntent.ReviewClick -> launch { MainNavigator.requestReview() }
@@ -149,6 +163,10 @@ class SettingsViewModel(
             is SettingsIntent.SetScreenshotBlockEnabled -> launch { interactor.setScreenshotBlockEnabled(intent.enabled) }
             is SettingsIntent.SetUpdateAvailable -> { reduce { it.copy(isUpdateAvailable = intent.state) } }
             is SettingsIntent.SetGrammaticalGender -> settingsUiInteractor.setGrammaticalGender(intent.value)
+            is SettingsIntent.SetAppIcon -> {
+                settingsUiInteractor.setIcon(intent.icon)
+                reduce { it.copy(enabledIcon = intent.icon) }
+            }
         }
     }
 }

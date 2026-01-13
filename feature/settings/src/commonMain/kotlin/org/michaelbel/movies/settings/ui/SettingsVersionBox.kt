@@ -17,7 +17,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.michaelbel.movies.common.version.AppVersionData
-import org.michaelbel.movies.settings.model.SettingsData
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.VersionPreviewParameterProvider
@@ -26,7 +25,10 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
 internal fun SettingsVersionBox(
-    aboutData: SettingsData.AboutData,
+    versionName: String,
+    versionCode: Long,
+    flavor: String,
+    isDebug: Boolean,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -44,24 +46,24 @@ internal fun SettingsVersionBox(
         )
 
         Text(
-            text = stringResource(MoviesStrings.settings_app_version_name, aboutData.versionName),
+            text = stringResource(MoviesStrings.settings_app_version_name, versionName),
             modifier = Modifier.padding(start = 4.dp),
             style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
         )
 
         Text(
-            text = stringResource(MoviesStrings.settings_app_version_code, aboutData.versionCode),
+            text = stringResource(MoviesStrings.settings_app_version_code, versionCode),
             modifier = Modifier.padding(start = 2.dp),
             style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
         )
 
         Text(
-            text = aboutData.flavor,
+            text = flavor,
             modifier = Modifier.padding(start = 2.dp),
             style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
         )
 
-        if (aboutData.isDebug) {
+        if (isDebug) {
             Text(
                 text = stringResource(MoviesStrings.settings_app_debug),
                 modifier = Modifier.padding(start = 2.dp),
@@ -78,12 +80,10 @@ private fun SettingsVersionBoxPreview(
 ) {
     MoviesTheme {
         SettingsVersionBox(
-            aboutData = SettingsData.AboutData(
-                versionName = "1.0.0",
-                versionCode = 1,
-                flavor = "GMS",
-                isDebug = true,
-            ),
+            versionName = "1.0.0",
+            versionCode = 1,
+            flavor = "GMS",
+            isDebug = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()

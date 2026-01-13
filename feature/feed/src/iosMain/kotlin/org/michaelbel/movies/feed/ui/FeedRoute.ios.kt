@@ -3,6 +3,7 @@
 package org.michaelbel.movies.feed.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -13,6 +14,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.feed.FeedViewModel
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.ktx.titleText
@@ -62,6 +65,9 @@ private fun FeedScreenContent(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
+        val layoutDirection = LocalLayoutDirection.current
+        val bottomBarHeight = 64.dp
+        val bottomBarPadding = 16.dp
         when {
             pagingItems.isEmpty() -> {
                 PageLoading(
@@ -77,7 +83,12 @@ private fun FeedScreenContent(
                     lazyStaggeredGridState = rememberLazyStaggeredGridState(),
                     pagingItems = pagingItems,
                     onMovieClick = { pagingKey, movieId -> dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId)) },
-                    contentPadding = innerPadding,
+                    contentPadding = PaddingValues(
+                        start = innerPadding.calculateStartPadding(layoutDirection),
+                        top = innerPadding.calculateTopPadding(),
+                        end = innerPadding.calculateEndPadding(layoutDirection),
+                        bottom = innerPadding.calculateBottomPadding() + bottomBarHeight + bottomBarPadding
+                    ),
                     modifier = Modifier
                 )
             }

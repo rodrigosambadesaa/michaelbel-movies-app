@@ -3,7 +3,10 @@
 package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -44,7 +48,6 @@ import org.michaelbel.movies.settings.event.SettingsEventManager
 import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.ktx.iconSnackbarTextRes
 import org.michaelbel.movies.settings.ktx.stringText
-import org.michaelbel.movies.settings.model.SettingsData
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.settings.ui.common.SettingAppIcon
 import org.michaelbel.movies.settings.ui.common.SettingItem
@@ -66,7 +69,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
-    var areNotificationsEnabled by remember { mutableStateOf(state.areNotificationsEnabled) }
     val openAppNotificationSettings = viewModel.settingsUiInteractor.navigateToAppNotificationSettings()
     val navigateToUrl = navigateToUrl(MOVIES_GITHUB_URL)
 
@@ -87,6 +89,12 @@ fun SettingsScreen(
         }
     }
 
+    val onRequestPostNotificationsPermission = viewModel.settingsUiInteractor.rememberPostNotificationsPermissionHandler(
+        areNotificationsEnabled = state.areNotificationsEnabled,
+        onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
+        onPermissionDenied = onShowPermissionSnackbar
+    )
+
     val onShowSnackbar: (String) -> Unit = { message ->
         scope.launch {
             snackbarHostState.showSnackbar(
@@ -95,55 +103,26 @@ fun SettingsScreen(
             )
         }
     }
-
-    val messageRed = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Red.iconSnackbarTextRes))
-    val messagePurple = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Purple.iconSnackbarTextRes))
-    val messageBrown = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Brown.iconSnackbarTextRes))
-    val messageAmoled = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Amoled.iconSnackbarTextRes))
+    val onRequestTileService = requestTileService(onShowSnackbar)
 
     SettingsScreenContent(
         state = state,
         dispatch = viewModel::dispatch,
-        settingsData = SettingsData(
-            notificationsData = SettingsData.NotificationsData(
-                isEnabled = areNotificationsEnabled,
-                onClick = viewModel.settingsUiInteractor.rememberPostNotificationsPermissionHandler(
-                    areNotificationsEnabled = areNotificationsEnabled,
-                    onPermissionGranted = { areNotificationsEnabled = state.areNotificationsEnabled },
-                    onPermissionDenied = onShowPermissionSnackbar
-                )
-            ),
-            tileData = SettingsData.RequestedData(
-                onRequest = requestTileService(onShowSnackbar)
-            ),
-            appIconData = SettingsData.ListData(
-                current = viewModel.settingsUiInteractor.enabledIcon,
-                onSelect = { icon ->
-                    val message = when (icon) {
-                        IconAlias.Red -> messageRed
-                        IconAlias.Purple -> messagePurple
-                        IconAlias.Brown -> messageBrown
-                        IconAlias.Amoled -> messageAmoled
-                    }
-                    onShowSnackbar(message)
-                    viewModel.settingsUiInteractor.setIcon(icon)
-                }
-            ),
-            githubData = SettingsData.RequestedData(
-                onRequest = navigateToUrl
-            )
-        ),
         snackbarHostState = snackbarHostState,
-        isNavigationIconVisible = viewModel.settingsUiInteractor.isNavigationIconVisible
+        isNavigationIconVisible = viewModel.settingsUiInteractor.isNavigationIconVisible,
+        onShowSnackbar = onShowSnackbar
     )
 
     OnResume {
-        areNotificationsEnabled = state.areNotificationsEnabled
+        viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled)
     }
 
     ObserveAsEvents(SettingsEventManager.eventFlow) { event ->
         when (event) {
             is SettingsEventManager.PinWidget -> {}
+            is SettingsEventManager.RequestPostNotificationsPermission -> onRequestPostNotificationsPermission()
+            is SettingsEventManager.RequestTileService -> onRequestTileService()
+            is SettingsEventManager.RequestGithub -> navigateToUrl()
         }
     }
 }
@@ -152,9 +131,9 @@ fun SettingsScreen(
 private fun SettingsScreenContent(
     state: SettingsModel,
     dispatch: (SettingsIntent) -> Unit,
-    settingsData: SettingsData,
     snackbarHostState: SnackbarHostState,
-    isNavigationIconVisible: Boolean
+    isNavigationIconVisible: Boolean,
+    onShowSnackbar: (String) -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
@@ -162,9 +141,14 @@ private fun SettingsScreenContent(
         canScroll = { true }
     )
     val lazyListState = rememberLazyListState()
+    val layoutDirection = LocalLayoutDirection.current
     val onScrollToTop: () -> Unit = {
         scope.launch { lazyListState.animateScrollToItem(0) }
     }
+    val messageRed = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Red.iconSnackbarTextRes))
+    val messagePurple = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Purple.iconSnackbarTextRes))
+    val messageBrown = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Brown.iconSnackbarTextRes))
+    val messageAmoled = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Amoled.iconSnackbarTextRes))
 
     Scaffold(
         modifier = Modifier
@@ -188,7 +172,12 @@ private fun SettingsScreenContent(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = lazyListState,
-            contentPadding = innerPadding
+            contentPadding = PaddingValues(
+                start = innerPadding.calculateStartPadding(layoutDirection),
+                top = innerPadding.calculateTopPadding(),
+                end = innerPadding.calculateEndPadding(layoutDirection),
+                bottom = innerPadding.calculateBottomPadding() + 80.dp
+            )
         ) {
             if (state.isLanguageFeatureEnabled) {
                 item {
@@ -400,26 +389,38 @@ private fun SettingsScreenContent(
                     ) {
                         SettingAppIcon(
                             iconAlias = IconAlias.Red,
-                            isEnabled = settingsData.appIconData.current == IconAlias.Red,
-                            onClick = settingsData.appIconData.onSelect
+                            isEnabled = state.enabledIcon == IconAlias.Red,
+                            onClick = {
+                                onShowSnackbar(messageRed)
+                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Red))
+                            }
                         )
 
                         SettingAppIcon(
                             iconAlias = IconAlias.Purple,
-                            isEnabled = settingsData.appIconData.current == IconAlias.Purple,
-                            onClick = settingsData.appIconData.onSelect
+                            isEnabled = state.enabledIcon == IconAlias.Purple,
+                            onClick = {
+                                onShowSnackbar(messagePurple)
+                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Purple))
+                            }
                         )
 
                         SettingAppIcon(
                             iconAlias = IconAlias.Brown,
-                            isEnabled = settingsData.appIconData.current == IconAlias.Brown,
-                            onClick = settingsData.appIconData.onSelect
+                            isEnabled = state.enabledIcon == IconAlias.Brown,
+                            onClick = {
+                                onShowSnackbar(messageBrown)
+                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Brown))
+                            }
                         )
 
                         SettingAppIcon(
                             iconAlias = IconAlias.Amoled,
-                            isEnabled = settingsData.appIconData.current == IconAlias.Amoled,
-                            onClick = settingsData.appIconData.onSelect
+                            isEnabled = state.enabledIcon == IconAlias.Amoled,
+                            onClick = {
+                                onShowSnackbar(messageAmoled)
+                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Amoled))
+                            }
                         )
                     }
                 }
@@ -435,10 +436,10 @@ private fun SettingsScreenContent(
                 item {
                     SettingSwitchItem(
                         title = stringResource(MoviesStrings.settings_post_notifications),
-                        description = stringResource(if (settingsData.notificationsData.isEnabled) MoviesStrings.settings_post_notifications_granted else MoviesStrings.settings_post_notifications_denied),
+                        description = stringResource(if (state.areNotificationsEnabled) MoviesStrings.settings_post_notifications_granted else MoviesStrings.settings_post_notifications_denied),
                         icon = MoviesIcons.Notifications,
-                        checked = settingsData.notificationsData.isEnabled,
-                        onClick = settingsData.notificationsData.onClick
+                        checked = state.areNotificationsEnabled,
+                        onClick = { dispatch(SettingsIntent.RequestPostNotificationsPermission) }
                     )
                 }
                 item {
@@ -472,7 +473,7 @@ private fun SettingsScreenContent(
                         title = stringResource(MoviesStrings.settings_tile),
                         description = stringResource(MoviesStrings.settings_tile_description),
                         icon = MoviesIcons.ViewAgenda,
-                        onClick = settingsData.tileData.onRequest
+                        onClick = { dispatch(SettingsIntent.RequestTileService) }
                     )
                 }
                 item {
@@ -525,7 +526,7 @@ private fun SettingsScreenContent(
                         title = stringResource(MoviesStrings.settings_github),
                         description = stringResource(MoviesStrings.settings_github_description),
                         icon = MoviesIcons.Github,
-                        onClick = settingsData.githubData.onRequest
+                        onClick = { dispatch(SettingsIntent.RequestGithub) }
                     )
                 }
                 if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
@@ -575,12 +576,10 @@ private fun SettingsScreenContent(
             if (state.isAboutFeatureEnabled) {
                 item {
                     SettingsVersionBox(
-                        aboutData = SettingsData.AboutData(
-                            versionName = state.versionName,
-                            versionCode = state.versionCode,
-                            flavor = state.appVersionData.flavor,
-                            isDebug = isDebug
-                        )
+                        versionName = state.versionName,
+                        versionCode = state.versionCode,
+                        flavor = state.appVersionData.flavor,
+                        isDebug = isDebug
                     )
                 }
             }

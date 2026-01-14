@@ -152,6 +152,9 @@ class SettingsViewModel(
             is SettingsIntent.BackClick -> launch { MainNavigator.back() }
             is SettingsIntent.ReviewClick -> launch { MainNavigator.requestReview() }
             is SettingsIntent.UpdateClick -> launch { MainNavigator.requestUpdate() }
+            is SettingsIntent.ScrollToTop -> launch { push(intent) }
+            is SettingsIntent.ShowSnackbar -> launch { push(intent) }
+            is SettingsIntent.ShowPermissionSnackbar -> launch { push(intent) }
             is SettingsIntent.SelectLanguage -> launch { interactor.selectLanguage(intent.language) }
             is SettingsIntent.SelectTheme -> launch { interactor.selectTheme(intent.theme) }
             is SettingsIntent.SelectFeedView -> launch { interactor.selectFeedView(intent.feedView) }

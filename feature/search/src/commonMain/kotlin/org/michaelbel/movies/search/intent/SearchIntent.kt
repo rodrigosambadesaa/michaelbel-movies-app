@@ -15,6 +15,7 @@ sealed interface SearchIntent: Intent {
     data class MovieDetailsClick(val movieList: PagingKey, val movieId: MovieId): SearchIntent
     data class RemoveMovieFromHistoryClick(val movieId: MovieId): SearchIntent
     data class SaveMovieToHistoryClick(val movieId: MovieId): SearchIntent
+    data class ShowSnackbar(val message: String, val isLong: Boolean): SearchIntent
     data class EnterSearchQuery(val query: String): SearchIntent
     data class ChangeActiveState(val state: Boolean): SearchIntent
 }

@@ -15,5 +15,7 @@ sealed interface FeedIntent: Intent {
     data object SearchClick: FeedIntent
     data object AuthClick: FeedIntent
     data object AccountClick: FeedIntent
+    data object ScrollToTop: FeedIntent
+    data class ShowSnackbar(val message: String, val isLong: Boolean): FeedIntent
     data class MovieDetailsClick(val pagingKey: PagingKey, val movieId: MovieId): FeedIntent
 }

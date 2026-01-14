@@ -30,7 +30,6 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.settings"
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
@@ -39,6 +38,5 @@ android {
 
     buildFeatures {
         buildConfig = true
-        compose = true
     }
 }

@@ -1,10 +1,16 @@
+import com.android.build.api.dsl.androidLibrary
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
+    androidLibrary {
+        namespace = "org.michaelbel.movies.platform.gms"
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+        minSdk = libs.versions.min.sdk.get().toInt()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -20,15 +26,5 @@ kotlin {
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.platform.gms"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
     }
 }

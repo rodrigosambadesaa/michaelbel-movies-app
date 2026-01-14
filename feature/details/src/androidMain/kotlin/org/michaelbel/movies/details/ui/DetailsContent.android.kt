@@ -114,23 +114,6 @@ internal fun DetailsContent(
             contentScale = ContentScale.Crop
         )
 
-        Text(
-            text = movie.title,
-            modifier = Modifier
-                .padding(start = 16.dp, top = 8.dp, end = 16.dp)
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .placeholder(
-                    visible = placeholder,
-                    color = MaterialTheme.colorScheme.inversePrimary,
-                    shape = MaterialTheme.shapes.small,
-                    highlight = PlaceholderHighlight.fade()
-                ),
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 3,
-            style = MaterialTheme.typography.titleLarge.copy(onContainerColor)
-        )
-
         SelectionContainer(
             modifier = Modifier
                 .padding(start = 16.dp, top = 8.dp, end = 16.dp)
@@ -143,10 +126,20 @@ internal fun DetailsContent(
                     highlight = PlaceholderHighlight.fade()
                 )
         ) {
-            Text(
-                text = movie.overview,
-                style = MaterialTheme.typography.bodyMedium.copy(onContainerColor)
-            )
+            Column {
+                Text(
+                    text = movie.title,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 3,
+                    style = MaterialTheme.typography.titleLarge.copy(onContainerColor)
+                )
+
+                Text(
+                    text = movie.overview,
+                    modifier = Modifier.padding(top = 8.dp),
+                    style = MaterialTheme.typography.bodyMedium.copy(onContainerColor)
+                )
+            }
         }
     }
 }

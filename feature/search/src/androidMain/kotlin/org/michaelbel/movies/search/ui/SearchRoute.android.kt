@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -42,6 +43,7 @@ import org.michaelbel.movies.search.model.SearchModel
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
+import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
@@ -49,8 +51,8 @@ import org.michaelbel.movies.ui.ktx.isFailure
 import org.michaelbel.movies.ui.ktx.isLoading
 import org.michaelbel.movies.ui.ktx.refreshThrowable
 import org.michaelbel.movies.ui.ktx.rememberConnectivityClickHandler
+import org.michaelbel.movies.ui.strings.MoviesStrings
 import java.net.UnknownHostException
-import org.michaelbel.movies.ui.R as UiR
 
 @Composable
 actual fun SearchScreen(
@@ -59,13 +61,36 @@ actual fun SearchScreen(
     val state by viewModel.stateFlow.collectAsStateCommon()
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val active by viewModel.isSearchActive.collectAsStateCommon()
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     SearchScreenContent(
         state = state,
         dispatch = viewModel::dispatch,
         pagingItems = pagingItems,
-        active = active
+        active = active,
+        snackbarHostState = snackbarHostState
     )
+
+    ObserveAsEvents(
+        flow = viewModel.eventFlow,
+        key1 = snackbarHostState
+    ) { event ->
+        when (event) {
+            is SearchIntent.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.run {
+                        currentSnackbarData?.dismiss()
+                        showSnackbar(
+                            message = event.message,
+                            duration = if (event.isLong) SnackbarDuration.Long else SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
+            else -> Unit
+        }
+    }
 }
 
 @Composable
@@ -73,26 +98,16 @@ private fun SearchScreenContent(
     state: SearchModel,
     dispatch: (SearchIntent) -> Unit,
     pagingItems: LazyPagingItems<MoviePojo>,
-    active: Boolean
+    active: Boolean,
+    snackbarHostState: SnackbarHostState
 ) {
-    val scope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val lazyGridState = rememberLazyGridState()
     val lazyStaggeredGridState = rememberLazyStaggeredGridState()
-    val snackbarHostState = remember { SnackbarHostState() }
     val focusRequester = remember { FocusRequester() }
 
-    val onShowSnackbar: (String) -> Unit = { message ->
-        scope.launch {
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Long
-            )
-        }
-    }
-
     if (pagingItems.isFailure && pagingItems.refreshThrowable is ApiKeyNotNullException) {
-        onShowSnackbar(stringResource(UiR.string.error_api_key_null))
+        dispatch(SearchIntent.ShowSnackbar(stringResource(MoviesStrings.error_api_key_null), true))
     }
 
     if (state.networkStatus == NetworkStatus.Available && pagingItems.isFailure && pagingItems.refreshThrowable is UnknownHostException) {
@@ -108,6 +123,11 @@ private fun SearchScreenContent(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            )
+        },
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
         Column {

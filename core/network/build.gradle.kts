@@ -44,7 +44,6 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.network"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()

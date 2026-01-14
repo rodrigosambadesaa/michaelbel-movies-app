@@ -26,8 +26,6 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.debug"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
@@ -36,6 +34,5 @@ android {
 
     buildFeatures {
         buildConfig = true
-        compose = true
     }
 }

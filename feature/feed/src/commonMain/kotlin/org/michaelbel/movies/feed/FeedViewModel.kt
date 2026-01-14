@@ -117,6 +117,8 @@ class FeedViewModel(
             is FeedIntent.SearchClick -> launch { MainNavigator.forward(SearchDestination) }
             is FeedIntent.AuthClick -> launch { MainNavigator.forward(AuthDestination) }
             is FeedIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
+            is FeedIntent.ScrollToTop -> launch { push(intent) }
+            is FeedIntent.ShowSnackbar -> launch { push(intent) }
             is FeedIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
         }
     }

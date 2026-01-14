@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -71,46 +72,55 @@ fun SettingsScreen(
     val state by viewModel.stateFlow.collectAsStateCommon()
     val openAppNotificationSettings = viewModel.settingsUiInteractor.navigateToAppNotificationSettings()
     val navigateToUrl = navigateToUrl(MOVIES_GITHUB_URL)
-
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val lazyListState = rememberLazyListState()
     val permissionMessage = stringResource(MoviesStrings.settings_post_notifications_should_request)
     val permissionAction = stringResource(MoviesStrings.settings_action_go)
-    val onShowPermissionSnackbar: () -> Unit = {
-        scope.launch {
-            val result = snackbarHostState.showSnackbar(
-                message = permissionMessage,
-                actionLabel = permissionAction,
-                duration = SnackbarDuration.Long
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                openAppNotificationSettings()
-            }
-        }
-    }
-
     val onRequestPostNotificationsPermission = viewModel.settingsUiInteractor.rememberPostNotificationsPermissionHandler(
         areNotificationsEnabled = state.areNotificationsEnabled,
         onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
-        onPermissionDenied = onShowPermissionSnackbar
+        onPermissionDenied = { viewModel.dispatch(SettingsIntent.ShowPermissionSnackbar(permissionMessage, permissionAction)) }
     )
+    val onRequestTileService = requestTileService { message -> viewModel.dispatch(SettingsIntent.ShowSnackbar(message)) }
 
-    val onShowSnackbar: (String) -> Unit = { message ->
-        scope.launch {
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short
-            )
+    ObserveAsEvents(
+        flow = viewModel.eventFlow,
+        key1 = snackbarHostState,
+        key2 = lazyListState
+    ) { event ->
+        when (event) {
+            is SettingsIntent.ScrollToTop -> scope.launch { lazyListState.animateScrollToItem(0) }
+            is SettingsIntent.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+            is SettingsIntent.ShowPermissionSnackbar -> {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel,
+                        duration = SnackbarDuration.Long
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        openAppNotificationSettings()
+                    }
+                }
+            }
+            else -> Unit
         }
     }
-    val onRequestTileService = requestTileService(onShowSnackbar)
 
     SettingsScreenContent(
         state = state,
         dispatch = viewModel::dispatch,
         snackbarHostState = snackbarHostState,
+        lazyListState = lazyListState,
         isNavigationIconVisible = viewModel.settingsUiInteractor.isNavigationIconVisible,
-        onShowSnackbar = onShowSnackbar
     )
 
     OnResume {
@@ -132,19 +142,14 @@ private fun SettingsScreenContent(
     state: SettingsModel,
     dispatch: (SettingsIntent) -> Unit,
     snackbarHostState: SnackbarHostState,
-    isNavigationIconVisible: Boolean,
-    onShowSnackbar: (String) -> Unit
+    lazyListState: LazyListState,
+    isNavigationIconVisible: Boolean
 ) {
-    val scope = rememberCoroutineScope()
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         state = rememberTopAppBarState(),
         canScroll = { true }
     )
-    val lazyListState = rememberLazyListState()
     val layoutDirection = LocalLayoutDirection.current
-    val onScrollToTop: () -> Unit = {
-        scope.launch { lazyListState.animateScrollToItem(0) }
-    }
     val messageRed = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Red.iconSnackbarTextRes))
     val messagePurple = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Purple.iconSnackbarTextRes))
     val messageBrown = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Brown.iconSnackbarTextRes))
@@ -159,7 +164,7 @@ private fun SettingsScreenContent(
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 isNavigationIconVisible = isNavigationIconVisible,
                 onNavigationIconClick = { dispatch(SettingsIntent.BackClick) },
-                onClick = onScrollToTop
+                onClick = { dispatch(SettingsIntent.ScrollToTop) }
             )
         },
         snackbarHost = {
@@ -391,7 +396,7 @@ private fun SettingsScreenContent(
                             iconAlias = IconAlias.Red,
                             isEnabled = state.enabledIcon == IconAlias.Red,
                             onClick = {
-                                onShowSnackbar(messageRed)
+                                dispatch(SettingsIntent.ShowSnackbar(messageRed))
                                 dispatch(SettingsIntent.SetAppIcon(IconAlias.Red))
                             }
                         )
@@ -400,7 +405,7 @@ private fun SettingsScreenContent(
                             iconAlias = IconAlias.Purple,
                             isEnabled = state.enabledIcon == IconAlias.Purple,
                             onClick = {
-                                onShowSnackbar(messagePurple)
+                                dispatch(SettingsIntent.ShowSnackbar(messagePurple))
                                 dispatch(SettingsIntent.SetAppIcon(IconAlias.Purple))
                             }
                         )
@@ -409,7 +414,7 @@ private fun SettingsScreenContent(
                             iconAlias = IconAlias.Brown,
                             isEnabled = state.enabledIcon == IconAlias.Brown,
                             onClick = {
-                                onShowSnackbar(messageBrown)
+                                dispatch(SettingsIntent.ShowSnackbar(messageBrown))
                                 dispatch(SettingsIntent.SetAppIcon(IconAlias.Brown))
                             }
                         )
@@ -418,7 +423,7 @@ private fun SettingsScreenContent(
                             iconAlias = IconAlias.Amoled,
                             isEnabled = state.enabledIcon == IconAlias.Amoled,
                             onClick = {
-                                onShowSnackbar(messageAmoled)
+                                dispatch(SettingsIntent.ShowSnackbar(messageAmoled))
                                 dispatch(SettingsIntent.SetAppIcon(IconAlias.Amoled))
                             }
                         )

@@ -32,15 +32,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.michaelbel.movies.ui.R
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.rememberNavigateToAppSettings
 import org.michaelbel.movies.ui.ktx.rememberRequestNotificationPermission
+import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
@@ -99,14 +99,14 @@ fun NotificationBottomSheet(
             }
 
             Text(
-                text = stringResource(R.string.notification_enable_title),
+                text = stringResource(MoviesStrings.notification_enable_title),
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
             )
 
             Text(
-                text = stringResource(R.string.notification_enable_subtitle),
+                text = stringResource(MoviesStrings.notification_enable_subtitle),
                 modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
@@ -126,7 +126,7 @@ fun NotificationBottomSheet(
                 modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
             ) {
                 Text(
-                    text = stringResource(if (Build.VERSION.SDK_INT >= 33) R.string.notification_continue else R.string.notification_go_to_settings)
+                    text = stringResource(if (Build.VERSION.SDK_INT >= 33) MoviesStrings.notification_continue else MoviesStrings.notification_go_to_settings)
                 )
             }
         }

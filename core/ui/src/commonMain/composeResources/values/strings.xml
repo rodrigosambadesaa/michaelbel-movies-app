@@ -8,7 +8,6 @@
     <string name="notification_continue">Continue</string>
     <string name="notification_go_to_settings">Go To Settings</string>
     <string name="retry">Retry</string>
-    <string name="no_image">No Image</string>
     <string name="error_api_key_null">TMDB API key is null</string>
     <string name="error_loading">Error while loading movies</string>
     <string name="error_check_internet_connectivity">Check Internet Connectivity</string>

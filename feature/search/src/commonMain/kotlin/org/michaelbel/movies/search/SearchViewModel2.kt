@@ -86,6 +86,7 @@ class SearchViewModel2(
                     interactor.insertMovie(MoviePojo.MOVIES_SEARCH_HISTORY, movie)
                 }
             }
+            is SearchIntent.ShowSnackbar -> launch { push(intent) }
             is SearchIntent.EnterSearchQuery -> { _query.value = intent.query }
             is SearchIntent.ChangeActiveState -> interactor.setSearchActive(intent.state)
         }

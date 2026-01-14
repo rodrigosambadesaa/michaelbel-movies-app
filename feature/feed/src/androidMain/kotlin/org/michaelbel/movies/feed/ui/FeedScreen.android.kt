@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -47,6 +50,7 @@ import org.michaelbel.movies.ui.compose.NotificationBottomSheet
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
+import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
@@ -54,8 +58,8 @@ import org.michaelbel.movies.ui.ktx.isFailure
 import org.michaelbel.movies.ui.ktx.isLoading
 import org.michaelbel.movies.ui.ktx.refreshThrowable
 import org.michaelbel.movies.ui.ktx.rememberConnectivityClickHandler
+import org.michaelbel.movies.ui.strings.MoviesStrings
 import java.net.UnknownHostException
-import org.michaelbel.movies.ui.R as UiR
 
 @Composable
 actual fun FeedScreen(
@@ -64,13 +68,47 @@ actual fun FeedScreen(
     val state by viewModel.stateFlow.collectAsStateCommon()
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val notificationsPermissionRequired by viewModel.notificationsPermissionRequired.collectAsStateCommon()
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val lazyListState = rememberLazyListState()
+    val lazyGridState = rememberLazyGridState()
+    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
 
     FeedScreenContent(
         state = state,
         dispatch = viewModel::dispatch,
         pagingItems = pagingItems,
-        notificationsPermissionRequired = notificationsPermissionRequired
+        notificationsPermissionRequired = notificationsPermissionRequired,
+        snackbarHostState = snackbarHostState,
+        lazyListState = lazyListState,
+        lazyGridState = lazyGridState,
+        lazyStaggeredGridState = lazyStaggeredGridState
     )
+
+    ObserveAsEvents(
+        flow = viewModel.eventFlow,
+        key1 = snackbarHostState
+    ) { event ->
+        when (event) {
+            is FeedIntent.ScrollToTop -> {
+                scope.launch { lazyListState.animateScrollToItem(0) }
+                scope.launch { lazyGridState.animateScrollToItem(0) }
+                scope.launch { lazyStaggeredGridState.animateScrollToItem(0) }
+            }
+            is FeedIntent.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.run {
+                        currentSnackbarData?.dismiss()
+                        showSnackbar(
+                            message = event.message,
+                            duration = if (event.isLong) SnackbarDuration.Long else SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
+            else -> Unit
+        }
+    }
 }
 
 @Composable
@@ -78,32 +116,14 @@ private fun FeedScreenContent(
     state: FeedModel,
     dispatch: (FeedIntent) -> Unit,
     pagingItems: LazyPagingItems<MoviePojo>,
-    notificationsPermissionRequired: Boolean
+    notificationsPermissionRequired: Boolean,
+    snackbarHostState: SnackbarHostState,
+    lazyListState: LazyListState,
+    lazyGridState: LazyGridState,
+    lazyStaggeredGridState: LazyStaggeredGridState
 ) {
-    val scope = rememberCoroutineScope()
-    val lazyListState = rememberLazyListState()
-    val lazyGridState = rememberLazyGridState()
-    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val onScrollToTop: () -> Unit = {
-        scope.launch { lazyListState.animateScrollToItem(0) }
-        scope.launch { lazyGridState.animateScrollToItem(0) }
-        scope.launch { lazyStaggeredGridState.animateScrollToItem(0) }
-    }
-
-    val onShowSnackbar: (String, SnackbarDuration) -> Unit = { message, snackbarDuration ->
-        scope.launch {
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = snackbarDuration
-            )
-        }
-    }
-
     if (pagingItems.isFailure && pagingItems.refreshThrowable is ApiKeyNotNullException) {
-        onShowSnackbar(stringResource(UiR.string.error_api_key_null), SnackbarDuration.Long)
+        dispatch(FeedIntent.ShowSnackbar(stringResource(MoviesStrings.error_api_key_null), true))
     }
 
     if (state.networkStatus == NetworkStatus.Available && pagingItems.isFailure && pagingItems.refreshThrowable is UnknownHostException) {
@@ -129,7 +149,7 @@ private fun FeedScreenContent(
         topBar = {
             FeedToolbar(
                 title = state.movieList.titleText,
-                modifier = Modifier.clickableWithoutRipple(onScrollToTop),
+                modifier = Modifier.clickableWithoutRipple { dispatch(FeedIntent.ScrollToTop) },
                 account = state.accountPojo,
                 isTmdbApiKeyEmpty = isTmdbApiKeyEmpty,
                 isSearchIconVisible = false,

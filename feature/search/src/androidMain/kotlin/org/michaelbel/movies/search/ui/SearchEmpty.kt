@@ -14,14 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.search.R
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.strings.MoviesStrings
 
 @Composable
 internal fun SearchEmpty(
@@ -40,7 +40,7 @@ internal fun SearchEmpty(
         )
 
         Text(
-            text = stringResource(R.string.search_results_empty),
+            text = stringResource(MoviesStrings.search_results_empty),
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()

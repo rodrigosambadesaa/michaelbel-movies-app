@@ -1,8 +1,5 @@
 package org.michaelbel.movies.main.mainnav
 
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
@@ -17,9 +14,6 @@ class MainNavViewModel(
     private val interactor: Interactor
 ): MoviesViewModel<EmptyModel, MainIntent>(EmptyModel) {
 
-    private val _snackbarMessage = Channel<String>()
-    val snackbarMessage: Flow<String> = _snackbarMessage.receiveAsFlow()
-
     override fun dispatch(intent: MainIntent) {
         when (intent) {
             is MainIntent.SearchClick -> launch { MainNavigator.forward(SearchDestination) }
@@ -28,8 +22,8 @@ class MainNavViewModel(
 
     override fun catch(throwable: Throwable) {
         when (throwable) {
-            is CreateSessionException -> launch { _snackbarMessage.send("Failure while signing in. Wrong token or no approval") }
-            is AccountDetailsException -> launch { _snackbarMessage.send("Failure while signing in. Wrong token or no approval") }
+            is CreateSessionException -> launch { push("Failure while signing in. Wrong token or no approval") }
+            is AccountDetailsException -> launch { push("Failure while signing in. Wrong token or no approval") }
             else -> super.catch(throwable)
         }
     }
@@ -44,7 +38,7 @@ class MainNavViewModel(
             interactor.run {
                 createSession(requestToken)
                 accountDetails()
-                _snackbarMessage.send("Successful authorization")
+                push("Successful authorization")
             }
         }
     }

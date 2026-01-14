@@ -50,6 +50,10 @@ import movies.core.ui_web.generated.resources.notification_enable_title
 import movies.core.ui_web.generated.resources.notification_go_to_settings
 import movies.core.ui_web.generated.resources.retry
 import movies.core.ui_web.generated.resources.search_clear
+import movies.core.ui_web.generated.resources.search_history_empty
+import movies.core.ui_web.generated.resources.search_recent
+import movies.core.ui_web.generated.resources.search_results_empty
+import movies.core.ui_web.generated.resources.search_title
 import movies.core.ui_web.generated.resources.settings_action_cancel
 import movies.core.ui_web.generated.resources.settings_action_go
 import movies.core.ui_web.generated.resources.settings_app_debug
@@ -170,6 +174,10 @@ object MoviesStrings {
     val gallery_action_open = Res.string.gallery_action_open
     val gallery_image_of = Res.string.gallery_image_of
 
+    val search_title = Res.string.search_title
+    val search_history_empty = Res.string.search_history_empty
+    val search_results_empty = Res.string.search_results_empty
+    val search_recent = Res.string.search_recent
     val search_clear = Res.string.search_clear
 
     val settings_title = Res.string.settings_title

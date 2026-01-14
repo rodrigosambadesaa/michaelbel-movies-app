@@ -30,6 +30,7 @@ import org.michaelbel.movies.details.ui.DetailsFailure
 import org.michaelbel.movies.details.ui.DetailsLoading
 import org.michaelbel.movies.details.ui.DetailsToolbar
 import org.michaelbel.movies.network.config.ScreenState
+import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -40,33 +41,38 @@ actual fun DetailsScreen(
     viewModel: DetailsViewModel
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val copiedText = stringResource(MoviesStrings.details_url_copied)
 
     DetailsScreenContent(
         state = state,
-        dispatch = viewModel::dispatch
+        dispatch = viewModel::dispatch,
+        snackbarHostState = snackbarHostState
     )
+
+    ObserveAsEvents(
+        flow = viewModel.eventFlow,
+        key1 = snackbarHostState
+    ) {
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(
+                message = copiedText,
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
 }
 
 @Composable
 private fun DetailsScreenContent(
     state: DetailsModel,
-    dispatch: (DetailsIntent) -> Unit
+    dispatch: (DetailsIntent) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
-    val snackbarHostState = remember { SnackbarHostState() }
-    val copiedText = stringResource(MoviesStrings.details_url_copied)
-
-    val onShowSnackbar: (String) -> Unit = { message ->
-        scope.launch {
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short
-            )
-        }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -77,7 +83,7 @@ private fun DetailsScreenContent(
                 onNavigationIconClick = { dispatch(DetailsIntent.BackClick) },
                 onShareClick = { url ->
                     clipboardManager.setText(AnnotatedString(url))
-                    onShowSnackbar(copiedText)
+                    dispatch(DetailsIntent.CopyClick)
                 },
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 modifier = Modifier.fillMaxWidth()

@@ -2,7 +2,6 @@
 
 package org.michaelbel.movies.gallery.ui
 
-import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -38,7 +37,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +48,6 @@ import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.gallery.GalleryViewModel
-import org.michaelbel.movies.gallery.R
 import org.michaelbel.movies.gallery.intent.GalleryIntent
 import org.michaelbel.movies.gallery.model.GalleryModel
 import org.michaelbel.movies.gallery.zoomable.rememberZoomState
@@ -59,10 +57,12 @@ import org.michaelbel.movies.persistence.database.ktx.original
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.iconbutton.BackIcon
 import org.michaelbel.movies.ui.compose.iconbutton.DownloadIcon
+import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.navigateToImageUri
 import org.michaelbel.movies.ui.navigation.GalleryDestination
+import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 import org.michaelbel.movies.work.DownloadImageWorker
 import org.michaelbel.movies.work.WorkInfoState
@@ -73,22 +73,64 @@ actual fun GalleryScreen(
     viewModel: GalleryViewModel
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val gallerySuccessText = stringResource(MoviesStrings.gallery_success)
+    val galleryActionOpenText = stringResource(MoviesStrings.gallery_action_open)
+    val galleryFailureText = stringResource(MoviesStrings.gallery_failure)
 
     GalleryScreenContent(
         state = state,
-        dispatch = viewModel::dispatch
+        dispatch = viewModel::dispatch,
+        snackbarHostState = snackbarHostState
     )
+
+    ObserveAsEvents(
+        flow = viewModel.eventFlow,
+        key1 = snackbarHostState
+    ) { event ->
+        when (event) {
+            is WorkInfoState -> {
+                when (event) {
+                    is WorkInfoState.Success -> {
+                        coroutineScope.launch {
+                            val result = snackbarHostState.showSnackbar(
+                                message = gallerySuccessText,
+                                actionLabel = galleryActionOpenText,
+                                duration = SnackbarDuration.Long
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                context.navigateToImageUri(event.result.toUri())
+                            }
+                        }
+                    }
+                    is WorkInfoState.Failure -> {
+                        if (event.result == DownloadImageWorker.FAILURE_RESULT) {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = galleryFailureText,
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+        }
+    }
 }
 
 @Composable
 private fun GalleryScreenContent(
     state: GalleryModel,
-    dispatch: (GalleryIntent) -> Unit
+    dispatch: (GalleryIntent) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
-    val context = LocalContext.current
     val hapticFeedback = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     val pagerState = rememberPagerState(pageCount = { state.movieImages.size })
     var currentPage by remember { mutableIntStateOf(0) }
@@ -97,43 +139,6 @@ private fun GalleryScreenContent(
             hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
             currentPage = page
         }
-    }
-
-    val onSuccessSnackbar: (String, String, Uri) -> Unit = { message, actionLabel, uri ->
-        coroutineScope.launch {
-            val result = snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = actionLabel,
-                duration = SnackbarDuration.Long
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                context.navigateToImageUri(uri)
-            }
-        }
-    }
-    val onFailureSnackbar: (String) -> Unit = { message ->
-        coroutineScope.launch {
-            snackbarHostState.showSnackbar(
-                message = message,
-                duration = SnackbarDuration.Short
-            )
-        }
-    }
-
-    when (state.workInfoState) {
-        is WorkInfoState.Success -> {
-            onSuccessSnackbar(
-                stringResource(R.string.gallery_success),
-                stringResource(R.string.gallery_action_open),
-                state.workInfoState.result.toUri()
-            )
-        }
-        is WorkInfoState.Failure -> {
-            if (state.workInfoState.result == DownloadImageWorker.FAILURE_RESULT) {
-                onFailureSnackbar(stringResource(R.string.gallery_failure))
-            }
-        }
-        else -> {}
     }
 
     Scaffold(
@@ -228,7 +233,7 @@ private fun GalleryScreenContent(
                         )
 
                         Text(
-                            text = stringResource(R.string.gallery_image_of, currentPage.plus(1), state.movieImages.size),
+                            text = stringResource(MoviesStrings.gallery_image_of, currentPage.plus(1), state.movieImages.size),
                             overflow = TextOverflow.Ellipsis,
                             textAlign = TextAlign.Start,
                             style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
@@ -264,7 +269,8 @@ private fun GalleryScreenContentPreview() {
     MoviesTheme {
         GalleryScreenContent(
             state = GalleryModel(),
-            dispatch = {}
+            dispatch = {},
+            snackbarHostState = SnackbarHostState()
         )
     }
 }

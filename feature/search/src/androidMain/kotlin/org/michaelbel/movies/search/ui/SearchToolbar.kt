@@ -20,17 +20,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Query
-import org.michaelbel.movies.search.R
 import org.michaelbel.movies.ui.compose.iconbutton.BackIcon
 import org.michaelbel.movies.ui.compose.iconbutton.CloseIcon
 import org.michaelbel.movies.ui.compose.iconbutton.VoiceIcon
 import org.michaelbel.movies.ui.ktx.rememberSpeechRecognitionLauncher
+import org.michaelbel.movies.ui.strings.MoviesStrings
 
 @Composable
 internal fun SearchToolbar(
@@ -57,7 +57,7 @@ internal fun SearchToolbar(
         modifier = modifier,
         placeholder = {
             Text(
-                text = stringResource(R.string.search_title)
+                text = stringResource(MoviesStrings.search_title)
             )
         },
         leadingIcon = {

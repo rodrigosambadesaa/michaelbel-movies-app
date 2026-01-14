@@ -62,7 +62,6 @@ android {
 
     buildFeatures {
         buildConfig = true
-        compose = true
     }
 
     val gmsImplementation by configurations

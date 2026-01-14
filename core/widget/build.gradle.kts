@@ -6,7 +6,7 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
+    androidTarget() // fixme манифест
     jvm()
     iosX64()
     iosArm64()
@@ -30,14 +30,9 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.widget"
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()
-    }
-
-    buildFeatures {
-        compose = true
     }
 }

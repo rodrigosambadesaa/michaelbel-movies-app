@@ -27,14 +27,9 @@ kotlin {
 
 android {
     namespace = "org.michaelbel.movies.details"
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()
-    }
-
-    buildFeatures {
-        compose = true
     }
 }

@@ -49,6 +49,7 @@ class DetailsViewModel(
             }
             is DetailsIntent.BackClick -> launch { MainNavigator.back() }
             is DetailsIntent.GalleryClick -> launch { MainNavigator.forward(GalleryDestination(destination.movieId)) }
+            is DetailsIntent.CopyClick -> launch { push(Unit) }
             is DetailsIntent.GenerateColors -> {
                 launch {
                     if (intent.containerColor != null && intent.onContainerColor != null) {

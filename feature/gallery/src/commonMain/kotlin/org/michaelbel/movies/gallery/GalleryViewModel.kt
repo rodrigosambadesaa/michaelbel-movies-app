@@ -8,6 +8,7 @@ import org.michaelbel.movies.gallery.model.GalleryModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
+import org.michaelbel.movies.work.WorkInfoState
 import org.michaelbel.movies.work.WorkManagerInteractor
 
 class GalleryViewModel(
@@ -35,7 +36,10 @@ class GalleryViewModel(
             is GalleryIntent.DownloadClick -> {
                 launch {
                     workManagerInteractor.downloadImage(intent.image).collectLatest { workInfoState ->
-                        reduce { it.copy(workInfoState = workInfoState) }
+                        when (workInfoState) {
+                            is WorkInfoState.Success, is WorkInfoState.Failure -> push(workInfoState)
+                            else -> Unit
+                        }
                     }
                 }
             }

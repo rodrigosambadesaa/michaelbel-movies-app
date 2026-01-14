@@ -19,10 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingToolbarDefaults
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -38,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -94,22 +93,13 @@ fun MainNavRoute(
                                 contentDescription = null
                             )
                         }
-                    },
-                    colors = FloatingToolbarDefaults.standardFloatingToolbarColors(
-                        toolbarContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        toolbarContentColor = MaterialTheme.colorScheme.onSurface,
-                        fabContainerColor = MaterialTheme.colorScheme.primary,
-                        fabContentColor = MaterialTheme.colorScheme.onPrimary
-                    )
+                    }
                 ) {
                     TonalToggleButton(
                         checked = backStack[backStack.lastIndex] == feedDestination,
                         onCheckedChange = { backStack[backStack.lastIndex] = feedDestination },
                         colors = ToggleButtonDefaults.tonalToggleButtonColors(
-                            checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                            contentColor = MaterialTheme.colorScheme.onSurface
+                            containerColor = Color.Transparent
                         ),
                         shapes = ToggleButtonShapes(
                             shape = RoundedCornerShape(18.dp),
@@ -132,17 +122,14 @@ fun MainNavRoute(
                     }
 
                     Spacer(
-                        modifier = Modifier.width(12.dp)
+                        modifier = Modifier.width(8.dp)
                     )
 
                     TonalToggleButton(
                         checked = backStack[backStack.lastIndex] == SettingsDestination,
                         onCheckedChange = { backStack[backStack.lastIndex] = SettingsDestination },
                         colors = ToggleButtonDefaults.tonalToggleButtonColors(
-                            checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                            checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-                            contentColor = MaterialTheme.colorScheme.onSurface
+                            containerColor = Color.Transparent
                         ),
                         shapes = ToggleButtonShapes(
                             shape = RoundedCornerShape(18.dp),
@@ -198,13 +185,17 @@ fun MainNavRoute(
     }
 
     ObserveAsEvents(
-        flow = viewModel.snackbarMessage,
+        flow = viewModel.eventFlow,
         key1 = snackbarHostState
-    ) { message ->
-        scope.launch {
-            snackbarHostState.run {
-                currentSnackbarData?.dismiss()
-                showSnackbar(message)
+    ) { event ->
+        when (event) {
+            is String -> {
+                scope.launch {
+                    snackbarHostState.run {
+                        currentSnackbarData?.dismiss()
+                        showSnackbar(event)
+                    }
+                }
             }
         }
     }

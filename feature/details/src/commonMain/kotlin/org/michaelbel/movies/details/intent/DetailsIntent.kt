@@ -9,5 +9,6 @@ sealed interface DetailsIntent: Intent {
     data object LoadMovie: DetailsIntent
     data object BackClick: DetailsIntent
     data object GalleryClick: DetailsIntent
+    data object CopyClick: DetailsIntent
     data class GenerateColors(val movieId: MovieId, val containerColor: Int?, val onContainerColor: Int?): DetailsIntent
 }

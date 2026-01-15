@@ -28,7 +28,6 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material.icons.outlined.Widgets
 import androidx.compose.ui.graphics.vector.ImageVector
-import movies.core.ui_web.generated.resources.Res
 
 /**
  * Movies icons. Material icons are [ImageVector]s, custom icons are drawable resource IDs.

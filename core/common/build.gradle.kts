@@ -23,10 +23,9 @@ kotlin {
             api(libs.bundles.kotlinx.coroutines.common)
             api(libs.bundles.kotlinx.datetime.common)
             api(libs.bundles.jetbrains.androidx.lifecycle.common)
-            api(libs.bundles.jetbrains.androidx.compose.common)
+            api(libs.bundles.jetbrains.compose.common)
             api(libs.bundles.koin.common)
             api(libs.bundles.napier.common)
-            implementation(compose.material3)
         }
         androidMain.dependencies {
             api(libs.bundles.kotlinx.coroutines.android)

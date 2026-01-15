@@ -17,7 +17,7 @@ kotlin {
             api(projects.feature.feedWeb)
             api(libs.bundles.jetbrains.androidx.navigation3.common)
             api(libs.bundles.koin.common)
-            implementation(compose.material3)
+            implementation(libs.jetbrains.compose.material3)
         }
     }
 

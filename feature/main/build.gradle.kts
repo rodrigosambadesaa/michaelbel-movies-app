@@ -23,7 +23,7 @@ kotlin {
             api(projects.feature.search)
             api(projects.feature.settings)
             api(projects.feature.debug)
-            implementation(libs.jetbrains.androidx.lifecycle.viewmodel.navigation3)
+            implementation(libs.bundles.jetbrains.androidx.lifecycle.viewmodel.common)
         }
         jvmMain.dependencies {
             implementation(projects.core.platformServices.injectJvm)

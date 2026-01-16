@@ -40,12 +40,12 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.platformServices.injectWeb)
             implementation(projects.feature.mainImplWeb)
-            implementation(libs.jetbrains.compose.runtime)
-            implementation(libs.jetbrains.compose.foundation)
-            implementation(libs.jetbrains.compose.material3)
-            implementation(libs.jetbrains.compose.material.icons.extended)
-            implementation(libs.jetbrains.compose.ui)
-            implementation(libs.jetbrains.compose.components.resources)
+            implementation(libs.bundles.jetbrains.compose.components.common)
+            implementation(libs.bundles.jetbrains.compose.foundation.common)
+            implementation(libs.bundles.jetbrains.compose.runtime.common)
+            implementation(libs.bundles.jetbrains.compose.material3.common)
+            implementation(libs.bundles.jetbrains.compose.material.icons.common)
+            implementation(libs.bundles.jetbrains.compose.ui.common)
         }
     }
 }

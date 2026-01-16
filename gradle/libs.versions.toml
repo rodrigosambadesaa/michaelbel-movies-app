@@ -192,6 +192,9 @@ kotlinx-datetime-common = [
 kotlinx-serialization-common = [
     "kotlinx-serialization-json"
 ]
+jetbrains-androidx-lifecycle-viewmodel-common = [
+    "jetbrains-androidx-lifecycle-viewmodel-navigation3"
+]
 jetbrains-androidx-lifecycle-common = [
     "jetbrains-androidx-lifecycle-runtime-compose",
     "jetbrains-androidx-lifecycle-viewmodel-compose",
@@ -202,11 +205,38 @@ jetbrains-androidx-navigation3-common = [
     "jetbrains-androidx-navigation3-ui",
     "jetbrains-androidx-compose-material3-adaptive-navigation3"
 ]
-jetbrains-compose-common = [
-    "jetbrains-compose-material3"
-]
 jetbrains-androidx-core-common = [
     "jetbrains-androidx-core-bundle"
+]
+jetbrains-compose-animation-common = [
+    "jetbrains-compose-animation"
+]
+jetbrains-compose-components-common = [
+    "jetbrains-compose-components-resources"
+]
+jetbrains-compose-foundation-common = [
+    "jetbrains-compose-foundation"
+]
+jetbrains-compose-material3-common = [
+    "jetbrains-compose-material3"
+]
+jetbrains-compose-material-common = [
+    "jetbrains-compose-material"
+]
+jetbrains-compose-material-icons-common = [
+    "jetbrains-compose-material-icons-extended"
+]
+jetbrains-compose-runtime-common = [
+    "jetbrains-compose-runtime"
+]
+jetbrains-compose-runtime-saveable-common = [
+    "jetbrains-compose-runtime-saveable"
+]
+jetbrains-compose-ui-common = [
+    "jetbrains-compose-ui"
+]
+jetbrains-compose-ui-tooling-common = [
+    "jetbrains-compose-ui-tooling-preview"
 ]
 datastore-common = [
     "androidx-datastore-core",

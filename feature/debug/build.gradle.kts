@@ -6,7 +6,7 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
+    androidTarget() // fixme класс R
     jvm()
     iosX64()
     iosArm64()

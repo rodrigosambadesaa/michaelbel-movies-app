@@ -66,7 +66,7 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_dynamic_colors">Dynamic Colors</string>
-    <string name="settings_dynamic_colors_description">Apply colors from wallpaper</string>
+    <string name="settings_dynamic_colors_description">Apply colors from Wallpaper</string>
     <string name="settings_post_notifications">Notifications</string>
     <string name="settings_post_notifications_denied">Permission denied</string>
     <string name="settings_post_notifications_granted">Permission granted</string>
@@ -115,6 +115,7 @@
     <string name="settings_update">Update App</string>
     <string name="settings_update_description">Using In-App Update API</string>
     <string name="settings_palette_colors">Palette Colors</string>
+    <string name="settings_palette_colors_description">Apply colors from Palette</string>
     <string name="settings_screenshots">Screenshots</string>
     <string name="settings_screenshots_description">Block taking screenshots</string>
 

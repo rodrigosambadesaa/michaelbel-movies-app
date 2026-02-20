@@ -14,7 +14,7 @@ import org.michaelbel.movies.platform.Flavor
 import org.michaelbel.movies.platform.app.AppService
 import org.michaelbel.movies.platform.update.UpdateListener
 import org.michaelbel.movies.platform.update.UpdateService
-import org.michaelbel.movies.settings.event.SettingsEventManager
+import org.michaelbel.movies.settings.event.SettingsEvent
 import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.ui.navigation.MainNavigator
@@ -27,7 +27,7 @@ class SettingsViewModel(
     private val interactor: Interactor,
     private val updateService: UpdateService,
     private val appService: AppService
-): MoviesViewModel<SettingsModel, SettingsIntent>(SettingsModel()), DefaultLifecycleObserver {
+): MoviesViewModel<SettingsModel, SettingsIntent, SettingsEvent>(SettingsModel()), DefaultLifecycleObserver {
 
     init {
         dispatch(SettingsIntent.CollectThemeData)
@@ -141,25 +141,26 @@ class SettingsViewModel(
                 })
             }
             is SettingsIntent.RequestPostNotificationsPermission -> {
-                launch { SettingsEventManager.push(SettingsEventManager.RequestPostNotificationsPermission) }
+                launch { push(SettingsEvent.RequestPostNotificationsPermission) }
             }
             is SettingsIntent.RequestTileService -> {
-                launch { SettingsEventManager.push(SettingsEventManager.RequestTileService) }
+                launch { push(SettingsEvent.RequestTileService) }
             }
             is SettingsIntent.RequestGithub -> {
-                launch { SettingsEventManager.push(SettingsEventManager.RequestGithub) }
+                launch { push(SettingsEvent.RequestGithub) }
             }
             is SettingsIntent.BackClick -> launch { MainNavigator.back() }
             is SettingsIntent.ReviewClick -> launch { MainNavigator.requestReview() }
             is SettingsIntent.UpdateClick -> launch { MainNavigator.requestUpdate() }
-            is SettingsIntent.ScrollToTop -> launch { push(intent) }
-            is SettingsIntent.ShowSnackbar -> launch { push(intent) }
-            is SettingsIntent.ShowPermissionSnackbar -> launch { push(intent) }
+            is SettingsIntent.ScrollToTop -> launch { push(SettingsEvent.ScrollToTop) }
+            is SettingsIntent.ShowSnackbar -> launch { push(SettingsEvent.ShowSnackbar(intent.message)) }
+            is SettingsIntent.ShowPermissionSnackbar -> launch { push(SettingsEvent.ShowPermissionSnackbar(intent.message, intent.actionLabel)) }
             is SettingsIntent.SelectLanguage -> launch { interactor.selectLanguage(intent.language) }
             is SettingsIntent.SelectTheme -> launch { interactor.selectTheme(intent.theme) }
             is SettingsIntent.SelectFeedView -> launch { interactor.selectFeedView(intent.feedView) }
             is SettingsIntent.SelectMovieList -> launch { interactor.selectMovieList(intent.movieList) }
             is SettingsIntent.SetDynamicColors -> launch { interactor.setDynamicColors(intent.value) }
+            is SettingsIntent.SetPaletteColors -> launch { interactor.setPaletteColors(intent.value) }
             is SettingsIntent.SetPaletteKey -> launch { interactor.setPaletteKey(intent.paletteKey) }
             is SettingsIntent.SetSeedColor -> launch { interactor.setSeedColor(intent.seedColor) }
             is SettingsIntent.SetBiometricEnabled -> launch { interactor.setBiometricEnabled(intent.enabled) }

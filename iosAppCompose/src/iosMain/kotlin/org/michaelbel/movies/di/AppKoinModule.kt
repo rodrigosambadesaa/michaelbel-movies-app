@@ -9,7 +9,6 @@ import org.michaelbel.movies.gallery.di.galleryKoinModule
 import org.michaelbel.movies.main.di.mainKoinModule
 import org.michaelbel.movies.main.di.mainNavKoinModule
 import org.michaelbel.movies.platform.inject.flavorServiceKtorModule
-import org.michaelbel.movies.search.di.searchKoinModule
 import org.michaelbel.movies.settings.di.settingsKoinModule
 
 internal val appKoinModule = module {
@@ -22,7 +21,6 @@ internal val appKoinModule = module {
         detailsKoinModule,
         feedKoinModule,
         galleryKoinModule,
-        searchKoinModule,
         settingsKoinModule
     )
 }

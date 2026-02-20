@@ -26,20 +26,15 @@ class SettingsUiInteractorImpl(
     private val context: Context
 ): SettingsUiInteractor {
 
-    override val isNavigationIconVisible: Boolean
-        get() = false
+    override val isNavigationIconVisible: Boolean = false
 
-    override val isLanguageFeatureEnabled: Boolean
-        get() = true
+    override val isLanguageFeatureEnabled: Boolean = true
 
-    override val isThemeFeatureEnabled: Boolean
-        get() = true
+    override val isThemeFeatureEnabled: Boolean = true
 
-    override val isFeedViewFeatureEnabled: Boolean
-        get() = true
+    override val isFeedViewFeatureEnabled: Boolean = true
 
-    override val isMovieListFeatureEnabled: Boolean
-        get() = true
+    override val isMovieListFeatureEnabled: Boolean = true
 
     override val isGenderFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(34) get() = Build.VERSION.SDK_INT >= 34
@@ -47,14 +42,12 @@ class SettingsUiInteractorImpl(
     override val isDynamicColorsFeatureEnabled: Boolean
         get() = DynamicColors.isDynamicColorAvailable()
 
-    override val isPaletteColorsFeatureEnabled: Boolean
-        get() = true
+    override val isPaletteColorsFeatureEnabled: Boolean = true
 
     override val isNotificationsFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
 
-    override val isBiometricFeatureEnabled: Boolean
-        get() = true
+    override val isBiometricFeatureEnabled: Boolean = true
 
     override val isWidgetFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(26) get() = Build.VERSION.SDK_INT >= 26
@@ -62,23 +55,17 @@ class SettingsUiInteractorImpl(
     override val isTileFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
 
-    override val isAppIconFeatureEnabled: Boolean
-        get() = true
+    override val isAppIconFeatureEnabled: Boolean = true
 
-    override val isScreenshotFeatureEnabled: Boolean
-        get() = true
+    override val isScreenshotFeatureEnabled: Boolean = true
 
-    override val isGithubFeatureEnabled: Boolean
-        get() = true
+    override val isGithubFeatureEnabled: Boolean = true
 
-    override val isReviewAppFeatureEnabled: Boolean
-        get() = true
+    override val isReviewAppFeatureEnabled: Boolean = true
 
-    override val isUpdateAppFeatureEnabled: Boolean
-        get() = true
+    override val isUpdateAppFeatureEnabled: Boolean = true
 
-    override val isAboutFeatureEnabled: Boolean
-        get() = true
+    override val isAboutFeatureEnabled: Boolean = true
 
     override val settingsWindowInsets: WindowInsets
         @Composable get() = displayCutoutWindowInsets

@@ -5,6 +5,7 @@ import org.michaelbel.movies.common.theme.AppTheme
 data class ThemeData(
     val appTheme: AppTheme,
     val dynamicColors: Boolean,
+    val paletteColors: Boolean,
     val paletteKey: Int,
     val seedColor: Int
 ) {
@@ -22,6 +23,7 @@ data class ThemeData(
             get() = ThemeData(
                 appTheme = AppTheme.FollowSystem,
                 dynamicColors = false,
+                paletteColors = false,
                 paletteKey = STYLE_TONAL_SPOT,
                 seedColor = DEFAULT_SEED_COLOR
             )

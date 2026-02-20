@@ -33,18 +33,18 @@ internal val PageContentColumnModifier: Modifier
     @Composable get() = Modifier
         .fillMaxWidth()
         .padding(horizontal = 8.dp, vertical = 4.dp)
-        .clip(MaterialTheme.shapes.small)
+        .clip(MaterialTheme.shapes.large)
         .background(MaterialTheme.colorScheme.inversePrimary)
 
 internal val PageContentGridModifier: Modifier
     @Composable get() = Modifier
         .fillMaxWidth()
         .padding(vertical = 4.dp)
-        .clip(MaterialTheme.shapes.small)
+        .clip(MaterialTheme.shapes.large)
         .background(MaterialTheme.colorScheme.inversePrimary)
 
 internal val PageContentStaggeredGridModifier: Modifier
     @Composable get() = Modifier
         .fillMaxWidth()
-        .clip(MaterialTheme.shapes.small)
+        .clip(MaterialTheme.shapes.large)
         .background(MaterialTheme.colorScheme.inversePrimary)

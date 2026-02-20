@@ -27,7 +27,7 @@ sealed interface AppTheme: SealedString {
                 NightYes.toString() -> NightYes
                 FollowSystem.toString() -> FollowSystem
                 Amoled.toString() -> Amoled
-                else -> throw InvalidThemeException
+                else -> throw InvalidThemeException()
             }
         }
     }

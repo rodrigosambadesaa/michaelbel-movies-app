@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.interactor.Interactor
@@ -31,14 +32,16 @@ import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AuthDestination
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
-import org.michaelbel.movies.ui.navigation.SearchDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 class FeedViewModel(
     private val interactor: Interactor,
     private val notificationClient: NotificationClient,
     private val networkManager: NetworkManager
-): MoviesViewModel<FeedModel, FeedIntent>(FeedModel()) {
+): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
+
+    private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
+    private val searchQuery: StateFlow<String> get() = _searchQuery.asStateFlow()
 
     private val currentMovieList: StateFlow<MovieList> = interactor.currentMovieList
         .stateIn(
@@ -51,6 +54,10 @@ class FeedViewModel(
         .flatMapLatest { movieList -> interactor.moviesPagingData(movieList) }
         .cachedIn(this)
 
+    val searchPagingDataFlow: Flow<PagingData<MoviePojo>> = searchQuery
+        .flatMapLatest(interactor::moviesPagingData)
+        .cachedIn(this)
+
     val pagingDataFlow2: StateFlow<List<MoviePojo>> = currentMovieList.flatMapLatest { movieList ->
         flowOf(interactor.moviesResult(movieList.nameOrLocalList))
     }.catch {
@@ -61,14 +68,14 @@ class FeedViewModel(
         initialValue = emptyList()
     )
 
-    private var _notificationsPermissionRequired: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val notificationsPermissionRequired: StateFlow<Boolean> get() = _notificationsPermissionRequired.asStateFlow()
-
     init {
         dispatch(FeedIntent.CollectAccountPojo)
         dispatch(FeedIntent.CollectFeedView)
         dispatch(FeedIntent.CollectMovieList)
         dispatch(FeedIntent.CollectNetworkStatus)
+        dispatch(FeedIntent.CollectSuggestions)
+        dispatch(FeedIntent.CollectSearchHistoryMovies)
+        dispatch(FeedIntent.LoadSuggestions)
         dispatch(FeedIntent.SubscribeNotificationsPermissionRequired)
     }
 
@@ -102,23 +109,47 @@ class FeedViewModel(
                     }
                 }
             }
+            is FeedIntent.CollectSuggestions -> {
+                launch {
+                    interactor.suggestions().collectLatest { suggestions ->
+                        reduce { it.copy(suggestions = suggestions) }
+                    }
+                }
+            }
+            is FeedIntent.CollectSearchHistoryMovies -> {
+                launch {
+                    interactor.moviesFlow(MoviePojo.MOVIES_SEARCH_HISTORY, Int.MAX_VALUE).collectLatest { searchHistoryMovies ->
+                        reduce { it.copy(searchHistoryMovies = searchHistoryMovies) }
+                    }
+                }
+            }
+            is FeedIntent.LoadSuggestions -> launch { interactor.updateSuggestions() }
             is FeedIntent.HideNotificationDialog -> {
                 launch {
-                    _notificationsPermissionRequired.tryEmit(false)
+                    reduce { it.copy(isNotificationDialogVisible = false) }
                     notificationClient.updateNotificationExpireTime()
                 }
             }
             is FeedIntent.SubscribeNotificationsPermissionRequired -> {
                 launch {
-                    _notificationsPermissionRequired.tryEmit(notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY))
+                    val required = notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY)
+                    reduce { it.copy(isNotificationDialogVisible = required) }
                 }
             }
             is FeedIntent.SettingsClick -> launch { MainNavigator.forward(SettingsDestination) }
-            is FeedIntent.SearchClick -> launch { MainNavigator.forward(SearchDestination) }
             is FeedIntent.AuthClick -> launch { MainNavigator.forward(AuthDestination) }
             is FeedIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
-            is FeedIntent.ScrollToTop -> launch { push(intent) }
-            is FeedIntent.ShowSnackbar -> launch { push(intent) }
+            is FeedIntent.ClearSearchHistoryClick -> launch { interactor.removeMovies(MoviePojo.MOVIES_SEARCH_HISTORY) }
+            is FeedIntent.RemoveMovieFromHistoryClick -> launch { interactor.removeMovie(MoviePojo.MOVIES_SEARCH_HISTORY, intent.movieId) }
+            is FeedIntent.SaveMovieToSearchHistoryClick -> {
+                launch {
+                    val movie = interactor.movie(searchQuery.value, intent.movieId)
+                    interactor.insertMovie(MoviePojo.MOVIES_SEARCH_HISTORY, movie)
+                }
+            }
+            is FeedIntent.EnterSearchQuery -> { _searchQuery.value = intent.query }
+            is FeedIntent.ScrollToTop -> launch { push(FeedEvent.ScrollToTop) }
+            is FeedIntent.ShowSnackbar -> launch { push(FeedEvent.ShowSnackbar(intent.message, intent.isLong)) }
             is FeedIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
         }
     }

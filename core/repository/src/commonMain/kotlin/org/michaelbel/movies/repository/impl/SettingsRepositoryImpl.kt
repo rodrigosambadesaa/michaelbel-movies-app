@@ -30,12 +30,14 @@ class SettingsRepositoryImpl(
             return combine(
                 preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceThemeKey),
                 preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey),
+                preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey),
                 preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferencePaletteKey),
                 preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceSeedColorKey)
-            ) { themeName, dynamicColors, paletteKey, seedColor ->
+            ) { themeName, dynamicColors, paletteColors, paletteKey, seedColor ->
                 ThemeData(
                     appTheme = AppTheme.transform(themeName ?: AppTheme.FollowSystem.toString()),
                     dynamicColors = dynamicColors ?: defaultDynamicColorsEnabled,
+                    paletteColors = paletteColors.orEmpty(),
                     paletteKey = paletteKey ?: ThemeData.STYLE_TONAL_SPOT,
                     seedColor = seedColor ?: ThemeData.DEFAULT_SEED_COLOR
                 )
@@ -66,6 +68,10 @@ class SettingsRepositoryImpl(
 
     override suspend fun setDynamicColors(value: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey, value)
+    }
+
+    override suspend fun setPaletteColors(value: Boolean) {
+        preferences.setValue(MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey, value)
     }
 
     override suspend fun setPaletteKey(paletteKey: Int) {

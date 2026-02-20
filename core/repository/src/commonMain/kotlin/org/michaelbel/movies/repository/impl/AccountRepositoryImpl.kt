@@ -44,6 +44,6 @@ class AccountRepositoryImpl(
                 setValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey, Clock.System.now().toEpochMilliseconds())
             }
             accountPersistence.upsert(account.accountPojo)
-        } catch (_: Exception) { throw AccountDetailsException }
+        } catch (_: Exception) { throw AccountDetailsException() }
     }
 }

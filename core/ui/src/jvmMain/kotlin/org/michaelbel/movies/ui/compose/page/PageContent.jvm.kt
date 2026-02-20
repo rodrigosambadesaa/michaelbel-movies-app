@@ -210,7 +210,6 @@ private fun PageContentStaggeredGrid(
                     ) {
                         PagingLoadingBox(
                             modifier = Modifier.fillMaxWidth().height(80.dp)
-
                         )
                     }
                 }

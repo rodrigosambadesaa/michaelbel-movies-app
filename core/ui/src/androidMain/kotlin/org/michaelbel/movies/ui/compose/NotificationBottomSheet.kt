@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package org.michaelbel.movies.ui.compose
 
@@ -21,6 +21,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -56,10 +58,7 @@ fun NotificationBottomSheet(
             initialValue = 15F,
             targetValue = -15F,
             animationSpec = infiniteRepeatable(
-                animation = tween(
-                    durationMillis = 500,
-                    easing = LinearEasing
-                ),
+                animation = tween(durationMillis = 500, easing = LinearEasing),
                 repeatMode = RepeatMode.Reverse
             ),
             label = ""
@@ -78,22 +77,15 @@ fun NotificationBottomSheet(
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.inversePrimary,
-                        shape = CircleShape
-                    ),
+                    .background(color = MaterialTheme.colorScheme.inversePrimary, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
                     imageVector = MoviesIcons.Notifications,
                     contentDescription = MoviesContentDescription.None,
-                    modifier = Modifier.graphicsLayer(
-                        transformOrigin = TransformOrigin(
-                            pivotFractionX = 0.5F,
-                            pivotFractionY = 0.0F
-                        ),
-                        rotationZ = value
-                    ),
+                    modifier = Modifier
+                        .size(IconButtonDefaults.smallIconSize)
+                        .graphicsLayer(transformOrigin = TransformOrigin(pivotFractionX = .5F, pivotFractionY = .0F), rotationZ = value),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurfaceVariant)
                 )
             }
@@ -120,6 +112,7 @@ fun NotificationBottomSheet(
                         else -> navigateToAppSettings()
                     }
                 },
+                shapes = ButtonDefaults.shapes(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceTint
                 ),

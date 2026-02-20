@@ -4,7 +4,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.buildkonfig)
 }
 
@@ -15,11 +15,16 @@ private val tmdbApiKey: String by lazy {
 }
 
 kotlin {
-    androidTarget()
     jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    androidLibrary {
+        namespace = "org.michaelbel.movies.network"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -31,6 +36,8 @@ kotlin {
             implementation(libs.bundles.ktor.android)
             implementation(libs.bundles.startup.android)
             implementation(libs.bundles.okhttp.logging.interceptor.android)
+            implementation(libs.bundles.chucker.library.no.op.android)
+            implementation(libs.bundles.flaker.noop.android)
         }
         iosMain.dependencies {
             implementation(libs.bundles.ktor.ios)
@@ -39,31 +46,6 @@ kotlin {
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.network"
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
-        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-
-    dependencies {
-        debugImplementation(libs.bundles.chucker.library.android) {
-            exclude(group = "androidx.constraintlayout")
-        }
-        releaseImplementation(libs.bundles.chucker.library.no.op.android) {
-            exclude(group = "androidx.constraintlayout")
-        }
-        debugImplementation(libs.bundles.flaker.android)
-        releaseImplementation(libs.bundles.flaker.noop.android)
     }
 }
 

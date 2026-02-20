@@ -12,13 +12,11 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import org.michaelbel.movies.account.AccountScreen
-import org.michaelbel.movies.feed.ui.FeedScreen
-import org.michaelbel.movies.search.ui.SearchScreen
-import org.michaelbel.movies.settings.ui.SettingsScreen
+import org.michaelbel.movies.feed.FeedScreen
+import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AppRoute
 import org.michaelbel.movies.ui.navigation.MainDestination
-import org.michaelbel.movies.ui.navigation.SearchDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 @Composable
@@ -36,7 +34,6 @@ fun NavContent(
         predictivePopTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
         entryProvider = entryProvider {
             entry<MainDestination> { FeedScreen() }
-            entry<SearchDestination> { SearchScreen() }
             entry<AccountDestination> { AccountScreen() }
             entry<SettingsDestination> { SettingsScreen() }
         }

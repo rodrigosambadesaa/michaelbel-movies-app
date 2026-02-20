@@ -88,7 +88,7 @@ private fun PageContentColumn(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = 4.dp),
+        modifier = modifier,
         state = lazyListState,
         contentPadding = contentPadding
     ) {
@@ -123,7 +123,7 @@ private fun PageContentColumn(
                                 .fillMaxWidth()
                                 .height(80.dp)
                                 .padding(start = 8.dp, top = 4.dp, end = 8.dp)
-                                .clip(MaterialTheme.shapes.small)
+                                .clip(MaterialTheme.shapes.large)
                                 .clickable { retry() }
                         )
                     }
@@ -184,7 +184,7 @@ private fun PageContentGrid(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(80.dp)
-                                .clip(MaterialTheme.shapes.small)
+                                .clip(MaterialTheme.shapes.large)
                                 .clickable { retry() }
                         )
                     }
@@ -245,7 +245,7 @@ private fun PageContentStaggeredGrid(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(80.dp)
-                                .clip(MaterialTheme.shapes.small)
+                                .clip(MaterialTheme.shapes.large)
                                 .clickable { retry() }
                         )
                     }

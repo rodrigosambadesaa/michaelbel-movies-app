@@ -39,7 +39,7 @@ class SearchMoviesRemoteMediator(
             } ?: return MediatorResult.Success(endOfPaginationReached = true)
 
             if (query.isEmpty()) {
-                throw PageEmptyException
+                throw PageEmptyException()
             }
 
             val moviesResult = searchRepository.searchMoviesResult(query, localeInteractor.language, loadKey)
@@ -51,7 +51,7 @@ class SearchMoviesRemoteMediator(
                 }
 
                 if (moviesResult.isEmpty) {
-                    throw PageEmptyException
+                    throw PageEmptyException()
                 }
 
                 pagingKeyRepository.insertPagingKey(query, moviesResult.nextPage, moviesResult.totalPages)

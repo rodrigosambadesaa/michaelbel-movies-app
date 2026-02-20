@@ -7,8 +7,7 @@ import org.michaelbel.movies.common.biometric.BiometricListener
 
 internal class BiometricInteractorImpl: BiometricInteractor {
 
-    override val isBiometricAvailable: Flow<Boolean>
-        get() = flowOf(false)
+    override val isBiometricAvailable: Flow<Boolean> = flowOf(false)
 
     override fun authenticate(activity: Any, biometricListener: BiometricListener) {}
 }

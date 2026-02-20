@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
@@ -17,7 +18,7 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun PagingFailureBox(
+fun PagingFailureBox(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -27,7 +28,7 @@ internal fun PagingFailureBox(
     ) {
         Text(
             text = stringResource(MoviesStrings.retry),
-            style = MaterialTheme.typography.bodyLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onErrorContainer, fontWeight = FontWeight.ExtraBold)
         )
     }
 }
@@ -39,7 +40,7 @@ private fun PagingFailureBoxPreview() {
         PagingFailureBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(80.dp)
                 .background(MaterialTheme.colorScheme.primaryContainer)
         )
     }

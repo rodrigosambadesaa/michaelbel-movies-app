@@ -51,7 +51,7 @@ class MovieRepositoryImpl(
         return try {
             moviePersistence.movieById(pagingKey, movieId) ?: movieNetworkService.movie(movieId, language).moviePojo
         } catch (_: Exception) {
-            throw MovieDetailsException
+            throw MovieDetailsException()
         }
     }
 
@@ -73,7 +73,7 @@ class MovieRepositoryImpl(
             moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE)
         } catch (_: Exception) {
             moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE).ifEmpty {
-                throw MoviesUpcomingException
+                throw MoviesUpcomingException()
             }
         }
     }

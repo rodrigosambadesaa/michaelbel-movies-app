@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.MovieDetailsException
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.details.event.DetailsEvent
 import org.michaelbel.movies.details.intent.DetailsIntent
 import org.michaelbel.movies.details.model.DetailsModel
 import org.michaelbel.movies.interactor.Interactor
@@ -17,7 +18,7 @@ class DetailsViewModel(
     private val destination: DetailsDestination,
     private val interactor: Interactor,
     private val networkManager: NetworkManager
-): MoviesViewModel<DetailsModel, DetailsIntent>(DetailsModel()) {
+): MoviesViewModel<DetailsModel, DetailsIntent, DetailsEvent>(DetailsModel()) {
 
     init {
         dispatch(DetailsIntent.CollectAppTheme)
@@ -49,7 +50,7 @@ class DetailsViewModel(
             }
             is DetailsIntent.BackClick -> launch { MainNavigator.back() }
             is DetailsIntent.GalleryClick -> launch { MainNavigator.forward(GalleryDestination(destination.movieId)) }
-            is DetailsIntent.CopyClick -> launch { push(Unit) }
+            is DetailsIntent.CopyClick -> launch { push(DetailsEvent.CopyClick) }
             is DetailsIntent.GenerateColors -> {
                 launch {
                     if (intent.containerColor != null && intent.onContainerColor != null) {

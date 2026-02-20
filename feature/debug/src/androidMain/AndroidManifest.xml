@@ -4,4 +4,13 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <application>
+
+        <activity
+            android:name="org.michaelbel.movies.debug.DebugActivity"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+            android:exported="true" />
+
+    </application>
+
 </manifest>

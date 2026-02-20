@@ -20,10 +20,9 @@ import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSe
 import org.michaelbel.movies.account.AccountScreen
 import org.michaelbel.movies.auth.AuthScreen
 import org.michaelbel.movies.details.DetailsScreen
-import org.michaelbel.movies.gallery.ui.GalleryScreen
+import org.michaelbel.movies.gallery.GalleryScreen
 import org.michaelbel.movies.main.mainnav.MainNavRoute
-import org.michaelbel.movies.search.ui.SearchScreen
-import org.michaelbel.movies.settings.ui.SettingsScreen
+import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.USE_PLATFORM_DEFAULT_WIDTH
 import org.michaelbel.movies.ui.navigation.AccountDestination
@@ -33,7 +32,6 @@ import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.ui.navigation.MainDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
-import org.michaelbel.movies.ui.navigation.SearchDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 @Composable
@@ -82,7 +80,6 @@ fun MainContent(
             }
             entry<DetailsDestination> { DetailsScreen(destination = it) }
             entry<GalleryDestination> { GalleryScreen(destination = it) }
-            entry<SearchDestination> { SearchScreen() }
             entry<SettingsDestination> { SettingsScreen() }
         }
     )

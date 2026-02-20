@@ -7,13 +7,14 @@ import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
+import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AuthViewModel(
     private val interactor: Interactor
-): MoviesViewModel<AuthModel, AuthIntent>(AuthModel()) {
+): MoviesViewModel<AuthModel, AuthIntent, Event>(AuthModel()) {
 
     override fun dispatch(intent: AuthIntent) {
         when (intent) {

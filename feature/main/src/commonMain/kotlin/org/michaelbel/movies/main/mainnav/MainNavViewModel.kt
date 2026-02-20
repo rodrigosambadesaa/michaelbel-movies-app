@@ -5,25 +5,25 @@ import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.common.mvi.model.EmptyModel
+import org.michaelbel.movies.feed.event.FeedAppEvent
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.main.intent.MainIntent
-import org.michaelbel.movies.ui.navigation.MainNavigator
-import org.michaelbel.movies.ui.navigation.SearchDestination
+import org.michaelbel.movies.main.mainnav.event.MainNavEvent
 
 class MainNavViewModel(
     private val interactor: Interactor
-): MoviesViewModel<EmptyModel, MainIntent>(EmptyModel) {
+): MoviesViewModel<EmptyModel, MainIntent, MainNavEvent>(EmptyModel) {
 
     override fun dispatch(intent: MainIntent) {
         when (intent) {
-            is MainIntent.SearchClick -> launch { MainNavigator.forward(SearchDestination) }
+            is MainIntent.FeedReselected -> launch { FeedAppEvent.push(FeedAppEvent.Event.ReselectFeed) }
         }
     }
 
     override fun catch(throwable: Throwable) {
         when (throwable) {
-            is CreateSessionException -> launch { push("Failure while signing in. Wrong token or no approval") }
-            is AccountDetailsException -> launch { push("Failure while signing in. Wrong token or no approval") }
+            is CreateSessionException -> launch { push(MainNavEvent.ShowSnackbar("Failure while signing in. Wrong token or no approval")) }
+            is AccountDetailsException -> launch { push(MainNavEvent.ShowSnackbar("Failure while signing in. Wrong token or no approval")) }
             else -> super.catch(throwable)
         }
     }
@@ -38,7 +38,7 @@ class MainNavViewModel(
             interactor.run {
                 createSession(requestToken)
                 accountDetails()
-                push("Successful authorization")
+                push(MainNavEvent.ShowSnackbar("Successful authorization"))
             }
         }
     }

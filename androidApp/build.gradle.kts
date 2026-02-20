@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets
 plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.palantir.git)
 }
 if (isGmsBuild) {
@@ -57,7 +56,6 @@ android {
         versionCode = gitCommitsCount
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
-
         buildConfigField("String", "VERSION_DATE", "\"$currentTime\"")
     }
 

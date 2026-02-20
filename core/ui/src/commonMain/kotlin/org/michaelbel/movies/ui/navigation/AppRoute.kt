@@ -14,9 +14,6 @@ data object AuthDestination: AppRoute
 data object AccountDestination: AppRoute
 
 @Serializable
-data object SearchDestination: AppRoute
-
-@Serializable
 data object SettingsDestination: AppRoute
 
 @Serializable

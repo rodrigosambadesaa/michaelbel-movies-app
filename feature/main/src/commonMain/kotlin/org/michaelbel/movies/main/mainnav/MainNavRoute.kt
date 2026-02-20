@@ -6,28 +6,24 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationItemIconPosition
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.ToggleButtonShapes
-import androidx.compose.material3.TonalToggleButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -36,7 +32,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -46,9 +41,11 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSerializer
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
-import org.michaelbel.movies.feed.ui.FeedScreen
+import org.michaelbel.movies.feed.FeedScreen
 import org.michaelbel.movies.main.intent.MainIntent
-import org.michaelbel.movies.settings.ui.SettingsScreen
+import org.michaelbel.movies.main.mainnav.event.MainNavAppEvent
+import org.michaelbel.movies.main.mainnav.event.MainNavEvent
+import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.navigation.AppRoute
@@ -83,71 +80,48 @@ fun MainNavRoute(
                 contentAlignment = Alignment.Center
             ) {
                 HorizontalFloatingToolbar(
-                    expanded = true,
-                    floatingActionButton = {
-                        FloatingActionButton(
-                            onClick = { viewModel.dispatch(MainIntent.SearchClick) }
-                        ) {
-                            Icon(
-                                imageVector = MoviesIcons.Search,
-                                contentDescription = null
-                            )
-                        }
-                    }
+                    expanded = true
                 ) {
-                    TonalToggleButton(
-                        checked = backStack[backStack.lastIndex] == feedDestination,
-                        onCheckedChange = { backStack[backStack.lastIndex] = feedDestination },
-                        colors = ToggleButtonDefaults.tonalToggleButtonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        shapes = ToggleButtonShapes(
-                            shape = RoundedCornerShape(18.dp),
-                            pressedShape = RoundedCornerShape(18.dp),
-                            checkedShape = RoundedCornerShape(18.dp)
-                        )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            imageVector = MoviesIcons.GridView,
-                            contentDescription = null
+                        ShortNavigationBarItem(
+                            icon = {
+                                Icon(
+                                    imageVector = MoviesIcons.GridView,
+                                    contentDescription = null
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = "Feed"
+                                )
+                            },
+                            selected = backStack[backStack.lastIndex] == feedDestination,
+                            onClick = {
+                                if (backStack[backStack.lastIndex] == feedDestination) {
+                                    viewModel.dispatch(MainIntent.FeedReselected)
+                                }
+                                backStack[backStack.lastIndex] = feedDestination
+                            },
+                            iconPosition = NavigationItemIconPosition.Start,
                         )
 
-                        Spacer(
-                            modifier = Modifier.width(ButtonDefaults.IconSpacing)
-                        )
-
-                        Text(
-                            text = "Feed"
-                        )
-                    }
-
-                    Spacer(
-                        modifier = Modifier.width(8.dp)
-                    )
-
-                    TonalToggleButton(
-                        checked = backStack[backStack.lastIndex] == SettingsDestination,
-                        onCheckedChange = { backStack[backStack.lastIndex] = SettingsDestination },
-                        colors = ToggleButtonDefaults.tonalToggleButtonColors(
-                            containerColor = Color.Transparent
-                        ),
-                        shapes = ToggleButtonShapes(
-                            shape = RoundedCornerShape(18.dp),
-                            pressedShape = RoundedCornerShape(18.dp),
-                            checkedShape = RoundedCornerShape(18.dp)
-                        )
-                    ) {
-                        Icon(
-                            imageVector = MoviesIcons.Settings,
-                            contentDescription = null
-                        )
-
-                        Spacer(
-                            modifier = Modifier.width(ButtonDefaults.IconSpacing)
-                        )
-
-                        Text(
-                            text = "Settings"
+                        ShortNavigationBarItem(
+                            icon = {
+                                Icon(
+                                    imageVector = MoviesIcons.Settings,
+                                    contentDescription = null
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = "Settings"
+                                )
+                            },
+                            selected = backStack[backStack.lastIndex] == SettingsDestination,
+                            onClick = { backStack[backStack.lastIndex] = SettingsDestination },
+                            iconPosition = NavigationItemIconPosition.Start
                         )
                     }
                 }
@@ -185,15 +159,24 @@ fun MainNavRoute(
     }
 
     ObserveAsEvents(
+        flow = MainNavAppEvent.eventFlow
+    ) { event ->
+        when (event) {
+            MainNavAppEvent.Event.OpenFeed -> backStack[backStack.lastIndex] = feedDestination
+            MainNavAppEvent.Event.OpenSettings -> backStack[backStack.lastIndex] = SettingsDestination
+        }
+    }
+
+    ObserveAsEvents(
         flow = viewModel.eventFlow,
         key1 = snackbarHostState
     ) { event ->
         when (event) {
-            is String -> {
+            is MainNavEvent.ShowSnackbar -> {
                 scope.launch {
                     snackbarHostState.run {
                         currentSnackbarData?.dismiss()
-                        showSnackbar(event)
+                        showSnackbar(event.message)
                     }
                 }
             }

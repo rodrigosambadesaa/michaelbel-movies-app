@@ -35,7 +35,7 @@ sealed interface MovieList: SealedString {
                 Popular().toString() -> Popular()
                 TopRated().toString() -> TopRated()
                 Upcoming().toString() -> Upcoming()
-                else -> throw InvalidMovieListException
+                else -> throw InvalidMovieListException()
             }
         }
 

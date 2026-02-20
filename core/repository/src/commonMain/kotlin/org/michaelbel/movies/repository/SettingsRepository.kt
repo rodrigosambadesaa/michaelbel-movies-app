@@ -30,6 +30,8 @@ interface SettingsRepository {
 
     suspend fun setDynamicColors(value: Boolean)
 
+    suspend fun setPaletteColors(value: Boolean)
+
     suspend fun setPaletteKey(paletteKey: Int)
 
     suspend fun setSeedColor(seedColor: Int)

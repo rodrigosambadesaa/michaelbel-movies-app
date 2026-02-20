@@ -3,15 +3,20 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
     jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    androidLibrary {
+        namespace = "org.michaelbel.movies.main"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -20,7 +25,6 @@ kotlin {
             api(projects.feature.details)
             api(projects.feature.feed)
             api(projects.feature.gallery)
-            api(projects.feature.search)
             api(projects.feature.settings)
             api(projects.feature.debug)
             implementation(libs.bundles.jetbrains.androidx.lifecycle.viewmodel.common)
@@ -35,41 +39,5 @@ kotlin {
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.main"
-    flavorDimensions += "version"
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
-    }
-
-    productFlavors {
-        create("gms") {
-            dimension = "version"
-            isDefault = true
-        }
-        create("hms") {
-            dimension = "version"
-        }
-        create("foss") {
-            dimension = "version"
-        }
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-
-    val gmsImplementation by configurations
-    val hmsImplementation by configurations
-    val fossImplementation by configurations
-    dependencies {
-        gmsImplementation(projects.core.platformServices.injectAndroid)
-        hmsImplementation(projects.core.platformServices.injectAndroid)
-        fossImplementation(projects.core.platformServices.injectAndroid)
     }
 }

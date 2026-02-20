@@ -37,71 +37,51 @@ internal class SettingsInteractorImpl(
         return settingsRepository.isBiometricEnabledAsync()
     }
 
-    override suspend fun selectTheme(
-        appTheme: AppTheme
-    ) {
+    override suspend fun selectTheme(appTheme: AppTheme) {
         withContext(dispatchers.ui) {
             settingsRepository.selectTheme(appTheme)
             analytics.logEvent(SelectThemeEvent(appTheme.toString()))
         }
     }
 
-    override suspend fun selectFeedView(
-        feedView: FeedView
-    ) {
+    override suspend fun selectFeedView(feedView: FeedView) {
         withContext(dispatchers.ui) {
             settingsRepository.selectFeedView(feedView)
             analytics.logEvent(SelectFeedViewEvent(feedView.toString()))
         }
     }
 
-    override suspend fun selectMovieList(
-        movieList: MovieList
-    ) {
+    override suspend fun selectMovieList(movieList: MovieList) {
         withContext(dispatchers.ui) {
             settingsRepository.selectMovieList(movieList)
             analytics.logEvent(SelectMovieListEvent(movieList.toString()))
         }
     }
 
-    override suspend fun setDynamicColors(
-        value: Boolean
-    ) {
+    override suspend fun setDynamicColors(value: Boolean) {
         withContext(dispatchers.main) {
             settingsRepository.setDynamicColors(value)
             analytics.logEvent(ChangeDynamicColorsEvent(value))
         }
     }
 
-    override suspend fun setPaletteKey(
-        paletteKey: Int
-    ) {
-        withContext(dispatchers.ui) {
-            settingsRepository.setPaletteKey(paletteKey)
-        }
+    override suspend fun setPaletteColors(value: Boolean) {
+        withContext(dispatchers.main) { settingsRepository.setPaletteColors(value) }
     }
 
-    override suspend fun setSeedColor(
-        seedColor: Int
-    ) {
-        withContext(dispatchers.ui) {
-            settingsRepository.setSeedColor(seedColor)
-        }
+    override suspend fun setPaletteKey(paletteKey: Int) {
+        withContext(dispatchers.ui) { settingsRepository.setPaletteKey(paletteKey) }
     }
 
-    override suspend fun setBiometricEnabled(
-        enabled: Boolean
-    ) {
-        withContext(dispatchers.main) {
-            settingsRepository.setBiometricEnabled(enabled)
-        }
+    override suspend fun setSeedColor(seedColor: Int) {
+        withContext(dispatchers.ui) { settingsRepository.setSeedColor(seedColor) }
     }
 
-    override suspend fun setScreenshotBlockEnabled(
-        enabled: Boolean
-    ) {
-        withContext(dispatchers.main) {
-            settingsRepository.setScreenshotBlockEnabled(enabled)
-        }
+    override suspend fun setBiometricEnabled(enabled: Boolean) {
+        withContext(dispatchers.main) { settingsRepository.setBiometricEnabled(enabled) }
+    }
+
+    override suspend fun setScreenshotBlockEnabled(enabled: Boolean) {
+        withContext(dispatchers.main) { settingsRepository.setScreenshotBlockEnabled(enabled) }
     }
 }

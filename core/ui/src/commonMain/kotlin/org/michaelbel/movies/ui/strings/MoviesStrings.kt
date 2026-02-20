@@ -94,6 +94,7 @@ import movies.core.ui.generated.resources.settings_movie_list_popular
 import movies.core.ui.generated.resources.settings_movie_list_top_rated
 import movies.core.ui.generated.resources.settings_movie_list_upcoming
 import movies.core.ui.generated.resources.settings_palette_colors
+import movies.core.ui.generated.resources.settings_palette_colors_description
 import movies.core.ui.generated.resources.settings_post_notifications
 import movies.core.ui.generated.resources.settings_post_notifications_denied
 import movies.core.ui.generated.resources.settings_post_notifications_granted
@@ -236,6 +237,7 @@ object MoviesStrings {
     val settings_update = Res.string.settings_update
     val settings_update_description = Res.string.settings_update_description
     val settings_palette_colors = Res.string.settings_palette_colors
+    val settings_palette_colors_description = Res.string.settings_palette_colors_description
     val settings_screenshots = Res.string.settings_screenshots
     val settings_screenshots_description = Res.string.settings_screenshots_description
 

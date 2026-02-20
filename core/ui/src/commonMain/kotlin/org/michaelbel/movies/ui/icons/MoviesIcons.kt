@@ -1,56 +1,44 @@
 package org.michaelbel.movies.ui.icons
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ManageSearch
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FileDownload
+import androidx.compose.material.icons.filled.Fingerprint
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardVoice
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.LocalMovies
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MovieFilter
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FileDownload
-import androidx.compose.material.icons.outlined.Fingerprint
-import androidx.compose.material.icons.outlined.GridView
-import androidx.compose.material.icons.outlined.History
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.KeyboardVoice
-import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.LocalMovies
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Screenshot
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material.icons.outlined.SystemUpdate
-import androidx.compose.material.icons.outlined.ViewAgenda
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material.icons.outlined.Widgets
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Screenshot
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material.icons.filled.ViewAgenda
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.Wallpaper
+import androidx.compose.material.icons.filled.Widgets
 import movies.core.ui.generated.resources.Res
 import movies.core.ui.generated.resources.ic_18_up_rating_outline_24
-import movies.core.ui.generated.resources.ic_file_download_24
 import movies.core.ui.generated.resources.ic_launcher_icon_amoled
 import movies.core.ui.generated.resources.ic_launcher_icon_brown
 import movies.core.ui.generated.resources.ic_launcher_icon_purple
 import movies.core.ui.generated.resources.ic_launcher_icon_red
-import movies.core.ui.generated.resources.ic_movie_filter_24
-import movies.core.ui.generated.resources.ic_settings_account_box_24
-import movies.core.ui.generated.resources.ic_settings_cinematic_blur_24
 import movies.core.ui.generated.resources.ic_tmdb_logo
 
-/**
- * Movies icons. Material icons are [ImageVector]s, custom icons are drawable resource IDs.
- */
 object MoviesIcons {
     val TmdbLogo = Res.drawable.ic_tmdb_logo
-    val MovieFilter24 = Res.drawable.ic_movie_filter_24
-    val FileDownload24 = Res.drawable.ic_file_download_24
     val AdultOutline = Res.drawable.ic_18_up_rating_outline_24
-    val SettingsAccountBox24 = Res.drawable.ic_settings_account_box_24
-    val SettingsCinematicBlur24 = Res.drawable.ic_settings_cinematic_blur_24
     val LauncherAmoled = Res.drawable.ic_launcher_icon_amoled
     val LauncherBrown = Res.drawable.ic_launcher_icon_brown
     val LauncherPurple = Res.drawable.ic_launcher_icon_purple
@@ -61,31 +49,31 @@ object MoviesIcons {
     val GooglePlay = GooglePlayVector
     val ThemeLightDark = ThemeLightDarkVector
 
-    val AccountCircle = Icons.Outlined.AccountCircle
-    val ArrowBack = Icons.AutoMirrored.Outlined.ArrowBack
-    val Check = Icons.Outlined.Check
-    val Close = Icons.Outlined.Close
-    val Delete = Icons.Outlined.Delete
-    val Info = Icons.Outlined.Info
-    val FileDownload = Icons.Outlined.FileDownload
-    val Fingerprint = Icons.Outlined.Fingerprint
-    val GridView = Icons.Outlined.GridView
-    val History = Icons.Outlined.History
-    val KeyboardVoice = Icons.Outlined.KeyboardVoice
-    val Language = Icons.Outlined.Language
-    val LocationOn = Icons.Outlined.LocationOn
+    val AccountCircle = Icons.Filled.AccountCircle
+    val ArrowBack = Icons.AutoMirrored.Filled.ArrowBack
+    val Check = Icons.Filled.Check
+    val Close = Icons.Filled.Close
+    val Delete = Icons.Filled.Delete
+    val Info = Icons.Filled.Info
+    val FileDownload = Icons.Filled.FileDownload
+    val Fingerprint = Icons.Filled.Fingerprint
+    val GridView = Icons.Filled.GridView
+    val KeyboardVoice = Icons.Filled.KeyboardVoice
+    val Language = Icons.Filled.Language
+    val LocationOn = Icons.Filled.LocationOn
     val ManageSearch = Icons.AutoMirrored.Filled.ManageSearch
     val MovieFilter = Icons.Filled.MovieFilter
-    val LocalMovies = Icons.Outlined.LocalMovies
-    val Notifications = Icons.Outlined.Notifications
-    val Palette = Icons.Outlined.Palette
-    val Screenshot = Icons.Outlined.Screenshot
-    val Search = Icons.Outlined.Search
-    val Settings = Icons.Outlined.Settings
-    val Share = Icons.Outlined.Share
-    val SystemUpdate = Icons.Outlined.SystemUpdate
-    val ViewAgenda = Icons.Outlined.ViewAgenda
-    val Visibility = Icons.Outlined.Visibility
-    val VisibilityOff = Icons.Outlined.VisibilityOff
-    val Widgets = Icons.Outlined.Widgets
+    val LocalMovies = Icons.Filled.LocalMovies
+    val Notifications = Icons.Filled.Notifications
+    val Palette = Icons.Filled.Palette
+    val Screenshot = Icons.Filled.Screenshot
+    val Search = Icons.Filled.Search
+    val Settings = Icons.Filled.Settings
+    val Share = Icons.Filled.Share
+    val SystemUpdate = Icons.Filled.SystemUpdate
+    val ViewAgenda = Icons.Filled.ViewAgenda
+    val Visibility = Icons.Filled.Visibility
+    val VisibilityOff = Icons.Filled.VisibilityOff
+    val Wallpaper = Icons.Filled.Wallpaper
+    val Widgets = Icons.Filled.Widgets
 }

@@ -9,7 +9,7 @@
     <string name="notification_go_to_settings">В Настройки</string>
     <string name="retry">Повторить</string>
     <string name="error_api_key_null">TMDB API не может быть пустым</string>
-    <string name="error_loading">При загрузке фильмов произошла ошибка</string>
+    <string name="error_loading">При загрузке фильмов произошла ошибка.\nИз 🇷🇺 РФ и 🇧🇾 РБ не работает без VPN.</string>
     <string name="error_check_internet_connectivity">Проверить подключение к интернету</string>
     <string name="share_via">Поделиться через</string>
     <string name="tile_title">Movies</string>
@@ -115,6 +115,7 @@
     <string name="settings_update">Обнови приложение</string>
     <string name="settings_update_description">Используя In-App Update API</string>
     <string name="settings_palette_colors">Палитра цветов</string>
+    <string name="settings_palette_colors_description">Применить цвета из пилитры</string>
     <string name="settings_screenshots">Скриншоты</string>
     <string name="settings_screenshots_description">Запретить делать скриншоты</string>
 

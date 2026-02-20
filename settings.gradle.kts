@@ -18,6 +18,9 @@ pluginManagement {
         }
     }
 }
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
 dependencyResolutionManagement {
     repositories {
         google {
@@ -67,14 +70,7 @@ include(
     ":feature:details",
     ":feature:feed",
     ":feature:gallery",
-    ":feature:search",
     ":feature:settings",
 
-    ":feature:debug",
-    ":feature:debug-impl",
-
-    ":core:ui-web",
-    ":feature:main-impl-web",
-    ":feature:feed-web",
-    ":feature:feed-impl-web"
+    ":feature:debug"
 )

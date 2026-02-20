@@ -9,21 +9,21 @@ import kotlinx.coroutines.flow.update
 import org.michaelbel.movies.common.mvi.model.Model
 import org.michaelbel.movies.common.viewmodel.CoroutineViewModel
 
-abstract class MoviesViewModel<S: Model, I: Intent>(
+abstract class MoviesViewModel<S: Model, I: Intent, E: Event>(
     initialState: S
 ): CoroutineViewModel() {
 
     private val _stateFlow = MutableStateFlow(initialState)
     val stateFlow: StateFlow<S> = _stateFlow
 
-    private val _eventChannel = Channel<Any>()
-    val eventFlow: Flow<Any> = _eventChannel.receiveAsFlow()
+    private val _eventChannel = Channel<E>()
+    val eventFlow: Flow<E> = _eventChannel.receiveAsFlow()
 
     protected fun reduce(reducer: (S) -> S) {
         _stateFlow.update(reducer)
     }
 
-    protected suspend fun push(event: Any) {
+    protected suspend fun push(event: E) {
         _eventChannel.send(event)
     }
 

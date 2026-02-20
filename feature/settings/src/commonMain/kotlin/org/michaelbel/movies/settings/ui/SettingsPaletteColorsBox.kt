@@ -32,14 +32,13 @@ import org.michaelbel.movies.ui.theme.paletteStyles
 
 @Composable
 internal fun SettingsPaletteColorsBox(
-    isDynamicColorsEnabled: Boolean,
     paletteKey: Int,
     seedColor: Int,
-    onChange: (Boolean, Int, Int) -> Unit
+    onChange: (Int, Int) -> Unit
 ) {
     val pageCount = colorList.size + 1
     val pagerState = rememberPagerState(
-        initialPage = if (paletteKey == ThemeData.STYLE_MONOCHROME) pageCount else colorList.indexOf(Color(seedColor)).run { if (this == -1) 0 else this }
+        initialPage = if (paletteKey == ThemeData.STYLE_MONOCHROME) pageCount - 1 else colorList.indexOf(Color(seedColor)).run { if (this == -1) 0 else this }
     ) { pageCount }
 
     Column(
@@ -60,8 +59,8 @@ internal fun SettingsPaletteColorsBox(
                         val tonalPalettes by remember { mutableStateOf(color.toTonalPalettes(style)) }
                         SettingPaletteColor(
                             tonalPalettes = tonalPalettes,
-                            isSelected = !isDynamicColorsEnabled && paletteKey == index && seedColor == color.toArgb(),
-                            onClick = { onChange(false, index, color.toArgb()) }
+                            isSelected = paletteKey == index && seedColor == color.toArgb(),
+                            onClick = { onChange(index, color.toArgb()) }
                         )
                     }
                 }
@@ -72,8 +71,8 @@ internal fun SettingsPaletteColorsBox(
                 ) {
                     SettingPaletteColor(
                         tonalPalettes = Color.Black.toTonalPalettes(PaletteStyle.Monochrome),
-                        isSelected = !isDynamicColorsEnabled && paletteKey == ThemeData.STYLE_MONOCHROME,
-                        onClick = { onChange(false, ThemeData.STYLE_MONOCHROME, Color.Black.toArgb()) }
+                        isSelected = paletteKey == ThemeData.STYLE_MONOCHROME,
+                        onClick = { onChange(ThemeData.STYLE_MONOCHROME, Color.Black.toArgb()) }
                     )
                 }
             }

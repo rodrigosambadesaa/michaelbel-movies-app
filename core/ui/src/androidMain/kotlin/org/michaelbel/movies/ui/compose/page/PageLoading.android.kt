@@ -63,7 +63,7 @@ private fun PageLoadingColumn(
     paddingValues: PaddingValues = PaddingValues()
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = 4.dp),
+        modifier = modifier,
         contentPadding = paddingValues,
         userScrollEnabled = false
     ) {
@@ -76,7 +76,7 @@ private fun PageLoadingColumn(
                     .placeholder(
                         visible = true,
                         color = MaterialTheme.colorScheme.inversePrimary,
-                        shape = MaterialTheme.shapes.small,
+                        shape = MaterialTheme.shapes.large,
                         highlight = PlaceholderHighlight.fade()
                     )
             )
@@ -105,7 +105,7 @@ private fun PageLoadingGrid(
                     .placeholder(
                         visible = true,
                         color = MaterialTheme.colorScheme.inversePrimary,
-                        shape = MaterialTheme.shapes.small,
+                        shape = MaterialTheme.shapes.large,
                         highlight = PlaceholderHighlight.fade()
                     )
             )
@@ -134,7 +134,7 @@ private fun PageLoadingStaggeredGrid(
                     .placeholder(
                         visible = true,
                         color = MaterialTheme.colorScheme.inversePrimary,
-                        shape = MaterialTheme.shapes.small,
+                        shape = MaterialTheme.shapes.large,
                         highlight = PlaceholderHighlight.fade()
                     )
             )

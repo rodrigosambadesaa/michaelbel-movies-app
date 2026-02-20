@@ -8,10 +8,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
-import org.michaelbel.movies.common.BuildConfig
 
 actual val isDebug: Boolean
-    get() = BuildConfig.DEBUG
+    get() = runCatching {
+        val activityThreadClass = Class.forName("android.app.ActivityThread")
+        val application = activityThreadClass
+            .getDeclaredMethod("currentApplication")
+            .invoke(null) as? android.app.Application
+        application?.applicationInfo?.flags?.and(android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
+    }.getOrDefault(false)
 
 actual val isPortrait: Boolean
     @Composable get() {

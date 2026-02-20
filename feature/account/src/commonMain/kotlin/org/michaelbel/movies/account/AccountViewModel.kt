@@ -5,13 +5,14 @@ import kotlinx.coroutines.launch
 import org.michaelbel.movies.account.intent.AccountIntent
 import org.michaelbel.movies.account.model.AccountModel
 import org.michaelbel.movies.common.exceptions.DeleteSessionException
+import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AccountViewModel(
     private val interactor: Interactor
-): MoviesViewModel<AccountModel, AccountIntent>(AccountModel()) {
+): MoviesViewModel<AccountModel, AccountIntent, Event>(AccountModel()) {
 
     init {
         dispatch(AccountIntent.CollectAccountPojo)

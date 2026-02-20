@@ -45,7 +45,7 @@ class FeedMoviesRemoteMediator(
                 }
 
                 if (moviesResult.isEmpty) {
-                    throw PageEmptyException
+                    throw PageEmptyException()
                 }
 
                 pagingKeyRepository.insertPagingKey(pagingKey, moviesResult.nextPage, moviesResult.totalPages)

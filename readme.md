@@ -217,42 +217,34 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Screenshot Detection](https://d.android.com/about/versions/14/features/screenshot-detection)
 - [x] [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 
-
 ## Modules
 ```mermaid
 graph TD;
-    main-impl-->androidApp
-    main-impl-->iosComposeApp
-    main-impl-->desktopApp
+    main-->androidApp
+    main-->iosAppCompose
+    main-->desktopApp
+    main-->webApp
 
-    account-->main-impl
-    auth-->main-impl
-    details-->main-impl
-    feed-->main-impl
-    gallery-->main-impl
-    search-->main-impl
-    settings-->main-impl
-    debug-->main-impl
+    account-->main
+    auth-->main
+    details-->main
+    feed-->main
+    gallery-->main
+    settings-->main
+    debug-->main
+    feed-web-->main
 
-    account-impl-->account
-    auth-impl-->auth
-    details-impl-->details
-    feed-impl-->feed
-    gallery-impl-->gallery
-    search-impl-->search
-    settings-impl-->settings
-    debug-impl-->debug
-
-    core-->account-impl
-    core-->auth-impl
-    core-->details-impl
-    core-->feed-impl
-    core-->gallery-impl
-    core-->search-impl
-    core-->settings-impl
-    core-->debug-impl
+    core-->account
+    core-->auth
+    core-->details
+    core-->feed
+    core-->gallery
+    core-->settings
+    core-->debug
+    core-->feed-web
 
     ui-->core
+    ui-web-->core
     common-->core
     interactor-->core
     notifications-->core
@@ -266,7 +258,6 @@ graph TD;
     network-->repository
     persistence-->repository
 ```
-
 
 ## Roadmap
 [Movies App Roadmap](https://github.com/users/michaelbel/projects/1/views/1)

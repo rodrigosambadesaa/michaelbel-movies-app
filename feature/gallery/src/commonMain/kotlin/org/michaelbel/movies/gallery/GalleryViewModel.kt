@@ -3,6 +3,7 @@ package org.michaelbel.movies.gallery
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.gallery.event.GalleryEvent
 import org.michaelbel.movies.gallery.intent.GalleryIntent
 import org.michaelbel.movies.gallery.model.GalleryModel
 import org.michaelbel.movies.interactor.Interactor
@@ -15,7 +16,7 @@ class GalleryViewModel(
     private val destination: GalleryDestination,
     private val interactor: Interactor,
     private val workManagerInteractor: WorkManagerInteractor
-): MoviesViewModel<GalleryModel, GalleryIntent>(GalleryModel()) {
+): MoviesViewModel<GalleryModel, GalleryIntent, GalleryEvent>(GalleryModel()) {
 
     init {
         dispatch(GalleryIntent.CollectMovieImages)
@@ -37,7 +38,7 @@ class GalleryViewModel(
                 launch {
                     workManagerInteractor.downloadImage(intent.image).collectLatest { workInfoState ->
                         when (workInfoState) {
-                            is WorkInfoState.Success, is WorkInfoState.Failure -> push(workInfoState)
+                            is WorkInfoState.Success, is WorkInfoState.Failure -> push(GalleryEvent.DownloadResult(workInfoState))
                             else -> Unit
                         }
                     }

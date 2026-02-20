@@ -19,7 +19,7 @@ sealed interface FeedView: SealedString {
             return when (name) {
                 FeedList.toString() -> FeedList
                 FeedGrid.toString() -> FeedGrid
-                else -> throw InvalidFeedViewException
+                else -> throw InvalidFeedViewException()
             }
         }
     }

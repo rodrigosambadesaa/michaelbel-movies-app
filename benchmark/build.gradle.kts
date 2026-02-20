@@ -1,8 +1,5 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
     alias(libs.plugins.android.test)
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -31,12 +28,6 @@ android {
     targetProjectPath = ":androidApp"
     experimentalProperties["android.experimental.self-instrumenting"] = true
 }
-
-/*androidComponents {
-    beforeVariants(selector().all()) {
-        it.enabled = it.buildType == "benchmark"
-    }
-}*/
 
 dependencies {
     implementation(libs.bundles.test.espresso.android)

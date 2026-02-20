@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+
 package org.michaelbel.movies.account
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,24 +15,30 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.account.intent.AccountIntent
 import org.michaelbel.movies.account.model.AccountModel
-import org.michaelbel.movies.account.ui.AccountCountryBox
-import org.michaelbel.movies.account.ui.AccountToolbar
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.compose.AccountAvatar
@@ -66,9 +75,28 @@ private fun AccountScreenContent(
                 shape = MaterialTheme.shapes.small
             )
     ) {
-        AccountToolbar(
-            onNavigationIconClick = { dispatch(AccountIntent.BackClick) },
-            modifier = Modifier.fillMaxWidth()
+        CenterAlignedTopAppBar(
+            title = {
+                Text(
+                    text = stringResource(MoviesStrings.account_title),
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                )
+            },
+            modifier = Modifier.fillMaxWidth(),
+            navigationIcon = {
+                IconButton(
+                    onClick = { dispatch(AccountIntent.BackClick) }
+                ) {
+                    Image(
+                        imageVector = MoviesIcons.Close,
+                        contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(Color.Transparent)
         )
 
         Row(
@@ -91,7 +119,7 @@ private fun AccountScreenContent(
                         painter = painterResource(MoviesIcons.AdultOutline),
                         contentDescription = stringResource(MoviesContentDescriptionCommon.AdultIcon),
                         modifier = Modifier
-                            .size(24.dp)
+                            .size(IconButtonDefaults.smallIconSize)
                             .align(Alignment.BottomEnd)
                             .background(
                                 color = MaterialTheme.colorScheme.primaryContainer,
@@ -128,12 +156,27 @@ private fun AccountScreenContent(
         }
 
         if (state.accountPojo.country.isNotEmpty()) {
-            AccountCountryBox(
-                country = state.accountPojo.country,
+            Row(
                 modifier = Modifier
                     .wrapContentWidth()
-                    .padding(start = 16.dp, top = 8.dp)
-            )
+                    .padding(start = 16.dp, top = 8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = MoviesIcons.LocationOn,
+                    contentDescription = stringResource(MoviesContentDescriptionCommon.UserLocationIcon),
+                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+
+                Text(
+                    text = state.accountPojo.country,
+                    modifier = Modifier.padding(start = 4.dp),
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                )
+            }
         }
 
         Button(
@@ -148,9 +191,8 @@ private fun AccountScreenContent(
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             if (state.isLogoutJobActive) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
+                LoadingIndicator(
+                    modifier = Modifier.size(40.dp),
                 )
             } else {
                 Text(

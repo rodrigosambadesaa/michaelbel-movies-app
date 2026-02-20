@@ -32,6 +32,7 @@ fun IosMainContent() {
                 themeData = ThemeData(
                     appTheme = themeData.appTheme,
                     dynamicColors = false,
+                    paletteColors = themeData.paletteColors,
                     paletteKey = themeData.paletteKey,
                     seedColor = themeData.seedColor
                 ),

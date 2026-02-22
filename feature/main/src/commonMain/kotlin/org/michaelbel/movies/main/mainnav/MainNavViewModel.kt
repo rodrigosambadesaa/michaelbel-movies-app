@@ -9,6 +9,7 @@ import org.michaelbel.movies.feed.event.FeedAppEvent
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.main.mainnav.event.MainNavEvent
+import org.michaelbel.movies.ui.strings.MoviesStrings
 
 class MainNavViewModel(
     private val interactor: Interactor
@@ -22,23 +23,27 @@ class MainNavViewModel(
 
     override fun catch(throwable: Throwable) {
         when (throwable) {
-            is CreateSessionException -> launch { push(MainNavEvent.ShowSnackbar("Failure while signing in. Wrong token or no approval")) }
-            is AccountDetailsException -> launch { push(MainNavEvent.ShowSnackbar("Failure while signing in. Wrong token or no approval")) }
+            is CreateSessionException -> launch { push(MainNavEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+            is AccountDetailsException -> launch { push(MainNavEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
             else -> super.catch(throwable)
         }
     }
 
     fun onRedirect(requestToken: String?, approved: Boolean?) {
         if (requestToken == null || approved == null) return
-        authorizeAccount(requestToken, approved)
+        if (!approved) {
+            launch { push(MainNavEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+            return
+        }
+        authorizeAccount(requestToken)
     }
 
-    private fun authorizeAccount(requestToken: String, approved: Boolean) {
+    private fun authorizeAccount(requestToken: String) {
         launch {
             interactor.run {
                 createSession(requestToken)
                 accountDetails()
-                push(MainNavEvent.ShowSnackbar("Successful authorization"))
+                push(MainNavEvent.ShowSnackbar(MoviesStrings.feed_auth_success))
             }
         }
     }

@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.IconButton
@@ -56,8 +58,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.gallery.event.GalleryEvent
 import org.michaelbel.movies.gallery.intent.GalleryIntent
 import org.michaelbel.movies.gallery.model.GalleryModel
-import org.michaelbel.movies.gallery.ui.GalleryLoading
-import org.michaelbel.movies.gallery.ui.LoopHorizontalPager
 import org.michaelbel.movies.gallery.zoomable.rememberZoomState
 import org.michaelbel.movies.gallery.zoomable.zoomable
 import org.michaelbel.movies.network.config.isNotOriginal
@@ -160,19 +160,28 @@ private fun GalleryScreenContent(
     ) { innerPadding ->
         when {
             state.movieImages.isEmpty() -> {
-                GalleryLoading(
-                    modifier = Modifier.fillMaxSize()
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LinearWavyProgressIndicator(
+                        trackColor = MaterialTheme.colorScheme.inversePrimary,
+                        wavelength = WavyProgressIndicatorDefaults.LinearDeterminateWavelength,
+                        waveSpeed = WavyProgressIndicatorDefaults.LinearDeterminateWavelength
+                    )
+                }
             }
             else -> {
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    LoopHorizontalPager(
-                        pagerState = pagerState,
+                    HorizontalPager(
+                        state = pagerState,
                         modifier = Modifier
                             .fillMaxSize()
-                            .align(Alignment.Center)
+                            .align(Alignment.Center),
+                        pageSpacing = 8.dp,
+                        flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
                     ) { page ->
                         val imageDb = state.movieImages[page]
                         var imageDiskCacheKey: String? by remember { mutableStateOf(null) }

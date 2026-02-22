@@ -54,7 +54,7 @@ internal fun <T: SealedString> SettingsDialog(
             ) {
                 Text(
                     text = stringResource(MoviesStrings.settings_action_cancel),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMediumEmphasized
                 )
             }
         },
@@ -101,7 +101,7 @@ internal fun <T: SealedString> SettingsDialog(
                         Text(
                             text = item.stringText,
                             modifier = Modifier.padding(start = 8.dp),
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMediumEmphasized
                         )
                     }
                 }

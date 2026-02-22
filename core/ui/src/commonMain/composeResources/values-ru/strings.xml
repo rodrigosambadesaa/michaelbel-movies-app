@@ -59,6 +59,9 @@
     <string name="search_recent">Недавние запросы</string>
     <string name="search_clear">Очистить</string>
 
+    <string name="main_nav_feed">Лента</string>
+    <string name="main_nav_settings">Настройки</string>
+
     <string name="settings_title">Настройки</string>
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_system">По умолчанию</string>

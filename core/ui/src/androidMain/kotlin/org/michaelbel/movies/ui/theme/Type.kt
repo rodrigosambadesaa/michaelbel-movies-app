@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+
 package org.michaelbel.movies.ui.theme
 
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -25,5 +28,8 @@ private val OpenSans = FontFamily(
 val MoviesTypography = Typography(
     titleMedium = TextStyle(
         fontFamily = FontFamily(Font(R.font.open_sans_semibold))
+    ),
+    titleMediumEmphasized = TextStyle(
+        fontFamily = FontFamily(Font(R.font.open_sans_bold))
     )
 )

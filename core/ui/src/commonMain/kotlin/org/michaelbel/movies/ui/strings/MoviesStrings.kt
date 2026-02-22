@@ -45,6 +45,8 @@ import movies.core.ui.generated.resources.gallery_logo
 import movies.core.ui.generated.resources.gallery_poster
 import movies.core.ui.generated.resources.gallery_success
 import movies.core.ui.generated.resources.language_code
+import movies.core.ui.generated.resources.main_nav_feed
+import movies.core.ui.generated.resources.main_nav_settings
 import movies.core.ui.generated.resources.notification_continue
 import movies.core.ui.generated.resources.notification_enable_subtitle
 import movies.core.ui.generated.resources.notification_enable_title
@@ -123,6 +125,8 @@ import org.jetbrains.compose.resources.stringResource
 
 object MoviesStrings {
     val language_code = Res.string.language_code
+    val main_nav_feed = Res.string.main_nav_feed
+    val main_nav_settings = Res.string.main_nav_settings
     val shortcuts_search_title = Res.string.shortcuts_search_title
     val shortcuts_settings_title = Res.string.shortcuts_settings_title
     val notification_enable_title = Res.string.notification_enable_title

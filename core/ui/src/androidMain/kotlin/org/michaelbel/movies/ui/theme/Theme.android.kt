@@ -7,10 +7,11 @@ package org.michaelbel.movies.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
+import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.expressiveLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import org.michaelbel.movies.common.ThemeData
@@ -30,7 +31,7 @@ actual fun MoviesTheme(
     content: @Composable () -> Unit
 ) {
     val seedColorPalettes = Color(themeData.seedColor).toTonalPalettes(paletteStyles.getOrElse(themeData.paletteKey) { PaletteStyle.TonalSpot })
-    val paletteLightColorScheme = if (themeData.paletteColors) seedColorPalettes.paletteLightColorScheme else lightColorScheme()
+    val paletteLightColorScheme = if (themeData.paletteColors) seedColorPalettes.paletteLightColorScheme else expressiveLightColorScheme()
     val paletteDarkColorScheme = if (themeData.paletteColors) seedColorPalettes.paletteDarkColorScheme else darkColorScheme()
     val (colorScheme, detectDarkMode) = when (themeData.appTheme) {
         AppTheme.NightNo -> {
@@ -70,6 +71,7 @@ actual fun MoviesTheme(
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,
+        motionScheme = MotionScheme.expressive(),
         shapes = MoviesShapes,
         typography = MoviesTypography
     ) {

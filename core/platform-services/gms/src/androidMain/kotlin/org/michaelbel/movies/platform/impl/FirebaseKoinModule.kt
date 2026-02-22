@@ -1,7 +1,6 @@
 package org.michaelbel.movies.platform.impl
 
 import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -14,7 +13,6 @@ private const val FETCH_INTERVAL_IN_SECONDS = 5L
 
 internal val firebaseKoinModule = module {
     single { Firebase.analytics }
-    single { FirebaseCrashlytics.getInstance() }
     single { FirebaseMessaging.getInstance() }
     single {
         val configSettings: FirebaseRemoteConfigSettings = remoteConfigSettings {

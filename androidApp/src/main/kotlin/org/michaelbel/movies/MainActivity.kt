@@ -24,6 +24,7 @@ import org.michaelbel.movies.ui.ktx.supportRegisterScreenCaptureCallback
 import org.michaelbel.movies.ui.ktx.supportUnregisterScreenCaptureCallback
 import org.michaelbel.movies.ui.navigation.MainDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
+import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SEARCH
 import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SETTINGS
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
@@ -65,7 +66,7 @@ internal class MainActivity: FragmentActivity() {
             }
         }
         resolveNotificationPreferencesIntent()
-        resolveShortcutIntent(intent)
+        resolveIntent(intent)
         viewModel.run {
             isScreenshotBlockEnabled.launchAndCollectIn(this@MainActivity) { enabled ->
                 window.setScreenshotBlockEnabled(enabled)
@@ -83,7 +84,7 @@ internal class MainActivity: FragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        resolveShortcutIntent(intent)
+        resolveIntent(intent)
     }
 
     override fun onStop() {
@@ -91,19 +92,46 @@ internal class MainActivity: FragmentActivity() {
         supportUnregisterScreenCaptureCallback(screenCaptureCallback)
     }
 
-    private fun resolveShortcutIntent(intent: Intent?) {
-        when (intent?.dataString) {
-            INTENT_ACTION_SEARCH -> {
+    private fun resolveIntent(intent: Intent?) {
+        val uri = intent?.data
+        when {
+            intent?.dataString == INTENT_ACTION_SEARCH -> {
                 lifecycleScope.launch {
                     MainNavigator.forward(MainDestination())
                     MainNavAppEvent.push(MainNavAppEvent.Event.OpenFeed)
                     FeedAppEvent.push(FeedAppEvent.Event.OpenSearch)
                 }
             }
-            INTENT_ACTION_SETTINGS -> {
+            intent?.dataString == INTENT_ACTION_SETTINGS -> {
                 lifecycleScope.launch {
                     MainNavigator.forward(MainDestination())
                     MainNavAppEvent.push(MainNavAppEvent.Event.OpenSettings)
+                }
+            }
+            uri?.scheme == "movies" && uri.host == "redirect_url" -> {
+                val requestToken = uri.getQueryParameter("request_token")?.takeIf(String::isNotBlank)
+                val approved = when (uri.getQueryParameter("approved")?.lowercase()) {
+                    "true", "1" -> true
+                    "false", "0" -> false
+                    else -> null
+                }
+                if (requestToken != null && approved != null) {
+                    lifecycleScope.launch {
+                        MainNavigator.forward(
+                            MainDestination(
+                                requestToken = requestToken,
+                                approved = approved
+                            )
+                        )
+                    }
+                }
+            }
+            uri?.scheme == "movies" && uri.host == "details" -> {
+                val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
+                if (movieId != null) {
+                    lifecycleScope.launch {
+                        MainNavigator.forward(DetailsDestination(movieList = null, movieId = movieId))
+                    }
                 }
             }
         }

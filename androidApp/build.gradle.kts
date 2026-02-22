@@ -52,7 +52,7 @@ android {
         applicationId = "org.michaelbel.moviemade"
         minSdk = libs.versions.min.sdk.get().toInt()
         targetSdk = libs.versions.target.sdk.get().toInt()
-        versionName = "2.1.0"
+        versionName = "3.0.0"
         versionCode = gitCommitsCount
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

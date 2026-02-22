@@ -39,7 +39,7 @@ internal val PageContentColumnModifier: Modifier
 internal val PageContentGridModifier: Modifier
     @Composable get() = Modifier
         .fillMaxWidth()
-        .padding(vertical = 4.dp)
+        .padding(bottom = 8.dp)
         .clip(MaterialTheme.shapes.large)
         .background(MaterialTheme.colorScheme.inversePrimary)
 

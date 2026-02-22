@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package org.michaelbel.movies.settings
 
@@ -7,6 +7,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,12 +17,17 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +36,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -39,7 +46,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
@@ -59,17 +68,17 @@ import org.michaelbel.movies.settings.ktx.iconSnackbarTextRes
 import org.michaelbel.movies.settings.ktx.stringText
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
-import org.michaelbel.movies.settings.ui.SettingsToolbar
-import org.michaelbel.movies.settings.ui.SettingsVersionBox
 import org.michaelbel.movies.settings.ui.common.SettingAppIcon
 import org.michaelbel.movies.settings.ui.common.SettingsDialog
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.appicon.IconAlias
-import org.michaelbel.movies.ui.compose.SwitchCheckIcon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.SettingsGenderText
+import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isDebug
+import org.michaelbel.movies.ui.ktx.modifierDisplayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.requestTileService
 import org.michaelbel.movies.ui.lifecycle.OnResume
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -164,11 +173,31 @@ private fun SettingsScreenContent(
             .fillMaxWidth()
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
-            SettingsToolbar(
-                topAppBarScrollBehavior = topAppBarScrollBehavior,
-                isNavigationIconVisible = isNavigationIconVisible,
-                onNavigationIconClick = { dispatch(SettingsIntent.BackClick) },
-                onClick = { dispatch(SettingsIntent.ScrollToTop) }
+            LargeFlexibleTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(MoviesStrings.settings_title)
+                    )
+                },
+                modifier = Modifier.clickableWithoutRipple { dispatch(SettingsIntent.ScrollToTop) },
+                navigationIcon = if (isNavigationIconVisible) {
+                    {
+                        IconButton(
+                            onClick = { dispatch(SettingsIntent.BackClick) },
+                            modifier = Modifier.then(modifierDisplayCutoutWindowInsets)
+                        ) {
+                            Image(
+                                imageVector = MoviesIcons.ArrowBack,
+                                contentDescription = stringResource(MoviesContentDescriptionCommon.BackIcon),
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                            )
+                        }
+                    }
+                } else {
+                    {}
+                },
+                scrollBehavior = topAppBarScrollBehavior
             )
         },
         snackbarHost = {
@@ -448,10 +477,14 @@ private fun SettingsScreenContent(
                                 checked = state.themeData.dynamicColors,
                                 onCheckedChange = null,
                                 thumbContent = if (state.themeData.dynamicColors) {
-                                    { SwitchCheckIcon() }
-                                } else {
-                                    null
-                                }
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
                             )
                         }
                     )
@@ -499,10 +532,14 @@ private fun SettingsScreenContent(
                                 checked = state.themeData.paletteColors,
                                 onCheckedChange = null,
                                 thumbContent = if (state.themeData.paletteColors) {
-                                    { SwitchCheckIcon() }
-                                } else {
-                                    null
-                                }
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
                             )
                         }
                     )
@@ -614,10 +651,14 @@ private fun SettingsScreenContent(
                                 checked = state.areNotificationsEnabled,
                                 onCheckedChange = null,
                                 thumbContent = if (state.areNotificationsEnabled) {
-                                    { SwitchCheckIcon() }
-                                } else {
-                                    null
-                                }
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
                             )
                         }
                     )
@@ -721,10 +762,14 @@ private fun SettingsScreenContent(
                                 checked = state.isBiometricEnabled,
                                 onCheckedChange = null,
                                 thumbContent = if (state.isBiometricEnabled) {
-                                    { SwitchCheckIcon() }
-                                } else {
-                                    null
-                                }
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
                             )
                         }
                     )
@@ -764,10 +809,14 @@ private fun SettingsScreenContent(
                                 checked = state.isScreenshotBlockEnabled,
                                 onCheckedChange = null,
                                 thumbContent = if (state.isScreenshotBlockEnabled) {
-                                    { SwitchCheckIcon() }
-                                } else {
-                                    null
-                                }
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
                             )
                         }
                     )
@@ -878,12 +927,46 @@ private fun SettingsScreenContent(
             }
             if (state.isAboutFeatureEnabled) {
                 item {
-                    SettingsVersionBox(
-                        versionName = state.versionName,
-                        versionCode = state.versionCode,
-                        flavor = state.appVersionData.flavor,
-                        isDebug = isDebug
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = MoviesIcons.MovieFilter,
+                            contentDescription = MoviesContentDescriptionCommon.None,
+                            modifier = Modifier
+                                .size(IconButtonDefaults.smallIconSize)
+                                .padding(vertical = 2.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+
+                        Text(
+                            text = stringResource(MoviesStrings.settings_app_version_name, state.versionName),
+                            modifier = Modifier.padding(start = 4.dp),
+                            style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                        )
+
+                        Text(
+                            text = stringResource(MoviesStrings.settings_app_version_code, state.versionCode),
+                            modifier = Modifier.padding(start = 2.dp),
+                            style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
+                        )
+
+                        Text(
+                            text = state.appVersionData.flavor,
+                            modifier = Modifier.padding(start = 2.dp),
+                            style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                        )
+
+                        if (isDebug) {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_app_debug),
+                                modifier = Modifier.padding(start = 2.dp),
+                                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                            )
+                        }
+                    }
                 }
             }
         }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,19 +23,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -114,10 +116,13 @@ private fun AuthScreenContent(
     val navigateToTmdbResetPasswordUrl = navigateToUrl(TMDB_RESET_PASSWORD)
     val navigateToTmdbRegisterUrl = navigateToUrl(TMDB_REGISTER)
 
-    if (state.requestToken != null) {
-        val signUrl = "$TMDB_AUTH_URL_2/${state.requestToken}$TMDB_AUTH_URL_3$TMDB_AUTH_REDIRECT_URL"
-        navigateToUrl(signUrl)
-        dispatch(AuthIntent.ResetRequestToken)
+    state.requestToken?.let { requestToken ->
+        val signUrl = "$TMDB_AUTH_URL_2/$requestToken$TMDB_AUTH_URL_3$TMDB_AUTH_REDIRECT_URL"
+        val navigateToTmdbAuthUrl = navigateToUrl(signUrl)
+        LaunchedEffect(requestToken) {
+            navigateToTmdbAuthUrl()
+            dispatch(AuthIntent.ResetRequestToken)
+        }
     }
 
     val navigateToTermsOfUseUrl = navigateToUrl(TMDB_TERMS_OF_USE)
@@ -283,12 +288,12 @@ private fun AuthScreenContent(
             enabled = username.isNotEmpty && password.isNotEmpty && !state.isSignInJobActive,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceTint
-            )
+            ),
+            contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             if (state.isSignInJobActive) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
+                LoadingIndicator(
+                    modifier = Modifier.size(40.dp)
                 )
             } else {
                 Text(
@@ -306,12 +311,12 @@ private fun AuthScreenContent(
             enabled = !state.isLoginJobActive,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceTint
-            )
+            ),
+            contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             if (state.isLoginJobActive) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
+                LoadingIndicator(
+                    modifier = Modifier.size(40.dp)
                 )
             } else {
                 Text(

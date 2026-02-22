@@ -136,7 +136,7 @@ private fun PageContentGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 280.dp),
-        modifier = modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp),
+        modifier = modifier.padding(start = 8.dp, end = 8.dp),
         state = lazyGridState,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -188,7 +188,7 @@ private fun PageContentStaggeredGrid(
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(minSize = 220.dp),
-        modifier = modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp),
+        modifier = modifier.padding(start = 8.dp, end = 8.dp),
         state = lazyStaggeredGridState,
         contentPadding = contentPadding,
         verticalItemSpacing = 8.dp,

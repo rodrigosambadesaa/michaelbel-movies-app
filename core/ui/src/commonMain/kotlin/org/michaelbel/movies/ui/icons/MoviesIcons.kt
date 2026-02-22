@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.KeyboardVoice
 import androidx.compose.material.icons.filled.Language
@@ -58,6 +59,7 @@ object MoviesIcons {
     val FileDownload = Icons.Filled.FileDownload
     val Fingerprint = Icons.Filled.Fingerprint
     val GridView = Icons.Filled.GridView
+    val RecentHistory = Icons.Filled.History
     val KeyboardVoice = Icons.Filled.KeyboardVoice
     val Language = Icons.Filled.Language
     val LocationOn = Icons.Filled.LocationOn

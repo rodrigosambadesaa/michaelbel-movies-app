@@ -10,11 +10,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -46,12 +53,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.stringResource
@@ -70,6 +77,7 @@ import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.isFailure
+import org.michaelbel.movies.ui.ktx.isRefreshLoading
 import org.michaelbel.movies.ui.ktx.lettersTextFontSizeSmall
 import org.michaelbel.movies.ui.ktx.refreshThrowable
 import org.michaelbel.movies.ui.ktx.rememberSpeechRecognitionLauncher
@@ -99,7 +107,7 @@ fun FeedSearchBar(
     onClearHistoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isSearchRefreshLoading = searchPagingItems.loadState.refresh is LoadState.Loading
+    val isSearchRefreshLoading = searchPagingItems.isRefreshLoading
     val searchContainerColor = MaterialTheme.colorScheme.inversePrimary
     val searchResultCardColor = MaterialTheme.colorScheme.primaryContainer
     val searchResultColorScheme = MaterialTheme.colorScheme.copy(
@@ -117,9 +125,13 @@ fun FeedSearchBar(
     val searchResultsLazyGridState = rememberLazyGridState()
     val searchResultsLazyStaggeredGridState = rememberLazyStaggeredGridState()
     val focusManager = LocalFocusManager.current
+    val layoutDirection = LocalLayoutDirection.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val textFieldState = rememberTextFieldState(initialText = query)
     val requestFocusAfterClose = remember { mutableStateOf(false) }
+    val safeDrawingHorizontalPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
+    val safeDrawingStartPadding = safeDrawingHorizontalPadding.calculateStartPadding(layoutDirection)
+    val safeDrawingEndPadding = safeDrawingHorizontalPadding.calculateEndPadding(layoutDirection)
 
     LaunchedEffect(query) {
         if (textFieldState.text.toString() != query) {
@@ -256,175 +268,190 @@ fun FeedSearchBar(
         modifier = modifier,
         colors = searchBarColors
     ) {
-        when {
-            isSearchResultsVisible -> {
-                when {
-                    isSearchRefreshLoading -> {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(searchContainerColor)
-                        ) {
-                            PageLoading(
-                                feedView = feedView,
-                                modifier = Modifier.fillMaxSize(),
-                                paddingValues = PaddingValues()
-                            )
-                        }
-                    }
-                    searchPagingItems.isFailure -> {
-                        if (searchPagingItems.refreshThrowable is PageEmptyException) {
-                            SearchEmpty(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = safeDrawingStartPadding, end = safeDrawingEndPadding)
+        ) {
+            when {
+                isSearchResultsVisible -> {
+                    when {
+                        isSearchRefreshLoading -> {
+                            Box(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(searchContainerColor)
-                            )
-                        } else {
-                            PageFailure(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(searchContainerColor)
-                                    .clickable { searchPagingItems.retry() },
-                                isButtonVisible = false,
-                                onButtonClick = {}
-                            )
+                            ) {
+                                PageLoading(
+                                    feedView = feedView,
+                                    modifier = Modifier.fillMaxSize(),
+                                    cardColor = searchResultCardColor
+                                )
+                            }
                         }
-                    }
-                    else -> {
-                        MaterialTheme(
-                            colorScheme = searchResultColorScheme,
-                            typography = MaterialTheme.typography,
-                            shapes = MaterialTheme.shapes
-                        ) {
-                            PageContent(
-                                feedView = feedView,
-                                lazyListState = searchResultsLazyListState,
-                                lazyGridState = searchResultsLazyGridState,
-                                lazyStaggeredGridState = searchResultsLazyStaggeredGridState,
-                                pagingItems = searchPagingItems,
-                                onMovieClick = { _, movieId -> onSearchMovieClick(movieId) },
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(searchContainerColor),
-                                contentPadding = searchResultContentPadding
-                            )
+                        searchPagingItems.isFailure -> {
+                            if (searchPagingItems.refreshThrowable is PageEmptyException) {
+                                SearchEmpty(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(searchContainerColor)
+                                )
+                            } else {
+                                PageFailure(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(searchContainerColor)
+                                        .clickable { searchPagingItems.retry() },
+                                    isButtonVisible = false,
+                                    onButtonClick = {}
+                                )
+                            }
+                        }
+                        else -> {
+                            MaterialTheme(
+                                colorScheme = searchResultColorScheme,
+                                typography = MaterialTheme.typography,
+                                shapes = MaterialTheme.shapes
+                            ) {
+                                PageContent(
+                                    feedView = feedView,
+                                    lazyListState = searchResultsLazyListState,
+                                    lazyGridState = searchResultsLazyGridState,
+                                    lazyStaggeredGridState = searchResultsLazyStaggeredGridState,
+                                    pagingItems = searchPagingItems,
+                                    onMovieClick = { _, movieId -> onSearchMovieClick(movieId) },
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(searchContainerColor),
+                                    contentPadding = searchResultContentPadding
+                                )
+                            }
                         }
                     }
                 }
-            }
-            searchHistoryMovies.isNotEmpty() -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .imePadding()
-                ) {
-                    Row(
+                searchHistoryMovies.isNotEmpty() -> {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .padding(start = 16.dp, end = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .fillMaxSize()
+                            .imePadding()
                     ) {
-                        Text(
-                            text = stringResource(MoviesStrings.search_recent),
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
-                        )
-
-                        TextButton(
-                            onClick = onClearHistoryClick,
-                            shapes = ButtonDefaults.shapes()
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp)
+                                .padding(start = 16.dp, end = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = stringResource(MoviesStrings.search_clear)
+                                text = stringResource(MoviesStrings.search_recent),
+                                textAlign = TextAlign.Start,
+                                style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
                             )
+
+                            TextButton(
+                                onClick = onClearHistoryClick,
+                                shapes = ButtonDefaults.shapes()
+                            ) {
+                                Text(
+                                    text = stringResource(MoviesStrings.search_clear)
+                                )
+                            }
                         }
-                    }
 
-                    LazyColumn {
-                        items(
-                            items = searchHistoryMovies,
-                            key = { it.movieId }
-                        ) { movie ->
-                            SwipeToDismiss(
-                                item = movie,
-                                onDelete = { onHistoryMovieRemoveClick(it.movieId) }
-                            ) { historyMovie, _ ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(52.dp)
-                                        .background(MaterialTheme.colorScheme.inversePrimary)
-                                        .clickable {
-                                            onInputText(historyMovie.title)
-                                            clearInputFocus()
-                                        }
-                                        .padding(start = 16.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = historyMovie.title,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
+                        LazyColumn {
+                            items(
+                                items = searchHistoryMovies,
+                                key = { it.movieId }
+                            ) { movie ->
+                                SwipeToDismiss(
+                                    item = movie,
+                                    onDelete = { onHistoryMovieRemoveClick(it.movieId) }
+                                ) { historyMovie, _ ->
+                                    Row(
                                         modifier = Modifier
-                                            .weight(1f)
-                                    )
-
-                                    IconButton(
-                                        onClick = { onHistoryMovieRemoveClick(historyMovie.movieId) }
+                                            .fillMaxWidth()
+                                            .height(52.dp)
+                                            .background(MaterialTheme.colorScheme.inversePrimary)
+                                            .clickable {
+                                                onInputText(historyMovie.title)
+                                                clearInputFocus()
+                                            }
+                                            .padding(start = 16.dp, end = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Icon(
-                                            imageVector = MoviesIcons.Close,
+                                            imageVector = MoviesIcons.RecentHistory,
                                             contentDescription = null,
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                                         )
+
+                                        Text(
+                                            text = historyMovie.title,
+                                            modifier = Modifier
+                                                .padding(start = 8.dp)
+                                                .weight(1F),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+
+                                        IconButton(
+                                            onClick = { onHistoryMovieRemoveClick(historyMovie.movieId) }
+                                        ) {
+                                            Icon(
+                                                imageVector = MoviesIcons.Close,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            suggestions.isNotEmpty() -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .imePadding(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxWidth()
+                suggestions.isNotEmpty() -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .imePadding(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        items(
-                            items = suggestions
-                        ) { suggestion ->
-                            Text(
-                                text = suggestion.title,
-                                maxLines = 1,
-                                textAlign = TextAlign.Center,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(52.dp)
-                                    .clickable {
-                                        onInputText(suggestion.title)
-                                        clearInputFocus()
-                                    }
-                                    .padding(horizontal = 16.dp, vertical = 14.dp)
-                            )
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            items(
+                                items = suggestions
+                            ) { suggestion ->
+                                Text(
+                                    text = suggestion.title,
+                                    maxLines = 1,
+                                    textAlign = TextAlign.Center,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(52.dp)
+                                        .clickable {
+                                            onInputText(suggestion.title)
+                                            clearInputFocus()
+                                        }
+                                        .padding(horizontal = 16.dp, vertical = 14.dp)
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            else -> {
-                SearchEmpty(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .imePadding()
-                )
+                else -> {
+                    SearchEmpty(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .imePadding()
+                    )
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,8 +26,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,12 +36,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
 import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.feed.event.FeedAppEvent
@@ -52,7 +55,6 @@ import org.michaelbel.movies.feed.ui.FeedSearchBar
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
 import org.michaelbel.movies.network.connectivity.NetworkStatus
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.ui.compose.ApiKeyBox
 import org.michaelbel.movies.ui.compose.NotificationBottomSheet
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
@@ -63,6 +65,7 @@ import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.isFailure
 import org.michaelbel.movies.ui.ktx.isLoading
+import org.michaelbel.movies.ui.ktx.isPortrait
 import org.michaelbel.movies.ui.ktx.refreshThrowable
 import org.michaelbel.movies.ui.ktx.rememberConnectivityClickHandler
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -139,18 +142,6 @@ private fun FeedScreenContent(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
     var isSearchAutoFocusEnabled by rememberSaveable { mutableStateOf(true) }
-    var preserveSearchStateOnNextRestore by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        if (!preserveSearchStateOnNextRestore) {
-            query = ""
-            searchQuery = ""
-            isSearchActive = false
-            isSearchAutoFocusEnabled = true
-            dispatch(FeedIntent.EnterSearchQuery(""))
-        }
-        preserveSearchStateOnNextRestore = false
-    }
 
     fun clearSearchState() {
         query = ""
@@ -243,7 +234,6 @@ private fun FeedScreenContent(
                     feedView = state.feedView,
                     searchPagingItems = searchPagingItems,
                     onSearchMovieClick = { movieId ->
-                        preserveSearchStateOnNextRestore = true
                         isSearchAutoFocusEnabled = false
                         dispatch(FeedIntent.SaveMovieToSearchHistoryClick(movieId))
                         dispatch(FeedIntent.MovieDetailsClick(searchQuery, movieId))
@@ -254,15 +244,17 @@ private fun FeedScreenContent(
                     onClearHistoryClick = { dispatch(FeedIntent.ClearSearchHistoryClick) },
                     modifier = Modifier
                         .padding(horizontal = searchBarHorizontalPadding)
-                        .windowInsetsPadding(displayCutoutWindowInsets)
                         .fillMaxWidth()
                 )
 
                 if (isTmdbApiKeyEmpty) {
-                    ApiKeyBox(
+                    Text(
+                        text = stringResource(MoviesStrings.error_api_key_null),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                            .padding(vertical = 16.dp),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyLarge.copy(MaterialTheme.colorScheme.error)
                     )
                 }
             }
@@ -272,12 +264,14 @@ private fun FeedScreenContent(
                 hostState = snackbarHostState
             )
         },
-        containerColor = MaterialTheme.colorScheme.primaryContainer
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         val layoutDirection = LocalLayoutDirection.current
+        val isGridLayout = state.feedView is FeedView.FeedGrid || (state.feedView is FeedView.FeedList && !isPortrait)
         val feedContentPadding = PaddingValues(
             start = innerPadding.calculateStartPadding(layoutDirection),
-            top = innerPadding.calculateTopPadding() + 4.dp,
+            top = innerPadding.calculateTopPadding() + if (isGridLayout) 8.dp else 4.dp,
             end = innerPadding.calculateEndPadding(layoutDirection),
             bottom = innerPadding.calculateBottomPadding() + 80.dp
         )

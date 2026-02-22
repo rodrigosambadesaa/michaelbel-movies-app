@@ -90,7 +90,7 @@ private fun PageLoadingGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 280.dp),
-        modifier = modifier.padding(start = 8.dp, top = 4.dp, end = 8.dp),
+        modifier = modifier.padding(start = 8.dp, end = 8.dp),
         contentPadding = paddingValues,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         userScrollEnabled = false
@@ -100,7 +100,7 @@ private fun PageLoadingGrid(
                 movie = MoviePojo.Empty,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 4.dp)
+                    .padding(bottom = 8.dp)
                     .placeholder(
                         visible = true,
                         color = MaterialTheme.colorScheme.inversePrimary,
@@ -119,7 +119,7 @@ private fun PageLoadingStaggeredGrid(
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Adaptive(minSize = 220.dp),
-        modifier = modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp),
+        modifier = modifier.padding(start = 8.dp, end = 8.dp),
         contentPadding = paddingValues,
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),

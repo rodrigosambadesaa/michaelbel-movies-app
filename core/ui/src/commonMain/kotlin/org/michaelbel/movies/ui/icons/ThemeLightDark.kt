@@ -1,5 +1,9 @@
 package org.michaelbel.movies.ui.icons
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
@@ -7,13 +11,15 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.michaelbel.movies.ui.theme.MoviesTheme
 
 /**
  * Convert SVG to Compose using https://composables.com/svgtocompose
  * SVG Icon: https://pictogrammers.com/library/mdi/icon/theme-light-dark
  */
-internal val MoviesIcons.ThemeLightDarkVector: ImageVector
+val MoviesIcons.ThemeLightDark: ImageVector
 	get() {
 		if (_themeLightDark != null) {
 			return _themeLightDark!!
@@ -96,3 +102,16 @@ internal val MoviesIcons.ThemeLightDarkVector: ImageVector
 	}
 
 private var _themeLightDark: ImageVector? = null
+
+@Preview
+@Composable
+private fun ThemeLightDarkIconPreview() {
+	MoviesTheme {
+		Icon(
+			imageVector = MoviesIcons.ThemeLightDark,
+			contentDescription = null,
+			modifier = Modifier.size(24.dp),
+			tint = Color.White
+		)
+	}
+}

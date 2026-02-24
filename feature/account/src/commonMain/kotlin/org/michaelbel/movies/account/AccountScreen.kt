@@ -34,7 +34,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.account.intent.AccountIntent
@@ -42,6 +41,7 @@ import org.michaelbel.movies.account.model.AccountModel
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.compose.AccountAvatar
+import org.michaelbel.movies.ui.icons.Adult
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isPortrait
@@ -116,7 +116,7 @@ private fun AccountScreenContent(
 
                 if (state.accountPojo.adult) {
                     Icon(
-                        painter = painterResource(MoviesIcons.AdultOutline),
+                        imageVector = MoviesIcons.Adult,
                         contentDescription = stringResource(MoviesContentDescriptionCommon.AdultIcon),
                         modifier = Modifier
                             .size(IconButtonDefaults.smallIconSize)

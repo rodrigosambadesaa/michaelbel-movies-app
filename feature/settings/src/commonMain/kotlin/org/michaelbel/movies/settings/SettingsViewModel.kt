@@ -129,9 +129,7 @@ class SettingsViewModel(
                     )
                 }
             }
-            is SettingsIntent.CollectAppIcon -> {
-                reduce { it.copy(enabledIcon = settingsUiInteractor.enabledIcon) }
-            }
+            is SettingsIntent.CollectAppIcon -> reduce { it.copy(enabledIcon = settingsUiInteractor.enabledIcon) }
             is SettingsIntent.FetchUpdateAvailable -> {
                 reduce { it.copy(isUpdateAvailable = true) }
                 updateService.setUpdateAvailableListener(object: UpdateListener {
@@ -140,15 +138,10 @@ class SettingsViewModel(
                     }
                 })
             }
-            is SettingsIntent.RequestPostNotificationsPermission -> {
-                launch { push(SettingsEvent.RequestPostNotificationsPermission) }
-            }
-            is SettingsIntent.RequestTileService -> {
-                launch { push(SettingsEvent.RequestTileService) }
-            }
-            is SettingsIntent.RequestGithub -> {
-                launch { push(SettingsEvent.RequestGithub) }
-            }
+            is SettingsIntent.RequestPostNotificationsPermission -> launch { push(SettingsEvent.RequestPostNotificationsPermission) }
+            is SettingsIntent.RequestTileService -> launch { push(SettingsEvent.RequestTileService) }
+            is SettingsIntent.RequestGithub -> launch { push(SettingsEvent.RequestGithub) }
+            is SettingsIntent.RequestTelegram -> launch { push(SettingsEvent.RequestTelegram) }
             is SettingsIntent.BackClick -> launch { MainNavigator.back() }
             is SettingsIntent.ReviewClick -> launch { MainNavigator.requestReview() }
             is SettingsIntent.UpdateClick -> launch { MainNavigator.requestUpdate() }

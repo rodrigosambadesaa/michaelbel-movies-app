@@ -14,8 +14,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.settings.ui.common.SettingPaletteColor
 import org.michaelbel.movies.ui.color.PaletteStyle
 import org.michaelbel.movies.ui.color.TonalPalettes.Companion.toTonalPalettes
+import org.michaelbel.movies.ui.ktx.isPortrait
 import org.michaelbel.movies.ui.pagerindicator.HorizontalPagerIndicator
 import org.michaelbel.movies.ui.theme.colorList
 import org.michaelbel.movies.ui.theme.paletteStyles
@@ -36,10 +36,19 @@ internal fun SettingsPaletteColorsBox(
     seedColor: Int,
     onChange: (Int, Int) -> Unit
 ) {
-    val pageCount = colorList.size + 1
-    val pagerState = rememberPagerState(
-        initialPage = if (paletteKey == ThemeData.STYLE_MONOCHROME) pageCount - 1 else colorList.indexOf(Color(seedColor)).run { if (this == -1) 0 else this }
-    ) { pageCount }
+    val colorsPerPage = if (isPortrait) 1 else 2
+    val colorPages = remember(colorsPerPage) { colorList.chunked(colorsPerPage) }
+    val pageCount = colorPages.size + 1
+    val selectedColorIndex = colorList.indexOf(Color(seedColor)).run { if (this == -1) 0 else this }
+    val selectedPage = if (paletteKey == ThemeData.STYLE_MONOCHROME) pageCount - 1 else selectedColorIndex / colorsPerPage
+    val pagerState = rememberPagerState(initialPage = selectedPage) { pageCount }
+
+    LaunchedEffect(selectedPage, pageCount) {
+        val targetPage = selectedPage.coerceIn(0, pageCount - 1)
+        if (pagerState.currentPage != targetPage) {
+            pagerState.scrollToPage(targetPage)
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -49,19 +58,20 @@ internal fun SettingsPaletteColorsBox(
             state = pagerState,
             contentPadding = PaddingValues(horizontal = 12.dp)
         ) { page ->
-            if (page < pageCount - 1) {
+            if (page < colorPages.size) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    paletteStyles.subList(ThemeData.STYLE_TONAL_SPOT, ThemeData.STYLE_MONOCHROME).forEachIndexed { index, style ->
-                        val color = colorList[page]
-                        val tonalPalettes by remember { mutableStateOf(color.toTonalPalettes(style)) }
-                        SettingPaletteColor(
-                            tonalPalettes = tonalPalettes,
-                            isSelected = paletteKey == index && seedColor == color.toArgb(),
-                            onClick = { onChange(index, color.toArgb()) }
-                        )
+                    colorPages[page].forEach { color ->
+                        val colorArgb = color.toArgb()
+                        paletteStyles.subList(ThemeData.STYLE_TONAL_SPOT, ThemeData.STYLE_MONOCHROME).forEachIndexed { index, style ->
+                            SettingPaletteColor(
+                                tonalPalettes = color.toTonalPalettes(style),
+                                isSelected = paletteKey == index && seedColor == colorArgb,
+                                onClick = { onChange(index, colorArgb) }
+                            )
+                        }
                     }
                 }
             } else {

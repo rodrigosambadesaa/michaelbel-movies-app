@@ -1,6 +1,7 @@
 package org.michaelbel.movies.settings.ui.common
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -19,12 +20,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.MoviesIcons
@@ -57,15 +59,25 @@ internal fun RowScope.SettingAppIcon(
             .background(MaterialTheme.colorScheme.inversePrimary)
             .clickable { onClick(iconAlias) }
     ) {
-        Icon(
-            painter = painterResource(iconAlias.iconRes),
-            contentDescription = stringResource(MoviesContentDescriptionCommon.AppIcon),
+        Box(
             modifier = Modifier
-                .padding(8.dp)
+                .align(Alignment.Center)
+                .matchParentSize()
+                .padding(6.dp)
                 .clip(CircleShape)
-                .align(Alignment.Center),
-            tint = Color.Unspecified
-        )
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            Image(
+                painter = painterResource(iconAlias.iconRes),
+                contentDescription = stringResource(MoviesContentDescriptionCommon.AppIcon),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .matchParentSize()
+                    .padding(2.dp)
+                    .graphicsLayer(scaleX = 1.35F, scaleY = 1.35F)
+            )
+        }
 
         Box(
             modifier = Modifier

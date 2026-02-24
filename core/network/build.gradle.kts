@@ -16,7 +16,6 @@ private val tmdbApiKey: String by lazy {
 
 kotlin {
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 

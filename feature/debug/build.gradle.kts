@@ -7,7 +7,6 @@ plugins {
 
 kotlin {
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -29,4 +28,9 @@ kotlin {
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
     }
+}
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
 }

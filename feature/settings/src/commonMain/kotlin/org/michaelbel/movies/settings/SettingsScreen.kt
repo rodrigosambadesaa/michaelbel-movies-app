@@ -56,6 +56,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.common.MOVIES_GITHUB_URL
+import org.michaelbel.movies.common.MOVIES_TELEGRAM_URL
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.common.browser.navigateToUrl
 import org.michaelbel.movies.common.gender.GrammaticalGender
@@ -64,15 +65,19 @@ import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.interactor.entity.AppLanguage
 import org.michaelbel.movies.settings.event.SettingsEvent
 import org.michaelbel.movies.settings.intent.SettingsIntent
-import org.michaelbel.movies.settings.ktx.iconSnackbarTextRes
 import org.michaelbel.movies.settings.ktx.stringText
 import org.michaelbel.movies.settings.model.SettingsModel
+import org.michaelbel.movies.settings.ui.SettingsAppIconsBox
 import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
-import org.michaelbel.movies.settings.ui.common.SettingAppIcon
 import org.michaelbel.movies.settings.ui.common.SettingsDialog
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.appicon.IconAlias
+import org.michaelbel.movies.ui.icons.Cat
+import org.michaelbel.movies.ui.icons.Github
+import org.michaelbel.movies.ui.icons.GooglePlay
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.icons.Telegram
+import org.michaelbel.movies.ui.icons.ThemeLightDark
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.SettingsGenderText
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
@@ -90,7 +95,8 @@ fun SettingsScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
     val openAppNotificationSettings = viewModel.settingsUiInteractor.navigateToAppNotificationSettings()
-    val navigateToUrl = navigateToUrl(MOVIES_GITHUB_URL)
+    val navigateToGithubUrl = navigateToUrl(MOVIES_GITHUB_URL)
+    val navigateToTelegramUrl = navigateToUrl(MOVIES_TELEGRAM_URL)
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val lazyListState = rememberLazyListState()
@@ -112,7 +118,8 @@ fun SettingsScreen(
             is SettingsEvent.PinWidget -> {}
             is SettingsEvent.RequestPostNotificationsPermission -> onRequestPostNotificationsPermission()
             is SettingsEvent.RequestTileService -> onRequestTileService()
-            is SettingsEvent.RequestGithub -> navigateToUrl()
+            is SettingsEvent.RequestGithub -> navigateToGithubUrl()
+            is SettingsEvent.RequestTelegram -> navigateToTelegramUrl()
             is SettingsEvent.ScrollToTop -> scope.launch { lazyListState.animateScrollToItem(0) }
             is SettingsEvent.ShowSnackbar -> {
                 scope.launch {
@@ -163,10 +170,9 @@ private fun SettingsScreenContent(
         canScroll = { true }
     )
     val layoutDirection = LocalLayoutDirection.current
-    val messageRed = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Red.iconSnackbarTextRes))
-    val messagePurple = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Purple.iconSnackbarTextRes))
-    val messageBrown = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Brown.iconSnackbarTextRes))
-    val messageAmoled = stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, stringResource(IconAlias.Amoled.iconSnackbarTextRes))
+    val iconChangedMessages = IconAlias.VALUES.associateWith { iconAlias ->
+        stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, iconAlias.title)
+    }
 
     Scaffold(
         modifier = Modifier
@@ -202,7 +208,8 @@ private fun SettingsScreenContent(
         },
         snackbarHost = {
             SnackbarHost(
-                hostState = snackbarHostState
+                hostState = snackbarHostState,
+                modifier = Modifier.padding(bottom = 64.dp)
             )
         }
     ) { innerPadding ->
@@ -250,7 +257,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Language,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -295,7 +303,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.ThemeLightDark,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -340,7 +349,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.GridView,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -385,7 +395,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.LocalMovies,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -429,7 +440,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Cat,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -469,7 +481,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Wallpaper,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         },
                         trailingContent = {
@@ -524,7 +537,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Palette,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         },
                         trailingContent = {
@@ -575,46 +589,13 @@ private fun SettingsScreenContent(
                     )
                 }
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        SettingAppIcon(
-                            iconAlias = IconAlias.Red,
-                            isEnabled = state.enabledIcon == IconAlias.Red,
-                            onClick = {
-                                dispatch(SettingsIntent.ShowSnackbar(messageRed))
-                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Red))
-                            }
-                        )
-
-                        SettingAppIcon(
-                            iconAlias = IconAlias.Purple,
-                            isEnabled = state.enabledIcon == IconAlias.Purple,
-                            onClick = {
-                                dispatch(SettingsIntent.ShowSnackbar(messagePurple))
-                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Purple))
-                            }
-                        )
-
-                        SettingAppIcon(
-                            iconAlias = IconAlias.Brown,
-                            isEnabled = state.enabledIcon == IconAlias.Brown,
-                            onClick = {
-                                dispatch(SettingsIntent.ShowSnackbar(messageBrown))
-                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Brown))
-                            }
-                        )
-
-                        SettingAppIcon(
-                            iconAlias = IconAlias.Amoled,
-                            isEnabled = state.enabledIcon == IconAlias.Amoled,
-                            onClick = {
-                                dispatch(SettingsIntent.ShowSnackbar(messageAmoled))
-                                dispatch(SettingsIntent.SetAppIcon(IconAlias.Amoled))
-                            }
-                        )
-                    }
+                    SettingsAppIconsBox(
+                        enabledIcon = state.enabledIcon,
+                        onChange = { iconAlias ->
+                            dispatch(SettingsIntent.ShowSnackbar(iconChangedMessages.getValue(iconAlias)))
+                            dispatch(SettingsIntent.SetAppIcon(iconAlias))
+                        }
+                    )
                 }
                 item {
                     HorizontalDivider(
@@ -643,7 +624,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Notifications,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         },
                         trailingContent = {
@@ -690,7 +672,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Widgets,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -722,7 +705,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.ViewAgenda,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -754,7 +738,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Fingerprint,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         },
                         trailingContent = {
@@ -801,7 +786,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Screenshot,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         },
                         trailingContent = {
@@ -848,7 +834,39 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.Github,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        }
+                    )
+                }
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
+                }
+                item {
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = { dispatch(SettingsIntent.RequestTelegram) }),
+                        headlineContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_telegram),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_telegram_description),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.Telegram,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -882,7 +900,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.GooglePlay,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )
@@ -914,7 +933,8 @@ private fun SettingsScreenContent(
                         leadingContent = {
                             Icon(
                                 imageVector = MoviesIcons.SystemUpdate,
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )

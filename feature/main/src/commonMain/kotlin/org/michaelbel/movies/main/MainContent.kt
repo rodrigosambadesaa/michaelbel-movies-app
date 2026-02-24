@@ -86,7 +86,7 @@ fun MainContent(
 
     ObserveAsEvents(MainNavigator.destFlow) { dest ->
         when (dest) {
-            is MainNavigator.NavigationEvent.Back -> backStack.removeLastOrNull()
+            is MainNavigator.NavigationEvent.Back -> if (backStack.size > 1) backStack.removeLastOrNull()
             is MainNavigator.NavigationEvent.Forward -> backStack.add(dest.destination)
             is MainNavigator.NavigationEvent.RequestReview -> onRequestReview()
             is MainNavigator.NavigationEvent.RequestUpdate -> onRequestUpdate()

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import org.michaelbel.movies.debug.ui.DebugActivityContent
 
 class DebugActivity: ComponentActivity() {
 

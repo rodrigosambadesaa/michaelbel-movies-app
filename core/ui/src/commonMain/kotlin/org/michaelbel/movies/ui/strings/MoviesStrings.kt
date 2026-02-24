@@ -86,6 +86,8 @@ import movies.core.ui.generated.resources.settings_gender_neutral
 import movies.core.ui.generated.resources.settings_gender_not_specified
 import movies.core.ui.generated.resources.settings_github
 import movies.core.ui.generated.resources.settings_github_description
+import movies.core.ui.generated.resources.settings_telegram
+import movies.core.ui.generated.resources.settings_telegram_description
 import movies.core.ui.generated.resources.settings_language
 import movies.core.ui.generated.resources.settings_language_en
 import movies.core.ui.generated.resources.settings_language_ru
@@ -225,6 +227,8 @@ object MoviesStrings {
     val settings_action_cancel = Res.string.settings_action_cancel
     val settings_github = Res.string.settings_github
     val settings_github_description = Res.string.settings_github_description
+    val settings_telegram = Res.string.settings_telegram
+    val settings_telegram_description = Res.string.settings_telegram_description
     val settings_app_widget = Res.string.settings_app_widget
     val settings_app_widget_description = Res.string.settings_app_widget_description
     val settings_tile = Res.string.settings_tile

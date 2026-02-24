@@ -7,6 +7,7 @@ sealed interface SettingsEvent: Event {
     data object RequestPostNotificationsPermission: SettingsEvent
     data object RequestTileService: SettingsEvent
     data object RequestGithub: SettingsEvent
+    data object RequestTelegram: SettingsEvent
     data object ScrollToTop: SettingsEvent
     data class ShowSnackbar(val message: String): SettingsEvent
     data class ShowPermissionSnackbar(val message: String, val actionLabel: String): SettingsEvent

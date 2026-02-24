@@ -146,6 +146,54 @@
         </activity-alias>
 
         <activity-alias
+            android:name="org.michaelbel.movies.RedDarkIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_red_dark"
+            android:roundIcon="@drawable/ic_launcher_red_dark"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.PinkIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_pink"
+            android:roundIcon="@drawable/ic_launcher_pink"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.RoseIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_rose"
+            android:roundIcon="@drawable/ic_launcher_rose"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
             android:name="org.michaelbel.movies.PurpleIcon"
             android:enabled="false"
             android:exported="true"
@@ -162,11 +210,235 @@
         </activity-alias>
 
         <activity-alias
+            android:name="org.michaelbel.movies.DeepPurpleIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_deep_purple"
+            android:roundIcon="@drawable/ic_launcher_deep_purple"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.BlueIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_blue"
+            android:roundIcon="@drawable/ic_launcher_blue"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.SkyIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_sky"
+            android:roundIcon="@drawable/ic_launcher_sky"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.TealIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_teal"
+            android:roundIcon="@drawable/ic_launcher_teal"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.AquaIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_aqua"
+            android:roundIcon="@drawable/ic_launcher_aqua"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.GreenIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_green"
+            android:roundIcon="@drawable/ic_launcher_green"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.EmeraldIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_emerald"
+            android:roundIcon="@drawable/ic_launcher_emerald"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.LimeIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_lime"
+            android:roundIcon="@drawable/ic_launcher_lime"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.YellowIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_yellow"
+            android:roundIcon="@drawable/ic_launcher_yellow"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.OrangeIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_orange"
+            android:roundIcon="@drawable/ic_launcher_orange"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.DeepOrangeIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_deep_orange"
+            android:roundIcon="@drawable/ic_launcher_deep_orange"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
             android:name="org.michaelbel.movies.BrownIcon"
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/ic_launcher_brown"
             android:roundIcon="@drawable/ic_launcher_brown"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.SandIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_sand"
+            android:roundIcon="@drawable/ic_launcher_sand"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.GreyIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_grey"
+            android:roundIcon="@drawable/ic_launcher_grey"
+            android:targetActivity="org.michaelbel.movies.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name="org.michaelbel.movies.BlueGreyIcon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@drawable/ic_launcher_blue_grey"
+            android:roundIcon="@drawable/ic_launcher_blue_grey"
             android:targetActivity="org.michaelbel.movies.MainActivity">
 
             <intent-filter>

@@ -12,7 +12,7 @@ import org.michaelbel.movies.platform.Flavor
 import org.michaelbel.movies.platform.app.AppService
 import org.michaelbel.movies.platform.messaging.MessagingService
 
-internal class DebugViewModel(
+class DebugViewModel(
     private val interactor: Interactor,
     appService: AppService,
     private val messagingService: MessagingService

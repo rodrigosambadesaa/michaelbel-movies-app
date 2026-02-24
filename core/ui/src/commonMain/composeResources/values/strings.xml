@@ -102,6 +102,8 @@
     <string name="settings_action_cancel">Cancel</string>
     <string name="settings_github">Movies on GitHub</string>
     <string name="settings_github_description">Check the GitHub repository</string>
+    <string name="settings_telegram">Telegram</string>
+    <string name="settings_telegram_description">Subscribe to Сhannel</string>
     <string name="settings_app_widget">Add Widget to Home Screen</string>
     <string name="settings_app_widget_description">3x2 %1$s</string>
     <string name="settings_tile">Add Tile to Quick Settings</string>

@@ -109,15 +109,16 @@ private fun DetailsScreenContent(
                 },
                 modifier = Modifier.fillMaxWidth(),
                 actions = {
+                    val movieUrl = state.detailsState.movieUrl
                     AnimatedVisibility(
-                        visible = state.detailsState.movieUrl != null,
+                        visible = movieUrl != null,
                         modifier = modifierDisplayCutoutWindowInsets,
                         enter = fadeIn()
                     ) {
-                        if (state.detailsState.movieUrl != null) {
+                        if (movieUrl != null) {
                             IconButton(
                                 onClick = {
-                                    clipboardManager.setText(AnnotatedString(state.detailsState.movieUrl))
+                                    clipboardManager.setText(AnnotatedString(movieUrl))
                                     dispatch(DetailsIntent.CopyClick)
                                 },
                                 modifier = Modifier

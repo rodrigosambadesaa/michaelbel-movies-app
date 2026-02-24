@@ -102,6 +102,8 @@
     <string name="settings_action_cancel">Отмена</string>
     <string name="settings_github">Movies на GitHub</string>
     <string name="settings_github_description">Посмотреть GitHub-репозиторий</string>
+    <string name="settings_telegram">Telegram</string>
+    <string name="settings_telegram_description">Подписаться на канал</string>
     <string name="settings_app_widget">Добавить виджет на главный экран</string>
     <string name="settings_app_widget_description">3x2 %1$s</string>
     <string name="settings_tile">Добавить плитку в шторку</string>

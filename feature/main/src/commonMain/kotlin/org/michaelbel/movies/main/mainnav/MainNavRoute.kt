@@ -56,6 +56,7 @@ import org.michaelbel.movies.ui.navigation.AppRoute
 import org.michaelbel.movies.ui.navigation.FeedDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
+import org.michaelbel.movies.common.platform.isDesktop
 
 @Composable
 fun MainNavRoute(
@@ -82,7 +83,7 @@ fun MainNavRoute(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 0.dp, top = 8.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = if (isDesktop) 16.dp else 0.dp, top = 8.dp)
                     .navigationBarsPadding(),
                 contentAlignment = Alignment.Center
             ) {

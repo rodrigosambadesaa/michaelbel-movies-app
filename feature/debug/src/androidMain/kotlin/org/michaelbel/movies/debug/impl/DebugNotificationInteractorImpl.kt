@@ -9,24 +9,32 @@ import android.content.Intent
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.runBlocking
+import movies.feature.debug.generated.resources.Res
+import movies.feature.debug.generated.resources.notification_debug_channel_description
+import movies.feature.debug.generated.resources.notification_debug_channel_id
+import movies.feature.debug.generated.resources.notification_debug_channel_name
+import movies.feature.debug.generated.resources.notification_debug_description
+import movies.feature.debug.generated.resources.notification_debug_title
 import org.michaelbel.movies.common.ktx.isPostNotificationsPermissionGranted
 import org.michaelbel.movies.common.ktx.notificationManager
 import org.michaelbel.movies.debug.DebugActivity
 import org.michaelbel.movies.debug.DebugNotificationInteractor
-import org.michaelbel.movies.debug.R
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
 
-internal class DebugNotificationInteractorImpl(
+class DebugNotificationInteractorImpl(
     private val context: Context
 ): DebugNotificationInteractor {
 
     override fun showDebugNotification() {
-        val channelId = context.getString(R.string.notification_debug_channel_id)
+        val channelId = resourceString(Res.string.notification_debug_channel_id)
 
         createChannel(
             channelId = channelId,
-            channelName = context.getString(R.string.notification_debug_channel_name),
-            channelDescription = context.getString(R.string.notification_debug_channel_description)
+            channelName = resourceString(Res.string.notification_debug_channel_name),
+            channelDescription = resourceString(Res.string.notification_debug_channel_description)
         )
 
         val notification = NotificationCompat.Builder(
@@ -34,8 +42,8 @@ internal class DebugNotificationInteractorImpl(
             channelId
         ).apply {
             priority = NotificationCompat.PRIORITY_MIN
-            setContentTitle(context.getString(R.string.notification_debug_title))
-            setContentText(context.getString(R.string.notification_debug_description))
+            setContentTitle(resourceString(Res.string.notification_debug_title))
+            setContentText(resourceString(Res.string.notification_debug_description))
             setSmallIcon(MoviesAndroidIcons.MovieFilter24)
             setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
             setDefaults(NotificationCompat.DEFAULT_LIGHTS)
@@ -67,6 +75,10 @@ internal class DebugNotificationInteractorImpl(
             setShowBadge(false)
         }.build()
         context.notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    private fun resourceString(resource: StringResource): String {
+        return runBlocking { getString(resource) }
     }
 
     private fun pendingIntent(): PendingIntent {

@@ -1,5 +1,9 @@
 package org.michaelbel.movies.ui.icons
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
@@ -7,13 +11,15 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.michaelbel.movies.ui.theme.MoviesTheme
 
 /**
  * Convert SVG to Compose using https://composables.com/svgtocompose
  * SVG Icon: https://pictogrammers.com/library/mdi/icon/cat
  */
-internal val MoviesIcons.CatVector: ImageVector
+val MoviesIcons.Cat: ImageVector
 	get() {
 		if (_cat != null) {
 			return _cat!!
@@ -94,3 +100,16 @@ internal val MoviesIcons.CatVector: ImageVector
 	}
 
 private var _cat: ImageVector? = null
+
+@Preview
+@Composable
+private fun CatIconPreview() {
+	MoviesTheme {
+		Icon(
+			imageVector = MoviesIcons.Cat,
+			contentDescription = null,
+			modifier = Modifier.size(24.dp),
+			tint = Color.White
+		)
+	}
+}

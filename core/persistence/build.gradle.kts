@@ -7,7 +7,6 @@ plugins {
 
 kotlin {
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -50,7 +49,6 @@ kotlin {
 dependencies {
     add("kspAndroid", libs.bundles.room.compiler.common)
     add("kspJvm", libs.bundles.room.compiler.common)
-    add("kspIosX64", libs.bundles.room.compiler.common)
     add("kspIosArm64", libs.bundles.room.compiler.common)
     add("kspIosSimulatorArm64", libs.bundles.room.compiler.common)
 

@@ -253,7 +253,7 @@ fun FeedSearchBar(
                                     AccountAvatar(
                                         account = account,
                                         fontSize = account.lettersTextFontSizeSmall,
-                                        modifier = Modifier.size(32.dp)
+                                        modifier = Modifier.size(IconButtonDefaults.largeIconSize)
                                     )
                                 }
                             }

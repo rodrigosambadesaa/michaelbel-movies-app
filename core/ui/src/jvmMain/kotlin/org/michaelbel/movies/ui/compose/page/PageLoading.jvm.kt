@@ -62,7 +62,7 @@ private fun PageLoadingColumn(
     paddingValues: PaddingValues = PaddingValues()
 ) {
     LazyColumn(
-        modifier = modifier.padding(top = 4.dp),
+        modifier = modifier.padding(top = 8.dp),
         contentPadding = paddingValues,
         userScrollEnabled = false
     ) {

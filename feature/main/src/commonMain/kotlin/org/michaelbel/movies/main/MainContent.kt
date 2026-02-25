@@ -1,9 +1,5 @@
 package org.michaelbel.movies.main
 
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -51,8 +47,9 @@ fun MainContent(
             rememberViewModelStoreNavEntryDecorator()
         ),
         sceneStrategy = remember { DialogSceneStrategy() },
-        popTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
-        predictivePopTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
+        transitionSpec = fadeTransitionSpec(),
+        popTransitionSpec = fadeTransitionSpec(),
+        predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
         entryProvider = entryProvider {
             entry<AuthDestination>(
                 metadata = DialogSceneStrategy.dialog(

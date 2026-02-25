@@ -9,12 +9,20 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.graphics.drawable.toBitmap
+import androidx.palette.graphics.Palette
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.google.android.material.color.DynamicColors
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.common.ktx.appNotificationSettingsIntent
-import org.michaelbel.movies.interactor.SettingsUiInteractor
+import org.michaelbel.movies.interactor.UiInteractor
+import org.michaelbel.movies.network.config.formatBackdropImage
+import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
 import org.michaelbel.movies.ui.appicon.setIcon
@@ -22,11 +30,9 @@ import org.michaelbel.movies.ui.ktx.currentGrammaticalGender
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.supportSetRequestedApplicationGrammaticalGender
 
-class SettingsUiInteractorImpl(
+class UiInteractorImpl(
     private val context: Context
-): SettingsUiInteractor {
-
-    override val isNavigationIconVisible: Boolean = false
+): UiInteractor {
 
     override val isLanguageFeatureEnabled: Boolean = true
 
@@ -50,7 +56,7 @@ class SettingsUiInteractorImpl(
     override val isBiometricFeatureEnabled: Boolean = true
 
     override val isWidgetFeatureEnabled: Boolean
-        @ChecksSdkIntAtLeast(26) get() = Build.VERSION.SDK_INT >= 26
+        get() = true
 
     override val isTileFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
@@ -61,11 +67,17 @@ class SettingsUiInteractorImpl(
 
     override val isGithubFeatureEnabled: Boolean = true
 
+    override val isTelegramFeatureEnabled: Boolean = true
+
     override val isReviewAppFeatureEnabled: Boolean = true
 
     override val isUpdateAppFeatureEnabled: Boolean = true
 
     override val isAboutFeatureEnabled: Boolean = true
+
+    override val isDetailsGalleryFeatureEnabled: Boolean = true
+
+    override val isDetailsShareFeatureEnabled: Boolean = true
 
     override val settingsWindowInsets: WindowInsets
         @Composable get() = displayCutoutWindowInsets
@@ -108,6 +120,38 @@ class SettingsUiInteractorImpl(
             when {
                 areNotificationsEnabled -> resultContract.launch(context.appNotificationSettingsIntent)
                 Build.VERSION.SDK_INT >= 33 -> postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    @Composable
+    override fun detailsPaletteEffect(
+        movie: MoviePojo,
+        placeholder: Boolean,
+        shouldGenerateColors: Boolean,
+        onGenerateColors: (Int, Int?, Int?) -> Unit
+    ) {
+        if (!shouldGenerateColors || placeholder) return
+
+        val context = LocalContext.current
+        LaunchedEffect(movie.backdropPath.formatBackdropImage) {
+            val imageRequest = ImageLoader(context).execute(
+                ImageRequest.Builder(context)
+                    .data(movie.backdropPath.formatBackdropImage)
+                    .allowHardware(false)
+                    .build()
+            )
+            if (imageRequest is SuccessResult) {
+                val bitmap = imageRequest.drawable.toBitmap()
+                Palette.from(bitmap).generate { palette ->
+                    if (palette != null) {
+                        onGenerateColors(
+                            movie.movieId,
+                            palette.vibrantSwatch?.rgb,
+                            palette.vibrantSwatch?.bodyTextColor
+                        )
+                    }
+                }
             }
         }
     }

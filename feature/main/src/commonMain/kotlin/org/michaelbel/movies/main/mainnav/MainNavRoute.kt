@@ -2,10 +2,6 @@
 
 package org.michaelbel.movies.main.mainnav
 
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -57,6 +53,8 @@ import org.michaelbel.movies.ui.navigation.FeedDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.common.platform.isDesktop
+import org.michaelbel.movies.main.fadePredictiveTransitionSpec
+import org.michaelbel.movies.main.fadeTransitionSpec
 
 @Composable
 fun MainNavRoute(
@@ -108,9 +106,7 @@ fun MainNavRoute(
                             },
                             selected = backStack[backStack.lastIndex] == feedDestination,
                             onClick = {
-                                if (backStack[backStack.lastIndex] == feedDestination) {
-                                    viewModel.dispatch(MainIntent.FeedReselected)
-                                }
+                                viewModel.dispatch(MainIntent.FeedReselected)
                                 backStack[backStack.lastIndex] = feedDestination
                             },
                             iconPosition = NavigationItemIconPosition.Start,
@@ -156,8 +152,9 @@ fun MainNavRoute(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
             ),
-            popTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
-            predictivePopTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
+            transitionSpec = fadeTransitionSpec(),
+            popTransitionSpec = fadeTransitionSpec(),
+            predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
             entryProvider = entryProvider {
                 entry<FeedDestination> { FeedScreen() }
                 entry<SettingsDestination> { SettingsScreen() }

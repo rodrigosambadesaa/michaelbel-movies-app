@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,22 +25,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
-import coil.request.ImageRequest
-import coil.request.SuccessResult
+import coil3.compose.AsyncImage
+import coil3.compose.AsyncImagePainter
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
+import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.network.config.formatBackdropImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.isNotEmpty
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
 import org.michaelbel.movies.ui.placeholder.material3.fade
 import org.michaelbel.movies.ui.placeholder.placeholder
@@ -52,31 +48,17 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 fun DetailsContent(
     movie: MoviePojo,
     onNavigateToGallery: () -> Unit,
-    onGenerateColors: (Int, Int?, Int?) -> Unit,
     modifier: Modifier = Modifier,
-    isThemeAmoled: Boolean = false,
     onContainerColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    placeholder: Boolean = false
+    placeholder: Boolean = false,
+    shouldGenerateColors: Boolean = true,
+    onGenerateColors: (Int, Int?, Int?) -> Unit = { _, _, _ -> },
+    detailsPaletteEffect: @Composable (MoviePojo, Boolean, Boolean, (Int, Int?, Int?) -> Unit) -> Unit = { _, _, _, _ -> }
 ) {
-    val context = LocalContext.current
-    var isNoImageVisible by remember { mutableStateOf(false) }
+    detailsPaletteEffect(movie, placeholder, shouldGenerateColors, onGenerateColors)
 
-    if (!isThemeAmoled && !placeholder) {
-        LaunchedEffect(key1 = movie.backdropPath.formatBackdropImage) {
-            val imageRequest = ImageLoader(context).execute(ImageRequest.Builder(context)
-                .data(movie.backdropPath.formatBackdropImage)
-                .allowHardware(false)
-                .build())
-            if (imageRequest is SuccessResult) {
-                val bitmap = imageRequest.drawable.toBitmap()
-                Palette.from(bitmap).generate { palette ->
-                    if (palette != null) {
-                        onGenerateColors(movie.movieId, palette.vibrantSwatch?.rgb, palette.vibrantSwatch?.bodyTextColor)
-                    }
-                }
-            }
-        }
-    }
+    val platformContext = LocalPlatformContext.current
+    var isNoImageVisible by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = modifier,
@@ -91,7 +73,7 @@ fun DetailsContent(
         val imageRequest: ImageRequest? = if (placeholder) {
             null
         } else {
-            ImageRequest.Builder(context)
+            ImageRequest.Builder(platformContext)
                 .data(movie.backdropPath.formatBackdropImage)
                 .crossfade(true)
                 .build()
@@ -110,7 +92,7 @@ fun DetailsContent(
             ) {
                 AsyncImage(
                     model = imageRequest,
-                    contentDescription = stringResource(MoviesContentDescription.MovieDetailsImage),
+                    contentDescription = stringResource(MoviesContentDescriptionCommon.MovieDetailsImage),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(220.dp)
@@ -145,7 +127,7 @@ fun DetailsContent(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = onContainerColor,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15F
+                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15f
                     )
                 )
             }
@@ -164,8 +146,7 @@ private fun DetailsContentPreview(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primaryContainer),
             movie = movie,
-            onNavigateToGallery = {},
-            onGenerateColors = { _,_,_ -> }
+            onNavigateToGallery = {}
         )
     }
 }

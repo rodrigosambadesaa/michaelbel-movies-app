@@ -23,21 +23,36 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
-            api(projects.core.network)
-            implementation(libs.bundles.datastore.common)
-            implementation(libs.bundles.room.common)
-            implementation(libs.bundles.sqlite.common)
-            implementation(libs.bundles.okio.common)
+        val commonMain by getting {
+            dependencies {
+                api(projects.core.network)
+                implementation(libs.bundles.datastore.common)
+                implementation(libs.bundles.room.common)
+                implementation(libs.bundles.sqlite.common)
+                implementation(libs.bundles.okio.common)
+            }
         }
-        androidMain.dependencies {
-            implementation(libs.bundles.datastore.android)
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.bundles.datastore.android)
+            }
         }
-        jvmMain.dependencies {
-            implementation(libs.bundles.datastore.desktop)
+        val jvmMain by getting {
+            dependencies {
+                implementation(libs.bundles.datastore.desktop)
+            }
         }
-        iosMain.dependencies {
-            implementation(libs.bundles.sqlite.bundled.ios)
+        val iosArm64Main by getting {
+            dependencies {
+                implementation(libs.bundles.sqlite.bundled.ios)
+            }
+            kotlin.srcDir("build/generated/ksp/iosArm64/iosArm64Main/kotlin")
+        }
+        val iosSimulatorArm64Main by getting {
+            dependencies {
+                implementation(libs.bundles.sqlite.bundled.ios)
+            }
+            kotlin.srcDir("build/generated/ksp/iosSimulatorArm64/iosSimulatorArm64Main/kotlin")
         }
     }
 
@@ -52,11 +67,6 @@ dependencies {
     add("kspIosArm64", libs.bundles.room.compiler.common)
     add("kspIosSimulatorArm64", libs.bundles.room.compiler.common)
 
-    /**
-     * Need to generate AppDatabase::class.instantiateImpl() in iosMain.
-     * Comment when build Android & Desktop apps. Uncomment when first build iOS app.
-     */
-    /*add("kspCommonMainMetadata", libs.bundles.room.compiler.common)*/
 }
 
 room {

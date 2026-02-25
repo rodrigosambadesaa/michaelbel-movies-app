@@ -6,12 +6,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.common.gender.GrammaticalGender
-import org.michaelbel.movies.interactor.SettingsUiInteractor
+import org.michaelbel.movies.interactor.UiInteractor
+import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
 
-class SettingsUiInteractorImpl: SettingsUiInteractor {
-
-    override val isNavigationIconVisible: Boolean = true
+class UiInteractorImpl: UiInteractor {
 
     override val isLanguageFeatureEnabled: Boolean = false
 
@@ -41,11 +40,17 @@ class SettingsUiInteractorImpl: SettingsUiInteractor {
 
     override val isGithubFeatureEnabled: Boolean = true
 
+    override val isTelegramFeatureEnabled: Boolean = true
+
     override val isReviewAppFeatureEnabled: Boolean = false
 
     override val isUpdateAppFeatureEnabled: Boolean = false
 
     override val isAboutFeatureEnabled: Boolean = true
+
+    override val isDetailsGalleryFeatureEnabled: Boolean = false
+
+    override val isDetailsShareFeatureEnabled: Boolean = false
 
     override val settingsWindowInsets: WindowInsets
         @Composable get() = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
@@ -66,6 +71,14 @@ class SettingsUiInteractorImpl: SettingsUiInteractor {
     ): () -> Unit {
         return {}
     }
+
+    @Composable
+    override fun detailsPaletteEffect(
+        movie: MoviePojo,
+        placeholder: Boolean,
+        shouldGenerateColors: Boolean,
+        onGenerateColors: (Int, Int?, Int?) -> Unit
+    ) {}
 
     override val enabledIcon: IconAlias = IconAlias.Red
 

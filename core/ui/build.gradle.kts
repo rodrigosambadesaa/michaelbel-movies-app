@@ -45,9 +45,9 @@ kotlin {
             implementation(libs.bundles.paging.android)
         }
         jvmMain.dependencies {
-            api(compose.desktop.common)
             api(compose.desktop.currentOs)
             api(libs.bundles.compose.desktop)
+            implementation(libs.androidx.paging.compose)
         }
     }
 

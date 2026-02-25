@@ -24,7 +24,6 @@ import movies.core.ui.generated.resources.auth_sign_up
 import movies.core.ui.generated.resources.auth_terms_of_use
 import movies.core.ui.generated.resources.auth_title
 import movies.core.ui.generated.resources.details_error_loading
-import movies.core.ui.generated.resources.details_title
 import movies.core.ui.generated.resources.details_url_copied
 import movies.core.ui.generated.resources.error_api_key_null
 import movies.core.ui.generated.resources.error_check_internet_connectivity
@@ -86,8 +85,6 @@ import movies.core.ui.generated.resources.settings_gender_neutral
 import movies.core.ui.generated.resources.settings_gender_not_specified
 import movies.core.ui.generated.resources.settings_github
 import movies.core.ui.generated.resources.settings_github_description
-import movies.core.ui.generated.resources.settings_telegram
-import movies.core.ui.generated.resources.settings_telegram_description
 import movies.core.ui.generated.resources.settings_language
 import movies.core.ui.generated.resources.settings_language_en
 import movies.core.ui.generated.resources.settings_language_ru
@@ -107,6 +104,8 @@ import movies.core.ui.generated.resources.settings_review
 import movies.core.ui.generated.resources.settings_review_description
 import movies.core.ui.generated.resources.settings_screenshots
 import movies.core.ui.generated.resources.settings_screenshots_description
+import movies.core.ui.generated.resources.settings_telegram
+import movies.core.ui.generated.resources.settings_telegram_description
 import movies.core.ui.generated.resources.settings_theme
 import movies.core.ui.generated.resources.settings_theme_amoled
 import movies.core.ui.generated.resources.settings_theme_dark
@@ -160,7 +159,6 @@ object MoviesStrings {
     val auth_error_while_create_session = Res.string.auth_error_while_create_session
     val auth_error_while_loading_account_details = Res.string.auth_error_while_loading_account_details
 
-    val details_title = Res.string.details_title
     val details_error_loading = Res.string.details_error_loading
     val details_url_copied = Res.string.details_url_copied
 

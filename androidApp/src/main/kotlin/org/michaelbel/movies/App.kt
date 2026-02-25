@@ -18,7 +18,7 @@ import org.michaelbel.movies.platform.crashlytics.CrashlyticsService
 import org.michaelbel.movies.ui.appicon.installLauncherIcon
 import timber.log.Timber
 
-internal class App: Application(), Configuration.Provider {
+class App: Application(), Configuration.Provider {
 
     private val workerFactory: KoinWorkerFactory by inject()
     private val appService: AppService by inject()

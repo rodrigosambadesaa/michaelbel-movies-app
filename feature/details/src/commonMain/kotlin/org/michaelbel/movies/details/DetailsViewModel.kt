@@ -3,11 +3,12 @@ package org.michaelbel.movies.details
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.MovieDetailsException
+import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
-import org.michaelbel.movies.details.event.DetailsEvent
 import org.michaelbel.movies.details.intent.DetailsIntent
 import org.michaelbel.movies.details.model.DetailsModel
 import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
 import org.michaelbel.movies.network.connectivity.NetworkManager
 import org.michaelbel.movies.ui.navigation.DetailsDestination
@@ -17,8 +18,15 @@ import org.michaelbel.movies.ui.navigation.MainNavigator
 class DetailsViewModel(
     private val destination: DetailsDestination,
     private val interactor: Interactor,
+    val uiInteractor: UiInteractor,
     private val networkManager: NetworkManager
-): MoviesViewModel<DetailsModel, DetailsIntent, DetailsEvent>(DetailsModel()) {
+): MoviesViewModel<DetailsModel, DetailsIntent, Event>(DetailsModel()) {
+
+    val isDetailsGalleryFeatureEnabled: Boolean
+        get() = uiInteractor.isDetailsGalleryFeatureEnabled
+
+    val isDetailsShareFeatureEnabled: Boolean
+        get() = uiInteractor.isDetailsShareFeatureEnabled
 
     init {
         dispatch(DetailsIntent.CollectAppTheme)
@@ -50,7 +58,6 @@ class DetailsViewModel(
             }
             is DetailsIntent.BackClick -> launch { MainNavigator.back() }
             is DetailsIntent.GalleryClick -> launch { MainNavigator.forward(GalleryDestination(destination.movieId)) }
-            is DetailsIntent.CopyClick -> launch { push(DetailsEvent.CopyClick) }
             is DetailsIntent.GenerateColors -> {
                 launch {
                     if (intent.containerColor != null && intent.onContainerColor != null) {

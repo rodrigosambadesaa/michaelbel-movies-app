@@ -13,7 +13,9 @@ data class FeedModel(
     val feedView: FeedView = FeedView.FeedList,
     val movieList: MovieList = MovieList.NowPlaying(),
     val networkStatus: NetworkStatus = NetworkStatus.Unavailable,
+    val isFeedLoading: Boolean = false, // TODO Fallback iOS
     val suggestions: List<SuggestionPojo> = emptyList(),
     val searchHistoryMovies: List<MoviePojo> = emptyList(),
-    val isNotificationDialogVisible: Boolean = false
+    val isNotificationDialogVisible: Boolean = false,
+    val fallbackMovies: List<MoviePojo> = emptyList() // TODO Fallback iOS
 ): Model

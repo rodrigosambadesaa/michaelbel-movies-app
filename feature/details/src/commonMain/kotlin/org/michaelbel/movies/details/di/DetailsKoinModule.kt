@@ -13,6 +13,6 @@ val detailsKoinModule = module {
         connectivityKoinModule
     )
     viewModel { (destination: DetailsDestination) ->
-        DetailsViewModel(destination, get(), get())
+        DetailsViewModel(destination, get(), get(), get())
     }
 }

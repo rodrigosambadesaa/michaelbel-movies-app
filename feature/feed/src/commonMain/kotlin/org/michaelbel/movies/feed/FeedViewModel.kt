@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.michaelbel.movies.common.list.MovieList
+import org.michaelbel.movies.common.log.log
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.intent.FeedIntent
@@ -26,6 +26,7 @@ import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.ktx.nameOrLocalList
 import org.michaelbel.movies.network.connectivity.NetworkManager
+import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.notifications.NotificationClient
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.navigation.AccountDestination
@@ -58,15 +59,17 @@ class FeedViewModel(
         .flatMapLatest(interactor::moviesPagingData)
         .cachedIn(this)
 
-    val pagingDataFlow2: StateFlow<List<MoviePojo>> = currentMovieList.flatMapLatest { movieList ->
-        flowOf(interactor.moviesResult(movieList.nameOrLocalList))
+    val moviesFlow: StateFlow<List<MoviePojo>> = currentMovieList.flatMapLatest { movieList ->
+        interactor.moviesFlow(movieList.nameOrLocalList, MovieResponse.DEFAULT_PAGE_SIZE)
     }.catch {
-        emptyList<List<MoviePojo>>()
+        emit(emptyList())
     }.stateIn(
         scope = this,
         started = SharingStarted.Lazily,
         initialValue = emptyList()
     )
+
+    val pagingDataFlow2: StateFlow<List<MoviePojo>> = moviesFlow
 
     init {
         dispatch(FeedIntent.CollectAccountPojo)
@@ -77,6 +80,9 @@ class FeedViewModel(
         dispatch(FeedIntent.CollectSearchHistoryMovies)
         dispatch(FeedIntent.LoadSuggestions)
         dispatch(FeedIntent.SubscribeNotificationsPermissionRequired)
+        launch {
+            pagingDataFlow.collect {}
+        }
     }
 
     override fun dispatch(intent: FeedIntent) {
@@ -106,6 +112,26 @@ class FeedViewModel(
                 launch {
                     networkManager.status.collectLatest { networkStatus ->
                         reduce { it.copy(networkStatus = networkStatus) }
+                    }
+                }
+            }
+            is FeedIntent.RefreshMovies -> { // TODO Fallback iOS
+                if (stateFlow.value.isFeedLoading) return
+                launch {
+                    val movieList = currentMovieList.value
+                    val pagingKey = movieList.nameOrLocalList
+                    reduce { it.copy(isFeedLoading = true) }
+                    try {
+                        val movies = interactor.fetchAndInsertMovies(pagingKey)
+                        log("Feed refresh loaded ${movies.size} movies for $pagingKey")
+                        reduce { it.copy(isFeedLoading = false) }
+                    } catch (throwable: Throwable) {
+                        log(throwable)
+                        reduce {
+                            it.copy(
+                                isFeedLoading = false
+                            )
+                        }
                     }
                 }
             }

@@ -9,7 +9,7 @@ import org.michaelbel.movies.common.notify.NotifyManager
 import org.michaelbel.movies.common.version.AppVersionData
 import org.michaelbel.movies.interactor.AboutInteractor
 import org.michaelbel.movies.interactor.Interactor
-import org.michaelbel.movies.interactor.SettingsUiInteractor
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.platform.Flavor
 import org.michaelbel.movies.platform.app.AppService
 import org.michaelbel.movies.platform.update.UpdateListener
@@ -20,7 +20,7 @@ import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class SettingsViewModel(
-    val settingsUiInteractor: SettingsUiInteractor,
+    val uiInteractor: UiInteractor,
     private val aboutInteractor: AboutInteractor,
     private val biometricController: BiometricInteractor,
     private val notifyManager: NotifyManager,
@@ -95,7 +95,7 @@ class SettingsViewModel(
                     }
                 }
             }
-            is SettingsIntent.CollectGender -> reduce { it.copy(grammaticalGender = settingsUiInteractor.grammaticalGender) }
+            is SettingsIntent.CollectGender -> reduce { it.copy(grammaticalGender = uiInteractor.grammaticalGender) }
             is SettingsIntent.CollectAbout -> {
                 launch {
                     reduce {
@@ -109,27 +109,28 @@ class SettingsViewModel(
             is SettingsIntent.CollectFeaturesEnabled -> {
                 reduce {
                     it.copy(
-                        isLanguageFeatureEnabled = settingsUiInteractor.isLanguageFeatureEnabled,
-                        isThemeFeatureEnabled = settingsUiInteractor.isThemeFeatureEnabled,
-                        isFeedViewFeatureEnabled = settingsUiInteractor.isFeedViewFeatureEnabled,
-                        isMovieListFeatureEnabled = settingsUiInteractor.isMovieListFeatureEnabled,
-                        isGenderFeatureEnabled = settingsUiInteractor.isGenderFeatureEnabled,
-                        isDynamicColorsFeatureEnabled = settingsUiInteractor.isDynamicColorsFeatureEnabled,
-                        isPaletteColorsFeatureEnabled = settingsUiInteractor.isPaletteColorsFeatureEnabled,
-                        isNotificationsFeatureEnabled = settingsUiInteractor.isNotificationsFeatureEnabled,
-                        isBiometricFeatureEnabled = settingsUiInteractor.isBiometricFeatureEnabled,
-                        isWidgetFeatureEnabled = settingsUiInteractor.isWidgetFeatureEnabled,
-                        isTileFeatureEnabled = settingsUiInteractor.isTileFeatureEnabled,
-                        isAppIconFeatureEnabled = settingsUiInteractor.isAppIconFeatureEnabled,
-                        isScreenshotFeatureEnabled = settingsUiInteractor.isScreenshotFeatureEnabled,
-                        isGithubFeatureEnabled = settingsUiInteractor.isGithubFeatureEnabled,
-                        isReviewAppFeatureEnabled = settingsUiInteractor.isReviewAppFeatureEnabled,
-                        isUpdateAppFeatureEnabled = settingsUiInteractor.isUpdateAppFeatureEnabled,
-                        isAboutFeatureEnabled = settingsUiInteractor.isAboutFeatureEnabled,
+                        isLanguageFeatureEnabled = uiInteractor.isLanguageFeatureEnabled,
+                        isThemeFeatureEnabled = uiInteractor.isThemeFeatureEnabled,
+                        isFeedViewFeatureEnabled = uiInteractor.isFeedViewFeatureEnabled,
+                        isMovieListFeatureEnabled = uiInteractor.isMovieListFeatureEnabled,
+                        isGenderFeatureEnabled = uiInteractor.isGenderFeatureEnabled,
+                        isDynamicColorsFeatureEnabled = uiInteractor.isDynamicColorsFeatureEnabled,
+                        isPaletteColorsFeatureEnabled = uiInteractor.isPaletteColorsFeatureEnabled,
+                        isNotificationsFeatureEnabled = uiInteractor.isNotificationsFeatureEnabled,
+                        isBiometricFeatureEnabled = uiInteractor.isBiometricFeatureEnabled,
+                        isWidgetFeatureEnabled = uiInteractor.isWidgetFeatureEnabled,
+                        isTileFeatureEnabled = uiInteractor.isTileFeatureEnabled,
+                        isAppIconFeatureEnabled = uiInteractor.isAppIconFeatureEnabled,
+                        isScreenshotFeatureEnabled = uiInteractor.isScreenshotFeatureEnabled,
+                        isGithubFeatureEnabled = uiInteractor.isGithubFeatureEnabled,
+                        isTelegramFeatureEnabled = uiInteractor.isTelegramFeatureEnabled,
+                        isReviewAppFeatureEnabled = uiInteractor.isReviewAppFeatureEnabled,
+                        isUpdateAppFeatureEnabled = uiInteractor.isUpdateAppFeatureEnabled,
+                        isAboutFeatureEnabled = uiInteractor.isAboutFeatureEnabled,
                     )
                 }
             }
-            is SettingsIntent.CollectAppIcon -> reduce { it.copy(enabledIcon = settingsUiInteractor.enabledIcon) }
+            is SettingsIntent.CollectAppIcon -> reduce { it.copy(enabledIcon = uiInteractor.enabledIcon) }
             is SettingsIntent.FetchUpdateAvailable -> {
                 reduce { it.copy(isUpdateAvailable = true) }
                 updateService.setUpdateAvailableListener(object: UpdateListener {
@@ -159,9 +160,9 @@ class SettingsViewModel(
             is SettingsIntent.SetBiometricEnabled -> launch { interactor.setBiometricEnabled(intent.enabled) }
             is SettingsIntent.SetScreenshotBlockEnabled -> launch { interactor.setScreenshotBlockEnabled(intent.enabled) }
             is SettingsIntent.SetUpdateAvailable -> { reduce { it.copy(isUpdateAvailable = intent.state) } }
-            is SettingsIntent.SetGrammaticalGender -> settingsUiInteractor.setGrammaticalGender(intent.value)
+            is SettingsIntent.SetGrammaticalGender -> uiInteractor.setGrammaticalGender(intent.value)
             is SettingsIntent.SetAppIcon -> {
-                settingsUiInteractor.setIcon(intent.icon)
+                uiInteractor.setIcon(intent.icon)
                 reduce { it.copy(enabledIcon = intent.icon) }
             }
         }

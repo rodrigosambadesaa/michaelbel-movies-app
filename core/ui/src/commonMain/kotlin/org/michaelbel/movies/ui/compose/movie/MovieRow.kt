@@ -29,7 +29,7 @@ import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun MovieRow(
+fun MovieRow(
     movie: MoviePojo,
     modifier: Modifier = Modifier,
     maxLines: Int = 10

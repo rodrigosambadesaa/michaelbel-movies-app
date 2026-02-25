@@ -181,6 +181,7 @@ private fun AccountScreenContent(
 
         Button(
             onClick = { dispatch(AccountIntent.LogoutClick) },
+            shapes = ButtonDefaults.shapes(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),

@@ -13,7 +13,7 @@ import org.michaelbel.movies.platform.inject.flavorServiceKtorModule
 import org.michaelbel.movies.settings.di.settingsKoinModule
 import org.michaelbel.movies.widget.di.glanceKoinModule
 
-internal val appKoinModule = module {
+val appKoinModule = module {
     includes(
         flavorServiceKtorModule,
         mainKoinModule,

@@ -7,7 +7,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,7 +24,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
@@ -48,7 +46,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
@@ -83,7 +80,6 @@ import org.michaelbel.movies.ui.ktx.SettingsGenderText
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isDebug
-import org.michaelbel.movies.ui.ktx.modifierDisplayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.requestTileService
 import org.michaelbel.movies.ui.lifecycle.OnResume
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -94,7 +90,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
-    val openAppNotificationSettings = viewModel.settingsUiInteractor.navigateToAppNotificationSettings()
+    val openAppNotificationSettings = viewModel.uiInteractor.navigateToAppNotificationSettings()
     val navigateToGithubUrl = navigateToUrl(MOVIES_GITHUB_URL)
     val navigateToTelegramUrl = navigateToUrl(MOVIES_TELEGRAM_URL)
     val scope = rememberCoroutineScope()
@@ -102,7 +98,7 @@ fun SettingsScreen(
     val lazyListState = rememberLazyListState()
     val permissionMessage = stringResource(MoviesStrings.settings_post_notifications_should_request)
     val permissionAction = stringResource(MoviesStrings.settings_action_go)
-    val onRequestPostNotificationsPermission = viewModel.settingsUiInteractor.rememberPostNotificationsPermissionHandler(
+    val onRequestPostNotificationsPermission = viewModel.uiInteractor.rememberPostNotificationsPermissionHandler(
         areNotificationsEnabled = state.areNotificationsEnabled,
         onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
         onPermissionDenied = { viewModel.dispatch(SettingsIntent.ShowPermissionSnackbar(permissionMessage, permissionAction)) }
@@ -148,8 +144,7 @@ fun SettingsScreen(
         state = state,
         dispatch = viewModel::dispatch,
         snackbarHostState = snackbarHostState,
-        lazyListState = lazyListState,
-        isNavigationIconVisible = viewModel.settingsUiInteractor.isNavigationIconVisible,
+        lazyListState = lazyListState
     )
 
     OnResume {
@@ -162,16 +157,19 @@ private fun SettingsScreenContent(
     state: SettingsModel,
     dispatch: (SettingsIntent) -> Unit,
     snackbarHostState: SnackbarHostState,
-    lazyListState: LazyListState,
-    isNavigationIconVisible: Boolean
+    lazyListState: LazyListState
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         state = rememberTopAppBarState(),
         canScroll = { true }
     )
     val layoutDirection = LocalLayoutDirection.current
-    val iconChangedMessages = IconAlias.VALUES.associateWith { iconAlias ->
-        stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, iconAlias.title)
+    val iconChangedMessages: Map<IconAlias, String> = if (state.isAppIconFeatureEnabled) {
+        IconAlias.VALUES.associateWith { iconAlias ->
+            stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, iconAlias.title)
+        }
+    } else {
+        emptyMap()
     }
 
     Scaffold(
@@ -186,23 +184,6 @@ private fun SettingsScreenContent(
                     )
                 },
                 modifier = Modifier.clickableWithoutRipple { dispatch(SettingsIntent.ScrollToTop) },
-                navigationIcon = if (isNavigationIconVisible) {
-                    {
-                        IconButton(
-                            onClick = { dispatch(SettingsIntent.BackClick) },
-                            modifier = Modifier.then(modifierDisplayCutoutWindowInsets)
-                        ) {
-                            Image(
-                                imageVector = MoviesIcons.ArrowBack,
-                                contentDescription = stringResource(MoviesContentDescriptionCommon.BackIcon),
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                            )
-                        }
-                    }
-                } else {
-                    {}
-                },
                 scrollBehavior = topAppBarScrollBehavior
             )
         },
@@ -592,7 +573,9 @@ private fun SettingsScreenContent(
                     SettingsAppIconsBox(
                         enabledIcon = state.enabledIcon,
                         onChange = { iconAlias ->
-                            dispatch(SettingsIntent.ShowSnackbar(iconChangedMessages.getValue(iconAlias)))
+                            iconChangedMessages[iconAlias]?.let { message ->
+                                dispatch(SettingsIntent.ShowSnackbar(message))
+                            }
                             dispatch(SettingsIntent.SetAppIcon(iconAlias))
                         }
                     )
@@ -845,6 +828,8 @@ private fun SettingsScreenContent(
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                     )
                 }
+            }
+            if (state.isTelegramFeatureEnabled) {
                 item {
                     ListItem(
                         modifier = Modifier
@@ -871,12 +856,12 @@ private fun SettingsScreenContent(
                         }
                     )
                 }
-                if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
-                    item {
-                        HorizontalDivider(
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-                        )
-                    }
+            }
+            if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
                 }
             }
             if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled) {
@@ -948,7 +933,9 @@ private fun SettingsScreenContent(
             if (state.isAboutFeatureEnabled) {
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {

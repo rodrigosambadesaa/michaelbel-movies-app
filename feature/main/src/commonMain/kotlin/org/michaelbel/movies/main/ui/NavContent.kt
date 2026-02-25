@@ -1,9 +1,5 @@
 package org.michaelbel.movies.main.ui
 
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.saveable.rememberSerializable
@@ -18,6 +14,8 @@ import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AppRoute
 import org.michaelbel.movies.ui.navigation.MainDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
+import org.michaelbel.movies.main.fadePredictiveTransitionSpec
+import org.michaelbel.movies.main.fadeTransitionSpec
 
 @Composable
 fun NavContent(
@@ -30,8 +28,9 @@ fun NavContent(
     NavDisplay(
         backStack = backStack,
         modifier = modifier,
-        popTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
-        predictivePopTransitionSpec = { fadeIn() togetherWith fadeOut() using SizeTransform(clip = false) },
+        transitionSpec = fadeTransitionSpec(),
+        popTransitionSpec = fadeTransitionSpec(),
+        predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
         entryProvider = entryProvider {
             entry<MainDestination> { FeedScreen() }
             entry<AccountDestination> { AccountScreen() }

@@ -32,7 +32,6 @@
     <string name="auth_error_while_create_session">Ошибка при получении идентификатора сессии</string>
     <string name="auth_error_while_loading_account_details">Ошибка при загрузке информации об аккаунте</string>
 
-    <string name="details_title">Детали фильма</string>
     <string name="details_error_loading">Во время загрузки произошла ошибка</string>
     <string name="details_url_copied">Ссылка на фильм скопирована в буфер обмена</string>
 

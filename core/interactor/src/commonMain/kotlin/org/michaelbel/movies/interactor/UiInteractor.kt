@@ -4,11 +4,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.michaelbel.movies.common.SealedString
+import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
 
-interface SettingsUiInteractor {
-
-    val isNavigationIconVisible: Boolean
+interface UiInteractor {
 
     val isLanguageFeatureEnabled: Boolean
 
@@ -38,11 +37,17 @@ interface SettingsUiInteractor {
 
     val isGithubFeatureEnabled: Boolean
 
+    val isTelegramFeatureEnabled: Boolean
+
     val isReviewAppFeatureEnabled: Boolean
 
     val isUpdateAppFeatureEnabled: Boolean
 
     val isAboutFeatureEnabled: Boolean
+
+    val isDetailsGalleryFeatureEnabled: Boolean
+
+    val isDetailsShareFeatureEnabled: Boolean
 
     @get:Composable
     val settingsWindowInsets: WindowInsets
@@ -58,6 +63,14 @@ interface SettingsUiInteractor {
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
     ): () -> Unit
+
+    @Composable
+    fun detailsPaletteEffect(
+        movie: MoviePojo,
+        placeholder: Boolean,
+        shouldGenerateColors: Boolean,
+        onGenerateColors: (Int, Int?, Int?) -> Unit
+    )
 
     val enabledIcon: IconAlias
 

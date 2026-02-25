@@ -29,6 +29,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.bundles.paging.desktop)
+            implementation(libs.androidx.paging.compose)
         }
     }
 

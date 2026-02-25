@@ -7,10 +7,10 @@ import org.michaelbel.movies.analytics.di.moviesAnalyticsKoinModule
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
 import org.michaelbel.movies.interactor.AboutInteractor
 import org.michaelbel.movies.interactor.LocaleInteractor
-import org.michaelbel.movies.interactor.SettingsUiInteractor
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.interactor.impl.AboutInteractorImpl
 import org.michaelbel.movies.interactor.impl.LocaleInteractorImpl
-import org.michaelbel.movies.interactor.impl.SettingsUiInteractorImpl
+import org.michaelbel.movies.interactor.impl.UiInteractorImpl
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
 import org.michaelbel.movies.repository.di.repositoryKoinModule
 
@@ -28,6 +28,6 @@ actual val aboutInteractorKoinModule = module {
     singleOf(::AboutInteractorImpl) { bind<AboutInteractor>() }
 }
 
-actual val settingsUiInteractorKoinModule = module {
-    singleOf(::SettingsUiInteractorImpl) { bind<SettingsUiInteractor>() }
+actual val uiInteractorKoinModule = module {
+    singleOf(::UiInteractorImpl) { bind<UiInteractor>() }
 }

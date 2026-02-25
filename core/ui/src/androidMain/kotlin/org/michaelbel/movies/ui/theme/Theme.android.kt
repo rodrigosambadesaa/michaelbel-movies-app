@@ -2,8 +2,6 @@
 
 package org.michaelbel.movies.ui.theme
 
-//import androidx.compose.material3.ExperimentalMaterial3Api
-//import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
@@ -75,12 +73,6 @@ actual fun MoviesTheme(
         shapes = MoviesShapes,
         typography = MoviesTypography
     ) {
-        //CompositionLocalProvider(
-        //    LocalRippleConfiguration provides moviesRippleConfiguration(
-        //        color = MaterialTheme.colorScheme.primary
-        //    )
-        //) {
-            content()
-        //}
+        content()
     }
 }

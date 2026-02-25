@@ -30,10 +30,7 @@ import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SETTINGS
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
-/**
- * BiometricPrompt needs FragmentActivity.
- */
-internal class MainActivity: FragmentActivity() {
+class MainActivity: FragmentActivity() {
 
     private val viewModel: MainViewModel by viewModel()
 

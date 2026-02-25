@@ -12,7 +12,7 @@ import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
-internal actual val dataStoreKoinModule = module {
+actual val dataStoreKoinModule = module {
     single<DataStore<Preferences>> {
         createDataStore(
             producePath = {

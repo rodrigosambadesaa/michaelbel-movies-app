@@ -32,7 +32,6 @@
     <string name="auth_error_while_create_session">Error while create session</string>
     <string name="auth_error_while_loading_account_details">Error while loading account details</string>
 
-    <string name="details_title">Movie Details</string>
     <string name="details_error_loading">Error while loading</string>
     <string name="details_url_copied">Movie url copied to clipboard</string>
 

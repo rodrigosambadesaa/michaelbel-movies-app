@@ -131,6 +131,16 @@ internal class MovieInteractorImpl(
         }
     }
 
+    override suspend fun fetchAndInsertMovies(pagingKey: PagingKey): List<MoviePojo> { // TODO Fallback iOS
+        return withContext(dispatchers.io) {
+            val moviesResult = movieRepository.moviesResult(pagingKey, localeInteractor.language, 1)
+            movieRepository.insertMovies(pagingKey, moviesResult.page, moviesResult.results)
+            moviesResult.results.mapIndexed { index, movieResponse ->
+                movieResponse.moviePojo(pagingKey, index, moviesResult.page)
+            }
+        }
+    }
+
     override suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo> {
         return withContext(dispatchers.io) {
             movieRepository.moviesResult(pagingKey, localeInteractor.language, 1).results.mapIndexed { index, movieResponse ->

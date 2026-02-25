@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun DetailsLoading(
+fun DetailsLoading(
     modifier: Modifier = Modifier
 ) {
     DetailsContent(

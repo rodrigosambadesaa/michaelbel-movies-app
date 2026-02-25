@@ -28,18 +28,19 @@ internal class LocaleInteractorImpl(
 
     override suspend fun selectLanguage(language: AppLanguage) {
         withContext(dispatchers.io) {
-            if (Build.VERSION.SDK_INT >= 33) {
-                val localeManager = context.getSystemService(LocaleManager::class.java)
-                localeManager.applicationLocales = LocaleList.forLanguageTags(AppLanguage.code(language))
-            } else {
-                val locale = Locale(AppLanguage.code(language))
-                Locale.setDefault(locale)
-
-                val configuration = context.resources.configuration
-                configuration.setLocale(locale)
-                context.createConfigurationContext(configuration)
+            when {
+                Build.VERSION.SDK_INT >= 33 -> {
+                    val localeManager = context.getSystemService(LocaleManager::class.java)
+                    localeManager.applicationLocales = LocaleList.forLanguageTags(AppLanguage.code(language))
+                }
+                else -> {
+                    val locale = Locale(AppLanguage.code(language))
+                    Locale.setDefault(locale)
+                    val configuration = context.resources.configuration
+                    configuration.setLocale(locale)
+                    context.createConfigurationContext(configuration)
+                }
             }
-
             analytics.logEvent(SelectLanguageEvent(language.toString()))
         }
     }

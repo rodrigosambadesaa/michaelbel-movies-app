@@ -26,7 +26,8 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.PageEmptyException
-import org.michaelbel.movies.feed.event.FeedAppEvent
+import org.michaelbel.movies.feed.event.FeedEvent
+import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.feed.ui.FeedEmpty
@@ -64,16 +65,16 @@ actual fun FeedScreen(
     )
 
     ObserveAsEvents(
-        flow = FeedAppEvent.eventFlow,
+        flow = FeedEventManager.eventFlow,
         key1 = state.feedView
     ) { event ->
         when (event) {
-            FeedAppEvent.Event.ReselectFeed -> {
+            FeedEvent.ReselectFeed -> {
                 scope.launch { feedLazyListState.animateScrollToItem(0) }
                 scope.launch { feedLazyGridState.animateScrollToItem(0) }
                 scope.launch { feedLazyStaggeredGridState.animateScrollToItem(0) }
             }
-            FeedAppEvent.Event.OpenSearch -> Unit
+            else -> Unit
         }
     }
 

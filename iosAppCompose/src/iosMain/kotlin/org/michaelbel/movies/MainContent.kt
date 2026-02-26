@@ -12,7 +12,7 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.di.appKoinModule
-import org.michaelbel.movies.main.MainContent
+import org.michaelbel.movies.main.MainScreen
 import org.michaelbel.movies.main.MainViewModel
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.theme.MoviesTheme
@@ -25,21 +25,21 @@ fun IosMainContent() {
         }
     ) {
         val viewModel = koinInject<MainViewModel>()
-        val themeData by viewModel.themeData.collectAsStateCommon()
+        val state by viewModel.stateFlow.collectAsStateCommon()
 
         withViewModelStoreOwner {
             MoviesTheme(
                 themeData = ThemeData(
-                    appTheme = themeData.appTheme,
+                    appTheme = state.themeData.appTheme,
                     dynamicColors = false,
-                    paletteColors = themeData.paletteColors,
-                    paletteKey = themeData.paletteKey,
-                    seedColor = themeData.seedColor
+                    paletteColors = state.themeData.paletteColors,
+                    paletteKey = state.themeData.paletteKey,
+                    seedColor = state.themeData.seedColor
                 ),
-                theme = themeData.appTheme,
+                theme = state.themeData.appTheme,
                 enableEdgeToEdge = { _,_ -> }
             ) {
-                MainContent()
+                MainScreen()
             }
         }
     }

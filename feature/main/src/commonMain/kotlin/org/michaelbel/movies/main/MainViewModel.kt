@@ -1,26 +1,27 @@
 package org.michaelbel.movies.main
 
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.analytics.MoviesAnalytics
-import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
-import org.michaelbel.movies.common.viewmodel.CoroutineViewModel
+import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.debug.DebugNotificationInteractor
+import org.michaelbel.movies.feed.event.FeedEvent
+import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.main.event.MainEvent
+import org.michaelbel.movies.main.intent.MainIntent
+import org.michaelbel.movies.main.model.MainModel
+import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.platform.config.ConfigService
 import org.michaelbel.movies.platform.messaging.MessagingService
 import org.michaelbel.movies.platform.review.ReviewService
 import org.michaelbel.movies.platform.update.UpdateService
 import org.michaelbel.movies.ui.ktx.isDebug
+import org.michaelbel.movies.ui.navigation.DetailsDestination
+import org.michaelbel.movies.ui.navigation.MainDestination
+import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.work.WorkManagerInteractor
 
 class MainViewModel(
@@ -33,100 +34,90 @@ class MainViewModel(
     private val configService: ConfigService,
     private val reviewService: ReviewService,
     private val updateService: UpdateService,
-): CoroutineViewModel() {
-
-    private val _authenticateFlow = Channel<Unit>()
-    val authenticateFlow: Flow<Unit> get() = _authenticateFlow.receiveAsFlow()
-
-    private val _cancelFlow = Channel<Unit>()
-    val cancelFlow: Flow<Unit> get() = _cancelFlow.receiveAsFlow()
-
-    private val _splashLoading = MutableStateFlow(true)
-    val splashLoading: StateFlow<Boolean> get() = _splashLoading.asStateFlow()
-
-    val themeData: StateFlow<ThemeData> = interactor.themeData
-        .stateIn(
-            scope = this,
-            started = SharingStarted.Lazily,
-            initialValue = ThemeData.Default
-        )
-
-    val isScreenshotBlockEnabled: StateFlow<Boolean> = interactor.isScreenshotBlockEnabled
-        .stateIn(
-            scope = this,
-            started = SharingStarted.Lazily,
-            initialValue = false
-        )
+): MoviesViewModel<MainModel, MainIntent, MainEvent>(MainModel()) {
 
     init {
-        fetchBiometric()
-        fetchRemoteConfig()
-        fetchFirebaseMessagingToken()
-        prepopulateDatabase()
-        updateAccountDetails()
-        showDebugNotification()
+        dispatch(MainIntent.CollectThemeData)
+        dispatch(MainIntent.CollectScreenshotBlockEnabled)
+        dispatch(MainIntent.FetchBiometric)
+        dispatch(MainIntent.FetchRemoteConfig)
+        dispatch(MainIntent.FetchFirebaseMessagingToken)
+        dispatch(MainIntent.PrepopulateDatabase)
+        dispatch(MainIntent.UpdateAccountDetails)
+        dispatch(MainIntent.ShowDebugNotification)
     }
 
-    /*fun analyticsTrackDestination(destination: NavDestination, arguments: Bundle?) {
-        val hashMap = hashMapOf<String, String>()
-        arguments?.keySet()?.forEach { key ->
-            hashMap[key] = arguments.getString(key).orEmpty()
-        }
-        analytics.trackDestination(destination.route, hashMap)
-    }*/
-
-    fun authenticate(activity: Any) {
-        val biometricListener = object: BiometricListener {
-            override fun onSuccess() {
-                _splashLoading.value = false
+    override fun dispatch(intent: MainIntent) {
+        when (intent) {
+            is MainIntent.OpenFeed -> launch { MainTabsEventManager.push(MainEvent.OpenFeed) }
+            is MainIntent.OpenSettings -> launch { MainTabsEventManager.push(MainEvent.OpenSettings) }
+            is MainIntent.CollectThemeData -> {
+                launch {
+                    interactor.themeData.collectLatest { themeData ->
+                        reduce { it.copy(themeData = themeData) }
+                    }
+                }
             }
-
-            override fun onCancel() {
-                launch { _cancelFlow.send(Unit) }
+            is MainIntent.CollectScreenshotBlockEnabled -> {
+                launch {
+                    interactor.isScreenshotBlockEnabled.collectLatest { isScreenshotBlockEnabled ->
+                        reduce { it.copy(isScreenshotBlockEnabled = isScreenshotBlockEnabled) }
+                    }
+                }
             }
-        }
-        biometricController.authenticate(activity, biometricListener)
-    }
-
-    fun requestReview(activity: Any) {
-        reviewService.requestReview(activity)
-    }
-
-    fun requestUpdate(activity: Any) {
-        updateService.startUpdate(activity)
-    }
-
-    private fun fetchBiometric() = launch {
-        val isBiometricEnabled = interactor.isBiometricEnabledAsync()
-        _splashLoading.value = isBiometricEnabled
-        if (isBiometricEnabled) {
-            _authenticateFlow.send(Unit)
-        }
-    }
-
-    private fun fetchRemoteConfig() = launch {
-        configService.fetchAndActivate()
-    }
-
-    private fun fetchFirebaseMessagingToken() {
-        /*messagingService.setTokenListener(object: TokenListener {
-            override fun onNewToken(token: String) {
-                printlnDebug("firebase messaging token: $token")
+            is MainIntent.RequestReview -> reviewService.requestReview(intent.activity)
+            is MainIntent.RequestUpdate -> updateService.startUpdate(intent.activity)
+            is MainIntent.FetchBiometric -> {
+                launch {
+                    val isBiometricEnabled = interactor.isBiometricEnabledAsync()
+                    reduce { it.copy(splashLoading = isBiometricEnabled) }
+                    if (isBiometricEnabled) {
+                        push(MainEvent.BiometricAuthenticate)
+                    }
+                }
             }
-        })*/
-    }
+            is MainIntent.FetchRemoteConfig -> launch { configService.fetchAndActivate() }
+            is MainIntent.FetchFirebaseMessagingToken -> {
+                /*messagingService.setTokenListener(object: TokenListener {
+                    override fun onNewToken(token: String) {
+                        printlnDebug("firebase messaging token: $token")
+                    }
+                })*/
+            }
+            is MainIntent.PrepopulateDatabase -> workManagerInteractor.prepopulateDatabase()
+            is MainIntent.UpdateAccountDetails -> workManagerInteractor.updateAccountDetails()
+            is MainIntent.ShowDebugNotification -> {
+                if (isDebug) {
+                    debugNotificationInteractor.showDebugNotification()
+                }
+            }
+            is MainIntent.Authenticate -> {
+                val biometricListener = object: BiometricListener {
+                    override fun onSuccess() {
+                        reduce { it.copy(splashLoading = false) }
+                    }
 
-    private fun prepopulateDatabase() {
-        workManagerInteractor.prepopulateDatabase()
-    }
-
-    private fun updateAccountDetails() {
-        workManagerInteractor.updateAccountDetails()
-    }
-
-    private fun showDebugNotification() {
-        if (isDebug) {
-            debugNotificationInteractor.showDebugNotification()
+                    override fun onCancel() {
+                        launch { push(MainEvent.BiometricCancel) }
+                    }
+                }
+                biometricController.authenticate(intent.activity, biometricListener)
+            }
+            is MainIntent.NavigateToDetails -> launch { MainNavigator.forward(DetailsDestination(movieList = null, movieId = intent.movieId)) }
+            is MainIntent.NavigateToMain -> launch { MainNavigator.forward(MainDestination(intent.requestToken, intent.approved)) }
+            is MainIntent.ShortcutSearchClick -> {
+                launch {
+                    MainNavigator.forward(MainDestination())
+                    dispatch(MainIntent.OpenFeed)
+                    FeedEventManager.push(FeedEvent.OpenSearch)
+                }
+            }
+            is MainIntent.ShortcutSettingsClick -> {
+                launch {
+                    MainNavigator.forward(MainDestination())
+                    dispatch(MainIntent.OpenSettings)
+                }
+            }
         }
     }
 }

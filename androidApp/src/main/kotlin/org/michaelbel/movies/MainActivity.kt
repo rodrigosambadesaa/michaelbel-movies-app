@@ -9,22 +9,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import org.michaelbel.movies.feed.event.FeedAppEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.michaelbel.movies.common.ktx.launchAndCollectIn
-import org.michaelbel.movies.main.MainContent
+import org.michaelbel.movies.main.MainScreen
 import org.michaelbel.movies.main.MainViewModel
-import org.michaelbel.movies.main.mainnav.event.MainNavAppEvent
+import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.resolveNotificationPreferencesIntent
 import org.michaelbel.movies.ui.ktx.setScreenshotBlockEnabled
 import org.michaelbel.movies.ui.ktx.supportRegisterScreenCaptureCallback
 import org.michaelbel.movies.ui.ktx.supportUnregisterScreenCaptureCallback
-import org.michaelbel.movies.ui.navigation.MainDestination
-import org.michaelbel.movies.ui.navigation.MainNavigator
-import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SEARCH
 import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SETTINGS
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
@@ -44,33 +37,30 @@ class MainActivity: FragmentActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().apply { setKeepOnScreenCondition { viewModel.splashLoading.value } }
+        installSplashScreen().apply { setKeepOnScreenCondition { viewModel.stateFlow.value.splashLoading } }
         super.onCreate(savedInstanceState)
         installShortcuts()
         setContent {
-            val themeData by viewModel.themeData.collectAsStateCommon()
+            val state by viewModel.stateFlow.collectAsStateCommon()
 
             MoviesTheme(
-                themeData = themeData,
+                themeData = state.themeData,
                 enableEdgeToEdge = { statusBarStyle, navigationBarStyle ->
                     enableEdgeToEdge(statusBarStyle as SystemBarStyle, navigationBarStyle as SystemBarStyle)
                 }
             ) {
-                MainContent(
-                    onRequestReview = { viewModel.requestReview(this) },
-                    onRequestUpdate = { viewModel.requestUpdate(this) }
+                MainScreen(
+                    onFinish = ::finish,
+                    onAuthenticate = { viewModel.dispatch(MainIntent.Authenticate(this)) },
+                    onScreenshotBlockEnabledChanged = { window.setScreenshotBlockEnabled(it) },
+                    onRequestReview = { viewModel.dispatch(MainIntent.RequestReview(this)) },
+                    onRequestUpdate = { viewModel.dispatch(MainIntent.RequestUpdate(this)) },
+                    viewModel = viewModel
                 )
             }
         }
         resolveNotificationPreferencesIntent()
         resolveIntent(intent)
-        viewModel.run {
-            isScreenshotBlockEnabled.launchAndCollectIn(this@MainActivity) { enabled ->
-                window.setScreenshotBlockEnabled(enabled)
-            }
-            authenticateFlow.launchAndCollectIn(this@MainActivity) { authenticate(this@MainActivity) }
-            cancelFlow.launchAndCollectIn(this@MainActivity) { finish() }
-        }
     }
 
     override fun onStart() {
@@ -92,19 +82,8 @@ class MainActivity: FragmentActivity() {
     private fun resolveIntent(intent: Intent?) {
         val uri = intent?.data
         when {
-            intent?.dataString == INTENT_ACTION_SEARCH -> {
-                lifecycleScope.launch {
-                    MainNavigator.forward(MainDestination())
-                    MainNavAppEvent.push(MainNavAppEvent.Event.OpenFeed)
-                    FeedAppEvent.push(FeedAppEvent.Event.OpenSearch)
-                }
-            }
-            intent?.dataString == INTENT_ACTION_SETTINGS -> {
-                lifecycleScope.launch {
-                    MainNavigator.forward(MainDestination())
-                    MainNavAppEvent.push(MainNavAppEvent.Event.OpenSettings)
-                }
-            }
+            intent?.dataString == INTENT_ACTION_SEARCH -> viewModel.dispatch(MainIntent.ShortcutSearchClick)
+            intent?.dataString == INTENT_ACTION_SETTINGS -> viewModel.dispatch(MainIntent.ShortcutSettingsClick)
             uri?.scheme == "movies" && uri.host == "redirect_url" -> {
                 val requestToken = uri.getQueryParameter("request_token")?.takeIf(String::isNotBlank)
                 val approved = when (uri.getQueryParameter("approved")?.lowercase()) {
@@ -113,23 +92,12 @@ class MainActivity: FragmentActivity() {
                     else -> null
                 }
                 if (requestToken != null && approved != null) {
-                    lifecycleScope.launch {
-                        MainNavigator.forward(
-                            MainDestination(
-                                requestToken = requestToken,
-                                approved = approved
-                            )
-                        )
-                    }
+                    viewModel.dispatch(MainIntent.NavigateToMain(requestToken, approved))
                 }
             }
             uri?.scheme == "movies" && uri.host == "details" -> {
                 val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
-                if (movieId != null) {
-                    lifecycleScope.launch {
-                        MainNavigator.forward(DetailsDestination(movieList = null, movieId = movieId))
-                    }
-                }
+                movieId?.let { viewModel.dispatch(MainIntent.NavigateToDetails(it)) }
             }
         }
     }

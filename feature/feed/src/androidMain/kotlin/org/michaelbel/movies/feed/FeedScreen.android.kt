@@ -46,8 +46,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
 import org.michaelbel.movies.common.exceptions.PageEmptyException
-import org.michaelbel.movies.feed.event.FeedAppEvent
 import org.michaelbel.movies.feed.event.FeedEvent
+import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.feed.ui.FeedEmpty
@@ -123,6 +123,7 @@ actual fun FeedScreen(
                     }
                 }
             }
+            else -> Unit
         }
     }
 }
@@ -158,19 +159,20 @@ private fun FeedScreenContent(
     }
 
     ObserveAsEvents(
-        flow = FeedAppEvent.eventFlow
+        flow = FeedEventManager.eventFlow
     ) { event ->
         when (event) {
-            FeedAppEvent.Event.ReselectFeed -> {
+            FeedEvent.ReselectFeed -> {
                 when {
                     isSearchActive || searchQuery.isNotEmpty() -> clearSearchState()
                     else -> dispatch(FeedIntent.ScrollToTop)
                 }
             }
-            FeedAppEvent.Event.OpenSearch -> {
+            FeedEvent.OpenSearch -> {
                 isSearchActive = true
                 isSearchAutoFocusEnabled = true
             }
+            else -> Unit
         }
     }
 

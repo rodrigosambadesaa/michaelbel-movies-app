@@ -19,6 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextObfuscationMode
+import androidx.compose.foundation.text.input.byValue
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -31,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,9 +58,6 @@ import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
@@ -68,7 +70,6 @@ import org.michaelbel.movies.common.browser.navigateToUrl
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
-import org.michaelbel.movies.interactor.ktx.PasswordSaver
 import org.michaelbel.movies.interactor.ktx.UsernameSaver
 import org.michaelbel.movies.interactor.ktx.isNotEmpty
 import org.michaelbel.movies.interactor.ktx.trim
@@ -109,7 +110,8 @@ private fun AuthScreenContent(
     val scrollState = rememberScrollState()
 
     var username by rememberSaveable(saver = UsernameSaver) { mutableStateOf(Username("")) }
-    var password by rememberSaveable(saver = PasswordSaver) { mutableStateOf(Password("")) }
+    val passwordTextFieldState = rememberTextFieldState()
+    val password = Password(passwordTextFieldState.text.toString())
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     val navigateToTmdbUrl = navigateToUrl(TMDB_URL)
@@ -142,7 +144,6 @@ private fun AuthScreenContent(
             title = {
                 Text(
                     text = stringResource(MoviesStrings.auth_title),
-                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
                 )
             },
@@ -197,9 +198,8 @@ private fun AuthScreenContent(
             singleLine = true
         )
 
-        OutlinedTextField(
-            value = password.value,
-            onValueChange = { value -> password = Password(value.filterNot(Char::isWhitespace)) },
+        OutlinedSecureTextField(
+            state = passwordTextFieldState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 8.dp, end = 16.dp)
@@ -236,18 +236,16 @@ private fun AuthScreenContent(
                 }
             } else null,
             isError = state.error != null,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            inputTransformation = InputTransformation.byValue { _, proposed -> proposed.filterNot(Char::isWhitespace) },
+            textObfuscationMode = if (passwordVisible) TextObfuscationMode.Visible else TextObfuscationMode.Hidden,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                    dispatch(AuthIntent.SignInClick(username, password))
-                }
-            ),
-            singleLine = true
+            onKeyboardAction = {
+                focusManager.clearFocus()
+                dispatch(AuthIntent.SignInClick(username, password))
+            }
         )
 
         Row(

@@ -166,6 +166,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] CompileSDK 36
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
 - [x] Amoled Theme
+- [x] SecureTextField
 - [x] [SwipeToDismiss](https://d.android.com/develop/ui/compose/touch-input/user-interactions/swipe-to-dismiss)
 - [x] [Material You Dynamic Colors](https://d.android.com/develop/ui/views/theming/dynamic-colors)
 - [x] [Material3 Expressive](https://m3.material.io/blog/building-with-m3-expressive)

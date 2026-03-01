@@ -233,6 +233,7 @@ graph TD;
     details-->main
     feed-->main
     gallery-->main
+    notify-->main
     settings-->main
     debug-->main
     feed-web-->main
@@ -242,6 +243,7 @@ graph TD;
     core-->details
     core-->feed
     core-->gallery
+    core-->notify
     core-->settings
     core-->debug
     core-->feed-web

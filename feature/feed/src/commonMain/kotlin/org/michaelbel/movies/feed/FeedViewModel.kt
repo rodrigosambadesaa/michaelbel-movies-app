@@ -33,6 +33,7 @@ import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AuthDestination
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
+import org.michaelbel.movies.ui.navigation.NotifyDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 class FeedViewModel(
@@ -150,16 +151,11 @@ class FeedViewModel(
                 }
             }
             is FeedIntent.LoadSuggestions -> launch { interactor.updateSuggestions() }
-            is FeedIntent.HideNotificationDialog -> {
-                launch {
-                    reduce { it.copy(isNotificationDialogVisible = false) }
-                    notificationClient.updateNotificationExpireTime()
-                }
-            }
             is FeedIntent.SubscribeNotificationsPermissionRequired -> {
                 launch {
-                    val required = notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY)
-                    reduce { it.copy(isNotificationDialogVisible = required) }
+                    if (notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY)) {
+                        MainNavigator.forward(NotifyDestination)
+                    }
                 }
             }
             is FeedIntent.SettingsClick -> launch { MainNavigator.forward(SettingsDestination) }

@@ -64,13 +64,13 @@ include(
     ":core:widget",
     ":core:work",
 
-    ":feature:main",
     ":feature:account",
     ":feature:auth",
+    ":feature:debug",
     ":feature:details",
     ":feature:feed",
     ":feature:gallery",
-    ":feature:settings",
-
-    ":feature:debug"
+    ":feature:main",
+    ":feature:notify",
+    ":feature:settings"
 )

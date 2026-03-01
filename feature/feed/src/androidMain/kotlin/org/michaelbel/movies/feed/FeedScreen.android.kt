@@ -55,7 +55,6 @@ import org.michaelbel.movies.feed.ui.FeedSearchBar
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
 import org.michaelbel.movies.network.connectivity.NetworkStatus
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.ui.compose.NotificationBottomSheet
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
@@ -94,13 +93,6 @@ actual fun FeedScreen(
         feedLazyGridState = feedLazyGridState,
         feedLazyStaggeredGridState = feedLazyStaggeredGridState
     )
-
-    if (state.isNotificationDialogVisible) {
-        NotificationBottomSheet(
-            onDismissRequest = { viewModel.dispatch(FeedIntent.HideNotificationDialog) },
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
 
     ObserveAsEvents(
         flow = viewModel.eventFlow,

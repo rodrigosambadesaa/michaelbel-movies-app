@@ -17,6 +17,9 @@ data object AccountDestination: AppRoute
 data object SettingsDestination: AppRoute
 
 @Serializable
+data object NotifyDestination: AppRoute
+
+@Serializable
 data class MainDestination(
     val requestToken: String? = null,
     val approved: Boolean? = null

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
-package org.michaelbel.movies.ui.compose
+package org.michaelbel.movies.notify.ui
 
 import android.os.Build
 import androidx.compose.animation.core.Animatable
@@ -50,7 +50,7 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-fun NotificationBottomSheet(
+fun NotifyBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -161,9 +161,9 @@ fun NotificationBottomSheet(
 
 @Preview
 @Composable
-private fun NotificationBottomSheetPreview() {
+private fun NotifyBottomSheetPreview() {
     MoviesTheme {
-        NotificationBottomSheet(
+        NotifyBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primaryContainer),

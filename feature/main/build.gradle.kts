@@ -24,6 +24,7 @@ kotlin {
             api(projects.feature.details)
             api(projects.feature.feed)
             api(projects.feature.gallery)
+            api(projects.feature.notify)
             api(projects.feature.settings)
             api(projects.feature.debug)
             implementation(libs.bundles.jetbrains.androidx.lifecycle.viewmodel.common)

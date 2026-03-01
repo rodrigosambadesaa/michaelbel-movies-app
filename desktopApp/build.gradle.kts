@@ -13,7 +13,7 @@ kotlin {
         jvmMain.dependencies {
             implementation(projects.core.platformServices.injectJvm)
             implementation(projects.feature.main)
-            implementation("org.slf4j:slf4j-simple:2.0.17")
+            implementation(libs.slf4j.simple)
         }
     }
 }

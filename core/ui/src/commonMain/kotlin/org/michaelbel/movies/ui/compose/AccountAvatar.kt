@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
@@ -28,7 +29,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
-import org.michaelbel.movies.ui.ktx.lettersTextFontSizeSmall
 import org.michaelbel.movies.ui.preview.AccountPreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
@@ -77,7 +77,7 @@ private fun AccountAvatarPreview(
         ) {
             AccountAvatar(
                 account = account,
-                fontSize = account.lettersTextFontSizeSmall,
+                fontSize = if (account.letters.length == 1) 16.sp else 13.sp,
                 modifier = Modifier.size(32.dp),
             )
         }

@@ -6,5 +6,6 @@ import org.michaelbel.movies.common.mvi.model.Model
 data class MainModel(
     val splashLoading: Boolean = true,
     val themeData: ThemeData = ThemeData.Default,
-    val isScreenshotBlockEnabled: Boolean = false
+    val isScreenshotBlockEnabled: Boolean = false,
+    val openDebugSheet: Boolean = false
 ): Model

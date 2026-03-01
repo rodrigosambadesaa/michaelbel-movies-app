@@ -4,10 +4,10 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import org.michaelbel.movies.common.exceptions.PageEmptyException
 
-internal val <T: Any> LazyPagingItems<T>.isNotEmpty: Boolean
+val <T: Any> LazyPagingItems<T>.isNotEmpty: Boolean
     get() = itemCount > 0
 
-internal val <T: Any> LazyPagingItems<T>.isEmpty: Boolean
+val <T: Any> LazyPagingItems<T>.isEmpty: Boolean
     get() = itemCount == 0
 
 private val <T: Any> LazyPagingItems<T>.refreshState: LoadState
@@ -25,26 +25,26 @@ val <T: Any> LazyPagingItems<T>.isLoading: Boolean
 val <T: Any> LazyPagingItems<T>.isFailure: Boolean
     get() = refreshState is LoadState.Error && isEmpty
 
-internal val <T: Any> LazyPagingItems<T>.isPagingLoading: Boolean
+val <T: Any> LazyPagingItems<T>.isPagingLoading: Boolean
     get() = isNotEmpty && (isAppendLoading || isRefreshLoading)
 
 internal val <T: Any> LazyPagingItems<T>.isPagingFailure: Boolean
     get() = isNotEmpty && (isAppendError && appendThrowable !is PageEmptyException || isRefreshError && refreshThrowable !is PageEmptyException)
 
-internal val <T: Any> LazyPagingItems<T>.isRefreshError: Boolean
+val <T: Any> LazyPagingItems<T>.isRefreshError: Boolean
     get() = refreshState is LoadState.Error
 
-internal val <T: Any> LazyPagingItems<T>.isAppendError: Boolean
+val <T: Any> LazyPagingItems<T>.isAppendError: Boolean
     get() = appendState is LoadState.Error
 
 val <T: Any> LazyPagingItems<T>.refreshThrowable: Throwable
     get() = (refreshState as LoadState.Error).error
 
-internal val <T: Any> LazyPagingItems<T>.appendThrowable: Throwable
+val <T: Any> LazyPagingItems<T>.appendThrowable: Throwable
     get() = (appendState as LoadState.Error).error
 
-internal val <T: Any> LazyPagingItems<T>.isAppendLoading: Boolean
+val <T: Any> LazyPagingItems<T>.isAppendLoading: Boolean
     get() = appendState is LoadState.Loading
 
-internal val <T: Any> LazyPagingItems<T>.isAppendRefresh: Boolean
+val <T: Any> LazyPagingItems<T>.isAppendRefresh: Boolean
     get() = isRefreshLoading

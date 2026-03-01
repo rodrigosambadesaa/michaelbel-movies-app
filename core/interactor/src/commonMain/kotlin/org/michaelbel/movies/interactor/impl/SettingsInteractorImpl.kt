@@ -1,6 +1,7 @@
 package org.michaelbel.movies.interactor.impl
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.analytics.event.ChangeDynamicColorsEvent
@@ -13,11 +14,13 @@ import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.interactor.SettingsInteractor
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.repository.SettingsRepository
 
-internal class SettingsInteractorImpl(
+class SettingsInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val settingsRepository: SettingsRepository,
+    private val uiInteractor: UiInteractor,
     private val analytics: MoviesAnalytics
 ): SettingsInteractor {
 
@@ -27,7 +30,15 @@ internal class SettingsInteractorImpl(
 
     override val currentMovieList: Flow<MovieList> = settingsRepository.currentMovieList
 
-    override val themeData: Flow<ThemeData> = settingsRepository.themeData
+    override val themeData: Flow<ThemeData> = combine(
+        settingsRepository.themeData,
+        settingsRepository.dynamicColors
+    ) { themeData, dynamicColors ->
+        when (dynamicColors) {
+            null -> themeData.copy(dynamicColors = uiInteractor.defaultDynamicColorsEnabled)
+            else -> themeData
+        }
+    }
 
     override val isBiometricEnabled: Flow<Boolean> = settingsRepository.isBiometricEnabled
 

@@ -8,7 +8,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
 import org.michaelbel.movies.interactor.di.interactorKoinModule
-import org.michaelbel.movies.notifications.di.notificationClientKoinModule
 import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
 import org.michaelbel.movies.work.AccountUpdateWorker
 import org.michaelbel.movies.work.DownloadImageWorker
@@ -20,8 +19,7 @@ actual val workManagerInteractorKoinModule = module {
     includes(
         interactorKoinModule,
         dispatchersKoinModule,
-        persistenceKoinModule,
-        notificationClientKoinModule
+        persistenceKoinModule
     )
     single { WorkManager.getInstance(androidContext()) }
     workerOf(::AccountUpdateWorker)

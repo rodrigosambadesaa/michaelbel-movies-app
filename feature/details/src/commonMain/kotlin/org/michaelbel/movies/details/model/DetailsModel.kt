@@ -8,5 +8,7 @@ import org.michaelbel.movies.network.connectivity.NetworkStatus
 data class DetailsModel(
     val appTheme: AppTheme = AppTheme.FollowSystem,
     val networkStatus: NetworkStatus = NetworkStatus.Unavailable,
-    val detailsState: ScreenState = ScreenState.Loading
+    val detailsState: ScreenState = ScreenState.Loading,
+    val isDetailsGalleryFeatureEnabled: Boolean = false,
+    val isDetailsShareFeatureEnabled: Boolean = false
 ): Model

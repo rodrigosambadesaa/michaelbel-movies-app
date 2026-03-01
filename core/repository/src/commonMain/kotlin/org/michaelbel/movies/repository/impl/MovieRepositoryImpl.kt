@@ -6,6 +6,7 @@ import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.common.exceptions.MovieDetailsException
 import org.michaelbel.movies.common.exceptions.MoviesUpcomingException
+import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.network.MovieNetworkService
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
@@ -21,7 +22,6 @@ import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 import org.michaelbel.movies.repository.MovieRepository
-import org.michaelbel.movies.repository.ktx.checkApiKeyNotNullException
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -34,12 +34,16 @@ class MovieRepositoryImpl(
         return moviePersistence.pagingSource(pagingKey)
     }
 
+    override fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
+        return moviePersistence.movieFlow(pagingKey, movieId)
+    }
+
     override fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {
         return moviePersistence.moviesFlow(pagingKey, limit)
     }
 
     override suspend fun moviesResult(pagingKey: PagingKey, language: String, page: Page): Result<MovieResponse> {
-        if (isTmdbApiKeyEmpty && moviePersistence.isEmpty(MoviePojo.MOVIES_LOCAL_LIST)) checkApiKeyNotNullException()
+        if (isTmdbApiKeyEmpty && moviePersistence.isEmpty(MoviePojo.MOVIES_LOCAL_LIST)) throw ApiKeyNotNullException()
         return movieNetworkService.movies(pagingKey, language, page)
     }
 

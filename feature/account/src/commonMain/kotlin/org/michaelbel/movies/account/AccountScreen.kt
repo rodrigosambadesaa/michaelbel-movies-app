@@ -22,30 +22,35 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Job
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.account.intent.AccountIntent
 import org.michaelbel.movies.account.model.AccountModel
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
+import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.icons.Adult
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isPortrait
-import org.michaelbel.movies.ui.ktx.lettersTextFontSizeLarge
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
@@ -66,6 +71,11 @@ private fun AccountScreenContent(
     state: AccountModel,
     dispatch: (AccountIntent) -> Unit
 ) {
+    val buttonContainerColor = MaterialTheme.colorScheme.surfaceTint
+    val buttonContentColor = contentColorFor(buttonContainerColor).let { color ->
+        if (color == Color.Unspecified) MaterialTheme.colorScheme.onSurface else color
+    }
+
     Column(
         modifier = Modifier
             .padding(horizontal = if (isPortrait) 16.dp else 64.dp)
@@ -110,7 +120,7 @@ private fun AccountScreenContent(
             ) {
                 AccountAvatar(
                     account = state.accountPojo,
-                    fontSize = state.accountPojo.lettersTextFontSizeLarge,
+                    fontSize = if (state.accountPojo.letters.length == 1) 32.sp else 26.sp,
                     modifier = Modifier.size(64.dp)
                 )
 
@@ -140,6 +150,7 @@ private fun AccountScreenContent(
                 if (state.accountPojo.name.isNotEmpty()) {
                     Text(
                         text = state.accountPojo.name,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
                     )
@@ -148,6 +159,7 @@ private fun AccountScreenContent(
                 if (state.accountPojo.username.isNotEmpty()) {
                     Text(
                         text = state.accountPojo.username,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.secondary)
                     )
@@ -173,6 +185,7 @@ private fun AccountScreenContent(
                 Text(
                     text = state.accountPojo.country,
                     modifier = Modifier.padding(start = 4.dp),
+                    maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
                 )
@@ -187,25 +200,27 @@ private fun AccountScreenContent(
                 .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
             enabled = !state.isLogoutJobActive,
             colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceTint
+                containerColor = buttonContainerColor,
+                contentColor = buttonContentColor,
+                disabledContainerColor = buttonContainerColor,
+                disabledContentColor = buttonContentColor
             ),
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             if (state.isLogoutJobActive) {
                 LoadingIndicator(
                     modifier = Modifier.size(40.dp),
+                    color = buttonContentColor
                 )
             } else {
                 Text(
-                    text = stringResource(MoviesStrings.account_logout)
+                    text = stringResource(MoviesStrings.account_logout),
+                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                 )
             }
         }
     }
-
 }
-
-
 
 @Preview
 @Composable
@@ -222,6 +237,28 @@ private fun AccountScreenContentPreview() {
                     adult = true,
                     username = "michaelbel"
                 ),
+            ),
+            dispatch = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AccountScreenContentPreview2() {
+    MoviesTheme {
+        AccountScreenContent(
+            state = AccountModel(
+                accountPojo = AccountPojo(
+                    accountId = 0,
+                    avatarUrl = "",
+                    language = "",
+                    country = "Finland",
+                    name = "Michael Bely",
+                    adult = true,
+                    username = "michaelbel"
+                ),
+                logoutJob = Job()
             ),
             dispatch = {}
         )

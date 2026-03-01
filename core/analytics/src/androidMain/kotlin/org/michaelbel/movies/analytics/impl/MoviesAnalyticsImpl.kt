@@ -7,7 +7,7 @@ import org.michaelbel.movies.analytics.constants.MoviesParams
 import org.michaelbel.movies.analytics.model.BaseEvent
 import org.michaelbel.movies.platform.analytics.AnalyticsService
 
-internal class MoviesAnalyticsImpl(
+class MoviesAnalyticsImpl(
     private val analyticsService: AnalyticsService
 ): MoviesAnalytics {
 

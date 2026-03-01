@@ -15,15 +15,21 @@ interface UiInteractor {
 
     val isFeedViewFeatureEnabled: Boolean
 
+    val isFaveFeatureEnabled: Boolean
+
     val isMovieListFeatureEnabled: Boolean
 
     val isGenderFeatureEnabled: Boolean
 
     val isDynamicColorsFeatureEnabled: Boolean
 
+    val defaultDynamicColorsEnabled: Boolean
+
     val isPaletteColorsFeatureEnabled: Boolean
 
     val isNotificationsFeatureEnabled: Boolean
+
+    val isBatteryOptimizationFeatureEnabled: Boolean
 
     val isBiometricFeatureEnabled: Boolean
 
@@ -49,6 +55,8 @@ interface UiInteractor {
 
     val isDetailsShareFeatureEnabled: Boolean
 
+    val isPageFailureButtonVisible: Boolean
+
     @get:Composable
     val settingsWindowInsets: WindowInsets
 
@@ -56,6 +64,23 @@ interface UiInteractor {
 
     @Composable
     fun navigateToAppNotificationSettings(): () -> Unit
+
+    val isIgnoringBatteryOptimizations: Boolean
+
+    @Composable
+    fun requestIgnoreBatteryOptimizations(): () -> Unit
+
+    @Composable
+    fun navigateToBatteryOptimizationSettings(): () -> Unit
+
+    @Composable
+    fun navigateToAppSettings(): () -> Unit
+
+    @Composable
+    fun navigateToDeveloperSettings(): () -> Unit
+
+    @Composable
+    fun rememberCopyToClipboardHandler(): (String) -> Unit
 
     @Composable
     fun rememberPostNotificationsPermissionHandler(
@@ -65,7 +90,7 @@ interface UiInteractor {
     ): () -> Unit
 
     @Composable
-    fun detailsPaletteEffect(
+    fun DetailsPaletteEffect(
         movie: MoviePojo,
         placeholder: Boolean,
         shouldGenerateColors: Boolean,

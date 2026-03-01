@@ -22,18 +22,13 @@ kotlin {
             api(projects.feature.account)
             api(projects.feature.auth)
             api(projects.feature.details)
+            api(projects.feature.fave)
             api(projects.feature.feed)
             api(projects.feature.gallery)
             api(projects.feature.notify)
             api(projects.feature.settings)
             api(projects.feature.debug)
             implementation(libs.bundles.jetbrains.androidx.lifecycle.viewmodel.common)
-        }
-        jvmMain.dependencies {
-            implementation(projects.core.platformServices.injectJvm)
-        }
-        iosMain.dependencies {
-            implementation(projects.core.platformServices.injectIos)
         }
     }
 

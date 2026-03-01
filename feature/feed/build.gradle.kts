@@ -22,7 +22,6 @@ kotlin {
             api(projects.core.ui)
             api(projects.core.interactor)
             api(projects.core.platformServices.interactor)
-            implementation(projects.core.notifications)
         }
         androidMain.dependencies {
             implementation(libs.bundles.paging.android)

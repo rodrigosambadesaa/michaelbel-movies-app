@@ -20,7 +20,7 @@ import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class SettingsViewModel(
-    val uiInteractor: UiInteractor,
+    private val uiInteractor: UiInteractor,
     private val aboutInteractor: AboutInteractor,
     private val biometricController: BiometricInteractor,
     private val notifyManager: NotifyManager,
@@ -35,6 +35,7 @@ class SettingsViewModel(
         dispatch(SettingsIntent.CollectMovieList)
         dispatch(SettingsIntent.CollectAppServiceData)
         dispatch(SettingsIntent.CollectNotificationsEnabled)
+        dispatch(SettingsIntent.CollectIgnoringBatteryOptimizations)
         dispatch(SettingsIntent.CollectBiometricFeatureEnabled)
         dispatch(SettingsIntent.CollectBiometricEnabled)
         dispatch(SettingsIntent.CollectScreenshotBlockEnabled)
@@ -68,12 +69,9 @@ class SettingsViewModel(
                     }
                 }
             }
-            is SettingsIntent.CollectAppServiceData -> {
-                reduce { it.copy(isReviewFeatureEnabled = appService.flavor == Flavor.Gms, isUpdateFeatureEnabled = appService.flavor == Flavor.Gms, appVersionData = AppVersionData(appService.flavor.name)) }
-            }
-            is SettingsIntent.CollectNotificationsEnabled -> {
-                reduce { it.copy(areNotificationsEnabled = notifyManager.areNotificationsEnabled) }
-            }
+            is SettingsIntent.CollectAppServiceData -> reduce { it.copy(isReviewFeatureEnabled = appService.flavor == Flavor.Gms, isUpdateFeatureEnabled = appService.flavor == Flavor.Gms, appVersionData = AppVersionData(appService.flavor.name)) }
+            is SettingsIntent.CollectNotificationsEnabled -> reduce { it.copy(areNotificationsEnabled = notifyManager.areNotificationsEnabled) }
+            is SettingsIntent.CollectIgnoringBatteryOptimizations -> reduce { it.copy(isIgnoringBatteryOptimizations = uiInteractor.isIgnoringBatteryOptimizations) }
             is SettingsIntent.CollectBiometricFeatureEnabled -> {
                 launch {
                     biometricController.isBiometricAvailable.collectLatest { isBiometricAvailable ->
@@ -96,16 +94,7 @@ class SettingsViewModel(
                 }
             }
             is SettingsIntent.CollectGender -> reduce { it.copy(grammaticalGender = uiInteractor.grammaticalGender) }
-            is SettingsIntent.CollectAbout -> {
-                launch {
-                    reduce {
-                        it.copy(
-                            versionName = aboutInteractor.versionName,
-                            versionCode = aboutInteractor.versionCode
-                        )
-                    }
-                }
-            }
+            is SettingsIntent.CollectAbout -> reduce { it.copy(versionName = aboutInteractor.versionName, versionCode = aboutInteractor.versionCode) }
             is SettingsIntent.CollectFeaturesEnabled -> {
                 reduce {
                     it.copy(
@@ -117,6 +106,7 @@ class SettingsViewModel(
                         isDynamicColorsFeatureEnabled = uiInteractor.isDynamicColorsFeatureEnabled,
                         isPaletteColorsFeatureEnabled = uiInteractor.isPaletteColorsFeatureEnabled,
                         isNotificationsFeatureEnabled = uiInteractor.isNotificationsFeatureEnabled,
+                        isBatteryOptimizationFeatureEnabled = uiInteractor.isBatteryOptimizationFeatureEnabled,
                         isBiometricFeatureEnabled = uiInteractor.isBiometricFeatureEnabled,
                         isWidgetFeatureEnabled = uiInteractor.isWidgetFeatureEnabled,
                         isTileFeatureEnabled = uiInteractor.isTileFeatureEnabled,
@@ -140,6 +130,7 @@ class SettingsViewModel(
                 })
             }
             is SettingsIntent.RequestPostNotificationsPermission -> launch { push(SettingsEvent.RequestPostNotificationsPermission) }
+            is SettingsIntent.RequestIgnoreBatteryOptimizations -> launch { push(SettingsEvent.RequestIgnoreBatteryOptimizations) }
             is SettingsIntent.RequestTileService -> launch { push(SettingsEvent.RequestTileService) }
             is SettingsIntent.RequestGithub -> launch { push(SettingsEvent.RequestGithub) }
             is SettingsIntent.RequestTelegram -> launch { push(SettingsEvent.RequestTelegram) }

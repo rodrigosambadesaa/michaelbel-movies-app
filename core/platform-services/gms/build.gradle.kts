@@ -14,7 +14,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core.platformServices.interactor)
-            implementation(projects.core.notifications)
+            implementation(projects.core.interactor)
         }
         androidMain.dependencies {
             api(libs.bundles.google.firebase.android)

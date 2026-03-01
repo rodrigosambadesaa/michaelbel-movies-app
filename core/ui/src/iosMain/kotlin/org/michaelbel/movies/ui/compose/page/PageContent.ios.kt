@@ -23,18 +23,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.compose.movie.MovieColumn
 import org.michaelbel.movies.ui.compose.movie.MovieRow
-import org.michaelbel.movies.ui.ktx.PageContentColumnModifier
-import org.michaelbel.movies.ui.ktx.PageContentGridModifier
-import org.michaelbel.movies.ui.ktx.PageContentStaggeredGridModifier
 import org.michaelbel.movies.ui.ktx.gridColumnsCount
 import org.michaelbel.movies.ui.ktx.isPagingFailure
 import org.michaelbel.movies.ui.ktx.isPagingLoading
 import org.michaelbel.movies.ui.ktx.isPortrait
+import org.michaelbel.movies.ui.ktx.pageContentColumnModifier
+import org.michaelbel.movies.ui.ktx.pageContentGridModifier
+import org.michaelbel.movies.ui.ktx.pageContentStaggeredGridModifier
 import org.michaelbel.movies.ui.ktx.retry
 
 @Composable
@@ -46,7 +47,8 @@ fun PageContent(
     pagingItems: List<MoviePojo>,
     onMovieClick: (String, Int) -> Unit,
     modifier: Modifier,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
 ) {
     when (feedView) {
         is FeedView.FeedList -> {
@@ -56,7 +58,8 @@ fun PageContent(
                     pagingItems = pagingItems,
                     onMovieClick = onMovieClick,
                     contentPadding = contentPadding,
-                    modifier = modifier
+                    modifier = modifier,
+                    cardColor = cardColor
                 )
             } else {
                 PageContentGrid(
@@ -64,7 +67,8 @@ fun PageContent(
                     pagingItems = pagingItems,
                     onMovieClick = onMovieClick,
                     contentPadding = contentPadding,
-                    modifier = modifier
+                    modifier = modifier,
+                    cardColor = cardColor
                 )
             }
         }
@@ -74,7 +78,8 @@ fun PageContent(
                 pagingItems = pagingItems,
                 onMovieClick = onMovieClick,
                 contentPadding = contentPadding,
-                modifier = modifier
+                modifier = modifier,
+                cardColor = cardColor
             )
         }
     }
@@ -86,7 +91,8 @@ private fun PageContentColumn(
     pagingItems: List<MoviePojo>,
     onMovieClick: (String, Int) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
 ) {
     LazyColumn(
         modifier = modifier.padding(top = 4.dp),
@@ -98,7 +104,8 @@ private fun PageContentColumn(
         ) { movieDb ->
             MovieRow(
                 movie = movieDb,
-                modifier = PageContentColumnModifier.then(Modifier.clickable { onMovieClick(movieDb.movieList, movieDb.movieId) })
+                modifier = pageContentColumnModifier(cardColor)
+                    .then(Modifier.clickable { onMovieClick(movieDb.movieList, movieDb.movieId) })
             )
         }
         pagingItems.apply {
@@ -133,7 +140,8 @@ private fun PageContentGrid(
     pagingItems: List<MoviePojo>,
     onMovieClick: (String, Int) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -146,7 +154,8 @@ private fun PageContentGrid(
             MovieRow(
                 movie = movieDb,
                 maxLines = 1,
-                modifier = PageContentGridModifier.then(Modifier.clickable { onMovieClick(movieDb.movieList, movieDb.movieId) })
+                modifier = pageContentGridModifier(cardColor)
+                    .then(Modifier.clickable { onMovieClick(movieDb.movieList, movieDb.movieId) })
             )
         }
         pagingItems.apply {
@@ -185,7 +194,8 @@ private fun PageContentStaggeredGrid(
     pagingItems: List<MoviePojo>,
     onMovieClick: (String, Int) -> Unit,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
 ) {
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(gridColumnsCount),
@@ -200,7 +210,8 @@ private fun PageContentStaggeredGrid(
         ) { movieDb ->
             MovieColumn(
                 movie = movieDb,
-                modifier = PageContentStaggeredGridModifier.then(Modifier.clickable { onMovieClick(movieDb.movieList, movieDb.movieId) })
+                modifier = pageContentStaggeredGridModifier(cardColor)
+                    .then(Modifier.clickable { onMovieClick(movieDb.movieList, movieDb.movieId) })
             )
         }
         pagingItems.apply {

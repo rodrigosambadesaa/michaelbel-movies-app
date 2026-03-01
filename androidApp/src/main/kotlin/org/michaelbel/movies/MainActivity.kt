@@ -18,8 +18,10 @@ import org.michaelbel.movies.ui.ktx.resolveNotificationPreferencesIntent
 import org.michaelbel.movies.ui.ktx.setScreenshotBlockEnabled
 import org.michaelbel.movies.ui.ktx.supportRegisterScreenCaptureCallback
 import org.michaelbel.movies.ui.ktx.supportUnregisterScreenCaptureCallback
-import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SEARCH
-import org.michaelbel.movies.ui.shortcuts.INTENT_ACTION_SETTINGS
+import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_EXTRA
+import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_URI
+import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SEARCH
+import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SETTINGS
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
@@ -81,6 +83,10 @@ class MainActivity: FragmentActivity() {
 
     private fun resolveIntent(intent: Intent?) {
         val uri = intent?.data
+        val isDebugDeepLink = (uri?.scheme == "movies" && uri.host == "debug") ||
+            uri?.toString() == DEBUG_DEEP_LINK_URI ||
+            intent?.getBooleanExtra(DEBUG_DEEP_LINK_EXTRA, false) == true
+
         when {
             intent?.dataString == INTENT_ACTION_SEARCH -> viewModel.dispatch(MainIntent.ShortcutSearchClick)
             intent?.dataString == INTENT_ACTION_SETTINGS -> viewModel.dispatch(MainIntent.ShortcutSettingsClick)
@@ -98,6 +104,15 @@ class MainActivity: FragmentActivity() {
             uri?.scheme == "movies" && uri.host == "details" -> {
                 val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
                 movieId?.let { viewModel.dispatch(MainIntent.NavigateToDetails(it)) }
+            }
+            isDebugDeepLink -> {
+                viewModel.dispatch(MainIntent.NavigateToDebug)
+                intent.let { deepLinkIntent ->
+                    deepLinkIntent.removeExtra(DEBUG_DEEP_LINK_EXTRA)
+                    if (deepLinkIntent.data?.scheme == "movies" && deepLinkIntent.data?.host == "debug") {
+                        deepLinkIntent.data = null
+                    }
+                }
             }
         }
     }

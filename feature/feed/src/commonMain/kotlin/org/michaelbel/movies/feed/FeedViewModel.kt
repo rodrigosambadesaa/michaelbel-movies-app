@@ -23,11 +23,12 @@ import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
+import org.michaelbel.movies.interactor.AppNotificationInteractor
 import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.interactor.ktx.nameOrLocalList
 import org.michaelbel.movies.network.connectivity.NetworkManager
 import org.michaelbel.movies.network.model.MovieResponse
-import org.michaelbel.movies.notifications.NotificationClient
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AuthDestination
@@ -37,8 +38,9 @@ import org.michaelbel.movies.ui.navigation.NotifyDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 
 class FeedViewModel(
+    private val uiInteractor: UiInteractor,
     private val interactor: Interactor,
-    private val notificationClient: NotificationClient,
+    private val appNotificationInteractor: AppNotificationInteractor,
     private val networkManager: NetworkManager
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
@@ -77,6 +79,7 @@ class FeedViewModel(
         dispatch(FeedIntent.CollectFeedView)
         dispatch(FeedIntent.CollectMovieList)
         dispatch(FeedIntent.CollectNetworkStatus)
+        dispatch(FeedIntent.CollectPageFailureButtonVisible)
         dispatch(FeedIntent.CollectSuggestions)
         dispatch(FeedIntent.CollectSearchHistoryMovies)
         dispatch(FeedIntent.LoadSuggestions)
@@ -116,6 +119,7 @@ class FeedViewModel(
                     }
                 }
             }
+            is FeedIntent.CollectPageFailureButtonVisible -> reduce { it.copy(isPageFailureButtonVisible = uiInteractor.isPageFailureButtonVisible) }
             is FeedIntent.RefreshMovies -> { // TODO Fallback iOS
                 if (stateFlow.value.isFeedLoading) return
                 launch {
@@ -153,7 +157,7 @@ class FeedViewModel(
             is FeedIntent.LoadSuggestions -> launch { interactor.updateSuggestions() }
             is FeedIntent.SubscribeNotificationsPermissionRequired -> {
                 launch {
-                    if (notificationClient.notificationsPermissionRequired(NOTIFICATIONS_PERMISSION_DELAY)) {
+                    if (appNotificationInteractor.notificationsPermissionRequired()) {
                         MainNavigator.forward(NotifyDestination)
                     }
                 }
@@ -174,9 +178,5 @@ class FeedViewModel(
             is FeedIntent.ShowSnackbar -> launch { push(FeedEvent.ShowSnackbar(intent.message, intent.isLong)) }
             is FeedIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
         }
-    }
-
-    private companion object {
-        private const val NOTIFICATIONS_PERMISSION_DELAY = 2_000L
     }
 }

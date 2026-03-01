@@ -2,6 +2,10 @@
 
 package org.michaelbel.movies.main.tabs
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,9 +16,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationItemIconPosition
 import androidx.compose.material3.Scaffold
@@ -24,6 +30,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,6 +50,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.common.platform.isDesktop
+import org.michaelbel.movies.fave.FaveScreen
 import org.michaelbel.movies.feed.FeedScreen
 import org.michaelbel.movies.main.event.MainEvent
 import org.michaelbel.movies.main.tabs.event.MainTabsEvent
@@ -51,27 +59,27 @@ import org.michaelbel.movies.main.tabs.intent.MainTabsIntent
 import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
+import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.fadePredictiveTransitionSpec
 import org.michaelbel.movies.ui.ktx.fadeTransitionSpec
 import org.michaelbel.movies.ui.navigation.AppRoute
+import org.michaelbel.movies.ui.navigation.FaveDestination
 import org.michaelbel.movies.ui.navigation.FeedDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
 
 @Composable
 fun MainTabsScreen(
-    requestToken: String?,
-    approved: Boolean?,
+    feedDestination: FeedDestination,
     viewModel: MainTabsViewModel = koinViewModel()
 ) {
+    val state by viewModel.stateFlow.collectAsStateCommon()
+
     val layoutDirection = LocalLayoutDirection.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val authFailureMessage = stringResource(MoviesStrings.feed_auth_failure)
     val authSuccessMessage = stringResource(MoviesStrings.feed_auth_success)
-    val feedDestination = remember(requestToken, approved) {
-        FeedDestination(requestToken = requestToken, approved = approved ?: false)
-    }
 
     val backStack: MutableList<AppRoute> = rememberSerializable(serializer = SnapshotStateListSerializer()) {
         mutableStateListOf(feedDestination)
@@ -80,17 +88,19 @@ fun MainTabsScreen(
     MainTabsScreenContent(
         backStack = backStack,
         feedDestination = feedDestination,
+        showFaveTab = state.isFaveFeatureEnabled && state.isAuthorized,
         snackbarHostState = snackbarHostState,
         layoutDirection = layoutDirection,
         onFeedClick = {
             viewModel.dispatch(MainTabsIntent.FeedReselected)
             backStack[backStack.lastIndex] = feedDestination
         },
+        onFaveClick = { backStack[backStack.lastIndex] = FaveDestination },
         onSettingsClick = { backStack[backStack.lastIndex] = SettingsDestination }
     )
 
     LaunchedEffect(feedDestination.requestToken, feedDestination.approved) {
-        viewModel.onRedirect(feedDestination.requestToken, feedDestination.approved)
+        viewModel.dispatch(MainTabsIntent.HandleRedirect(feedDestination.requestToken, feedDestination.approved))
     }
 
     ObserveAsEvents(
@@ -129,11 +139,19 @@ fun MainTabsScreen(
 private fun MainTabsScreenContent(
     backStack: MutableList<AppRoute>,
     feedDestination: FeedDestination,
+    showFaveTab: Boolean,
     snackbarHostState: SnackbarHostState,
     layoutDirection: LayoutDirection,
     onFeedClick: () -> Unit,
+    onFaveClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
+    LaunchedEffect(showFaveTab) {
+        if (!showFaveTab && backStack[backStack.lastIndex] == FaveDestination) {
+            backStack[backStack.lastIndex] = feedDestination
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -148,13 +166,15 @@ private fun MainTabsScreenContent(
                     expanded = true
                 ) {
                     Row(
+                        modifier = Modifier.animateContentSize(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         ShortNavigationBarItem(
                             icon = {
                                 Icon(
                                     imageVector = MoviesIcons.GridView,
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                 )
                             },
                             label = {
@@ -168,11 +188,37 @@ private fun MainTabsScreenContent(
                             iconPosition = NavigationItemIconPosition.Start,
                         )
 
+                        AnimatedVisibility(
+                            visible = showFaveTab,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            ShortNavigationBarItem(
+                                icon = {
+                                    Icon(
+                                        imageVector = MoviesIcons.Favorite,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = stringResource(MoviesStrings.main_nav_fave),
+                                        style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
+                                    )
+                                },
+                                selected = backStack[backStack.lastIndex] == FaveDestination,
+                                onClick = onFaveClick,
+                                iconPosition = NavigationItemIconPosition.Start
+                            )
+                        }
+
                         ShortNavigationBarItem(
                             icon = {
                                 Icon(
                                     imageVector = MoviesIcons.Settings,
-                                    contentDescription = null
+                                    contentDescription = null,
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                 )
                             },
                             label = {
@@ -213,6 +259,7 @@ private fun MainTabsScreenContent(
             predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
             entryProvider = entryProvider {
                 entry<FeedDestination> { FeedScreen() }
+                entry<FaveDestination> { FaveScreen() }
                 entry<SettingsDestination> { SettingsScreen() }
             }
         )

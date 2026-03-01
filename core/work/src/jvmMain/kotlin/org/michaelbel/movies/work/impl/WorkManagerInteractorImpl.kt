@@ -8,9 +8,7 @@ import org.michaelbel.movies.work.WorkManagerInteractor
 
 class WorkManagerInteractorImpl: WorkManagerInteractor {
 
-    override fun downloadImage(image: ImagePojo): Flow<WorkInfoState> {
-        return flowOf(WorkInfoState.Success(""))
-    }
+    override fun downloadImage(image: ImagePojo): Flow<WorkInfoState> = flowOf(WorkInfoState.Success(""))
 
     override fun prepopulateDatabase() {}
 

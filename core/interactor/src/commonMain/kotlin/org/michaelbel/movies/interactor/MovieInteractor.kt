@@ -16,6 +16,8 @@ interface MovieInteractor {
 
     fun moviesPagingData(searchQuery: Query): Flow<PagingData<MoviePojo>>
 
+    fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?>
+
     fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>>
 
     suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo

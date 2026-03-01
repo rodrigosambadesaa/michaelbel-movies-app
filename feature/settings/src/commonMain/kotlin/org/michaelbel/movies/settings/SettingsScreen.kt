@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package org.michaelbel.movies.settings
 
@@ -9,6 +9,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -51,6 +53,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.common.MOVIES_GITHUB_URL
 import org.michaelbel.movies.common.MOVIES_TELEGRAM_URL
@@ -59,6 +62,7 @@ import org.michaelbel.movies.common.browser.navigateToUrl
 import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.theme.AppTheme
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.interactor.entity.AppLanguage
 import org.michaelbel.movies.settings.event.SettingsEvent
 import org.michaelbel.movies.settings.intent.SettingsIntent
@@ -76,21 +80,24 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
+import org.michaelbel.movies.ui.ktx.OnResume
 import org.michaelbel.movies.ui.ktx.SettingsGenderText
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isDebug
 import org.michaelbel.movies.ui.ktx.requestTileService
-import org.michaelbel.movies.ui.lifecycle.OnResume
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.widget.ktx.rememberAndPinAppWidgetProvider
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = koinViewModel()
+    viewModel: SettingsViewModel = koinViewModel(),
+    uiInteractor: UiInteractor = koinInject()
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
-    val openAppNotificationSettings = viewModel.uiInteractor.navigateToAppNotificationSettings()
+    val openAppNotificationSettings = uiInteractor.navigateToAppNotificationSettings()
+    val requestIgnoreBatteryOptimizations = uiInteractor.requestIgnoreBatteryOptimizations()
+    val openBatteryOptimizationSettings = uiInteractor.navigateToBatteryOptimizationSettings()
     val navigateToGithubUrl = navigateToUrl(MOVIES_GITHUB_URL)
     val navigateToTelegramUrl = navigateToUrl(MOVIES_TELEGRAM_URL)
     val scope = rememberCoroutineScope()
@@ -98,7 +105,7 @@ fun SettingsScreen(
     val lazyListState = rememberLazyListState()
     val permissionMessage = stringResource(MoviesStrings.settings_post_notifications_should_request)
     val permissionAction = stringResource(MoviesStrings.settings_action_go)
-    val onRequestPostNotificationsPermission = viewModel.uiInteractor.rememberPostNotificationsPermissionHandler(
+    val onRequestPostNotificationsPermission = uiInteractor.rememberPostNotificationsPermissionHandler(
         areNotificationsEnabled = state.areNotificationsEnabled,
         onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
         onPermissionDenied = { viewModel.dispatch(SettingsIntent.ShowPermissionSnackbar(permissionMessage, permissionAction)) }
@@ -113,6 +120,13 @@ fun SettingsScreen(
         when (event) {
             is SettingsEvent.PinWidget -> {}
             is SettingsEvent.RequestPostNotificationsPermission -> onRequestPostNotificationsPermission()
+            is SettingsEvent.RequestIgnoreBatteryOptimizations -> {
+                if (state.isIgnoringBatteryOptimizations) {
+                    openBatteryOptimizationSettings()
+                } else {
+                    requestIgnoreBatteryOptimizations()
+                }
+            }
             is SettingsEvent.RequestTileService -> onRequestTileService()
             is SettingsEvent.RequestGithub -> navigateToGithubUrl()
             is SettingsEvent.RequestTelegram -> navigateToTelegramUrl()
@@ -149,6 +163,7 @@ fun SettingsScreen(
 
     OnResume {
         viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled)
+        viewModel.dispatch(SettingsIntent.CollectIgnoringBatteryOptimizations)
     }
 }
 
@@ -634,6 +649,54 @@ private fun SettingsScreenContent(
                     )
                 }
             }
+            if (state.isBatteryOptimizationFeatureEnabled) {
+                item {
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = { dispatch(SettingsIntent.RequestIgnoreBatteryOptimizations) }),
+                        headlineContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_battery_optimization),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(if (state.isIgnoringBatteryOptimizations) MoviesStrings.settings_battery_optimization_ignored else MoviesStrings.settings_battery_optimization_optimized),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.BatterySaver,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = state.isIgnoringBatteryOptimizations,
+                                onCheckedChange = null,
+                                thumbContent = if (state.isIgnoringBatteryOptimizations) {
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
+                            )
+                        }
+                    )
+                }
+                item {
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
+                }
+            }
             if (state.isWidgetFeatureEnabled) {
                 item {
                     ListItem(
@@ -932,12 +995,12 @@ private fun SettingsScreenContent(
             }
             if (state.isAboutFeatureEnabled) {
                 item {
-                    Row(
+                    FlowRow(
                         modifier = Modifier
-                            .padding(vertical = 4.dp)
+                            .padding(horizontal = 16.dp, vertical = 4.dp)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalArrangement = Arrangement.Center
                     ) {
                         Icon(
                             imageVector = MoviesIcons.MovieFilter,

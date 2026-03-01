@@ -1,8 +1,12 @@
 package org.michaelbel.movies.interactor.impl
 
 import android.Manifest
+import android.content.ClipData
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,14 +14,20 @@ import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.net.toUri
 import androidx.palette.graphics.Palette
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.google.android.material.color.DynamicColors
+import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.common.ktx.appNotificationSettingsIntent
 import org.michaelbel.movies.interactor.UiInteractor
@@ -28,6 +38,8 @@ import org.michaelbel.movies.ui.appicon.enabledIcon
 import org.michaelbel.movies.ui.appicon.setIcon
 import org.michaelbel.movies.ui.ktx.currentGrammaticalGender
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
+import org.michaelbel.movies.ui.ktx.rememberNavigateToAppSettings
+import org.michaelbel.movies.ui.ktx.rememberNavigateToDeveloperSettings
 import org.michaelbel.movies.ui.ktx.supportSetRequestedApplicationGrammaticalGender
 
 class UiInteractorImpl(
@@ -40,6 +52,8 @@ class UiInteractorImpl(
 
     override val isFeedViewFeatureEnabled: Boolean = true
 
+    override val isFaveFeatureEnabled: Boolean = false
+
     override val isMovieListFeatureEnabled: Boolean = true
 
     override val isGenderFeatureEnabled: Boolean
@@ -48,10 +62,15 @@ class UiInteractorImpl(
     override val isDynamicColorsFeatureEnabled: Boolean
         get() = DynamicColors.isDynamicColorAvailable()
 
+    override val defaultDynamicColorsEnabled: Boolean
+        @ChecksSdkIntAtLeast(31) get() = Build.VERSION.SDK_INT >= 31
+
     override val isPaletteColorsFeatureEnabled: Boolean = true
 
     override val isNotificationsFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
+
+    override val isBatteryOptimizationFeatureEnabled: Boolean = true
 
     override val isBiometricFeatureEnabled: Boolean = true
 
@@ -79,6 +98,9 @@ class UiInteractorImpl(
 
     override val isDetailsShareFeatureEnabled: Boolean = true
 
+    override val isPageFailureButtonVisible: Boolean
+        @ChecksSdkIntAtLeast(29) get() = Build.VERSION.SDK_INT >= 29
+
     override val settingsWindowInsets: WindowInsets
         @Composable get() = displayCutoutWindowInsets
 
@@ -90,6 +112,55 @@ class UiInteractorImpl(
         val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
         val context = LocalContext.current
         return { resultContract.launch(context.appNotificationSettingsIntent) }
+    }
+
+    override val isIgnoringBatteryOptimizations: Boolean
+        get() {
+            val powerManager = context.getSystemService(PowerManager::class.java)
+            return powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
+        }
+
+    @Composable
+    override fun requestIgnoreBatteryOptimizations(): () -> Unit {
+        val context = LocalContext.current
+        val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+        val intent = remember(context.packageName) {
+            Intent(
+                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                "package:${context.packageName}".toUri()
+            )
+        }
+        return remember(resultContract, intent) { { resultContract.launch(intent) } }
+    }
+
+    @Composable
+    override fun navigateToBatteryOptimizationSettings(): () -> Unit {
+        val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+        val intent = remember { Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS) }
+        return remember(resultContract, intent) { { resultContract.launch(intent) } }
+    }
+
+    @Composable
+    override fun navigateToAppSettings(): () -> Unit {
+        return rememberNavigateToAppSettings()
+    }
+
+    @Composable
+    override fun navigateToDeveloperSettings(): () -> Unit {
+        return rememberNavigateToDeveloperSettings()
+    }
+
+    @Composable
+    override fun rememberCopyToClipboardHandler(): (String) -> Unit {
+        val clipboard = LocalClipboard.current
+        val scope = rememberCoroutineScope()
+        return remember(clipboard, scope) {
+            { text ->
+                scope.launch {
+                    clipboard.setClipEntry(ClipEntry(ClipData.newPlainText("", text)))
+                }
+            }
+        }
     }
 
     @Composable
@@ -125,7 +196,7 @@ class UiInteractorImpl(
     }
 
     @Composable
-    override fun detailsPaletteEffect(
+    override fun DetailsPaletteEffect(
         movie: MoviePojo,
         placeholder: Boolean,
         shouldGenerateColors: Boolean,

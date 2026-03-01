@@ -48,19 +48,28 @@ class AuthViewModel(
     }
 
     override fun catch(throwable: Throwable) {
-        stateFlow.value.signInJob?.cancel()
-        reduce { it.copy(requestToken = null, signInJob = null) }
-
         when (throwable) {
             is CreateRequestTokenException -> {
                 when {
                     throwable.loginViaTmdb -> dispatch(AuthIntent.ResetRequestToken)
-                    else -> reduce { it.copy(error = throwable) }
+                    else -> {
+                        stateFlow.value.signInJob?.cancel()
+                        reduce { it.copy(requestToken = null, signInJob = null, error = throwable) }
+                    }
                 }
             }
-            is CreateSessionWithLoginException -> reduce { it.copy(error = throwable) }
-            is CreateSessionException -> reduce { it.copy(error = throwable) }
-            is AccountDetailsException -> reduce { it.copy(error = throwable) }
+            is CreateSessionWithLoginException -> {
+                stateFlow.value.signInJob?.cancel()
+                reduce { it.copy(requestToken = null, signInJob = null, error = throwable) }
+            }
+            is CreateSessionException -> {
+                stateFlow.value.signInJob?.cancel()
+                reduce { it.copy(requestToken = null, signInJob = null, error = throwable) }
+            }
+            is AccountDetailsException -> {
+                stateFlow.value.signInJob?.cancel()
+                reduce { it.copy(requestToken = null, signInJob = null, error = throwable) }
+            }
             else -> super.catch(throwable)
         }
     }

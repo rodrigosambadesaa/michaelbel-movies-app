@@ -37,7 +37,7 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 import org.michaelbel.movies.widget.R
 
 @Composable
-internal fun AppWidgetConfigureActivityContent(
+fun AppWidgetConfigureActivityContent(
     viewModel: AppWidgetConfigureViewModel = koinViewModel(),
     enableEdgeToEdge: (Any, Any) -> Unit,
     onBackClick: () -> Unit

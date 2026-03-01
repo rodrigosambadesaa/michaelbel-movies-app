@@ -23,7 +23,6 @@ kotlin {
             api(projects.core.interactor)
             api(projects.core.widget)
             api(projects.core.platformServices.interactor)
-            implementation(projects.core.notifications)
         }
     }
 

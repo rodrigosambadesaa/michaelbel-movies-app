@@ -10,7 +10,6 @@ import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.SettingsRepository
-import org.michaelbel.movies.repository.ktx.defaultDynamicColorsEnabled
 
 class SettingsRepositoryImpl(
     private val preferences: MoviesPreferences
@@ -25,6 +24,9 @@ class SettingsRepositoryImpl(
     override val currentMovieList: Flow<MovieList>
         get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceMovieListKey).map { className -> MovieList.transform(className ?: MovieList.NowPlaying().toString()) }
 
+    override val dynamicColors: Flow<Boolean?>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey)
+
     override val themeData: Flow<ThemeData>
         get() {
             return combine(
@@ -36,7 +38,7 @@ class SettingsRepositoryImpl(
             ) { themeName, dynamicColors, paletteColors, paletteKey, seedColor ->
                 ThemeData(
                     appTheme = AppTheme.transform(themeName ?: AppTheme.FollowSystem.toString()),
-                    dynamicColors = dynamicColors ?: defaultDynamicColorsEnabled,
+                    dynamicColors = dynamicColors ?: ThemeData.Default.dynamicColors,
                     paletteColors = paletteColors.orEmpty(),
                     paletteKey = paletteKey ?: ThemeData.STYLE_TONAL_SPOT,
                     seedColor = seedColor ?: ThemeData.DEFAULT_SEED_COLOR

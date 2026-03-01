@@ -218,6 +218,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] [LeakCanary](https://github.com/square/leakcanary)
 - [x] [Koin](https://github.com/InsertKoinIO/koin)
 - [x] [Screenshot Detection](https://d.android.com/about/versions/14/features/screenshot-detection)
+- [x] [Battery Optimization Request](https://d.android.com/training/monitoring-device-state/doze-standby.html)
 - [x] [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
 
 ## Модули

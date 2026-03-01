@@ -45,6 +45,7 @@ import movies.core.ui.generated.resources.gallery_poster
 import movies.core.ui.generated.resources.gallery_success
 import movies.core.ui.generated.resources.language_code
 import movies.core.ui.generated.resources.main_nav_feed
+import movies.core.ui.generated.resources.main_nav_fave
 import movies.core.ui.generated.resources.main_nav_settings
 import movies.core.ui.generated.resources.notification_continue
 import movies.core.ui.generated.resources.notification_enable_subtitle
@@ -72,6 +73,9 @@ import movies.core.ui.generated.resources.settings_app_widget_description
 import movies.core.ui.generated.resources.settings_appearance
 import movies.core.ui.generated.resources.settings_appearance_grid
 import movies.core.ui.generated.resources.settings_appearance_list
+import movies.core.ui.generated.resources.settings_battery_optimization
+import movies.core.ui.generated.resources.settings_battery_optimization_ignored
+import movies.core.ui.generated.resources.settings_battery_optimization_optimized
 import movies.core.ui.generated.resources.settings_biometric_added
 import movies.core.ui.generated.resources.settings_biometric_not_added
 import movies.core.ui.generated.resources.settings_dynamic_colors
@@ -127,6 +131,7 @@ import org.jetbrains.compose.resources.stringResource
 object MoviesStrings {
     val language_code = Res.string.language_code
     val main_nav_feed = Res.string.main_nav_feed
+    val main_nav_fave = Res.string.main_nav_fave
     val main_nav_settings = Res.string.main_nav_settings
     val shortcuts_search_title = Res.string.shortcuts_search_title
     val shortcuts_settings_title = Res.string.shortcuts_settings_title
@@ -196,6 +201,9 @@ object MoviesStrings {
     val settings_post_notifications = Res.string.settings_post_notifications
     val settings_post_notifications_denied = Res.string.settings_post_notifications_denied
     val settings_post_notifications_granted = Res.string.settings_post_notifications_granted
+    val settings_battery_optimization = Res.string.settings_battery_optimization
+    val settings_battery_optimization_optimized = Res.string.settings_battery_optimization_optimized
+    val settings_battery_optimization_ignored = Res.string.settings_battery_optimization_ignored
     val settings_review = Res.string.settings_review
     val settings_review_description = Res.string.settings_review_description
     val settings_post_notifications_should_request = Res.string.settings_post_notifications_should_request

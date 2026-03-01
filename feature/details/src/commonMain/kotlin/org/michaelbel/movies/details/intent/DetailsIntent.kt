@@ -6,6 +6,8 @@ import org.michaelbel.movies.persistence.database.typealiases.MovieId
 sealed interface DetailsIntent: Intent {
     data object CollectAppTheme: DetailsIntent
     data object CollectNetworkStatus: DetailsIntent
+    data object CollectFeatureFlags: DetailsIntent
+    data object CollectMovieDb: DetailsIntent
     data object LoadMovie: DetailsIntent
     data object BackClick: DetailsIntent
     data object GalleryClick: DetailsIntent

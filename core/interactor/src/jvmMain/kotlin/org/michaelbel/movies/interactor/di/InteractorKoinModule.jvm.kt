@@ -6,9 +6,13 @@ import org.koin.dsl.module
 import org.michaelbel.movies.analytics.di.moviesAnalyticsKoinModule
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
 import org.michaelbel.movies.interactor.AboutInteractor
+import org.michaelbel.movies.interactor.AppNotificationInteractor
+import org.michaelbel.movies.interactor.DebugNotificationInteractor
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.interactor.impl.AboutInteractorImpl
+import org.michaelbel.movies.interactor.impl.AppNotificationInteractorImpl
+import org.michaelbel.movies.interactor.impl.DebugNotificationInteractorImpl
 import org.michaelbel.movies.interactor.impl.LocaleInteractorImpl
 import org.michaelbel.movies.interactor.impl.UiInteractorImpl
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
@@ -28,4 +32,12 @@ actual val aboutInteractorKoinModule = module {
 
 actual val uiInteractorKoinModule = module {
     singleOf(::UiInteractorImpl) { bind<UiInteractor>() }
+}
+
+actual val debugNotificationInteractorKoinModule = module {
+    singleOf(::DebugNotificationInteractorImpl) { bind<DebugNotificationInteractor>() }
+}
+
+actual val appNotificationInteractorKoinModule = module {
+    singleOf(::AppNotificationInteractorImpl) { bind<AppNotificationInteractor>() }
 }

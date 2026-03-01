@@ -62,11 +62,7 @@ fun FeedEmpty(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(start = 16.dp, top = 12.dp, end = 16.dp),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineSmall.copy(
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontWeight = FontWeight.SemiBold
-            )
+            style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
         )
     }
 }

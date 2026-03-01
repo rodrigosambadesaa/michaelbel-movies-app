@@ -9,7 +9,7 @@ import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.entity.AppLanguage
 
-internal class LocaleInteractorImpl(
+class LocaleInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val analytics: MoviesAnalytics
 ): LocaleInteractor {

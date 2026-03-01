@@ -14,6 +14,8 @@ interface SettingsRepository {
 
     val currentMovieList: Flow<MovieList>
 
+    val dynamicColors: Flow<Boolean?>
+
     val themeData: Flow<ThemeData>
 
     val isBiometricEnabled: Flow<Boolean>

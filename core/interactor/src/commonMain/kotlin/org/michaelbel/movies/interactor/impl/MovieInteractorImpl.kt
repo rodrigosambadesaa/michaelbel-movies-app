@@ -28,7 +28,7 @@ import org.michaelbel.movies.repository.MovieRepository
 import org.michaelbel.movies.repository.PagingKeyRepository
 import org.michaelbel.movies.repository.SearchRepository
 
-internal class MovieInteractorImpl(
+class MovieInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val localeInteractor: LocaleInteractor,
     private val movieRepository: MovieRepository,
@@ -37,9 +37,7 @@ internal class MovieInteractorImpl(
     private val moviesDatabase: MoviesDatabase
 ): MovieInteractor {
 
-    override fun moviesPagingData(
-        movieList: MovieList
-    ): Flow<PagingData<MoviePojo>> {
+    override fun moviesPagingData(movieList: MovieList): Flow<PagingData<MoviePojo>> {
         return Pager(
             config = PagingConfig(
                 pageSize = MovieResponse.DEFAULT_PAGE_SIZE,
@@ -56,9 +54,7 @@ internal class MovieInteractorImpl(
         ).flow
     }
 
-    override fun moviesPagingData(
-        searchQuery: Query
-    ): Flow<PagingData<MoviePojo>> {
+    override fun moviesPagingData(searchQuery: Query): Flow<PagingData<MoviePojo>> {
         return Pager(
             config = PagingConfig(
                 pageSize = MovieResponse.DEFAULT_PAGE_SIZE,
@@ -76,10 +72,11 @@ internal class MovieInteractorImpl(
         ).flow
     }
 
-    override fun moviesFlow(
-        pagingKey: PagingKey,
-        limit: Limit
-    ): Flow<List<MoviePojo>> {
+    override fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
+        return movieRepository.movieFlow(pagingKey, movieId)
+    }
+
+    override fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {
         return movieRepository.moviesFlow(pagingKey, limit)
     }
 
@@ -87,45 +84,27 @@ internal class MovieInteractorImpl(
         return withContext(dispatchers.io) { movieRepository.moviesWidget(localeInteractor.language) }
     }
 
-    override suspend fun movie(
-        pagingKey: PagingKey,
-        movieId: MovieId
-    ): MoviePojo {
+    override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
         return withContext(dispatchers.io) { movieRepository.movie(pagingKey, movieId) }
     }
 
-    override suspend fun movieDetails(
-        pagingKey: PagingKey,
-        movieId: MovieId
-    ): MoviePojo {
+    override suspend fun movieDetails(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
         return withContext(dispatchers.io) { movieRepository.movieDetails(pagingKey, localeInteractor.language, movieId) }
     }
 
-    override suspend fun removeMovies(
-        pagingKey: PagingKey
-    ) {
+    override suspend fun removeMovies(pagingKey: PagingKey) {
         return withContext(dispatchers.io) { movieRepository.removeMovies(pagingKey) }
     }
 
-    override suspend fun removeMovie(
-        pagingKey: PagingKey,
-        movieId: MovieId
-    ) {
+    override suspend fun removeMovie(pagingKey: PagingKey, movieId: MovieId) {
         return withContext(dispatchers.io) { movieRepository.removeMovie(pagingKey, movieId) }
     }
 
-    override suspend fun insertMovie(
-        pagingKey: PagingKey,
-        movie: MoviePojo
-    ) {
+    override suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo) {
         return withContext(dispatchers.io) { movieRepository.insertMovie(pagingKey, movie) }
     }
 
-    override suspend fun updateMovieColors(
-        movieId: MovieId,
-        containerColor: Int,
-        onContainerColor: Int
-    ) {
+    override suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {
         return withContext(dispatchers.io) {
             movieRepository.updateMovieColors(movieId, containerColor, onContainerColor)
         }

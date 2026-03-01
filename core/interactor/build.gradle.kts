@@ -14,6 +14,7 @@ kotlin {
         namespace = "org.michaelbel.movies.interactor"
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()
+        androidResources.enable = true
     }
 
     sourceSets {

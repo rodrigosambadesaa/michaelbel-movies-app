@@ -11,7 +11,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.IconButton
@@ -28,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.michaelbel.movies.common.theme.AppTheme
@@ -40,11 +40,11 @@ import org.michaelbel.movies.details.ktx.toolbarTitle
 import org.michaelbel.movies.details.ui.DetailsContent
 import org.michaelbel.movies.details.ui.DetailsFailure
 import org.michaelbel.movies.details.ui.DetailsLoading
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.modifierDisplayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.shareText
 import org.michaelbel.movies.ui.navigation.DetailsDestination
@@ -53,7 +53,8 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 @Composable
 fun DetailsScreen(
     destination: DetailsDestination,
-    viewModel: DetailsViewModel = koinViewModel { parametersOf(destination) }
+    viewModel: DetailsViewModel = koinViewModel { parametersOf(destination) },
+    uiInteractor: UiInteractor = koinInject()
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
     val shouldGenerateColors = state.appTheme !is AppTheme.Amoled
@@ -82,17 +83,18 @@ fun DetailsScreen(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(displayCutoutWindowInsets)
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
+                modifier = modifierDisplayCutoutWindowInsets,
                 title = {
-                    Text(text = state.detailsState.toolbarTitle)
+                    Text(
+                        text = state.detailsState.toolbarTitle
+                    )
                 },
                 actions = {
                     AnimatedVisibility(
-                        visible = viewModel.isDetailsShareFeatureEnabled && state.detailsState.movieUrl != null,
-                        modifier = modifierDisplayCutoutWindowInsets,
+                        visible = state.isDetailsShareFeatureEnabled && state.detailsState.movieUrl != null,
                         enter = fadeIn()
                     ) {
                         state.detailsState.movieUrl?.let { url ->
@@ -118,8 +120,7 @@ fun DetailsScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { viewModel.dispatch(DetailsIntent.BackClick) },
-                        modifier = modifierDisplayCutoutWindowInsets
+                        onClick = { viewModel.dispatch(DetailsIntent.BackClick) }
                     ) {
                         Image(
                             imageVector = MoviesIcons.ArrowBack,
@@ -145,19 +146,21 @@ fun DetailsScreen(
             is ScreenState.Loading -> {
                 DetailsLoading(
                     modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
+                        .padding(top = innerPadding.calculateTopPadding())
+                        .fillMaxSize(),
+                    additionalBottomContentPadding = innerPadding.calculateBottomPadding()
                 )
             }
             is ScreenState.Content<*> -> {
                 DetailsContent(
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .padding(top = innerPadding.calculateTopPadding())
                         .fillMaxSize(),
+                    additionalBottomContentPadding = innerPadding.calculateBottomPadding(),
                     movie = detailsState.movie,
                     onContainerColor = animateOnContainerColor.value,
                     onNavigateToGallery = {
-                        if (viewModel.isDetailsGalleryFeatureEnabled) {
+                        if (state.isDetailsGalleryFeatureEnabled) {
                             viewModel.dispatch(DetailsIntent.GalleryClick)
                         }
                     },
@@ -173,7 +176,7 @@ fun DetailsScreen(
                         )
                     },
                     detailsPaletteEffect = { movie, placeholder, shouldGenerateColorsValue, onGenerateColors ->
-                        viewModel.uiInteractor.detailsPaletteEffect(
+                        uiInteractor.DetailsPaletteEffect(
                             movie = movie,
                             placeholder = placeholder,
                             shouldGenerateColors = shouldGenerateColorsValue,
@@ -185,7 +188,7 @@ fun DetailsScreen(
             is ScreenState.Failure -> {
                 DetailsFailure(
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .padding(top = innerPadding.calculateTopPadding())
                         .fillMaxSize()
                 )
             }

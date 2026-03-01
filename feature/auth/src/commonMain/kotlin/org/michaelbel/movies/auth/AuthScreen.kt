@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 
 package org.michaelbel.movies.auth
 
@@ -10,6 +10,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,12 +36,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,8 +62,11 @@ import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Job
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -129,6 +136,22 @@ private fun AuthScreenContent(
 
     val navigateToTermsOfUseUrl = navigateToUrl(TMDB_TERMS_OF_USE)
     val navigateToPrivacyPolicyUrl = navigateToUrl(TMDB_PRIVACY_POLICY)
+    val buttonContainerColor = MaterialTheme.colorScheme.surfaceTint
+    val buttonContentColor = contentColorFor(buttonContainerColor).let { color ->
+        if (color == Color.Unspecified) MaterialTheme.colorScheme.onSurface else color
+    }
+    val signInButtonColors = ButtonDefaults.buttonColors(
+        containerColor = buttonContainerColor,
+        contentColor = buttonContentColor,
+        disabledContainerColor = if (state.isSignInJobActive) buttonContainerColor else MaterialTheme.colorScheme.onSurface.copy(alpha = .12F),
+        disabledContentColor = if (state.isSignInJobActive) buttonContentColor else MaterialTheme.colorScheme.onSurface.copy(alpha = .38F)
+    )
+    val loadingButtonColors = ButtonDefaults.buttonColors(
+        containerColor = buttonContainerColor,
+        contentColor = buttonContentColor,
+        disabledContainerColor = buttonContainerColor,
+        disabledContentColor = buttonContentColor
+    )
 
     Column(
         modifier = Modifier
@@ -144,6 +167,8 @@ private fun AuthScreenContent(
             title = {
                 Text(
                     text = stringResource(MoviesStrings.auth_title),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
                 )
             },
@@ -248,16 +273,18 @@ private fun AuthScreenContent(
             }
         )
 
-        Row(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+        FlowRow(
+            modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             TextButton(
                 onClick = navigateToTmdbRegisterUrl,
                 shapes = ButtonDefaults.shapes()
             ) {
                 Text(
-                    text = stringResource(MoviesStrings.auth_sign_up)
+                    text = stringResource(MoviesStrings.auth_sign_up),
+                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                 )
             }
 
@@ -271,7 +298,8 @@ private fun AuthScreenContent(
                     shapes = ButtonDefaults.shapes()
                 ) {
                     Text(
-                        text = stringResource(MoviesStrings.auth_reset_password)
+                        text = stringResource(MoviesStrings.auth_reset_password),
+                        style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                     )
                 }
             }
@@ -284,18 +312,18 @@ private fun AuthScreenContent(
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 4.dp, end = 16.dp),
             enabled = username.isNotEmpty && password.isNotEmpty && !state.isSignInJobActive,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceTint
-            ),
+            colors = signInButtonColors,
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             if (state.isSignInJobActive) {
                 LoadingIndicator(
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
+                    color = buttonContentColor
                 )
             } else {
                 Text(
-                    text = stringResource(MoviesStrings.auth_sign_in)
+                    text = stringResource(MoviesStrings.auth_sign_in),
+                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                 )
             }
         }
@@ -307,18 +335,18 @@ private fun AuthScreenContent(
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 8.dp, end = 16.dp),
             enabled = !state.isLoginJobActive,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.surfaceTint
-            ),
+            colors = loadingButtonColors,
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
             if (state.isLoginJobActive) {
                 LoadingIndicator(
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp),
+                    color = buttonContentColor
                 )
             } else {
                 Text(
-                    text = stringResource(MoviesStrings.auth_login)
+                    text = stringResource(MoviesStrings.auth_login),
+                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                 )
             }
         }
@@ -336,15 +364,18 @@ private fun AuthScreenContent(
             )
 
             Row(
-                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(MoviesStrings.auth_terms_of_use),
                     modifier = Modifier
+                        .weight(1F)
                         .padding(vertical = 16.dp)
                         .clickableWithoutRipple(navigateToTermsOfUseUrl),
-                    style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.End)
                 )
 
                 Box(
@@ -358,9 +389,10 @@ private fun AuthScreenContent(
                 Text(
                     text = stringResource(MoviesStrings.auth_privacy_policy),
                     modifier = Modifier
+                        .weight(1F)
                         .padding(vertical = 16.dp)
                         .clickableWithoutRipple(navigateToPrivacyPolicyUrl),
-                    style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
                 )
             }
         }
@@ -373,6 +405,44 @@ private fun AuthScreenContentPreview() {
     MoviesTheme {
         AuthScreenContent(
             state = AuthModel(),
+            dispatch = {}
+        )
+    }
+}
+
+@Composable
+private fun AuthScreenContentPreview2() {
+    MoviesTheme {
+        AuthScreenContent(
+            state = AuthModel(
+                error = CreateSessionWithLoginException()
+            ),
+            dispatch = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AuthScreenContentPreview3() {
+    MoviesTheme {
+        AuthScreenContent(
+            state = AuthModel(
+                signInJob = Job()
+            ),
+            dispatch = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun AuthScreenContentPreview4() {
+    MoviesTheme {
+        AuthScreenContent(
+            state = AuthModel(
+                loginJob = Job()
+            ),
             dispatch = {}
         )
     }

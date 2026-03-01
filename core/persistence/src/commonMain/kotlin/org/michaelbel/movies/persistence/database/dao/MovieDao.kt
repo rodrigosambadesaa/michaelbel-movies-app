@@ -24,6 +24,9 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE movieList = :pagingKey ORDER BY position ASC")
     fun pagingSource(pagingKey: PagingKey): PagingSource<Int, MoviePojo>
 
+    @Query("SELECT * FROM movies WHERE movieList = :pagingKey AND movieId = :movieId")
+    fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?>
+
     @Query("SELECT * FROM movies WHERE movieList = :pagingKey ORDER BY position DESC LIMIT :limit")
     fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>>
 

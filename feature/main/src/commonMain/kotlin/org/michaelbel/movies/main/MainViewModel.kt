@@ -6,7 +6,7 @@ import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
 import org.michaelbel.movies.common.mvi.MoviesViewModel
-import org.michaelbel.movies.debug.DebugNotificationInteractor
+import org.michaelbel.movies.interactor.DebugNotificationInteractor
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.interactor.Interactor
@@ -118,6 +118,8 @@ class MainViewModel(
                     dispatch(MainIntent.OpenSettings)
                 }
             }
+            is MainIntent.NavigateToDebug -> reduce { it.copy(openDebugSheet = true) }
+            is MainIntent.ConsumeDebugNavigation -> reduce { it.copy(openDebugSheet = false) }
         }
     }
 }

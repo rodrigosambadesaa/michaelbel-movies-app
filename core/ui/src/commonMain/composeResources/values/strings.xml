@@ -59,6 +59,7 @@
     <string name="search_clear">Clear</string>
 
     <string name="main_nav_feed">Feed</string>
+    <string name="main_nav_fave">Fave</string>
     <string name="main_nav_settings">Settings</string>
 
     <string name="settings_title">Settings</string>
@@ -72,6 +73,9 @@
     <string name="settings_post_notifications">Notifications</string>
     <string name="settings_post_notifications_denied">Permission denied</string>
     <string name="settings_post_notifications_granted">Permission granted</string>
+    <string name="settings_battery_optimization">Battery optimization</string>
+    <string name="settings_battery_optimization_optimized">Optimization is on for Movies</string>
+    <string name="settings_battery_optimization_ignored">Optimization is off for Movies</string>
     <string name="settings_review">Rate App</string>
     <string name="settings_review_description">Using In-App Review API</string>
     <string name="settings_post_notifications_should_request">Notifications are disabled. Please go to app settings to activate them</string>

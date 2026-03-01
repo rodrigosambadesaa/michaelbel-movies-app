@@ -11,7 +11,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import org.michaelbel.movies.common.ktx.currentDateTime
-import org.michaelbel.movies.notifications.NotificationClient
+import org.michaelbel.movies.interactor.AppNotificationInteractor
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -19,7 +19,7 @@ import java.net.URL
 class DownloadImageWorker(
     private val context: Context,
     workerParams: WorkerParameters,
-    private val notificationClient: NotificationClient
+    private val appNotificationInteractor: AppNotificationInteractor
 ): CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -32,7 +32,7 @@ class DownloadImageWorker(
             Result.failure(workDataOf(KEY_IMAGE_URL to FAILURE_RESULT))
         }
 
-        notificationClient.sendDownloadImageNotification(
+        appNotificationInteractor.sendDownloadImageNotification(
             notificationId = notificationId,
             contentTitleRes = contentTitleRes,
             contentTextRes = contentTextRes
@@ -43,7 +43,7 @@ class DownloadImageWorker(
             name = "$currentDateTime.jpg"
         )
 
-        notificationClient.cancelDownloadImageNotification(notificationId)
+        appNotificationInteractor.cancelDownloadImageNotification(notificationId)
 
         return if (uri != null) {
             Result.success(workDataOf(KEY_IMAGE_URL to uri.toString()))

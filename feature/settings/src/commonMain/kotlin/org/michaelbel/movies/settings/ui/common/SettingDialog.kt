@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -38,7 +39,7 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun <T: SealedString> SettingsDialog(
+fun <T: SealedString> SettingsDialog(
     icon: ImageVector,
     title: String,
     items: List<T>,
@@ -54,7 +55,7 @@ internal fun <T: SealedString> SettingsDialog(
             ) {
                 Text(
                     text = stringResource(MoviesStrings.settings_action_cancel),
-                    style = MaterialTheme.typography.titleMediumEmphasized
+                    style = MaterialTheme.typography.titleMediumEmphasized.copy(textAlign = TextAlign.Center)
                 )
             }
         },

@@ -18,11 +18,14 @@ import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSe
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.account.AccountScreen
 import org.michaelbel.movies.auth.AuthScreen
+import org.michaelbel.movies.debug.DebugScreen
 import org.michaelbel.movies.details.DetailsScreen
 import org.michaelbel.movies.gallery.GalleryScreen
 import org.michaelbel.movies.main.event.MainEvent
+import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.main.tabs.MainTabsScreen
 import org.michaelbel.movies.notify.NotifyScreen
+import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.USE_PLATFORM_DEFAULT_WIDTH
@@ -32,7 +35,9 @@ import org.michaelbel.movies.ui.ktx.fadeTransitionSpec
 import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AppRoute
 import org.michaelbel.movies.ui.navigation.AuthDestination
+import org.michaelbel.movies.ui.navigation.DebugDestination
 import org.michaelbel.movies.ui.navigation.DetailsDestination
+import org.michaelbel.movies.ui.navigation.FeedDestination
 import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.ui.navigation.MainDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
@@ -55,6 +60,15 @@ fun MainScreen(
 
     LaunchedEffect(state.isScreenshotBlockEnabled) {
         onScreenshotBlockEnabledChanged(state.isScreenshotBlockEnabled)
+    }
+
+    LaunchedEffect(state.openDebugSheet) {
+        if (state.openDebugSheet) {
+            if (backStack.lastOrNull() != DebugDestination) {
+                backStack.add(DebugDestination)
+            }
+            viewModel.dispatch(MainIntent.ConsumeDebugNavigation)
+        }
     }
 
     MainScreenContent(
@@ -120,12 +134,14 @@ private fun MainScreenContent(
             ) {
                 NotifyScreen()
             }
-            entry<MainDestination> {
-                MainTabsScreen(
-                    requestToken = it.requestToken,
-                    approved = it.approved
+            entry<DebugDestination>(
+                metadata = DialogSceneStrategy.dialog(
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = USE_PLATFORM_DEFAULT_WIDTH)
                 )
+            ) {
+                DebugScreen()
             }
+            entry<MainDestination> { MainTabsScreen(feedDestination = FeedDestination(requestToken = it.requestToken, approved = it.approved.orEmpty())) }
             entry<DetailsDestination> { DetailsScreen(destination = it) }
             entry<GalleryDestination> { GalleryScreen(destination = it) }
             entry<SettingsDestination> { SettingsScreen() }

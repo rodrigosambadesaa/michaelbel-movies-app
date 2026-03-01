@@ -9,12 +9,16 @@ import org.michaelbel.movies.persistence.database.typealiases.Limit
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
-class MoviePersistence internal constructor(
+class MoviePersistence(
     private val moviesDatabase: MoviesDatabase
 ) {
 
     fun pagingSource(pagingKey: PagingKey): PagingSource<Int, MoviePojo> {
         return moviesDatabase.movieDao.pagingSource(pagingKey)
+    }
+
+    fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
+        return moviesDatabase.movieDao.movieFlow(pagingKey, movieId)
     }
 
     fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {

@@ -7,6 +7,8 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.net.toUri
 import org.michaelbel.movies.ui.R
+import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SEARCH
+import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SETTINGS
 
 private const val SEARCH_SHORTCUT_ID = "searchShortcutId"
 private const val SETTINGS_SHORTCUT_ID = "settingsShortcutId"

@@ -18,7 +18,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.interactor)
-            implementation(projects.core.notifications)
         }
         androidMain.dependencies {
             implementation(libs.bundles.work.android)

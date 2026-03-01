@@ -2,7 +2,6 @@
 
 package org.michaelbel.movies.feed
 
-import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Column
@@ -65,6 +64,7 @@ import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.isFailure
 import org.michaelbel.movies.ui.ktx.isLoading
 import org.michaelbel.movies.ui.ktx.isPortrait
+import org.michaelbel.movies.ui.ktx.isRefreshLoading
 import org.michaelbel.movies.ui.ktx.refreshThrowable
 import org.michaelbel.movies.ui.ktx.rememberConnectivityClickHandler
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -75,6 +75,7 @@ actual fun FeedScreen(
     viewModel: FeedViewModel
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
+
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
     val searchPagingItems = viewModel.searchPagingDataFlow.collectAsLazyPagingItems()
     val scope = rememberCoroutineScope()
@@ -180,6 +181,8 @@ private fun FeedScreenContent(
         targetValue = if (isSearchActive) 0.dp else 16.dp,
         label = ""
     )
+    val isSearchFailure = searchPagingItems.isFailure
+    val isSearchEmptyFailure = isSearchFailure && searchPagingItems.refreshThrowable is PageEmptyException
 
     Scaffold(
         topBar = {
@@ -225,12 +228,33 @@ private fun FeedScreenContent(
                     account = state.accountPojo,
                     onAuthIconClick = { dispatch(FeedIntent.AuthClick) },
                     onAccountIconClick = { dispatch(FeedIntent.AccountClick) },
-                    feedView = state.feedView,
-                    searchPagingItems = searchPagingItems,
-                    onSearchMovieClick = { movieId ->
-                        isSearchAutoFocusEnabled = false
-                        dispatch(FeedIntent.SaveMovieToSearchHistoryClick(movieId))
-                        dispatch(FeedIntent.MovieDetailsClick(searchQuery, movieId))
+                    isSearchRefreshLoading = searchPagingItems.isRefreshLoading,
+                    isSearchFailure = isSearchFailure,
+                    isSearchEmptyFailure = isSearchEmptyFailure,
+                    onSearchRetryClick = searchPagingItems::retry,
+                    searchLoadingContent = { modifier ->
+                        PageLoading(
+                            feedView = state.feedView,
+                            modifier = modifier,
+                            cardColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    },
+                    searchContent = { modifier, lazyListState, lazyGridState, lazyStaggeredGridState ->
+                        PageContent(
+                            feedView = state.feedView,
+                            lazyListState = lazyListState,
+                            lazyGridState = lazyGridState,
+                            lazyStaggeredGridState = lazyStaggeredGridState,
+                            pagingItems = searchPagingItems,
+                            onMovieClick = { _, movieId ->
+                                isSearchAutoFocusEnabled = false
+                                dispatch(FeedIntent.SaveMovieToSearchHistoryClick(movieId))
+                                dispatch(FeedIntent.MovieDetailsClick(searchQuery, movieId))
+                            },
+                            modifier = modifier,
+                            contentPadding = PaddingValues(bottom = 96.dp),
+                            cardColor = MaterialTheme.colorScheme.primaryContainer
+                        )
                     },
                     suggestions = state.suggestions,
                     searchHistoryMovies = state.searchHistoryMovies,
@@ -247,8 +271,7 @@ private fun FeedScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 16.dp),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodyLarge.copy(MaterialTheme.colorScheme.error)
+                        style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
                     )
                 }
             }
@@ -292,7 +315,7 @@ private fun FeedScreenContent(
                             .windowInsetsPadding(displayCutoutWindowInsets)
                             .fillMaxSize()
                             .clickableWithoutRipple(pagingItems::retry),
-                        isButtonVisible = Build.VERSION.SDK_INT >= 29,
+                        isButtonVisible = state.isPageFailureButtonVisible,
                         onButtonClick = rememberConnectivityClickHandler()
                     )
                 }

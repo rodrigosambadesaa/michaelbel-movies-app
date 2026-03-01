@@ -7,7 +7,7 @@ import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.viewmodel.CoroutineViewModel
 import org.michaelbel.movies.interactor.Interactor
 
-internal class AppWidgetConfigureViewModel(
+class AppWidgetConfigureViewModel(
     interactor: Interactor
 ): CoroutineViewModel() {
 

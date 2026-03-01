@@ -18,15 +18,21 @@ class UiInteractorImpl: UiInteractor {
 
     override val isFeedViewFeatureEnabled: Boolean = true
 
+    override val isFaveFeatureEnabled: Boolean = false
+
     override val isMovieListFeatureEnabled: Boolean = true
 
     override val isGenderFeatureEnabled: Boolean = false
 
     override val isDynamicColorsFeatureEnabled: Boolean = false
 
+    override val defaultDynamicColorsEnabled: Boolean = false
+
     override val isPaletteColorsFeatureEnabled: Boolean = false
 
     override val isNotificationsFeatureEnabled: Boolean = false
+
+    override val isBatteryOptimizationFeatureEnabled: Boolean = false
 
     override val isBiometricFeatureEnabled: Boolean = false
 
@@ -52,6 +58,8 @@ class UiInteractorImpl: UiInteractor {
 
     override val isDetailsShareFeatureEnabled: Boolean = false
 
+    override val isPageFailureButtonVisible: Boolean = false
+
     override val settingsWindowInsets: WindowInsets
         @Composable get() = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
 
@@ -61,6 +69,33 @@ class UiInteractorImpl: UiInteractor {
     @Composable
     override fun navigateToAppNotificationSettings(): () -> Unit {
         return {}
+    }
+
+    override val isIgnoringBatteryOptimizations: Boolean = false
+
+    @Composable
+    override fun requestIgnoreBatteryOptimizations(): () -> Unit {
+        return {}
+    }
+
+    @Composable
+    override fun navigateToBatteryOptimizationSettings(): () -> Unit {
+        return {}
+    }
+
+    @Composable
+    override fun navigateToAppSettings(): () -> Unit {
+        return {}
+    }
+
+    @Composable
+    override fun navigateToDeveloperSettings(): () -> Unit {
+        return {}
+    }
+
+    @Composable
+    override fun rememberCopyToClipboardHandler(): (String) -> Unit {
+        return { _: String -> }
     }
 
     @Composable
@@ -73,7 +108,7 @@ class UiInteractorImpl: UiInteractor {
     }
 
     @Composable
-    override fun detailsPaletteEffect(
+    override fun DetailsPaletteEffect(
         movie: MoviePojo,
         placeholder: Boolean,
         shouldGenerateColors: Boolean,

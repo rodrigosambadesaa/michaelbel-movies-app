@@ -22,7 +22,6 @@ kotlin {
             api(projects.core.ui)
             api(projects.core.common)
             implementation(projects.core.interactor)
-            implementation(projects.core.notifications)
         }
     }
 

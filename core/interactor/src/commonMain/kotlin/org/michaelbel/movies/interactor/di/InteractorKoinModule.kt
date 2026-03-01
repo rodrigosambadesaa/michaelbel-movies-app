@@ -35,7 +35,9 @@ val interactorKoinModule = module {
         moviesAnalyticsKoinModule,
         localeInteractorKoinModule,
         aboutInteractorKoinModule,
-        uiInteractorKoinModule
+        uiInteractorKoinModule,
+        debugNotificationInteractorKoinModule,
+        appNotificationInteractorKoinModule
     )
     singleOf(::AccountInteractorImpl) { bind<AccountInteractor>() }
     singleOf(::AuthenticationInteractorImpl) { bind<AuthenticationInteractor>() }
@@ -63,3 +65,5 @@ val interactorKoinModule = module {
 expect val localeInteractorKoinModule: Module
 expect val aboutInteractorKoinModule: Module
 expect val uiInteractorKoinModule: Module
+expect val debugNotificationInteractorKoinModule: Module
+expect val appNotificationInteractorKoinModule: Module

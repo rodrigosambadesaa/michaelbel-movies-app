@@ -13,6 +13,7 @@ sealed interface SettingsIntent: Intent {
     data object CollectMovieList: SettingsIntent
     data object CollectAppServiceData: SettingsIntent
     data object CollectNotificationsEnabled: SettingsIntent
+    data object CollectIgnoringBatteryOptimizations: SettingsIntent
     data object CollectBiometricFeatureEnabled: SettingsIntent
     data object CollectBiometricEnabled: SettingsIntent
     data object CollectScreenshotBlockEnabled: SettingsIntent
@@ -22,6 +23,7 @@ sealed interface SettingsIntent: Intent {
     data object CollectAppIcon: SettingsIntent
     data object FetchUpdateAvailable: SettingsIntent
     data object RequestPostNotificationsPermission: SettingsIntent
+    data object RequestIgnoreBatteryOptimizations: SettingsIntent
     data object RequestTileService: SettingsIntent
     data object RequestGithub: SettingsIntent
     data object RequestTelegram: SettingsIntent

@@ -15,6 +15,8 @@ interface MovieRepository {
 
     fun moviesPagingSource(pagingKey: PagingKey): PagingSource<Int, MoviePojo>
 
+    fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?>
+
     fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>>
 
     suspend fun moviesResult(pagingKey: PagingKey, language: String, page: Page): Result<MovieResponse>

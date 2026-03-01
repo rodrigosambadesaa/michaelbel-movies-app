@@ -256,8 +256,7 @@ private fun GalleryScreenContent(
                         Text(
                             text = stringResource(MoviesStrings.gallery_image_of, currentPage.plus(1), state.movieImages.size),
                             overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Start,
-                            style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
                         )
                     }
 

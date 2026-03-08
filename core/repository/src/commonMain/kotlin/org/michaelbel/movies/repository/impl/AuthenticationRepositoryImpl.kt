@@ -11,34 +11,25 @@ import org.michaelbel.movies.network.model.SessionRequest
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.network.model.Username
 import org.michaelbel.movies.persistence.database.AccountPersistence
+import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AuthenticationRepository
 
-internal class AuthenticationRepositoryImpl(
+class AuthenticationRepositoryImpl(
     private val authenticationNetworkService: AuthenticationNetworkService,
     private val accountPersistence: AccountPersistence,
     private val preferences: MoviesPreferences
 ): AuthenticationRepository {
 
-    override suspend fun createRequestToken(
-        loginViaTmdb: Boolean
-    ): Token {
+    override suspend fun createRequestToken(loginViaTmdb: Boolean): Token {
         return try {
             val token = authenticationNetworkService.createRequestToken()
-            if (!token.success) {
-                throw CreateRequestTokenException(loginViaTmdb)
-            }
+            if (!token.success) throw CreateRequestTokenException(loginViaTmdb)
             token
-        } catch (ignored: Exception) {
-            throw CreateRequestTokenException(loginViaTmdb)
-        }
+        } catch (_: Exception) { throw CreateRequestTokenException(loginViaTmdb) }
     }
 
-    override suspend fun createSessionWithLogin(
-        username: String,
-        password: String,
-        requestToken: String
-    ): Token {
+    override suspend fun createSessionWithLogin(username: String, password: String, requestToken: String): Token {
         return try {
             val token = authenticationNetworkService.createSessionWithLogin(
                 username = Username(
@@ -47,47 +38,31 @@ internal class AuthenticationRepositoryImpl(
                     requestToken = requestToken
                 )
             )
-            if (!token.success) {
-                throw CreateSessionWithLoginException
-            }
+            if (!token.success) throw CreateSessionWithLoginException()
             token
-        } catch (ignored: Exception) {
-            throw CreateSessionWithLoginException
-        }
+        } catch (_: Exception) { throw CreateSessionWithLoginException() }
     }
 
-    override suspend fun createSession(
-        token: String
-    ): Session {
+    override suspend fun createSession(token: String): Session {
         return try {
             val session = authenticationNetworkService.createSession(RequestToken(token))
-            if (session.success) {
-                preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey, session.sessionId)
-            } else {
-                throw CreateSessionException
-            }
+            if (!session.success) throw CreateSessionException()
+            preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey, session.sessionId)
             session
-        } catch (ignored: Exception) {
-            throw CreateSessionException
-        }
+        } catch (_: Exception) { throw CreateSessionException() }
     }
 
     override suspend fun deleteSession() {
-        runCatching {
-            val sessionId = preferences.sessionId().orEmpty()
+        try {
+            val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
             val deletedSession = authenticationNetworkService.deleteSession(SessionRequest(sessionId))
-            if (deletedSession.success) {
-                val accountId = preferences.accountId()
-                accountPersistence.removeById(accountId)
-                preferences.run {
-                    removeValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey)
-                    removeValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
-                }
-            } else {
-                throw DeleteSessionException
+            if (!deletedSession.success) throw DeleteSessionException()
+            val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
+            accountPersistence.removeById(accountId)
+            preferences.run {
+                removeValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey)
+                removeValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
             }
-        }.onFailure {
-            throw DeleteSessionException
-        }
+        } catch (_: Exception) { throw DeleteSessionException() }
     }
 }

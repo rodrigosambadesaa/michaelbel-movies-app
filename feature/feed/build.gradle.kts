@@ -3,36 +3,36 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
+    androidLibrary {
+        namespace = "org.michaelbel.movies.feed"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+    }
+
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.feedImpl)
+            api(projects.core.ui)
+            api(projects.core.interactor)
+            api(projects.core.platformServices.interactor)
+        }
+        androidMain.dependencies {
+            implementation(libs.bundles.paging.android)
+        }
+        jvmMain.dependencies {
+            implementation(libs.bundles.paging.desktop)
+            implementation(libs.androidx.paging.compose)
         }
     }
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.feed"
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
-    }
-
-    buildFeatures {
-        compose = true
     }
 }

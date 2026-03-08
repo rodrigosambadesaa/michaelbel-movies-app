@@ -11,7 +11,7 @@ plugins {
 
 kotlin {
     js {
-        moduleName = "composeApp"
+        outputModuleName = "composeApp"
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
@@ -21,7 +21,7 @@ kotlin {
         useEsModules()
     }
     wasmJs {
-        moduleName = "composeApp"
+        outputModuleName = "composeApp"
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
@@ -38,15 +38,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.platformServices.injectWeb)
-            implementation(projects.feature.mainImplWeb)
-
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
+            implementation(libs.bundles.jetbrains.compose.components.common)
+            implementation(libs.bundles.jetbrains.compose.foundation.common)
+            implementation(libs.bundles.jetbrains.compose.runtime.common)
+            implementation(libs.bundles.jetbrains.compose.material3.common)
+            implementation(libs.bundles.jetbrains.compose.material.icons.common)
+            implementation(libs.bundles.jetbrains.compose.ui.common)
         }
     }
 }

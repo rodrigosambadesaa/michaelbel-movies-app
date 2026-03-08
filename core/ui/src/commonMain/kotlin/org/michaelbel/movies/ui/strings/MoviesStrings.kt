@@ -24,7 +24,6 @@ import movies.core.ui.generated.resources.auth_sign_up
 import movies.core.ui.generated.resources.auth_terms_of_use
 import movies.core.ui.generated.resources.auth_title
 import movies.core.ui.generated.resources.details_error_loading
-import movies.core.ui.generated.resources.details_title
 import movies.core.ui.generated.resources.details_url_copied
 import movies.core.ui.generated.resources.error_api_key_null
 import movies.core.ui.generated.resources.error_check_internet_connectivity
@@ -45,13 +44,19 @@ import movies.core.ui.generated.resources.gallery_logo
 import movies.core.ui.generated.resources.gallery_poster
 import movies.core.ui.generated.resources.gallery_success
 import movies.core.ui.generated.resources.language_code
-import movies.core.ui.generated.resources.no_image
+import movies.core.ui.generated.resources.main_nav_feed
+import movies.core.ui.generated.resources.main_nav_fave
+import movies.core.ui.generated.resources.main_nav_settings
 import movies.core.ui.generated.resources.notification_continue
 import movies.core.ui.generated.resources.notification_enable_subtitle
 import movies.core.ui.generated.resources.notification_enable_title
 import movies.core.ui.generated.resources.notification_go_to_settings
 import movies.core.ui.generated.resources.retry
 import movies.core.ui.generated.resources.search_clear
+import movies.core.ui.generated.resources.search_history_empty
+import movies.core.ui.generated.resources.search_recent
+import movies.core.ui.generated.resources.search_results_empty
+import movies.core.ui.generated.resources.search_title
 import movies.core.ui.generated.resources.settings_action_cancel
 import movies.core.ui.generated.resources.settings_action_go
 import movies.core.ui.generated.resources.settings_app_debug
@@ -68,6 +73,9 @@ import movies.core.ui.generated.resources.settings_app_widget_description
 import movies.core.ui.generated.resources.settings_appearance
 import movies.core.ui.generated.resources.settings_appearance_grid
 import movies.core.ui.generated.resources.settings_appearance_list
+import movies.core.ui.generated.resources.settings_battery_optimization
+import movies.core.ui.generated.resources.settings_battery_optimization_ignored
+import movies.core.ui.generated.resources.settings_battery_optimization_optimized
 import movies.core.ui.generated.resources.settings_biometric_added
 import movies.core.ui.generated.resources.settings_biometric_not_added
 import movies.core.ui.generated.resources.settings_dynamic_colors
@@ -91,6 +99,7 @@ import movies.core.ui.generated.resources.settings_movie_list_popular
 import movies.core.ui.generated.resources.settings_movie_list_top_rated
 import movies.core.ui.generated.resources.settings_movie_list_upcoming
 import movies.core.ui.generated.resources.settings_palette_colors
+import movies.core.ui.generated.resources.settings_palette_colors_description
 import movies.core.ui.generated.resources.settings_post_notifications
 import movies.core.ui.generated.resources.settings_post_notifications_denied
 import movies.core.ui.generated.resources.settings_post_notifications_granted
@@ -99,6 +108,8 @@ import movies.core.ui.generated.resources.settings_review
 import movies.core.ui.generated.resources.settings_review_description
 import movies.core.ui.generated.resources.settings_screenshots
 import movies.core.ui.generated.resources.settings_screenshots_description
+import movies.core.ui.generated.resources.settings_telegram
+import movies.core.ui.generated.resources.settings_telegram_description
 import movies.core.ui.generated.resources.settings_theme
 import movies.core.ui.generated.resources.settings_theme_amoled
 import movies.core.ui.generated.resources.settings_theme_dark
@@ -119,6 +130,9 @@ import org.jetbrains.compose.resources.stringResource
 
 object MoviesStrings {
     val language_code = Res.string.language_code
+    val main_nav_feed = Res.string.main_nav_feed
+    val main_nav_fave = Res.string.main_nav_fave
+    val main_nav_settings = Res.string.main_nav_settings
     val shortcuts_search_title = Res.string.shortcuts_search_title
     val shortcuts_settings_title = Res.string.shortcuts_settings_title
     val notification_enable_title = Res.string.notification_enable_title
@@ -126,7 +140,6 @@ object MoviesStrings {
     val notification_continue = Res.string.notification_continue
     val notification_go_to_settings = Res.string.notification_go_to_settings
     val retry = Res.string.retry
-    val no_image = Res.string.no_image
     val error_api_key_null = Res.string.error_api_key_null
     val error_loading = Res.string.error_loading
     val error_check_internet_connectivity = Res.string.error_check_internet_connectivity
@@ -151,7 +164,6 @@ object MoviesStrings {
     val auth_error_while_create_session = Res.string.auth_error_while_create_session
     val auth_error_while_loading_account_details = Res.string.auth_error_while_loading_account_details
 
-    val details_title = Res.string.details_title
     val details_error_loading = Res.string.details_error_loading
     val details_url_copied = Res.string.details_url_copied
 
@@ -172,6 +184,10 @@ object MoviesStrings {
     val gallery_action_open = Res.string.gallery_action_open
     val gallery_image_of = Res.string.gallery_image_of
 
+    val search_title = Res.string.search_title
+    val search_history_empty = Res.string.search_history_empty
+    val search_results_empty = Res.string.search_results_empty
+    val search_recent = Res.string.search_recent
     val search_clear = Res.string.search_clear
 
     val settings_title = Res.string.settings_title
@@ -185,6 +201,9 @@ object MoviesStrings {
     val settings_post_notifications = Res.string.settings_post_notifications
     val settings_post_notifications_denied = Res.string.settings_post_notifications_denied
     val settings_post_notifications_granted = Res.string.settings_post_notifications_granted
+    val settings_battery_optimization = Res.string.settings_battery_optimization
+    val settings_battery_optimization_optimized = Res.string.settings_battery_optimization_optimized
+    val settings_battery_optimization_ignored = Res.string.settings_battery_optimization_ignored
     val settings_review = Res.string.settings_review
     val settings_review_description = Res.string.settings_review_description
     val settings_post_notifications_should_request = Res.string.settings_post_notifications_should_request
@@ -214,6 +233,8 @@ object MoviesStrings {
     val settings_action_cancel = Res.string.settings_action_cancel
     val settings_github = Res.string.settings_github
     val settings_github_description = Res.string.settings_github_description
+    val settings_telegram = Res.string.settings_telegram
+    val settings_telegram_description = Res.string.settings_telegram_description
     val settings_app_widget = Res.string.settings_app_widget
     val settings_app_widget_description = Res.string.settings_app_widget_description
     val settings_tile = Res.string.settings_tile
@@ -230,6 +251,7 @@ object MoviesStrings {
     val settings_update = Res.string.settings_update
     val settings_update_description = Res.string.settings_update_description
     val settings_palette_colors = Res.string.settings_palette_colors
+    val settings_palette_colors_description = Res.string.settings_palette_colors_description
     val settings_screenshots = Res.string.settings_screenshots
     val settings_screenshots_description = Res.string.settings_screenshots_description
 

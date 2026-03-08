@@ -1,16 +1,27 @@
 @file:Suppress("UnstableApiUsage")
-
 pluginManagement {
     repositories {
         google()
         gradlePluginPortal()
         mavenCentral()
-        maven(url = "https://developer.huawei.com/repo/")
+        maven("https://developer.huawei.com/repo/") {
+            content {
+                includeGroupByRegex("com\\.huawei(\\..+)?")
+            }
+        }
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "com.huawei.agconnect") {
+                useModule("com.huawei.agconnect:agcp:${requested.version}")
+            }
+        }
     }
 }
-
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
 dependencyResolutionManagement {
-    /*repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)*/
     repositories {
         google {
             content {
@@ -23,16 +34,14 @@ dependencyResolutionManagement {
         maven(url = "https://developer.huawei.com/repo/")
     }
 }
-
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "movies"
-
 include(
     ":androidApp",
     ":desktopApp",
     ":iosApp",
     ":iosAppCompose",
     ":webApp",
-    ":instant",
     ":benchmark",
 
     ":core:platform-services:gms",
@@ -48,37 +57,20 @@ include(
     ":core:common",
     ":core:interactor",
     ":core:network",
-    ":core:notifications",
     ":core:persistence",
     ":core:repository",
     ":core:ui",
     ":core:widget",
     ":core:work",
 
-    ":feature:main",
-    ":feature:main-impl",
     ":feature:account",
-    ":feature:account-impl",
     ":feature:auth",
-    ":feature:auth-impl",
-    ":feature:details",
-    ":feature:details-impl",
-    ":feature:feed",
-    ":feature:feed-impl",
-    ":feature:gallery",
-    ":feature:gallery-impl",
-    ":feature:search",
-    ":feature:search-impl",
-    ":feature:settings",
-    ":feature:settings-impl",
-
     ":feature:debug",
-    ":feature:debug-impl",
-
-    ":core:ui-web",
-    ":feature:main-impl-web",
-    ":feature:feed-web",
-    ":feature:feed-impl-web"
+    ":feature:details",
+    ":feature:fave",
+    ":feature:feed",
+    ":feature:gallery",
+    ":feature:main",
+    ":feature:notify",
+    ":feature:settings"
 )
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

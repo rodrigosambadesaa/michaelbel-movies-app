@@ -10,98 +10,85 @@ import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.SettingsRepository
-import org.michaelbel.movies.repository.ktx.defaultDynamicColorsEnabled
 
-internal class SettingsRepositoryImpl(
+class SettingsRepositoryImpl(
     private val preferences: MoviesPreferences
 ): SettingsRepository {
 
-    override val currentTheme: Flow<AppTheme> = preferences.themeFlow.map { name ->
-        AppTheme.transform(name ?: AppTheme.FollowSystem.toString())
-    }
+    override val currentTheme: Flow<AppTheme>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceThemeKey).map { name -> AppTheme.transform(name ?: AppTheme.FollowSystem.toString()) }
 
-    override val currentFeedView: Flow<FeedView> = preferences.feedViewFlow.map { name ->
-        FeedView.transform(name ?: FeedView.FeedList.toString())
-    }
+    override val currentFeedView: Flow<FeedView>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceFeedViewKey).map { name -> FeedView.transform(name ?: FeedView.FeedList.toString()) }
 
-    override val currentMovieList: Flow<MovieList> = preferences.movieListFlow.map { className ->
-        MovieList.transform(className ?: MovieList.NowPlaying().toString())
-    }
+    override val currentMovieList: Flow<MovieList>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceMovieListKey).map { className -> MovieList.transform(className ?: MovieList.NowPlaying().toString()) }
+
+    override val dynamicColors: Flow<Boolean?>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey)
 
     override val themeData: Flow<ThemeData>
         get() {
             return combine(
-                preferences.themeFlow,
-                preferences.isDynamicColorsFlow,
-                preferences.paletteKeyFlow,
-                preferences.seedColorFlow
-            ) { name, dynamicColors, paletteKey, seedColor ->
+                preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceThemeKey),
+                preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey),
+                preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey),
+                preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferencePaletteKey),
+                preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceSeedColorKey)
+            ) { themeName, dynamicColors, paletteColors, paletteKey, seedColor ->
                 ThemeData(
-                    appTheme = AppTheme.transform(name ?: AppTheme.FollowSystem.toString()),
-                    dynamicColors = dynamicColors ?: defaultDynamicColorsEnabled,
+                    appTheme = AppTheme.transform(themeName ?: AppTheme.FollowSystem.toString()),
+                    dynamicColors = dynamicColors ?: ThemeData.Default.dynamicColors,
+                    paletteColors = paletteColors.orEmpty(),
                     paletteKey = paletteKey ?: ThemeData.STYLE_TONAL_SPOT,
                     seedColor = seedColor ?: ThemeData.DEFAULT_SEED_COLOR
                 )
             }
         }
 
-    override val isBiometricEnabled: Flow<Boolean> = preferences.isBiometricEnabledFlow.map { enabled ->
-        enabled.orEmpty()
-    }
+    override val isBiometricEnabled: Flow<Boolean>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceBiometricKey).map { it.orEmpty() }
 
-    override val isScreenshotBlockEnabled: Flow<Boolean> = preferences.isScreenshotBlockEnabledFlow.map { enabled ->
-        enabled.orEmpty()
-    }
+    override val isScreenshotBlockEnabled: Flow<Boolean>
+        get() = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceScreenshotBlockKey).map { it.orEmpty() }
 
     override suspend fun isBiometricEnabledAsync(): Boolean {
-        return preferences.isBiometricEnabledAsync()
+        return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceBiometricKey).orEmpty()
     }
 
-    override suspend fun selectTheme(
-        appTheme: AppTheme
-    ) {
+    override suspend fun selectTheme(appTheme: AppTheme) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceThemeKey, appTheme.toString())
     }
 
-    override suspend fun selectFeedView(
-        feedView: FeedView
-    ) {
+    override suspend fun selectFeedView(feedView: FeedView) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceFeedViewKey, feedView.toString())
     }
 
-    override suspend fun selectMovieList(
-        movieList: MovieList
-    ) {
+    override suspend fun selectMovieList(movieList: MovieList) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceMovieListKey, movieList.toString())
     }
 
-    override suspend fun setDynamicColors(
-        value: Boolean
-    ) {
+    override suspend fun setDynamicColors(value: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey, value)
     }
 
-    override suspend fun setPaletteKey(
-        paletteKey: Int
-    ) {
+    override suspend fun setPaletteColors(value: Boolean) {
+        preferences.setValue(MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey, value)
+    }
+
+    override suspend fun setPaletteKey(paletteKey: Int) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferencePaletteKey, paletteKey)
     }
 
-    override suspend fun setSeedColor(
-        seedColor: Int
-    ) {
+    override suspend fun setSeedColor(seedColor: Int) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSeedColorKey, seedColor)
     }
 
-    override suspend fun setBiometricEnabled(
-        enabled: Boolean
-    ) {
+    override suspend fun setBiometricEnabled(enabled: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceBiometricKey, enabled)
     }
 
-    override suspend fun setScreenshotBlockEnabled(
-        enabled: Boolean
-    ) {
+    override suspend fun setScreenshotBlockEnabled(enabled: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceScreenshotBlockKey, enabled)
     }
 }

@@ -16,21 +16,15 @@ class AuthenticationNetworkService internal constructor(
         return ktorAuthenticationService.createRequestToken()
     }
 
-    suspend fun createSessionWithLogin(
-        username: Username
-    ): Token {
+    suspend fun createSessionWithLogin(username: Username): Token {
         return ktorAuthenticationService.createSessionWithLogin(username)
     }
 
-    suspend fun createSession(
-        authToken: RequestToken
-    ): Session {
+    suspend fun createSession(authToken: RequestToken): Session {
         return ktorAuthenticationService.createSession(authToken)
     }
 
-    suspend fun deleteSession(
-        sessionRequest: SessionRequest
-    ): DeletedSession {
+    suspend fun deleteSession(sessionRequest: SessionRequest): DeletedSession {
         return ktorAuthenticationService.deleteSession(sessionRequest)
     }
 }

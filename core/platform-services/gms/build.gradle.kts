@@ -1,15 +1,20 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
+    androidLibrary {
+        namespace = "org.michaelbel.movies.platform.gms"
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+        minSdk = libs.versions.min.sdk.get().toInt()
+        androidResources.enable = true
+    }
 
     sourceSets {
         commonMain.dependencies {
             api(projects.core.platformServices.interactor)
-            implementation(projects.core.notifications)
+            implementation(projects.core.interactor)
         }
         androidMain.dependencies {
             api(libs.bundles.google.firebase.android)
@@ -20,15 +25,5 @@ kotlin {
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.platform.gms"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
     }
 }

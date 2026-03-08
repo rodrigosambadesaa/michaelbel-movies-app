@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.flowOf
 import org.michaelbel.movies.network.connectivity.NetworkManager
 import org.michaelbel.movies.network.connectivity.NetworkStatus
 
-internal class NetworkManagerImpl: NetworkManager {
+class NetworkManagerImpl: NetworkManager {
     override val status: Flow<NetworkStatus> = flowOf(NetworkStatus.Available)
 }

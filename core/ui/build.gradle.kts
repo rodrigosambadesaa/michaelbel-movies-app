@@ -1,34 +1,40 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
+
+    androidLibrary {
+        namespace = "org.michaelbel.movies.ui"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+        androidResources.enable = true
+    }
 
     sourceSets {
         commonMain.dependencies {
             api(projects.core.persistence)
             api(libs.bundles.coil.common)
-            api(libs.bundles.jetbrains.androidx.navigation.compose.common)
-            api(libs.bundles.jetbrains.androidx.core.bundle.common)
-            api(compose.animation)
-            api(compose.foundation)
-            api(compose.runtime)
-            api(compose.runtimeSaveable)
-            api(compose.ui)
-            api(compose.material)
-            api(compose.material3)
-            api(compose.components.resources)
-            api(compose.components.uiToolingPreview)
-            implementation(compose.materialIconsExtended)
-            implementation(libs.bundles.lifecycle.common)
+            api(libs.bundles.jetbrains.androidx.lifecycle.common)
+            api(libs.bundles.jetbrains.androidx.navigation3.common)
+            api(libs.bundles.jetbrains.androidx.core.common)
+            api(libs.bundles.jetbrains.compose.animation.common)
+            api(libs.bundles.jetbrains.compose.components.common)
+            api(libs.bundles.jetbrains.compose.foundation.common)
+            api(libs.bundles.jetbrains.compose.material.common)
+            api(libs.bundles.jetbrains.compose.material3.common)
+            api(libs.bundles.jetbrains.compose.runtime.common)
+            api(libs.bundles.jetbrains.compose.runtime.saveable.common)
+            api(libs.bundles.jetbrains.compose.ui.common)
+            api(libs.bundles.jetbrains.compose.ui.tooling.common)
+            implementation(libs.bundles.jetbrains.compose.material.icons.common)
         }
         androidMain.dependencies {
             api(libs.bundles.core.splashscreen.android)
@@ -39,24 +45,13 @@ kotlin {
             implementation(libs.bundles.paging.android)
         }
         jvmMain.dependencies {
-            api(compose.desktop.common)
             api(compose.desktop.currentOs)
             api(libs.bundles.compose.desktop)
+            implementation(libs.androidx.paging.compose)
         }
     }
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.ui"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
     }
 }

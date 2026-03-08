@@ -7,7 +7,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.glance.unit.ColorProvider
 import org.michaelbel.movies.widget.R
 
-internal data class ColorProviders(
+data class ColorProviders(
     val primary: ColorProvider,
     val onPrimary: ColorProvider,
     val primaryContainer: ColorProvider,
@@ -41,7 +41,7 @@ internal data class ColorProviders(
 )
 
 @SuppressLint("RestrictedApi")
-internal fun dynamicThemeColorProviders(): ColorProviders {
+fun dynamicThemeColorProviders(): ColorProviders {
     return ColorProviders(
         primary = ColorProvider(R.color.colorPrimary),
         onPrimary = ColorProvider(R.color.colorOnPrimary),
@@ -76,9 +76,9 @@ internal fun dynamicThemeColorProviders(): ColorProviders {
     )
 }
 
-internal val LocalColorProviders = staticCompositionLocalOf { dynamicThemeColorProviders() }
+val LocalColorProviders = staticCompositionLocalOf { dynamicThemeColorProviders() }
 
-internal object GlanceTheme {
+object GlanceTheme {
     val colors: ColorProviders
         @Composable @ReadOnlyComposable get() = LocalColorProviders.current
 }

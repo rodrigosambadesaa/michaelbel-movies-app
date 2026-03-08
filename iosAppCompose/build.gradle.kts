@@ -5,12 +5,6 @@ plugins {
 }
 
 kotlin {
-    iosX64 {
-        binaries.framework {
-            baseName = "iosAppCompose"
-            isStatic = true
-        }
-    }
     iosArm64 {
         binaries.framework {
             baseName = "iosAppCompose"
@@ -27,7 +21,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.platformServices.injectIos)
-            implementation(projects.feature.mainImpl)
+            implementation(projects.feature.main)
         }
     }
 }

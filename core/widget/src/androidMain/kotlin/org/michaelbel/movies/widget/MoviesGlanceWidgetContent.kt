@@ -32,10 +32,9 @@ import org.michaelbel.movies.widget.ktx.stringResource
 import org.michaelbel.movies.widget.theme.GlanceTheme
 import org.michaelbel.movies.widget.work.MoviesUpdateWidgetAction
 import org.michaelbel.movies.widget.work.MoviesWidgetState
-import org.michaelbel.movies.widget.R
 
 @Composable
-internal fun MoviesGlanceWidgetContent(
+fun MoviesGlanceWidgetContent(
     glanceWidgetState: MoviesWidgetState,
     modifier: GlanceModifier = GlanceModifier
 ) {
@@ -64,12 +63,7 @@ internal fun MoviesGlanceWidgetContent(
                 Text(
                     text = stringResource(R.string.appwidget_title),
                     modifier = GlanceModifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onBackground,
-                        textAlign = TextAlign.Left,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    style = TextStyle(color = GlanceTheme.colors.onBackground, fontSize = 20.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Left)
                 )
 
                 LazyColumn(
@@ -90,11 +84,7 @@ internal fun MoviesGlanceWidgetContent(
                             Text(
                                 text = movie.movieTitle,
                                 modifier = GlanceModifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                                style = TextStyle(
-                                    color = GlanceTheme.colors.onBackground,
-                                    textAlign = TextAlign.Start,
-                                    fontSize = 16.sp
-                                ),
+                                style = TextStyle(color = GlanceTheme.colors.onBackground, textAlign = TextAlign.Start, fontSize = 16.sp),
                                 maxLines = 1
                             )
                         }
@@ -113,10 +103,7 @@ internal fun MoviesGlanceWidgetContent(
             ) {
                 Text(
                     text = glanceWidgetState.message,
-                    style = TextStyle(
-                        color = GlanceTheme.colors.onBackground,
-                        fontSize = 16.sp
-                    )
+                    style = TextStyle(color = GlanceTheme.colors.onBackground, fontSize = 16.sp)
                 )
 
                 Spacer(

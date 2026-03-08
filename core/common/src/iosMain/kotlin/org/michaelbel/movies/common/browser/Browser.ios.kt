@@ -9,7 +9,11 @@ actual fun navigateToUrl(url: String): () -> Unit {
     val nsUrl = NSURL.URLWithString(url)
     return {
         if (nsUrl != null) {
-            UIApplication.sharedApplication().openURL(nsUrl)
+            UIApplication.sharedApplication().openURL(
+                nsUrl,
+                options = emptyMap<Any?, Any?>(),
+                completionHandler = null
+            )
         }
     }
 }

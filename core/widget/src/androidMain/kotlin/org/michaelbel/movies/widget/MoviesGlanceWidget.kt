@@ -9,7 +9,7 @@ import org.michaelbel.movies.widget.theme.MoviesGlanceTheme
 import org.michaelbel.movies.widget.work.MoviesGlanceStateDefinition
 import org.michaelbel.movies.widget.work.MoviesWidgetState
 
-internal class MoviesGlanceWidget: GlanceAppWidget() {
+class MoviesGlanceWidget: GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {

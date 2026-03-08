@@ -17,7 +17,7 @@ import org.michaelbel.movies.widget.R
 import org.michaelbel.movies.widget.ktx.mapToMovieData
 import java.time.Duration
 
-internal class MoviesGlanceWidgetWorker(
+class MoviesGlanceWidgetWorker(
     workerParams: WorkerParameters,
     private val context: Context,
     private val interactor: Interactor

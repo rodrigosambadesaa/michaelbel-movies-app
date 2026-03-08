@@ -12,7 +12,7 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.di.appKoinModule
-import org.michaelbel.movies.main.MainContent
+import org.michaelbel.movies.main.MainScreen
 import org.michaelbel.movies.main.MainViewModel
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.theme.MoviesTheme
@@ -25,20 +25,21 @@ fun IosMainContent() {
         }
     ) {
         val viewModel = koinInject<MainViewModel>()
-        val themeData by viewModel.themeData.collectAsStateCommon()
+        val state by viewModel.stateFlow.collectAsStateCommon()
 
         withViewModelStoreOwner {
             MoviesTheme(
                 themeData = ThemeData(
-                    appTheme = themeData.appTheme,
+                    appTheme = state.themeData.appTheme,
                     dynamicColors = false,
-                    paletteKey = themeData.paletteKey,
-                    seedColor = themeData.seedColor
+                    paletteColors = state.themeData.paletteColors,
+                    paletteKey = state.themeData.paletteKey,
+                    seedColor = state.themeData.seedColor
                 ),
-                theme = themeData.appTheme,
+                theme = state.themeData.appTheme,
                 enableEdgeToEdge = { _,_ -> }
             ) {
-                MainContent()
+                MainScreen()
             }
         }
     }
@@ -61,12 +62,8 @@ private fun rememberComposeViewModelStoreOwner(): ViewModelStoreOwner {
 @Composable
 internal fun withViewModelStoreOwner(content: @Composable () -> Unit) {
     if (LocalViewModelStoreOwner.current != null) {
-        // Normal case: use system-provided owner
         content()
     } else {
-        // Fallback case: use ViewModelStoreOwner with scope of this composable.
-        // It's required for Compose Multiplatform for now because it's not providing default value yet.
-        // Expected to be fixed in Compose Multiplatform 1.7.0
         CompositionLocalProvider(
             LocalViewModelStoreOwner provides rememberComposeViewModelStoreOwner(),
             content = content

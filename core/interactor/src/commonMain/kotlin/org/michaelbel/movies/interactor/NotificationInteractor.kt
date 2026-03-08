@@ -5,4 +5,6 @@ interface NotificationInteractor {
     suspend fun notificationExpireTime(): Long
 
     suspend fun updateNotificationExpireTime()
+
+    suspend fun resetNotificationExpireTime()
 }

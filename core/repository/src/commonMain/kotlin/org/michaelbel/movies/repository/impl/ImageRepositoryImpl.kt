@@ -9,20 +9,16 @@ import org.michaelbel.movies.persistence.database.ktx.imagePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.repository.ImageRepository
 
-internal class ImageRepositoryImpl(
+class ImageRepositoryImpl(
     private val movieNetworkService: MovieNetworkService,
     private val imagePersistence: ImagePersistence
 ): ImageRepository {
 
-    override fun imagesFlow(
-        movieId: MovieId
-    ): Flow<List<ImagePojo>> {
+    override fun imagesFlow(movieId: MovieId): Flow<List<ImagePojo>> {
         return imagePersistence.imagesFlow(movieId)
     }
 
-    override suspend fun images(
-        movieId: MovieId
-    ) {
+    override suspend fun images(movieId: MovieId) {
         val imageResponse = movieNetworkService.images(movieId)
         val posters = imageResponse.posters.mapIndexed { index, image ->
             image.imagePojo(
@@ -45,6 +41,6 @@ internal class ImageRepositoryImpl(
                 position = posters.count().plus(backdrops.count()).plus(index)
             )
         }
-        imagePersistence.insert(posters + backdrops + logos)
+        imagePersistence.upsert(posters + backdrops + logos)
     }
 }

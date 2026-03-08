@@ -12,7 +12,8 @@ kotlin {
     sourceSets {
         jvmMain.dependencies {
             implementation(projects.core.platformServices.injectJvm)
-            implementation(projects.feature.mainImpl)
+            implementation(projects.feature.main)
+            implementation(libs.slf4j.simple)
         }
     }
 }
@@ -24,7 +25,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Movies"
-            packageVersion = "1.0.0"
+            packageVersion = "2.1.0"
 
             val iconsRoot = project.file("desktop-icons")
             macOS {
@@ -44,8 +45,4 @@ compose.desktop {
     }
 }
 
-tasks.register("printVersionName") {
-    doLast {
-        println(compose.desktop.application.nativeDistributions.packageVersion)
-    }
-}
+tasks.register("printVersionName") { doLast { println(compose.desktop.application.nativeDistributions.packageVersion) } }

@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.dp
 
@@ -29,22 +30,28 @@ fun Modifier.clickableWithoutRipple(
     )
 }
 
-internal val PageContentColumnModifier: Modifier
-    @Composable get() = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 8.dp, vertical = 4.dp)
-        .clip(MaterialTheme.shapes.small)
-        .background(MaterialTheme.colorScheme.inversePrimary)
+@Composable
+fun pageContentColumnModifier(
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
+): Modifier = Modifier
+    .fillMaxWidth()
+    .padding(horizontal = 8.dp, vertical = 4.dp)
+    .clip(MaterialTheme.shapes.large)
+    .background(cardColor)
 
-internal val PageContentGridModifier: Modifier
-    @Composable get() = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 4.dp)
-        .clip(MaterialTheme.shapes.small)
-        .background(MaterialTheme.colorScheme.inversePrimary)
+@Composable
+fun pageContentGridModifier(
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
+): Modifier = Modifier
+    .fillMaxWidth()
+    .padding(bottom = 8.dp)
+    .clip(MaterialTheme.shapes.large)
+    .background(cardColor)
 
-internal val PageContentStaggeredGridModifier: Modifier
-    @Composable get() = Modifier
-        .fillMaxWidth()
-        .clip(MaterialTheme.shapes.small)
-        .background(MaterialTheme.colorScheme.inversePrimary)
+@Composable
+fun pageContentStaggeredGridModifier(
+    cardColor: Color = MaterialTheme.colorScheme.inversePrimary
+): Modifier = Modifier
+    .fillMaxWidth()
+    .clip(MaterialTheme.shapes.large)
+    .background(cardColor)

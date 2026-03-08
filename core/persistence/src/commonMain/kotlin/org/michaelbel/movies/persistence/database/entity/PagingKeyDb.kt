@@ -4,7 +4,10 @@ import androidx.room.Entity
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
-@Entity(tableName = "pagingkeys", primaryKeys = ["pagingKey"])
+@Entity(
+    tableName = "pagingkeys",
+    primaryKeys = ["pagingKey"]
+)
 data class PagingKeyDb(
     val pagingKey: PagingKey,
     val page: Page?,

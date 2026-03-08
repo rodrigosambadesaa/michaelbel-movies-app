@@ -6,11 +6,11 @@ import org.michaelbel.movies.persistence.database.typealiases.AccountId
 
 interface AccountRepository {
 
-    val account: Flow<AccountPojo?>
+    val accountPojoFlow: Flow<AccountPojo>
 
     suspend fun accountId(): AccountId
 
-    suspend fun accountExpireTime(): Long?
+    suspend fun accountExpireTime(): Long
 
     suspend fun accountDetails()
 }

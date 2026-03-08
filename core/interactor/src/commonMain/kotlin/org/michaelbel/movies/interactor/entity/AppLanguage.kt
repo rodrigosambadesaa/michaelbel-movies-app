@@ -23,7 +23,7 @@ sealed interface AppLanguage: SealedString {
             return when (code) {
                 "en" -> English()
                 "ru" -> Russian()
-                else -> throw InvalidLocaleException
+                else -> throw InvalidLocaleException()
             }
         }
 

@@ -1,6 +1,6 @@
 package org.michaelbel.movies.analytics.constants
 
-internal object MoviesEvents {
+object MoviesEvents {
     const val SETTINGS_SELECT_LANGUAGE = "select_language"
     const val SETTINGS_SELECT_THEME = "select_theme"
     const val SETTINGS_FEED_VIEW = "select_feed_view"

@@ -3,7 +3,13 @@ package org.michaelbel.movies.ui.ktx
 import android.app.GrammaticalInflectionManager
 import android.content.Context
 import android.os.Build
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import org.michaelbel.movies.common.gender.GrammaticalGender
+import org.michaelbel.movies.ui.R
+
+val SettingsGenderText: String
+    @Composable get() = stringResource(R.string.settings_gender)
 
 val Context.currentGrammaticalGender: GrammaticalGender
     get() {

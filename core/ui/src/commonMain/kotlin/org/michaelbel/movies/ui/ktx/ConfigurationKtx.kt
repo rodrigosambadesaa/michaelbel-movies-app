@@ -3,6 +3,9 @@ package org.michaelbel.movies.ui.ktx
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 
+val gridColumnsCount: Int
+    @Composable get() = if (isPortrait) 2 else 4
+
 expect val isDebug: Boolean
 
 expect val isPortrait: Boolean

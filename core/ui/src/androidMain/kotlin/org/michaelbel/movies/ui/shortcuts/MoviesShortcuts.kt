@@ -7,8 +7,8 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.net.toUri
 import org.michaelbel.movies.ui.R
-import org.michaelbel.movies.ui.appicon.shortcutSearchIconRes
-import org.michaelbel.movies.ui.appicon.shortcutSettingsIconRes
+import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SEARCH
+import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SETTINGS
 
 private const val SEARCH_SHORTCUT_ID = "searchShortcutId"
 private const val SETTINGS_SHORTCUT_ID = "settingsShortcutId"
@@ -21,14 +21,14 @@ fun Context.installShortcuts() {
         .setShortLabel(getString(R.string.shortcuts_search_title))
         .setLongLabel(getString(R.string.shortcuts_search_title))
         .setRank(1)
-        .setIcon(IconCompat.createWithResource(this, shortcutSearchIconRes))
+        .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_search_48))
         .setIntent(Intent(Intent.ACTION_VIEW, INTENT_ACTION_SEARCH.toUri()))
         .build()
     val settingsShortcut = ShortcutInfoCompat.Builder(this, SETTINGS_SHORTCUT_ID)
         .setShortLabel(getString(R.string.shortcuts_settings_title))
         .setLongLabel(getString(R.string.shortcuts_settings_title))
         .setRank(1)
-        .setIcon(IconCompat.createWithResource(this, shortcutSettingsIconRes))
+        .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_settings_48))
         .setIntent(Intent(Intent.ACTION_VIEW, INTENT_ACTION_SETTINGS.toUri()))
         .build()
     ShortcutManagerCompat.setDynamicShortcuts(this, listOf(searchShortcut, settingsShortcut))

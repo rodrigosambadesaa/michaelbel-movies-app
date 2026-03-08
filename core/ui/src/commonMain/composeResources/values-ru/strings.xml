@@ -8,9 +8,8 @@
     <string name="notification_continue">Продолжить</string>
     <string name="notification_go_to_settings">В Настройки</string>
     <string name="retry">Повторить</string>
-    <string name="no_image">Картинка не загрузилась</string>
     <string name="error_api_key_null">TMDB API не может быть пустым</string>
-    <string name="error_loading">При загрузке фильмов произошла ошибка</string>
+    <string name="error_loading">При загрузке фильмов произошла ошибка.\nИз 🇷🇺 РФ и 🇧🇾 РБ не работает без VPN.</string>
     <string name="error_check_internet_connectivity">Проверить подключение к интернету</string>
     <string name="share_via">Поделиться через</string>
     <string name="tile_title">Movies</string>
@@ -33,7 +32,6 @@
     <string name="auth_error_while_create_session">Ошибка при получении идентификатора сессии</string>
     <string name="auth_error_while_loading_account_details">Ошибка при загрузке информации об аккаунте</string>
 
-    <string name="details_title">Детали фильма</string>
     <string name="details_error_loading">Во время загрузки произошла ошибка</string>
     <string name="details_url_copied">Ссылка на фильм скопирована в буфер обмена</string>
 
@@ -60,6 +58,10 @@
     <string name="search_recent">Недавние запросы</string>
     <string name="search_clear">Очистить</string>
 
+    <string name="main_nav_feed">Лента</string>
+    <string name="main_nav_fave">Избранное</string>
+    <string name="main_nav_settings">Настройки</string>
+
     <string name="settings_title">Настройки</string>
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_system">По умолчанию</string>
@@ -71,6 +73,9 @@
     <string name="settings_post_notifications">Уведомления</string>
     <string name="settings_post_notifications_denied">Разрешение отклонено</string>
     <string name="settings_post_notifications_granted">Разрешение предоставлено</string>
+    <string name="settings_battery_optimization">Оптимизация батареи</string>
+    <string name="settings_battery_optimization_optimized">Для Movies оптимизация включена</string>
+    <string name="settings_battery_optimization_ignored">Для Movies оптимизация отключена</string>
     <string name="settings_review">Оцени приложение</string>
     <string name="settings_review_description">Используя In-App Review API</string>
     <string name="settings_post_notifications_should_request">Уведомления отключены. Активируйте их в настройках приложения</string>
@@ -100,6 +105,8 @@
     <string name="settings_action_cancel">Отмена</string>
     <string name="settings_github">Movies на GitHub</string>
     <string name="settings_github_description">Посмотреть GitHub-репозиторий</string>
+    <string name="settings_telegram">Telegram</string>
+    <string name="settings_telegram_description">Подписаться на канал</string>
     <string name="settings_app_widget">Добавить виджет на главный экран</string>
     <string name="settings_app_widget_description">3x2 %1$s</string>
     <string name="settings_tile">Добавить плитку в шторку</string>
@@ -116,6 +123,7 @@
     <string name="settings_update">Обнови приложение</string>
     <string name="settings_update_description">Используя In-App Update API</string>
     <string name="settings_palette_colors">Палитра цветов</string>
+    <string name="settings_palette_colors_description">Применить цвета из пилитры</string>
     <string name="settings_screenshots">Скриншоты</string>
     <string name="settings_screenshots_description">Запретить делать скриншоты</string>
 

@@ -9,7 +9,5 @@ interface LocaleInteractor {
 
     val appLanguage: Flow<AppLanguage>
 
-    suspend fun selectLanguage(
-        language: AppLanguage
-    )
+    suspend fun selectLanguage(language: AppLanguage)
 }

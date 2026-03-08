@@ -20,7 +20,7 @@ class PagingKeyPersistence internal constructor(
         moviesDatabase.pagingKeyDao.removePagingKey(pagingKey)
     }
 
-    suspend fun insertPagingKey(pagingKeyPojo: PagingKeyPojo) {
-        moviesDatabase.pagingKeyDao.insertPagingKey(pagingKeyPojo.pagingKeyDb)
+    suspend fun upsertPagingKey(pagingKeyPojo: PagingKeyPojo) {
+        moviesDatabase.pagingKeyDao.upsertPagingKey(pagingKeyPojo.pagingKeyDb)
     }
 }

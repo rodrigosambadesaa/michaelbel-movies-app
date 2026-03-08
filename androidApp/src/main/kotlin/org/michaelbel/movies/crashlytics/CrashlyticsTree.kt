@@ -3,7 +3,7 @@ package org.michaelbel.movies.crashlytics
 import org.michaelbel.movies.platform.crashlytics.CrashlyticsService
 import timber.log.Timber
 
-internal class CrashlyticsTree(
+class CrashlyticsTree(
     private val crashlyticsService: CrashlyticsService
 ): Timber.Tree() {
 

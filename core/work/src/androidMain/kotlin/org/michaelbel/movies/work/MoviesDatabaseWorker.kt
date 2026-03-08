@@ -36,11 +36,11 @@ class MoviesDatabaseWorker(
                                 position = index.plus(1)
                             )
                         }
-                        moviePersistence.insertMovies(moviesDb)
+                        moviePersistence.upsert(moviesDb)
                     }
                 }
                 Result.success()
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
                 Result.failure()
             }
         }

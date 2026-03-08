@@ -1,29 +1,14 @@
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-}
-
-kotlin {
-    androidTarget()
-
-    sourceSets {
-        commonMain.dependencies {
-            api(projects.core.platformServices.interactor)
-        }
-    }
-
-    compilerOptions {
-        jvmToolchain(libs.versions.jdk.get().toInt())
-    }
 }
 
 android {
     namespace = "org.michaelbel.movies.platform.inject_android"
+    compileSdk = libs.versions.compile.sdk.get().toInt()
     flavorDimensions += "version"
 
     defaultConfig {
         minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
     }
 
     productFlavors {
@@ -39,12 +24,14 @@ android {
         }
     }
 
-    val gmsImplementation by configurations
-    val hmsImplementation by configurations
-    val fossImplementation by configurations
-    dependencies {
-        gmsImplementation(projects.core.platformServices.gms)
-        hmsImplementation(projects.core.platformServices.hms)
-        fossImplementation(projects.core.platformServices.foss)
-    }
+}
+
+val gmsImplementation by configurations
+val hmsImplementation by configurations
+val fossImplementation by configurations
+dependencies {
+    implementation(projects.core.platformServices.interactor)
+    gmsImplementation(projects.core.platformServices.gms)
+    hmsImplementation(projects.core.platformServices.hms)
+    fossImplementation(projects.core.platformServices.foss)
 }

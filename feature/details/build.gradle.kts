@@ -3,36 +3,28 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
+    androidLibrary {
+        namespace = "org.michaelbel.movies.details"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+    }
+
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.detailsImpl)
+            api(projects.core.ui)
+            api(projects.core.interactor)
         }
     }
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.details"
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
-    }
-
-    buildFeatures {
-        compose = true
     }
 }

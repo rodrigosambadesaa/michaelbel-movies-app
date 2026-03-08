@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.glance.GlanceTheme
 
 @Composable
-internal fun MoviesGlanceTheme(
+fun MoviesGlanceTheme(
     content: @Composable () -> Unit
 ) {
     GlanceTheme(

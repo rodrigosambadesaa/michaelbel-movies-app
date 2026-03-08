@@ -7,9 +7,7 @@ class AccountNetworkService internal constructor(
     private val ktorAccountService: KtorAccountService
 ) {
 
-    suspend fun accountDetails(
-        sessionId: String
-    ): Account {
+    suspend fun accountDetails(sessionId: String): Account {
         return ktorAccountService.accountDetails(sessionId)
     }
 }

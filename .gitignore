@@ -1,18 +1,11 @@
-# Kotlin
+/.github/movies.jks
+/.github/keystore.properties
 .kotlin
 .kotlin-js-store
-
-# Gradle
 .gradle
+.idea
 build
 build-cache
 generated
-
-# Idea
-.idea
-
-/config/movies.jks
-/config/keystore.properties
-
 local.properties
 releaseNotes.txt

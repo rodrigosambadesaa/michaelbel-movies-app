@@ -14,6 +14,8 @@ interface SettingsRepository {
 
     val currentMovieList: Flow<MovieList>
 
+    val dynamicColors: Flow<Boolean?>
+
     val themeData: Flow<ThemeData>
 
     val isBiometricEnabled: Flow<Boolean>
@@ -22,35 +24,21 @@ interface SettingsRepository {
 
     suspend fun isBiometricEnabledAsync(): Boolean
 
-    suspend fun selectTheme(
-        appTheme: AppTheme
-    )
+    suspend fun selectTheme(appTheme: AppTheme)
 
-    suspend fun selectFeedView(
-        feedView: FeedView
-    )
+    suspend fun selectFeedView(feedView: FeedView)
 
-    suspend fun selectMovieList(
-        movieList: MovieList
-    )
+    suspend fun selectMovieList(movieList: MovieList)
 
-    suspend fun setDynamicColors(
-        value: Boolean
-    )
+    suspend fun setDynamicColors(value: Boolean)
 
-    suspend fun setPaletteKey(
-        paletteKey: Int
-    )
+    suspend fun setPaletteColors(value: Boolean)
 
-    suspend fun setSeedColor(
-        seedColor: Int
-    )
+    suspend fun setPaletteKey(paletteKey: Int)
 
-    suspend fun setBiometricEnabled(
-        enabled: Boolean
-    )
+    suspend fun setSeedColor(seedColor: Int)
 
-    suspend fun setScreenshotBlockEnabled(
-        enabled: Boolean
-    )
+    suspend fun setBiometricEnabled(enabled: Boolean)
+
+    suspend fun setScreenshotBlockEnabled(enabled: Boolean)
 }

@@ -8,7 +8,6 @@
     <string name="notification_continue">Continue</string>
     <string name="notification_go_to_settings">Go To Settings</string>
     <string name="retry">Retry</string>
-    <string name="no_image">No Image</string>
     <string name="error_api_key_null">TMDB API key is null</string>
     <string name="error_loading">Error while loading movies</string>
     <string name="error_check_internet_connectivity">Check Internet Connectivity</string>
@@ -33,7 +32,6 @@
     <string name="auth_error_while_create_session">Error while create session</string>
     <string name="auth_error_while_loading_account_details">Error while loading account details</string>
 
-    <string name="details_title">Movie Details</string>
     <string name="details_error_loading">Error while loading</string>
     <string name="details_url_copied">Movie url copied to clipboard</string>
 
@@ -60,6 +58,10 @@
     <string name="search_recent">Recent Searches</string>
     <string name="search_clear">Clear</string>
 
+    <string name="main_nav_feed">Feed</string>
+    <string name="main_nav_fave">Fave</string>
+    <string name="main_nav_settings">Settings</string>
+
     <string name="settings_title">Settings</string>
     <string name="settings_theme">Theme</string>
     <string name="settings_theme_system">Follow System</string>
@@ -67,10 +69,13 @@
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_dynamic_colors">Dynamic Colors</string>
-    <string name="settings_dynamic_colors_description">Apply colors from wallpaper</string>
+    <string name="settings_dynamic_colors_description">Apply colors from Wallpaper</string>
     <string name="settings_post_notifications">Notifications</string>
     <string name="settings_post_notifications_denied">Permission denied</string>
     <string name="settings_post_notifications_granted">Permission granted</string>
+    <string name="settings_battery_optimization">Battery optimization</string>
+    <string name="settings_battery_optimization_optimized">Optimization is on for Movies</string>
+    <string name="settings_battery_optimization_ignored">Optimization is off for Movies</string>
     <string name="settings_review">Rate App</string>
     <string name="settings_review_description">Using In-App Review API</string>
     <string name="settings_post_notifications_should_request">Notifications are disabled. Please go to app settings to activate them</string>
@@ -100,6 +105,8 @@
     <string name="settings_action_cancel">Cancel</string>
     <string name="settings_github">Movies on GitHub</string>
     <string name="settings_github_description">Check the GitHub repository</string>
+    <string name="settings_telegram">Telegram</string>
+    <string name="settings_telegram_description">Subscribe to Сhannel</string>
     <string name="settings_app_widget">Add Widget to Home Screen</string>
     <string name="settings_app_widget_description">3x2 %1$s</string>
     <string name="settings_tile">Add Tile to Quick Settings</string>
@@ -116,6 +123,7 @@
     <string name="settings_update">Update App</string>
     <string name="settings_update_description">Using In-App Update API</string>
     <string name="settings_palette_colors">Palette Colors</string>
+    <string name="settings_palette_colors_description">Apply colors from Palette</string>
     <string name="settings_screenshots">Screenshots</string>
     <string name="settings_screenshots_description">Block taking screenshots</string>
 

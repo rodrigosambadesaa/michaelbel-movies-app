@@ -1,8 +1,5 @@
 @file:SuppressLint("StartActivityAndCollapseDeprecated")
-@file:Suppress(
-    "DEPRECATION",
-    "EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING"
-)
+@file:Suppress("DEPRECATION")
 
 package org.michaelbel.movies.ui.tile
 
@@ -13,11 +10,9 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.service.quicksettings.TileService
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
 import org.michaelbel.movies.ui.R
+import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
 
-@RequiresApi(24)
 class MoviesTileService: TileService() {
 
     override fun onTileAdded() {
@@ -35,7 +30,7 @@ class MoviesTileService: TileService() {
 
     override fun onClick() {
         super.onClick()
-        runCatching {
+        try {
             val intent = packageManager.getLaunchIntentForPackage(packageName)?.apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -50,6 +45,6 @@ class MoviesTileService: TileService() {
             } else {
                 startActivityAndCollapse(intent)
             }
-        }
+        } catch (_: Exception) {}
     }
 }

@@ -6,7 +6,5 @@ interface SearchInteractor {
 
     val isSearchActive: StateFlow<Boolean>
 
-    fun setSearchActive(
-        value: Boolean
-    )
+    fun setSearchActive(value: Boolean)
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.android.dynamic.feature) apply false
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.kotlin.android) apply false
@@ -21,7 +22,7 @@ plugins {
 }
 
 detekt {
-    config.setFrom("$projectDir/config/detekt/detekt.yml")
+    config.setFrom("$projectDir/.github/detekt.yml")
 }
 
 subprojects {

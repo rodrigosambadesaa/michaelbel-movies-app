@@ -12,50 +12,29 @@ import org.michaelbel.movies.persistence.database.typealiases.Query
 
 interface MovieInteractor {
 
-    fun moviesPagingData(
-        movieList: MovieList
-    ): Flow<PagingData<MoviePojo>>
+    fun moviesPagingData(movieList: MovieList): Flow<PagingData<MoviePojo>>
 
-    fun moviesPagingData(
-        searchQuery: Query
-    ): Flow<PagingData<MoviePojo>>
+    fun moviesPagingData(searchQuery: Query): Flow<PagingData<MoviePojo>>
 
-    fun moviesFlow(
-        pagingKey: PagingKey,
-        limit: Limit
-    ): Flow<List<MoviePojo>>
+    fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?>
 
-    suspend fun movie(
-        pagingKey: PagingKey,
-        movieId: MovieId
-    ): MoviePojo
+    fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>>
 
-    suspend fun movieDetails(
-        pagingKey: PagingKey,
-        movieId: MovieId
-    ): MoviePojo
+    suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo
+
+    suspend fun movieDetails(pagingKey: PagingKey, movieId: MovieId): MoviePojo
 
     suspend fun moviesWidget(): List<MovieDbMini>
 
-    suspend fun removeMovies(
-        pagingKey: PagingKey
-    )
+    suspend fun removeMovies(pagingKey: PagingKey)
 
-    suspend fun removeMovie(
-        pagingKey: PagingKey,
-        movieId: MovieId
-    )
+    suspend fun removeMovie(pagingKey: PagingKey, movieId: MovieId)
 
-    suspend fun insertMovie(
-        pagingKey: PagingKey,
-        movie: MoviePojo
-    )
+    suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo)
 
-    suspend fun updateMovieColors(
-        movieId: MovieId,
-        containerColor: Int,
-        onContainerColor: Int
-    )
+    suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int)
+
+    suspend fun fetchAndInsertMovies(pagingKey: PagingKey): List<MoviePojo> // TODO Fallback iOS
 
     suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo>
 }

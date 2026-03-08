@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
-import java.util.Locale
+import androidx.core.os.LocaleListCompat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
@@ -14,6 +14,7 @@ import org.michaelbel.movies.analytics.event.SelectLanguageEvent
 import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.entity.AppLanguage
+import java.util.Locale
 
 internal class LocaleInteractorImpl(
     private val context: Context,
@@ -22,28 +23,46 @@ internal class LocaleInteractorImpl(
 ): LocaleInteractor {
 
     override val language: String
-        get() = AppCompatDelegate.getApplicationLocales()[0]?.language ?: AppLanguage.English().code
+        get() {
+            val appCompatLocales = AppCompatDelegate.getApplicationLocales()
+            val appCompatLanguage = if (appCompatLocales.size() > 0) appCompatLocales[0]?.language else null
+            if (!appCompatLanguage.isNullOrBlank()) {
+                return appCompatLanguage
+            }
+
+            if (Build.VERSION.SDK_INT >= 33) {
+                val localeManager = context.getSystemService(LocaleManager::class.java)
+                val frameworkLocales = localeManager.applicationLocales
+                val frameworkLanguage = if (frameworkLocales.size() > 0) frameworkLocales[0].language else null
+                if (!frameworkLanguage.isNullOrBlank()) {
+                    return frameworkLanguage
+                }
+            }
+
+            val resourcesLocales = context.resources.configuration.locales
+            val resourcesLanguage = if (resourcesLocales.size() > 0) resourcesLocales[0].language else null
+            return resourcesLanguage?.takeIf(String::isNotBlank) ?: AppLanguage.English().code
+        }
 
     override val appLanguage: Flow<AppLanguage> = flowOf(AppLanguage.transform(language))
 
     override suspend fun selectLanguage(language: AppLanguage) {
         withContext(dispatchers.io) {
-            // for AppCompatActivity
-            /*AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language.code))*/
-
-            // for ComponentActivity
-            if (Build.VERSION.SDK_INT >= 33) {
-                val localeManager = context.getSystemService(LocaleManager::class.java)
-                localeManager.applicationLocales = LocaleList.forLanguageTags(AppLanguage.code(language))
-            } else {
-                val locale = Locale(AppLanguage.code(language))
-                Locale.setDefault(locale)
-
-                val configuration = context.resources.configuration
-                configuration.setLocale(locale)
-                context.createConfigurationContext(configuration)
+            val languageCode = AppLanguage.code(language)
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
+            when {
+                Build.VERSION.SDK_INT >= 33 -> {
+                    val localeManager = context.getSystemService(LocaleManager::class.java)
+                    localeManager.applicationLocales = LocaleList.forLanguageTags(languageCode)
+                }
+                else -> {
+                    val locale = Locale(languageCode)
+                    Locale.setDefault(locale)
+                    val configuration = context.resources.configuration
+                    configuration.setLocale(locale)
+                    context.createConfigurationContext(configuration)
+                }
             }
-
             analytics.logEvent(SelectLanguageEvent(language.toString()))
         }
     }

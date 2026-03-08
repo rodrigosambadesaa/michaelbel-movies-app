@@ -1,9 +1,8 @@
 package org.michaelbel.movies.persistence.database.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.persistence.database.entity.SuggestionDb
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
@@ -15,10 +14,10 @@ import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 interface SuggestionDao {
 
     @Query("SELECT * FROM suggestions")
-    fun suggestionsFlow(): Flow<List<SuggestionPojo>>
+    fun selectFlow(): Flow<List<SuggestionPojo>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(suggestions: List<SuggestionDb>)
+    @Upsert
+    suspend fun upsert(suggestions: List<SuggestionDb>)
 
     @Query("DELETE FROM suggestions")
     suspend fun removeAll()

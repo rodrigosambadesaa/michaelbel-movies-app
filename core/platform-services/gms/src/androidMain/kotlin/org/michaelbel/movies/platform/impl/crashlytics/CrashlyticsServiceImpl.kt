@@ -3,16 +3,19 @@ package org.michaelbel.movies.platform.impl.crashlytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.michaelbel.movies.platform.crashlytics.CrashlyticsService
 
-class CrashlyticsServiceImpl(
-    private val firebaseCrashlytics: FirebaseCrashlytics
-): CrashlyticsService {
+class CrashlyticsServiceImpl: CrashlyticsService {
+
+    private val firebaseCrashlytics: FirebaseCrashlytics?
+        get() = runCatching { FirebaseCrashlytics.getInstance() }.getOrNull()
 
     override fun recordException(priority: Int, tag: String, message: String, exception: Throwable) {
-        firebaseCrashlytics.run {
-            setCustomKey(CRASHLYTICS_KEY_PRIORITY, priority)
-            setCustomKey(CRASHLYTICS_KEY_TAG, tag)
-            setCustomKey(CRASHLYTICS_KEY_MESSAGE, message)
-            recordException(exception)
+        runCatching {
+            firebaseCrashlytics?.run {
+                setCustomKey(CRASHLYTICS_KEY_PRIORITY, priority)
+                setCustomKey(CRASHLYTICS_KEY_TAG, tag)
+                setCustomKey(CRASHLYTICS_KEY_MESSAGE, message)
+                recordException(exception)
+            }
         }
     }
 

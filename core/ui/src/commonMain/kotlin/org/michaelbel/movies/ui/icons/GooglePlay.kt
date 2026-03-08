@@ -1,5 +1,9 @@
 package org.michaelbel.movies.ui.icons
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
@@ -7,13 +11,15 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.michaelbel.movies.ui.theme.MoviesTheme
 
 /**
  * Convert SVG to Compose using https://composables.com/svgtocompose
  * SVG Icon: https://pictogrammers.com/library/mdi/icon/google-play
  */
-internal val MoviesIcons.GooglePlayVector: ImageVector
+val MoviesIcons.GooglePlay: ImageVector
 	get() {
 		if (_googlePlay != null) {
 			return _googlePlay!!
@@ -64,3 +70,16 @@ internal val MoviesIcons.GooglePlayVector: ImageVector
 	}
 
 private var _googlePlay: ImageVector? = null
+
+@Preview
+@Composable
+private fun GooglePlayIconPreview() {
+	MoviesTheme {
+		Icon(
+			imageVector = MoviesIcons.GooglePlay,
+			contentDescription = null,
+			modifier = Modifier.size(24.dp),
+			tint = Color.White
+		)
+	}
+}

@@ -10,7 +10,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.factory.KoinWorkerFactory
 import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
-import org.michaelbel.movies.common.BuildConfig
+import org.michaelbel.movies.app.BuildConfig
 import org.michaelbel.movies.crashlytics.CrashlyticsTree
 import org.michaelbel.movies.di.appKoinModule
 import org.michaelbel.movies.platform.app.AppService
@@ -18,7 +18,7 @@ import org.michaelbel.movies.platform.crashlytics.CrashlyticsService
 import org.michaelbel.movies.ui.appicon.installLauncherIcon
 import timber.log.Timber
 
-internal class App: Application(), Configuration.Provider {
+class App: Application(), Configuration.Provider {
 
     private val workerFactory: KoinWorkerFactory by inject()
     private val appService: AppService by inject()

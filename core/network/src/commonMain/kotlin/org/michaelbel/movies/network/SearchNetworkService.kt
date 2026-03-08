@@ -8,11 +8,7 @@ class SearchNetworkService internal constructor(
     private val ktorSearchService: KtorSearchService
 ) {
 
-    suspend fun searchMovies(
-        query: String,
-        language: String,
-        page: Int
-    ): Result<MovieResponse> {
+    suspend fun searchMovies(query: String, language: String, page: Int): Result<MovieResponse> {
         return ktorSearchService.searchMovies(query, language, page)
     }
 }

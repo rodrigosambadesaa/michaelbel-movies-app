@@ -3,36 +3,30 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.compose)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    androidTarget()
     jvm()
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
+    androidLibrary {
+        namespace = "org.michaelbel.movies.gallery"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+        androidResources.enable = true
+    }
+
     sourceSets {
         commonMain.dependencies {
-            api(projects.feature.galleryImpl)
+            api(projects.core.ui)
+            api(projects.core.work)
+            api(projects.core.interactor)
         }
     }
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
-    }
-}
-
-android {
-    namespace = "org.michaelbel.movies.gallery"
-
-    defaultConfig {
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
-    }
-
-    buildFeatures {
-        compose = true
     }
 }

@@ -10,6 +10,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import org.michaelbel.movies.network.config.TMDB_API_ENDPOINT
+import org.michaelbel.movies.network.config.tmdbApiKey
 
 private const val REQUEST_TIMEOUT_MILLIS = 10_000L
 private const val SOCKET_TIMEOUT_SECONDS = 10_000L
@@ -21,6 +22,9 @@ actual val ktorKoinModule = module {
             defaultRequest {
                 contentType(ContentType.Application.Json)
                 url(TMDB_API_ENDPOINT)
+                url {
+                    parameters.append("api_key", tmdbApiKey)
+                }
             }
             install(ContentNegotiation) {
                 json(Json { ignoreUnknownKeys = true })
@@ -31,12 +35,6 @@ actual val ktorKoinModule = module {
                 socketTimeoutMillis = SOCKET_TIMEOUT_SECONDS
             }
         }
-        /*ktor.sendPipeline.intercept(HttpSendPipeline.State) {
-            context.headers.append("api_key", tmdbApiKey)
-        }*/
-        /*ktor.plugin(HttpSend).intercept { request ->
-            execute(request)
-        }*/
         ktor
     }
 }

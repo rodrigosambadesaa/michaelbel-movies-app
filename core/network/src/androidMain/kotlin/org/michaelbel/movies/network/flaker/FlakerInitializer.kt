@@ -11,7 +11,5 @@ class FlakerInitializer: Initializer<Unit> {
         FlakerAndroidOkhttpContainer.install(context)
     }
 
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
-    }
+    override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 }

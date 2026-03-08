@@ -8,7 +8,7 @@ import org.koin.dsl.module
 import org.michaelbel.movies.persistence.datastore.DATA_STORE_NAME
 import org.michaelbel.movies.persistence.datastore.SHARED_PREFERENCES_NAME
 
-internal actual val dataStoreKoinModule = module {
+actual val dataStoreKoinModule = module {
     single<DataStore<Preferences>> {
         createDataStore(
             migrations = listOf(SharedPreferencesMigration(androidContext(), SHARED_PREFERENCES_NAME)),

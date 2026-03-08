@@ -1,4 +1,4 @@
-[<img align="left" src="config/images/play_store_app_icon_512x512_rounded.png" width="150" height="150">]()
+[<img align="left" src=".github/pics/play_store_app_icon_512x512_rounded.png" width="150" height="150">]()
 <div align="right">
     <a href="https://github.com/michaelbel/movies/blob/develop/readme.md"><b>en</b></a>
     <a href="https://github.com/michaelbel/movies/blob/develop/readme.ru.md">ru</a>
@@ -12,11 +12,11 @@
 Movies
 =
 
-[![](https://img.shields.io/badge/android-000000.svg?style=for-the-badge&logo=android)](https://github.com/michaelbel/movies)
-[![](https://img.shields.io/badge/ios-000000.svg?style=for-the-badge&logo=apple)](https://github.com/michaelbel/movies)
-[![](https://img.shields.io/badge/macOS-000000.svg?style=for-the-badge&logo=macos)](https://github.com/michaelbel/movies)
-[![](https://img.shields.io/badge/Windows-000000.svg?style=for-the-badge&logo=windows)](https://github.com/michaelbel/movies)
-[![](https://img.shields.io/badge/jvm_desktop-000000.svg?style=for-the-badge&logo=pcgamingwiki)](https://github.com/michaelbel/movies)
+[![](https://img.shields.io/badge/android-2F2F2F.svg?style=for-the-badge&logo=android)](https://github.com/michaelbel/movies)
+[![](https://img.shields.io/badge/ios-2F2F2F.svg?style=for-the-badge&logo=apple)](https://github.com/michaelbel/movies)
+[![](https://img.shields.io/badge/macOS-2F2F2F.svg?style=for-the-badge&logo=macos)](https://github.com/michaelbel/movies)
+[![](https://img.shields.io/badge/Windows-2F2F2F.svg?style=for-the-badge&logo=windows)](https://github.com/michaelbel/movies)
+[![](https://img.shields.io/badge/jvm_desktop-2F2F2F.svg?style=for-the-badge&logo=pcgamingwiki)](https://github.com/michaelbel/movies)
 <!--
 [![](https://img.shields.io/badge/Linux-000000.svg?style=for-the-badge&logo=linux)](https://github.com/michaelbel/movies)
 [![](https://img.shields.io/badge/Web-000000.svg?style=for-the-badge&logo=google-chrome)](https://github.com/michaelbel/movies)
@@ -31,50 +31,52 @@ The goal of this project is to implement an app that provides a consistent user 
 
 The app is currently in development. Android app is already available.
 
+Get interactive AI-powered documentation for the repository on [DeepWiki](https://deepwiki.com/michaelbel/movies).
+
 
 ## Screenshots
 
 **Android**
 <div align="center">
-    <img src="config/images/android/android1.png" alt="Android Image 1" width="24%">
-    <img src="config/images/android/android2.png" alt="Android Image 2" width="24%">
-    <img src="config/images/android/android3.png" alt="Android Image 3" width="24%">
-    <img src="config/images/android/android4.png" alt="Android Image 4" width="24%">
-    <img src="config/images/android/android7.gif" alt="Android Image 7" width="24%">
-    <img src="config/images/android/android8.gif" alt="Android Image 8" width="24%">
-    <img src="config/images/android/android9.gif" alt="Android Image 9" width="24%">
-    <img src="config/images/android/android10.gif" alt="Android Image 10" width="24%">
-    <img src="config/images/android/android5.png" alt="Android Image 5" width="49%">
-    <img src="config/images/android/android6.png" alt="Android Image 6" width="49%">
+    <img src=".github/pics/android/android1.png" alt="Android Image 1" width="24%">
+    <img src=".github/pics/android/android2.png" alt="Android Image 2" width="24%">
+    <img src=".github/pics/android/android3.png" alt="Android Image 3" width="24%">
+    <img src=".github/pics/android/android4.png" alt="Android Image 4" width="24%">
+    <img src=".github/pics/android/android7.gif" alt="Android Image 7" width="24%">
+    <img src=".github/pics/android/android8.gif" alt="Android Image 8" width="24%">
+    <img src=".github/pics/android/android9.gif" alt="Android Image 9" width="24%">
+    <img src=".github/pics/android/android10.gif" alt="Android Image 10" width="24%">
+    <img src=".github/pics/android/android5.png" alt="Android Image 5" width="49%">
+    <img src=".github/pics/android/android6.png" alt="Android Image 6" width="49%">
 </div>
 <br/>
 
 **iOS**
 <div align="center">
-    <img src="config/images/ios/ios1.png" alt="iOS Image 1" width="24%">
-    <img src="config/images/ios/ios2.png" alt="iOS Image 2" width="24%">
-    <img src="config/images/ios/ios3.png" alt="iOS Image 3" width="24%">
-    <img src="config/images/ios/ios4.png" alt="iOS Image 4" width="24%">
-    <img src="config/images/ios/ios5.png" alt="iOS Image 5" width="49%">
-    <img src="config/images/ios/ios6.png" alt="iOS Image 6" width="49%">
+    <img src=".github/pics/ios/ios1.png" alt="iOS Image 1" width="24%">
+    <img src=".github/pics/ios/ios2.png" alt="iOS Image 2" width="24%">
+    <img src=".github/pics/ios/ios3.png" alt="iOS Image 3" width="24%">
+    <img src=".github/pics/ios/ios4.png" alt="iOS Image 4" width="24%">
+    <img src=".github/pics/ios/ios5.png" alt="iOS Image 5" width="49%">
+    <img src=".github/pics/ios/ios6.png" alt="iOS Image 6" width="49%">
 </div>
 <br/>
 
 **macOS**
 <div align="center">
-    <img src="config/images/macos/macos1.png" alt="macOS Image 1" width="49%">
-    <img src="config/images/macos/macos2.png" alt="macOS Image 2" width="49%">
-    <img src="config/images/macos/macos3.png" alt="macOS Image 3" width="49%">
-    <img src="config/images/macos/macos4.png" alt="macOS Image 4" width="49%">
+    <img src=".github/pics/macos/macos1.png" alt="macOS Image 1" width="49%">
+    <img src=".github/pics/macos/macos2.png" alt="macOS Image 2" width="49%">
+    <img src=".github/pics/macos/macos3.png" alt="macOS Image 3" width="49%">
+    <img src=".github/pics/macos/macos4.png" alt="macOS Image 4" width="49%">
 </div>
 <br/>
 
 **Windows**
 <div align="center">
-    <img src="config/images/windows/windows1.png" alt="Windows Image 1" width="49%">
-    <img src="config/images/windows/windows2.png" alt="Windows Image 2" width="49%">
-    <img src="config/images/windows/windows3.png" alt="Windows Image 3" width="49%">
-    <img src="config/images/windows/windows4.png" alt="Windows Image 4" width="49%">
+    <img src=".github/pics/windows/windows1.png" alt="Windows Image 1" width="49%">
+    <img src=".github/pics/windows/windows2.png" alt="Windows Image 2" width="49%">
+    <img src=".github/pics/windows/windows3.png" alt="Windows Image 3" width="49%">
+    <img src=".github/pics/windows/windows4.png" alt="Windows Image 4" width="49%">
 </div>
 
 
@@ -90,7 +92,7 @@ The app is still usable without an API key. In this case functionality will be l
 Choose a run configuration for an appropriate target in Android Studio and run it.
 <br/>
 <br/>
-<img src="config/images/run-configurations.png" width="30%">
+<img src=".github/pics/run-configurations.png" width="30%">
 
 - Clone this repository using [latest version](https://d.android.com/studio) of Android Studio
 - Run the app on your Device or Emulator
@@ -122,23 +124,25 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 [![](https://PlayBadges.pavi2410.me/badge/downloads?id=org.michaelbel.moviemade)](https://play.google.com/store/apps/details?id=org.michaelbel.moviemade)
 [![](https://img.shields.io/github/downloads/michaelbel/movies/total?logo=github&label=Downloads&labelColor=212133&color=34CC2C)](https://github.com/michaelbel/movies/releases)
 
-[<img src="config/images/badges/badge-googleplay.svg" alt="" height="80">](https://play.google.com/store/apps/details?id=org.michaelbel.moviemade)
-[<img src="config/images/badges/badge-appgallery.svg" alt="" height="80">](https://appgallery.cloud.huawei.com/ag/n/app/C109677247)
-[<img src="config/images/badges/badge-github.svg" alt="" height="80">](https://github.com/michaelbel/movies/releases/download/2.0.0/Movies-v2.0.0.1699.-gms-release.apk)
-[<img src="config/images/badges/badge-obtainium.svg" alt="" height="80">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/michaelbel/movies)
+[<img src=".github/pics/badges/badge-googleplay.svg" alt="" height="80">](https://play.google.com/store/apps/details?id=org.michaelbel.moviemade)
+[<img src=".github/pics/badges/badge-appgallery.svg" alt="" height="80">](https://appgallery.cloud.huawei.com/ag/n/app/C109677247)
+[<img src=".github/pics/badges/badge-github.svg" alt="" height="80">](https://nightly.link/michaelbel/movies/workflows/ci/develop/artifact.zip)
+[<img src=".github/pics/badges/badge-obtainium.svg" alt="" height="80">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/michaelbel/movies)
+[<img src=".github/pics/badges/badge-openapk.svg" alt="" height="80">](https://www.openapk.net/movies/org.michaelbel.movies/)
+[<img src=".github/pics/badges/badge-android-freeware.svg" alt="" height="80">](https://www.androidfreeware.net/download-movies-apk.html)
 
 
 ## Technologies
 [![Git](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com)
 [![Kotlin](https://img.shields.io/badge/kotlin-7f52ff.svg?style=for-the-badge&logo=kotlin&logoColor=white)](https://d.android.com/kotlin)
+[![KMP](https://img.shields.io/badge/KMP-7F52FF?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMzcuNjA0OFYwLjEzOTIxOUwzNy40NjU3IDM3LjYwNDhIMFpNMCA0Mi4zOTUzVjgwSDAuMDk1NDI4TDM3LjcwMDIgNDIuMzk1M0gwWk00My4zMTc3IDM2LjY4MjNMODAgMEg2LjYzNTQ3TDQzLjMxNzcgMzYuNjgyM1pNNDMuMzY1NSA0My41MDQ3TDYuODcwMTcgODBINzkuODYwN0w0My4zNjU1IDQzLjUwNDdaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K&logoColor=white)](https://www.jetbrains.com/kotlin-multiplatform)
 [![Ktor](https://img.shields.io/badge/Ktor-7f52ff?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij4KICA8ZGVmcyBmaWxsPSIjN2Y1MmZmIj4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYSIgeDE9IjI0Ljk0MSIgeDI9IjUyLjMwNiIgeTE9IjI0Ljk0MSIgeTI9IjUyLjMwNiIgZ3JhZGllbnRUcmFuc2Zvcm09InJvdGF0ZSguMTA0KSBzY2FsZSgxLjIxOTA1KSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGZpbGw9IiM3ZjUyZmYiPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4yOTYiIHN0b3AtY29sb3I9IiNmZmZmZmYiIGZpbGw9IiM3ZjUyZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIuNjk0IiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBmaWxsPSIjN2Y1MmZmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgZmlsbD0iIzdmNTJmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYiIgeDE9IjUzLjE1MSIgeDI9Ijc5LjAyMyIgeTE9IjUzLjE1MSIgeTI9Ijc5LjAyMyIgZ3JhZGllbnRUcmFuc2Zvcm09InJvdGF0ZSguMTA0KSBzY2FsZSgxLjIxOTA1KSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiIGZpbGw9IiM3ZjUyZmYiPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4xMDgiIHN0b3AtY29sb3I9IiNmZmZmZmYiIGZpbGw9IiM3ZjUyZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIuMTczIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBmaWxsPSIjN2Y1MmZmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iLjQ5MiIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgZmlsbD0iIzdmNTJmZiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii43MTYiIHN0b3AtY29sb3I9IiNmZmZmZmYiIGZpbGw9IiM3ZjUyZmYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIuODIzIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBmaWxsPSIjN2Y1MmZmIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cGF0aCBmaWxsPSJ1cmwoI2EpIiBkPSJNODAuNDU3IDQ3LjU0MyA0Ny41NDMgMTQuNjI5IDE0LjYyOSA0Ny41NDNsMzIuOTE0IDMyLjkxNFptMCAwIi8+CiAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0ibTQ3LjU0MyA4MC40NTcgMzIuOTE0IDMyLjkxNCAzMi45MTQtMzIuOTE0LTMyLjkxNC0zMi45MTRabTAgMCIvPgogIDxwYXRoIGQ9Ik04MC40NTcgNDcuNTQzSDQ3LjU0M3YzMi45MTRoMzIuOTE0Wm0wIDAiIGZpbGw9IiM3ZjUyZmYiLz4KPC9zdmc+&logoColor=white)](https://ktor.io)
-[![Multiplatform](https://img.shields.io/badge/Multiplatform-AD4DB1?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzUiIGhlaWdodD0iNzUiIHZpZXdCb3g9IjAgMCA3NSA3NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzM0XzQ2KSI+CjxwYXRoIGQ9Ik03NSA3NUgwVjBINzVMMzcuMzI0MiAzNy41TDc1IDc1WiIgZmlsbD0iI0U2RTZFNiIvPgo8cGF0aCBkPSJNNDMuMDA3OCA1NC40MzM2SDEwLjU0NjlWMzguMTQ0NUMxMC41NDY5IDI5LjEyMTEgMTcuODEyNSAyMS44NTU1IDI2Ljc3NzMgMjEuODU1NUMzNS43NDIyIDIxLjg1NTUgNDMuMDA3OCAyOS4xNzk3IDQzLjAwNzggMzguMTQ0NVY1NC40MzM2WiIgZmlsbD0iIzNEREI4NCIvPgo8cGF0aCBkPSJNNDUuMjM0NCA1NC42NjhDMzYuMjY5NSA1NC42NjggMjkuMDAzOSA0Ny4zNDM4IDI5LjAwMzkgMzguMzc4OUMyOS4wMDM5IDI5LjM1NTUgMzYuMjY5NSAyMi4wODk4IDQ1LjIzNDQgMjIuMDg5OEM1NC4xOTkyIDIyLjA4OTggNjEuNDY0OCAyOS40MTQxIDYxLjQ2NDggMzguMzc4OUM2MS40MDYyIDQ3LjM0MzggNTQuMTQwNiA1NC42NjggNDUuMjM0NCA1NC42NjhaIiBmaWxsPSIjNEQ0RDREIi8+CjxwYXRoIGQ9Ik01NC45NjA5IDkuNDkyMTlDNDkuMTYwMiA5LjQ5MjE5IDQ0LjQxNDEgMTMuODg2NyA0NC40MTQxIDE5LjI3NzNDNDQuNDE0MSAxOS4zOTQ1IDQ0LjQxNDEgMTkuNTExNyA0NC40MTQxIDE5LjYyODlDNDQuNTMxMiAxOS42Mjg5IDQ0LjY0ODQgMTkuNjI4OSA0NC43NjU2IDE5LjYyODlDNTAuNTY2NCAxOS42Mjg5IDU1LjMxMjUgMTUuMjM0NCA1NS4zMTI1IDkuODQzNzVDNTUuMzEyNSA5LjcyNjU2IDU1LjMxMjUgOS42MDkzOCA1NS4zMTI1IDkuNDkyMTlDNTUuMTk1MyA5LjQ5MjE5IDU1LjA3ODEgOS40OTIxOSA1NC45NjA5IDkuNDkyMTlaIiBmaWxsPSIjNEQ0RDREIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMzRfNDYiPgo8cmVjdCB3aWR0aD0iNzUiIGhlaWdodD0iNzUiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==&logoColor=white)](https://www.jetbrains.com/kotlin-multiplatform)
 [![Compose](https://img.shields.io/badge/compose-blue.svg?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://d.android.com/jetpack/compose)
 [![Material3](https://img.shields.io/badge/Material3-004A76?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDBweCIgaGVpZ2h0PSI4MDBweCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8dGl0bGU+bWF0ZXJpYWxfZGVzaWduPC90aXRsZT4KICA8cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9Im5vbmUiLz4KICA8cGF0aCBkPSJNMjEsMTJhOSw5LDAsMCwwLTItNS42MlYxNy42M0E4Ljc4LDguNzgsMCwwLDAsMjEsMTJtLTMuMzcsN0g2LjM4YTkuNSw5LjUsMCwwLDAsMi42NywxLjQxQTguOTEsOC45MSwwLDAsMCwxMiwyMSw4Ljg2LDguODYsMCwwLDAsMTUsMjAuNDEsOS43Miw5LjcyLDAsMCwwLDE3LjYzLDE5TTExLDE3LDcsOXY4aDRtNi04LTQsOGg0VjltLTUsNS41M0wxNS43NSw3SDguMjVMMTIsMTQuNTNNMTcuNjMsNUE4LjkxLDguOTEsMCwwLDAsNi4zOCw1SDE3LjYzTTUsMTcuNjNWNi4zOEE5LDksMCwwLDAsMywxMmE4Ljc4LDguNzgsMCwwLDAsMiw1LjYzTTIzLDEyYTEwLjU3LDEwLjU3LDAsMCwxLTMuMjIsNy43OEExMC41NywxMC41NywwLDAsMSwxMiwyM2ExMC41OSwxMC41OSwwLDAsMS03Ljc4LTMuMjJBMTAuNTcsMTAuNTcsMCwwLDEsMSwxMiwxMC41OSwxMC41OSwwLDAsMSw0LjIyLDQuMjIsMTAuNTksMTAuNTksMCwwLDEsMTIsMWExMC41NywxMC41NywwLDAsMSw3Ljc4LDMuMjJBMTAuNTksMTAuNTksMCwwLDEsMjMsMTJaIiBmaWxsPSIjZmZmZmZmIi8+Cjwvc3ZnPg==&logoColor=white)](https://m3.material.io)
-[![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)](https://d.android.com/studio/releases/gradle-plugin)
+[![Gradle](https://img.shields.io/badge/Gradle-09A1CD.svg?style=for-the-badge&logo=Gradle&logoColor=white)](https://d.android.com/studio/releases/gradle-plugin)
 [![Android](https://img.shields.io/badge/Android%20SDK-50AE55?style=for-the-badge&logo=android&logoColor=F6F6F6)](https://d.android.com)
 [![Room](https://img.shields.io/badge/Room_Multiplatform-50AE55?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyLDNDNy41OCwzIDQsNC43OSA0LDdDNCw5LjIxIDcuNTgsMTEgMTIsMTFDMTYuNDIsMTEgMjAsOS4yMSAyMCw3QzIwLDQuNzkgMTYuNDIsMyAxMiwzTTQsOVYxMkM0LDE0LjIxIDcuNTgsMTYgMTIsMTZDMTYuNDIsMTYgMjAsMTQuMjEgMjAsMTJWOUMyMCwxMS4yMSAxNi40MiwxMyAxMiwxM0M3LjU4LDEzIDQsMTEuMjEgNCw5TTQsMTRWMTdDNCwxOS4yMSA3LjU4LDIxIDEyLDIxQzE2LjQyLDIxIDIwLDE5LjIxIDIwLDE3VjE0QzIwLDE2LjIxIDE2LjQyLDE4IDEyLDE4QzcuNTgsMTggNCwxNi4yMSA0LDE0WiIgZmlsbD0iI2ZmZmZmZiIvPjwvc3ZnPg==&logoColor=white)](https://d.android.com/kotlin/multiplatform/room)
-[![Firebase](https://img.shields.io/badge/Firebase-E5B82C?style=for-the-badge&logo=Firebase&logoColor=white)](https://firebase.google.com)
+[![Firebase](https://img.shields.io/badge/Firebase-E5B82C?style=for-the-badge&logo=Firebase&logoColor=333333)](https://firebase.google.com)
 [![Coil](https://img.shields.io/badge/Coil-3B6BB4?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjAwcHgiIGhlaWdodD0iMjAwcHgiIHZpZXdCb3g9IjMzMi41IDIwMCAxNDAgMTQwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGc+Cgk8Zz4KCQk8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzkyLjcyOCwzMDMuMzgybC0zMi4zODQtMjQuMjQxbC0zLjI0MywyLjQzMWMtNS41MjMsNC4xMzEtNS41MjMsMTAuODM3LDAsMTQuOTdsMzUuNjI3LDI2LjY3MiAgICBjNS41MjUsNC4xMzIsMTQuNDc4LDQuMTMyLDIwLjAwMiwwbDM1LjYyNy0yNi42NzJjNS41MjYtNC4xMzMsNS41MjYtMTAuODM5LDAtMTQuOTdsLTMuMjQ2LTIuNDMxbC0zMi4zODEsMjQuMjQxICAgIEM0MDcuMjA2LDMwNy41MTUsMzk4LjI1MywzMDcuNTE1LDM5Mi43MjgsMzAzLjM4MnoiLz4KCQk8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDQ4LjM1NywyNjEuNzQybC0zLjI0Ni0yLjQzbC0zMi4zODEsMjQuMjM4Yy01LjUyNSw0LjEzMy0xNC40NzgsNC4xMzMtMjAuMDAyLDBsLTMyLjM4NC0yNC4yMzggICAgbC0zLjI0MywyLjQzYy01LjUyMyw0LjEzMS01LjUyMywxMC44MzUsMCwxNC45NzFsMy4yNDMsMi40MjhsMzIuMzg0LDI0LjI0MWM1LjUyNSw0LjEzMywxNC40NzgsNC4xMzMsMjAuMDAyLDBsMzIuMzgxLTI0LjI0MSAgICBsMy4yNDYtMi40MjhDNDUzLjg4NCwyNzIuNTc3LDQ1My44ODQsMjY1Ljg3Myw0NDguMzU3LDI2MS43NDJ6Ii8+CgkJPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTQxMi43MywyODMuNTUxbDMyLjM4MS0yNC4yMzhsMy4yNDYtMi40MzJjNS41MjYtNC4xMzEsNS41MjYtMTAuODM3LDAtMTQuOTcxbC0yLjk4My0yLjIzMiAgICBsLTM3LjMzOCwyNy44NDNjLTIuOTMyLDIuMTk2LTcuNjg1LDIuMTk2LTEwLjYxNSwwbC0xOC45MTEtMTQuMTVjLTIuOTMxLTIuMTk1LTIuOTMxLTUuNzUyLDAtNy45NDhsMzcuOTEtMjcuNDE5bC0zLjY4OS0yLjc2MSAgICBjLTUuNTI1LTQuMTM2LTE0LjQ3OC00LjEzNi0yMC4wMDIsMGwtMzUuNjI3LDI2LjY2OGMtNS41MjMsNC4xMzMtNS41MjMsMTAuODQsMCwxNC45NzFsMy4yNDMsMi40MzJsMzIuMzg0LDI0LjIzOCAgICBDMzk4LjI1MywyODcuNjg0LDQwNy4yMDYsMjg3LjY4NCw0MTIuNzMsMjgzLjU1MXoiLz4KCTwvZz4KPC9nPgo8L3N2Zz4=&logoColor=white)](https://github.com/coil-kt/coil)
 [![Clean](https://img.shields.io/badge/Clean%20Architecture-4169E1.svg?style=for-the-badge&logo=ccleaner&logoColor=white)](https://d.android.com/topic/architecture)
 [![Dependabot](https://img.shields.io/badge/Dependabot-0366D6?&style=for-the-badge&logo=dependabot&logoColor=white)](https://github.com/dependabot)
@@ -151,18 +155,20 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Modularization](https://d.android.com/topic/modularization)
 - [x] [MVVM](https://d.android.com/topic/architecture)
 - [x] [KTS Gradle Files](https://d.android.com/studio/build/migrate-to-kts)
-- [x] [Kotlin Symbol Processing API](https://d.android.com/studio/build/migrate-to-ksp)
+- [x] [KSP](https://d.android.com/studio/build/migrate-to-ksp)
 - [x] [Gradle Version Catalog](https://d.android.com/build/migrate-to-catalogs)
 - [x] [Build Variants](https://d.android.com/build/build-variants)
 - [x] [Product Flavors](https://d.android.com/build/build-variants#product-flavors)
 - [x] [Using buildSrc Directory](https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#sec:build_sources)
-- [x] MinSDK 23
-- [x] TargetSDK 35
-- [x] CompileSDK 35
+- [x] MinSDK 26
+- [x] TargetSDK 36
+- [x] CompileSDK 36
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
 - [x] Amoled Theme
-- [x] SwipeToDismiss
+- [x] SecureTextField
+- [x] [SwipeToDismiss](https://d.android.com/develop/ui/compose/touch-input/user-interactions/swipe-to-dismiss)
 - [x] [Material You Dynamic Colors](https://d.android.com/develop/ui/views/theming/dynamic-colors)
+- [x] [Material3 Expressive](https://m3.material.io/blog/building-with-m3-expressive)
 - [x] [Themed App Icon](https://d.android.com/develop/ui/views/launch/icon_design_adaptive)
 - [x] [Palette Colors API](https://d.android.com/develop/ui/views/graphics/palette-colors)
 - [x] [Accompanist](https://github.com/google/accompanist)
@@ -176,7 +182,7 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [WorkManager](https://d.android.com/topic/libraries/architecture/workmanager)
 - [x] [DataStore](https://d.android.com/datastore)
 - [x] [Startup](https://d.android.com/jetpack/androidx/releases/startup)
-- [x] [Navigation](https://d.android.com/guide/navigation)
+- [x] [Navigation3](https://d.android.com/guide/navigation/navigation-3)
 - [x] [Paging3](https://d.android.com/topic/libraries/architecture/paging/v3-overview)
 - [x] [Browser](https://d.android.com/jetpack/androidx/releases/browser)
 - [x] [OkHttp](https://github.com/square/okhttp)
@@ -208,48 +214,42 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Tile Quick Settings](https://d.android.com/develop/ui/views/quicksettings-tiles)
 - [x] [Grammatical Gender](https://d.android.com/about/versions/14/features/grammatical-inflection)
 - [x] [Biometric Authentication Dialog](https://d.android.com/training/sign-in/biometric-auth)
-- [x] [Type safety Navigation](https://d.android.com/guide/navigation/design/type-safety)
 - [x] [LeakCanary](https://github.com/square/leakcanary)
 - [x] [Koin](https://github.com/InsertKoinIO/koin)
 - [x] [Screenshot Detection](https://d.android.com/about/versions/14/features/screenshot-detection)
+- [x] [Battery Optimization Request](https://d.android.com/training/monitoring-device-state/doze-standby.html)
 - [x] [BuildKonfig](https://github.com/yshrsmz/BuildKonfig)
-
 
 ## Modules
 ```mermaid
 graph TD;
-    main-impl-->androidApp
-    main-impl-->iosComposeApp
-    main-impl-->desktopApp
+    main-->androidApp
+    main-->iosAppCompose
+    main-->desktopApp
+    main-->webApp
 
-    account-->main-impl
-    auth-->main-impl
-    details-->main-impl
-    feed-->main-impl
-    gallery-->main-impl
-    search-->main-impl
-    settings-->main-impl
-    debug-->main-impl
+    account-->main
+    auth-->main
+    details-->main
+    feed-->main
+    gallery-->main
+    notify-->main
+    settings-->main
+    debug-->main
+    feed-web-->main
 
-    account-impl-->account
-    auth-impl-->auth
-    details-impl-->details
-    feed-impl-->feed
-    gallery-impl-->gallery
-    search-impl-->search
-    settings-impl-->settings
-    debug-impl-->debug
-
-    core-->account-impl
-    core-->auth-impl
-    core-->details-impl
-    core-->feed-impl
-    core-->gallery-impl
-    core-->search-impl
-    core-->settings-impl
-    core-->debug-impl
+    core-->account
+    core-->auth
+    core-->details
+    core-->feed
+    core-->gallery
+    core-->notify
+    core-->settings
+    core-->debug
+    core-->feed-web
 
     ui-->core
+    ui-web-->core
     common-->core
     interactor-->core
     notifications-->core
@@ -263,7 +263,6 @@ graph TD;
     network-->repository
     persistence-->repository
 ```
-
 
 ## Roadmap
 [Movies App Roadmap](https://github.com/users/michaelbel/projects/1/views/1)
@@ -285,11 +284,11 @@ If you find any problems or would like to suggest a feature, please feel free to
 
 
 ## Contacts
-[![](https://img.shields.io/badge/Telegram-24A1DE?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/michaelbel)
-[![](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/michael-bel)
+[![](https://img.shields.io/badge/Telegram-24A1DE?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDciIGhlaWdodD0iMzkiIHZpZXdCb3g9IjAgMCA0NyAzOSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zLjE3MjkyIDE2LjQ2NjRDMTUuNTYyNSAxMS4wNjg0IDIzLjgyNDIgNy41MDk3NSAyNy45NTggNS43OTAzOEMzOS43NjA3IDAuODgxMjMxIDQyLjIxMzIgMC4wMjg0NTkzIDQzLjgxMTcgMC4wMDAzMDAyMzhDNDQuMTYzMiAtMC4wMDU4OTMwMyA0NC45NDkzIDAuMDgxMjM3OSA0NS40NTg1IDAuNDk0NDJDNDUuODg4NSAwLjg0MzMwMyA0Ni4wMDY4IDEuMzE0NTkgNDYuMDYzNCAxLjY0NTM3QzQ2LjEyIDEuOTc2MTUgNDYuMTkwNSAyLjcyOTY4IDQ2LjEzNDUgMy4zMTg0NkM0NS40OTQ5IDEwLjAzODcgNDIuNzI3NCAyNi4zNDcgNDEuMzE5NCAzMy44NzM4QzQwLjcyMzcgMzcuMDU4NyAzOS41NTA2IDM4LjEyNjUgMzguNDE1IDM4LjIzMUMzNS45NDY5IDM4LjQ1ODIgMzQuMDcyOCAzNi42IDMxLjY4MjMgMzUuMDMzQzI3Ljk0MTggMzIuNTgxIDI1LjgyODYgMzEuMDU0NyAyMi4xOTc4IDI4LjY2MkMxOC4wMDE3IDI1Ljg5NjggMjAuNzIxOCAyNC4zNzcxIDIzLjExMzIgMjEuODkzM0MyMy43MzkgMjEuMjQzMyAzNC42MTMzIDExLjM1MjMgMzQuODIzOCAxMC40NTVDMzQuODUwMSAxMC4zNDI4IDM0Ljg3NDUgOS45MjQ1MSAzNC42MjYgOS43MDM2NEMzNC4zNzc1IDkuNDgyNzYgMzQuMDEwNyA5LjU1ODI5IDMzLjc0NjEgOS42MTgzNkMzMy4zNzA5IDkuNzAzNTEgMjcuMzk1MyAxMy42NTMxIDE1LjgxOTMgMjEuNDY3M0MxNC4xMjMyIDIyLjYzMiAxMi41ODY4IDIzLjE5OTUgMTEuMjEwNCAyMy4xNjk3QzkuNjkyODkgMjMuMTM2OSA2Ljc3Mzg4IDIyLjMxMTcgNC42MDM5MSAyMS42MDY0QzEuOTQyMzQgMjAuNzQxMiAtMC4xNzMwMTkgMjAuMjgzOCAwLjAxMTE4MTUgMTguODE0NEMwLjEwNzEyNCAxOC4wNDkxIDEuMTYxMDQgMTcuMjY2NCAzLjE3MjkyIDE2LjQ2NjRaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K)](https://t.me/michaelbel)
+[![](https://img.shields.io/badge/LinkedIn-0077B5?&style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzUiIGhlaWdodD0iNzUiIHZpZXdCb3g9IjAgMCA3NSA3NSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03NSA3NUg1OS41ODk4VjQ4Ljc1MzFDNTkuNTg5OCA0MS41NTY5IDU2Ljg1NTUgMzcuNTM1NCA1MS4xNTk3IDM3LjUzNTRDNDQuOTYzNCAzNy41MzU0IDQxLjcyNjEgNDEuNzIwNCA0MS43MjYxIDQ4Ljc1MzFWNzVIMjYuODc1VjI1SDQxLjcyNjFWMzEuNzM1QzQxLjcyNjEgMzEuNzM1IDQ2LjE5MTQgMjMuNDcyNCA1Ni44MDE4IDIzLjQ3MjRDNjcuNDA3MiAyMy40NzI0IDc1IDI5Ljk0ODggNzUgNDMuMzQzMVY3NVpNOS4xNTc3MSAxOC40NTI5QzQuMDk5MTIgMTguNDUyOSAwIDE0LjMyMTYgMCA5LjIyNjQ1QzAgNC4xMzEyOCA0LjA5OTEyIDAgOS4xNTc3MSAwQzE0LjIxNjMgMCAxOC4zMTMgNC4xMzEyOCAxOC4zMTMgOS4yMjY0NUMxOC4zMTMgMTQuMzIxNiAxNC4yMTYzIDE4LjQ1MjkgOS4xNTc3MSAxOC40NTI5Wk0xLjQ4OTI2IDc1SDE2Ljk3NTFWMjVIMS40ODkyNlY3NVoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=)](https://linkedin.com/in/michael-bel)
 [![](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:michaelvel24865@gmail.com)
 [![](https://img.shields.io/badge/Instagram-E1306C?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/michael_bel)
-[![](https://img.shields.io/badge/Twitter-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/michael_bely)
+[![](https://img.shields.io/badge/Twitter-333333?style=for-the-badge&logo=x&logoColor=white)](https://x.com/michael_bely)
 [![](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@michaelbely)
 
 
@@ -307,7 +306,7 @@ If you find any problems or would like to suggest a feature, please feel free to
 [![](https://img.shields.io/github/license/michaelbel/movies?style=for-the-badge&logo=github&labelColor=3F464F)](license.txt)
 
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">
-  <img alt="Apache License 2.0" src="config/images/apache.png" height="110"/>
+  <img alt="Apache License 2.0" src=".github/pics/apache.png" height="110"/>
 </a>
 
     Copyright 2017 Michael Bely

@@ -3,10 +3,8 @@
 package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,7 +29,7 @@ import org.michaelbel.movies.ui.theme.colorList
 import org.michaelbel.movies.ui.theme.paletteStyles
 
 @Composable
-internal fun SettingsPaletteColorsBox(
+fun SettingsPaletteColorsBox(
     paletteKey: Int,
     seedColor: Int,
     onChange: (Int, Int) -> Unit
@@ -55,8 +53,7 @@ internal fun SettingsPaletteColorsBox(
     ) {
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = 12.dp)
+            state = pagerState
         ) { page ->
             if (page < colorPages.size) {
                 Row(
@@ -92,7 +89,7 @@ internal fun SettingsPaletteColorsBox(
             pagerState = pagerState,
             modifier = Modifier.padding(vertical = 12.dp),
             activeColor = MaterialTheme.colorScheme.primary,
-            inactiveColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.outlineVariant,
+            inactiveColor = MaterialTheme.colorScheme.outline,
             indicatorWidth = 6.dp,
             indicatorHeight = 6.dp,
             spacing = 2.dp

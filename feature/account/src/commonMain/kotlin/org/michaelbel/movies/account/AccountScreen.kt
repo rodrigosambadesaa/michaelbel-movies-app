@@ -18,8 +18,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.LocalTextStyle
@@ -95,8 +95,16 @@ private fun AccountScreenContent(
             },
             modifier = Modifier.fillMaxWidth(),
             navigationIcon = {
-                IconButton(
-                    onClick = { dispatch(AccountIntent.BackClick) }
+                FilledIconButton(
+                    onClick = { dispatch(AccountIntent.BackClick) },
+                    shapes = IconButtonDefaults.shapes(
+                        shape = IconButtonDefaults.smallRoundShape,
+                        pressedShape = IconButtonDefaults.smallPressedShape
+                    ),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .08F),
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 ) {
                     Image(
                         imageVector = MoviesIcons.Close,

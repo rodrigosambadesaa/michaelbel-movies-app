@@ -3,10 +3,8 @@
 package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +23,7 @@ import org.michaelbel.movies.ui.ktx.isPortrait
 import org.michaelbel.movies.ui.pagerindicator.HorizontalPagerIndicator
 
 @Composable
-internal fun SettingsAppIconsBox(
+fun SettingsAppIconsBox(
     enabledIcon: IconAlias,
     onChange: (IconAlias) -> Unit
 ) {
@@ -47,8 +45,7 @@ internal fun SettingsAppIconsBox(
     ) {
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
-            state = pagerState,
-            contentPadding = PaddingValues(horizontal = 12.dp)
+            state = pagerState
         ) { page ->
             val iconsOnPage = iconPages[page]
             Row(
@@ -69,7 +66,7 @@ internal fun SettingsAppIconsBox(
             pagerState = pagerState,
             modifier = Modifier.padding(vertical = 12.dp),
             activeColor = MaterialTheme.colorScheme.primary,
-            inactiveColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.outlineVariant,
+            inactiveColor = MaterialTheme.colorScheme.outline,
             indicatorWidth = 6.dp,
             indicatorHeight = 6.dp,
             spacing = 2.dp

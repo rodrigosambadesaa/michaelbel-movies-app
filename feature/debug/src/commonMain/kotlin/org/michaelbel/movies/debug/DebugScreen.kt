@@ -5,15 +5,17 @@ package org.michaelbel.movies.debug
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -25,7 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import movies.feature.debug.generated.resources.Res
 import movies.feature.debug.generated.resources.debug_app_settings
@@ -78,8 +80,16 @@ fun DebugScreen(
                     modifier = Modifier.weight(1F)
                 )
 
-                IconButton(
-                    onClick = { viewModel.dispatch(DebugIntent.DismissRequest) }
+                FilledIconButton(
+                    onClick = { viewModel.dispatch(DebugIntent.DismissRequest) },
+                    shapes = IconButtonDefaults.shapes(
+                        shape = IconButtonDefaults.smallRoundShape,
+                        pressedShape = IconButtonDefaults.smallPressedShape
+                    ),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .08F),
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 ) {
                     Icon(
                         imageVector = MoviesIcons.Close,
@@ -93,6 +103,8 @@ fun DebugScreen(
             ListItem(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
                     .clickable(onClick = navigateToAppSettings),
                 headlineContent = {
                     Text(
@@ -108,16 +120,18 @@ fun DebugScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 },
-                colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             )
 
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            Spacer(
+                modifier = Modifier.height(2.dp)
             )
 
             ListItem(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .clip(RoundedCornerShape(4.dp))
                     .clickable(onClick = navigateToDeveloperSettings),
                 headlineContent = {
                     Text(
@@ -133,16 +147,18 @@ fun DebugScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 },
-                colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             )
 
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            Spacer(
+                modifier = Modifier.height(2.dp)
             )
 
             ListItem(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .clip(if (!state.isFirebaseTokenFeatureEnabled) RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp) else RoundedCornerShape(4.dp))
                     .clickable(onClick = { viewModel.dispatch(DebugIntent.ResetNotificationExpireTime) }),
                 headlineContent = {
                     Text(
@@ -158,17 +174,19 @@ fun DebugScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 },
-                colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
             )
 
             if (state.isFirebaseTokenFeatureEnabled) {
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                Spacer(
+                    modifier = Modifier.height(2.dp)
                 )
 
                 ListItem(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
                         .clickable(onClick = { copyToClipboard(state.firebaseToken) }),
                     headlineContent = {
                         Text(
@@ -184,7 +202,7 @@ fun DebugScreen(
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
                 )
             }
         }

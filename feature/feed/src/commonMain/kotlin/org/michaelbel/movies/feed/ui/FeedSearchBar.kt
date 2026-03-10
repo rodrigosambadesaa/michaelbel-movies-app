@@ -6,8 +6,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -25,10 +27,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ButtonDefaults
@@ -37,6 +40,8 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
@@ -50,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -315,86 +321,98 @@ fun FeedSearchBar(
                         contentPadding = PaddingValues(bottom = 136.dp)
                     ) {
                         item {
-                            Row(
+                            ListItem(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(start = 16.dp, end = 8.dp),
-                                verticalAlignment = Alignment.Top
-                            ) {
-                                Text(
-                                    text = stringResource(MoviesStrings.search_recent),
-                                    modifier = Modifier
-                                        .weight(1F)
-                                        .padding(top = 12.dp, end = 8.dp, bottom = 12.dp),
-                                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
-                                )
-
-                                TextButton(
-                                    onClick = onClearHistoryClick,
-                                    modifier = Modifier
-                                        .padding(top = 12.dp)
-                                        .align(Alignment.Top),
-                                    shapes = ButtonDefaults.shapes()
-                                ) {
+                                    .padding(start = 8.dp),
+                                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+                                headlineContent = {
                                     Text(
-                                        text = stringResource(MoviesStrings.search_clear),
-                                        style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                                        text = stringResource(MoviesStrings.search_recent),
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            textAlign = TextAlign.Start
+                                        )
                                     )
-                                }
-                            }
-                        }
-                        items(
-                            items = searchHistoryMovies,
-                            key = { it.movieId }
-                        ) { movie ->
-                            SwipeToDismiss(
-                                item = movie,
-                                onDelete = { onHistoryMovieRemoveClick(it.movieId) }
-                            ) { historyMovie, _ ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(MaterialTheme.colorScheme.inversePrimary)
-                                        .clickable {
-                                            onInputText(historyMovie.title)
-                                            clearInputFocus()
-                                        }
-                                        .padding(start = 16.dp, top = 8.dp, end = 4.dp, bottom = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        imageVector = MoviesIcons.History,
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .align(Alignment.CenterVertically)
-                                            .size(IconButtonDefaults.smallIconSize),
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                    )
-
-                                    Text(
-                                        text = historyMovie.title,
-                                        modifier = Modifier
-                                            .padding(start = 8.dp)
-                                            .weight(1F)
-                                    )
-
-                                    IconButton(
-                                        onClick = { onHistoryMovieRemoveClick(historyMovie.movieId) },
-                                        modifier = Modifier.align(Alignment.CenterVertically)
+                                },
+                                trailingContent = {
+                                    TextButton(
+                                        onClick = onClearHistoryClick,
+                                        shapes = ButtonDefaults.shapes()
                                     ) {
-                                        Icon(
-                                            imageVector = MoviesIcons.Close,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        Text(
+                                            text = stringResource(MoviesStrings.search_clear),
+                                            style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
                                         )
                                     }
+                                }
+                            )
+                        }
+                        itemsIndexed(
+                            items = searchHistoryMovies,
+                            key = { index, movie -> movie.movieId }
+                        ) { index, movie ->
+                            val itemShape = when {
+                                searchHistoryMovies.size == 1 -> RoundedCornerShape(16.dp)
+                                index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+                                index == searchHistoryMovies.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+                                else -> RoundedCornerShape(4.dp)
+                            }
+
+                            Column {
+                                SwipeToDismiss(
+                                    item = movie,
+                                    onDelete = { onHistoryMovieRemoveClick(it.movieId) },
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                    shape = itemShape
+                                ) { historyMovie, _ ->
+                                    ListItem(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(itemShape)
+                                            .clickable {
+                                                onInputText(historyMovie.title)
+                                                clearInputFocus()
+                                            },
+                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                                        headlineContent = {
+                                            Text(
+                                                text = historyMovie.title,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        },
+                                        leadingContent = {
+                                            Icon(
+                                                imageVector = MoviesIcons.History,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                            )
+                                        },
+                                        trailingContent = {
+                                            IconButton(
+                                                onClick = { onHistoryMovieRemoveClick(historyMovie.movieId) }
+                                            ) {
+                                                Icon(
+                                                    imageVector = MoviesIcons.Close,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
+
+                                if (index != searchHistoryMovies.lastIndex) {
+                                    Spacer(
+                                        modifier = Modifier.height(2.dp)
+                                    )
                                 }
                             }
                         }
                     }
                 }
-
                 suggestions.isNotEmpty() -> {
                     Box(
                         modifier = Modifier
@@ -405,28 +423,49 @@ fun FeedSearchBar(
                         LazyColumn(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            items(
+                            itemsIndexed(
                                 items = suggestions
-                            ) { suggestion ->
-                                Text(
-                                    text = suggestion.title,
-                                    maxLines = 1,
-                                    textAlign = TextAlign.Center,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(52.dp)
-                                        .clickable {
-                                            onInputText(suggestion.title)
-                                            clearInputFocus()
+                            ) { index, suggestion ->
+                                val itemShape = when {
+                                    suggestions.size == 1 -> RoundedCornerShape(16.dp)
+                                    index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+                                    index == suggestions.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+                                    else -> RoundedCornerShape(4.dp)
+                                }
+
+                                Column(
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                ) {
+                                    ListItem(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clip(itemShape)
+                                            .clickable {
+                                                onInputText(suggestion.title)
+                                                clearInputFocus()
+                                            },
+                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                                        headlineContent = {
+                                            Text(
+                                                text = suggestion.title,
+                                                maxLines = 1,
+                                                textAlign = TextAlign.Center,
+                                                overflow = TextOverflow.Ellipsis,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
                                         }
-                                        .padding(horizontal = 16.dp, vertical = 14.dp)
-                                )
+                                    )
+
+                                    if (index != suggestions.lastIndex) {
+                                        Spacer(
+                                            modifier = Modifier.height(2.dp)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
                 else -> {
                     SearchEmpty(
                         modifier = Modifier

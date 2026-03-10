@@ -56,7 +56,7 @@ internal fun RowScope.SettingAppIcon(
             .weight(1F, false)
             .aspectRatio(1F)
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.inversePrimary)
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable { onClick(iconAlias) }
     ) {
         Box(

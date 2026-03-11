@@ -166,6 +166,7 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
 - [x] Amoled Theme
 - [x] SecureTextField
+- [x] Font Scale Cap (max 1.15)
 - [x] [SwipeToDismiss](https://d.android.com/develop/ui/compose/touch-input/user-interactions/swipe-to-dismiss)
 - [x] [Material You Dynamic Colors](https://d.android.com/develop/ui/views/theming/dynamic-colors)
 - [x] [Material3 Expressive](https://m3.material.io/blog/building-with-m3-expressive)

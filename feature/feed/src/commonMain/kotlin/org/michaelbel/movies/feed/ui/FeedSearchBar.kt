@@ -1,10 +1,12 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package org.michaelbel.movies.feed.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +25,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.grid.LazyGridState
@@ -35,6 +38,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -129,6 +134,7 @@ fun FeedSearchBar(
     val keyboardController = LocalSoftwareKeyboardController.current
     val textFieldState = rememberTextFieldState(initialText = query)
     val requestFocusAfterClose = remember { mutableStateOf(false) }
+    val expandedHistoryMovieId = remember { mutableStateOf<MovieId?>(null) }
     val safeDrawingHorizontalPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
     val safeDrawingStartPadding = safeDrawingHorizontalPadding.calculateStartPadding(layoutDirection)
     val safeDrawingEndPadding = safeDrawingHorizontalPadding.calculateEndPadding(layoutDirection)
@@ -366,42 +372,83 @@ fun FeedSearchBar(
                                     modifier = Modifier.padding(horizontal = 16.dp),
                                     shape = itemShape
                                 ) { historyMovie, _ ->
-                                    ListItem(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(itemShape)
-                                            .clickable {
-                                                onInputText(historyMovie.title)
-                                                clearInputFocus()
-                                            },
-                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                                        headlineContent = {
-                                            Text(
-                                                text = historyMovie.title,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        },
-                                        leadingContent = {
-                                            Icon(
-                                                imageVector = MoviesIcons.History,
-                                                contentDescription = null,
-                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                            )
-                                        },
-                                        trailingContent = {
-                                            IconButton(
-                                                onClick = { onHistoryMovieRemoveClick(historyMovie.movieId) }
-                                            ) {
-                                                Icon(
-                                                    imageVector = MoviesIcons.Close,
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    Box {
+                                        ListItem(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clip(itemShape)
+                                                .combinedClickable(
+                                                    onClick = {
+                                                        expandedHistoryMovieId.value = null
+                                                        onInputText(historyMovie.title)
+                                                        clearInputFocus()
+                                                    },
+                                                    onLongClick = {
+                                                        expandedHistoryMovieId.value = historyMovie.movieId
+                                                    }
+                                                ),
+                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                                            headlineContent = {
+                                                Text(
+                                                    text = historyMovie.title,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
                                                 )
+                                            },
+                                            leadingContent = {
+                                                Icon(
+                                                    imageVector = MoviesIcons.History,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                                )
+                                            },
+                                            trailingContent = {
+                                                IconButton(
+                                                    onClick = {
+                                                        expandedHistoryMovieId.value = null
+                                                        onHistoryMovieRemoveClick(historyMovie.movieId)
+                                                    }
+                                                ) {
+                                                    Icon(
+                                                        imageVector = MoviesIcons.Close,
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                    )
+                                                }
                                             }
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = expandedHistoryMovieId.value == historyMovie.movieId,
+                                            onDismissRequest = { expandedHistoryMovieId.value = null },
+                                            modifier = Modifier.widthIn(min = 180.dp),
+                                            shape = RoundedCornerShape(16.dp),
+                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                            tonalElevation = 2.dp,
+                                            shadowElevation = 4.dp
+                                        ) {
+                                            DropdownMenuItem(
+                                                text = {
+                                                    Text(
+                                                        text = stringResource(MoviesStrings.search_remove)
+                                                    )
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        imageVector = MoviesIcons.Delete,
+                                                        contentDescription = null,
+                                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                                    )
+                                                },
+                                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                                                onClick = {
+                                                    expandedHistoryMovieId.value = null
+                                                    onHistoryMovieRemoveClick(historyMovie.movieId)
+                                                }
+                                            )
                                         }
-                                    )
+                                    }
                                 }
 
                                 if (index != searchHistoryMovies.lastIndex) {

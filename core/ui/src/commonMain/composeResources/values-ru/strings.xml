@@ -57,6 +57,7 @@
     <string name="search_results_empty">Нет результатов поиска</string>
     <string name="search_recent">Недавние запросы</string>
     <string name="search_clear">Очистить</string>
+    <string name="search_remove">Удалить</string>
 
     <string name="main_nav_feed">Лента</string>
     <string name="main_nav_fave">Избранное</string>

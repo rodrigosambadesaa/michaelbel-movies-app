@@ -58,6 +58,9 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import org.michaelbel.movies.gallery.event.GalleryEvent
 import org.michaelbel.movies.gallery.intent.GalleryIntent
+import org.michaelbel.movies.gallery.ktx.INFINITE_PAGER_PAGE_COUNT
+import org.michaelbel.movies.gallery.ktx.calculateInitialPagerPage
+import org.michaelbel.movies.gallery.ktx.pageToImageIndex
 import org.michaelbel.movies.gallery.model.GalleryModel
 import org.michaelbel.movies.gallery.zoomable.rememberZoomState
 import org.michaelbel.movies.gallery.zoomable.zoomable
@@ -74,8 +77,6 @@ import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 import org.michaelbel.movies.work.WorkInfoState
-
-private const val DOWNLOAD_FAILURE_RESULT = "FAILURE_RESULT"
 
 @Composable
 fun GalleryScreen(
@@ -116,7 +117,7 @@ fun GalleryScreen(
                         }
                     }
                     is WorkInfoState.Failure -> {
-                        if (workInfoState.result == DOWNLOAD_FAILURE_RESULT) {
+                        if (workInfoState.result == "FAILURE_RESULT") {
                             scope.launch {
                                 snackbarHostState.showSnackbar(
                                     message = galleryFailureText,
@@ -141,13 +142,29 @@ private fun GalleryScreenContent(
     val hapticFeedback = LocalHapticFeedback.current
     val platformContext = LocalPlatformContext.current
     val scope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = { state.movieImages.size })
+    val imageCount = state.movieImages.size
+    val pagerPageCount = if (imageCount > 1) INFINITE_PAGER_PAGE_COUNT else imageCount
+    val pagerState = rememberPagerState(pageCount = { pagerPageCount })
     var currentPage by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(pagerState) {
+    LaunchedEffect(pagerState, imageCount) {
+        if (imageCount == 0) {
+            currentPage = 0
+            return@LaunchedEffect
+        }
+
+        if (imageCount > 1 && pagerState.currentPage == 0) {
+            pagerState.scrollToPage(calculateInitialPagerPage(imageCount))
+        }
+
+        currentPage = pageToImageIndex(pagerState.currentPage, imageCount)
+
         snapshotFlow { pagerState.currentPage }.collect { page ->
-            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-            currentPage = page
+            val nextPage = pageToImageIndex(page, imageCount)
+            if (nextPage != currentPage) {
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+            }
+            currentPage = nextPage
         }
     }
 
@@ -185,7 +202,7 @@ private fun GalleryScreenContent(
                         pageSpacing = 8.dp,
                         flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
                     ) { page ->
-                        val imageDb = state.movieImages[page]
+                        val imageDb = state.movieImages[pageToImageIndex(page, imageCount)]
                         var imageDiskCacheKey: String? by remember { mutableStateOf(null) }
                         var image by remember { mutableStateOf("") }
                         image = imageDb.original

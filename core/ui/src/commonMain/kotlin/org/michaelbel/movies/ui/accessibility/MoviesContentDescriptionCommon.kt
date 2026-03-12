@@ -9,6 +9,7 @@ import movies.core.ui.generated.resources.content_description_appearance_icon
 import movies.core.ui.generated.resources.content_description_back_icon
 import movies.core.ui.generated.resources.content_description_close_icon
 import movies.core.ui.generated.resources.content_description_download_icon
+import movies.core.ui.generated.resources.content_description_favorite_icon
 import movies.core.ui.generated.resources.content_description_movie_details_image
 import movies.core.ui.generated.resources.content_description_password_icon
 import movies.core.ui.generated.resources.content_description_password_off_icon
@@ -27,6 +28,7 @@ object MoviesContentDescriptionCommon {
     val BackIcon = Res.string.content_description_back_icon
     val CloseIcon = Res.string.content_description_close_icon
     val DownloadIcon = Res.string.content_description_download_icon
+    val FavoriteIcon = Res.string.content_description_favorite_icon
     val HistoryIcon = Res.string.content_description_download_icon
     val MovieDetailsImage = Res.string.content_description_movie_details_image
     val PasswordIcon = Res.string.content_description_password_icon

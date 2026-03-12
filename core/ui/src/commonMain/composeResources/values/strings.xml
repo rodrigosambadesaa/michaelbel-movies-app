@@ -11,7 +11,13 @@
     <string name="error_api_key_null">TMDB API key is null</string>
     <string name="error_loading">Error while loading movies</string>
     <string name="error_check_internet_connectivity">Check Internet Connectivity</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
+    <string name="download">Download</string>
+    <string name="login">Login</string>
+    <string name="share">Share</string>
     <string name="share_via">Share via</string>
+    <string name="voice_search">Voice search</string>
     <string name="tile_title">Movies</string>
     <string name="tile_added">Movies Tile added</string>
 
@@ -89,7 +95,7 @@
     <string name="settings_appearance">Appearance</string>
     <string name="settings_appearance_list">List</string>
     <string name="settings_appearance_grid">Grid</string>
-    <string name="settings_movie_list">Movie List</string>
+    <string name="settings_movie_list">List</string>
     <string name="settings_movie_list_now_playing">Now Playing</string>
     <string name="settings_movie_list_popular">Popular</string>
     <string name="settings_movie_list_top_rated">Top Rated</string>
@@ -104,8 +110,8 @@
     <string name="settings_app_version_code">(%1$s)</string>
     <string name="settings_app_debug">Debug</string>
     <string name="settings_action_cancel">Cancel</string>
-    <string name="settings_github">Movies on GitHub</string>
-    <string name="settings_github_description">Check the GitHub repository</string>
+    <string name="settings_github">GitHub</string>
+    <string name="settings_github_description">Check the Repository</string>
     <string name="settings_telegram">Telegram</string>
     <string name="settings_telegram_description">Subscribe to Сhannel</string>
     <string name="settings_app_widget">Add Widget to Home Screen</string>
@@ -143,6 +149,7 @@
     <string name="content_description_back_icon">Back Icon</string>
     <string name="content_description_close_icon">Close Icon</string>
     <string name="content_description_download_icon">Download Icon</string>
+    <string name="content_description_favorite_icon">Favorite Icon</string>
     <string name="content_description_history_icon">History Icon</string>
     <string name="content_description_movie_details_image">Movie Details Image</string>
     <string name="content_description_password_icon">Password Visible Icon</string>

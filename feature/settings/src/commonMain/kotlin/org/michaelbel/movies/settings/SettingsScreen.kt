@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +27,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
@@ -138,20 +136,13 @@ fun SettingsScreen(
             is SettingsEvent.RequestTelegram -> navigateToTelegramUrl()
             is SettingsEvent.ScrollToTop -> scope.launch { lazyListState.animateScrollToItem(0) }
             is SettingsEvent.ShowSnackbar -> {
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        message = event.message,
-                        duration = SnackbarDuration.Short
-                    )
-                }
+                snackbarHostState.currentSnackbarData?.dismiss()
+                scope.launch { snackbarHostState.showSnackbar(message = event.message, duration = SnackbarDuration.Short) }
             }
             is SettingsEvent.ShowPermissionSnackbar -> {
+                snackbarHostState.currentSnackbarData?.dismiss()
                 scope.launch {
-                    val result = snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.actionLabel,
-                        duration = SnackbarDuration.Long
-                    )
+                    val result = snackbarHostState.showSnackbar(message = event.message, actionLabel = event.actionLabel, duration = SnackbarDuration.Long)
                     if (result == SnackbarResult.ActionPerformed) {
                         openAppNotificationSettings()
                     }
@@ -205,6 +196,10 @@ private fun SettingsScreenContent(
                     )
                 },
                 modifier = Modifier.clickableWithoutRipple { dispatch(SettingsIntent.ScrollToTop) },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    scrolledContainerColor = MaterialTheme.colorScheme.inversePrimary
+                ),
                 scrollBehavior = topAppBarScrollBehavior
             )
         },
@@ -213,7 +208,8 @@ private fun SettingsScreenContent(
                 hostState = snackbarHostState,
                 modifier = Modifier.padding(bottom = 64.dp)
             )
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -246,7 +242,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
                             .clickable(onClick = { languageDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_language),
@@ -295,7 +291,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { themeDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_theme),
@@ -344,7 +340,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { appearanceDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_appearance),
@@ -393,7 +389,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { movieListDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_movie_list),
@@ -441,7 +437,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { genderDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = SettingsGenderText,
@@ -485,7 +481,7 @@ private fun SettingsScreenContent(
                                     }
                                 }
                             ),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_dynamic_colors),
@@ -535,7 +531,7 @@ private fun SettingsScreenContent(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                            .background(MaterialTheme.colorScheme.inversePrimary)
                     ) {
                         ListItem(
                             modifier = Modifier
@@ -549,7 +545,7 @@ private fun SettingsScreenContent(
                                         }
                                     }
                                 ),
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                             headlineContent = {
                                 Text(
                                     text = stringResource(MoviesStrings.settings_palette_colors),
@@ -615,7 +611,7 @@ private fun SettingsScreenContent(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                            .background(MaterialTheme.colorScheme.inversePrimary)
                     )
                     {
                         Text(
@@ -648,7 +644,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.RequestPostNotificationsPermission) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_post_notifications),
@@ -699,7 +695,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.RequestIgnoreBatteryOptimizations) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_battery_optimization),
@@ -750,7 +746,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = rememberAndPinAppWidgetProvider()),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_app_widget),
@@ -786,7 +782,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.RequestTileService) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_tile),
@@ -822,7 +818,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.SetBiometricEnabled(!state.isBiometricEnabled)) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_lock_app),
@@ -873,7 +869,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.SetScreenshotBlockEnabled(!state.isScreenshotBlockEnabled)) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_screenshots),
@@ -924,7 +920,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.RequestGithub) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_github),
@@ -960,7 +956,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.RequestTelegram) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_telegram),
@@ -998,7 +994,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.ReviewClick) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_review),
@@ -1034,7 +1030,7 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
                             .clickable(onClick = { dispatch(SettingsIntent.UpdateClick) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_update),

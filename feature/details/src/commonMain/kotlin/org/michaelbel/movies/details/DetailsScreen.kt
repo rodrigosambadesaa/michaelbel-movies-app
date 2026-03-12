@@ -16,10 +16,15 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -93,27 +98,68 @@ fun DetailsScreen(
                     )
                 },
                 actions = {
+                    TooltipBox(
+                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                            positioning = TooltipAnchorPosition.Below
+                        ),
+                        tooltip = {
+                            PlainTooltip {
+                                Text(
+                                    text = stringResource(if (state.isAuthorized && state.isFavorite) MoviesStrings.remove_from_favorites else MoviesStrings.add_to_favorites)
+                                )
+                            }
+                        },
+                        state = rememberTooltipState()
+                    ) {
+                        IconButton(
+                            onClick = { viewModel.dispatch(DetailsIntent.FavoriteClick) },
+                            enabled = !state.isFavoriteJobActive,
+                            modifier = Modifier
+                                .minimumInteractiveComponentSize()
+                                .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                            shape = IconButtonDefaults.extraSmallSquareShape
+                        ) {
+                            Image(
+                                imageVector = if (state.isAuthorized && state.isFavorite) MoviesIcons.Favorite else MoviesIcons.FavoriteBorder,
+                                contentDescription = stringResource(MoviesContentDescriptionCommon.FavoriteIcon),
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                colorFilter = ColorFilter.tint(animateOnContainerColor.value)
+                            )
+                        }
+                    }
+
                     AnimatedVisibility(
                         visible = state.isDetailsShareFeatureEnabled && state.detailsState.movieUrl != null,
                         enter = fadeIn()
                     ) {
                         state.detailsState.movieUrl?.let { url ->
-                            val shareTitle = stringResource(MoviesStrings.share_via)
-                            val shareAction = shareText(url, shareTitle)
-
-                            IconButton(
-                                onClick = shareAction,
-                                modifier = Modifier
-                                    .minimumInteractiveComponentSize()
-                                    .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
-                                shape = IconButtonDefaults.extraSmallSquareShape
+                            TooltipBox(
+                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                    positioning = TooltipAnchorPosition.Below
+                                ),
+                                tooltip = {
+                                    PlainTooltip {
+                                        Text(
+                                            text = stringResource(MoviesStrings.share)
+                                        )
+                                    }
+                                },
+                                state = rememberTooltipState()
                             ) {
-                                Image(
-                                    imageVector = MoviesIcons.Share,
-                                    contentDescription = stringResource(MoviesContentDescriptionCommon.ShareIcon),
-                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                    colorFilter = ColorFilter.tint(animateOnContainerColor.value)
-                                )
+                                IconButton(
+                                    onClick = shareText(url, stringResource(MoviesStrings.share_via)),
+                                    modifier = Modifier
+                                        .minimumInteractiveComponentSize()
+                                        .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                                    shape = IconButtonDefaults.extraSmallSquareShape
+                                ) {
+                                    Image(
+                                        imageVector = MoviesIcons.Share,
+                                        contentDescription = stringResource(MoviesContentDescriptionCommon.ShareIcon),
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                        colorFilter = ColorFilter.tint(animateOnContainerColor.value)
+                                    )
+                                }
                             }
                         }
                     }

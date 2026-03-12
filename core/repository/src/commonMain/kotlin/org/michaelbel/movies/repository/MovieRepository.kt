@@ -35,5 +35,7 @@ interface MovieRepository {
 
     suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo)
 
+    suspend fun updateFavorite(movieId: MovieId, favorite: Boolean)
+
     suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int)
 }

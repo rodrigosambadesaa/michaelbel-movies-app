@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -46,7 +47,8 @@ import java.net.UnknownHostException
 
 @Composable
 actual fun FeedScreen(
-    viewModel: FeedViewModel
+    viewModel: FeedViewModel,
+    onSearchActiveChange: (Boolean) -> Unit
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
@@ -54,6 +56,10 @@ actual fun FeedScreen(
     val feedLazyListState = rememberLazyListState()
     val feedLazyGridState = rememberLazyGridState()
     val feedLazyStaggeredGridState = rememberLazyStaggeredGridState()
+
+    LaunchedEffect(onSearchActiveChange) {
+        onSearchActiveChange(false)
+    }
 
     FeedScreenContent(
         state = state,

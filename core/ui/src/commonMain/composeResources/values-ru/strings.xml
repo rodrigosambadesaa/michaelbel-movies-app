@@ -11,7 +11,13 @@
     <string name="error_api_key_null">TMDB API не может быть пустым</string>
     <string name="error_loading">При загрузке фильмов произошла ошибка.\nИз 🇷🇺 РФ и 🇧🇾 РБ не работает без VPN.</string>
     <string name="error_check_internet_connectivity">Проверить подключение к интернету</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="remove_from_favorites">Удалить из избранного</string>
+    <string name="download">Загрузить</string>
+    <string name="login">Авторизация</string>
+    <string name="share">Поделиться</string>
     <string name="share_via">Поделиться через</string>
+    <string name="voice_search">Голосовой поиск</string>
     <string name="tile_title">Movies</string>
     <string name="tile_added">Плитка добавлена</string>
 
@@ -89,7 +95,7 @@
     <string name="settings_appearance">Вид</string>
     <string name="settings_appearance_list">Список</string>
     <string name="settings_appearance_grid">Сетка</string>
-    <string name="settings_movie_list">Список фильмов</string>
+    <string name="settings_movie_list">Список</string>
     <string name="settings_movie_list_now_playing">Премьеры</string>
     <string name="settings_movie_list_popular">Популярные</string>
     <string name="settings_movie_list_top_rated">Топ</string>
@@ -104,11 +110,11 @@
     <string name="settings_app_version_code">(%1$s)</string>
     <string name="settings_app_debug">Debug</string>
     <string name="settings_action_cancel">Отмена</string>
-    <string name="settings_github">Movies на GitHub</string>
-    <string name="settings_github_description">Посмотреть GitHub-репозиторий</string>
+    <string name="settings_github">GitHub</string>
+    <string name="settings_github_description">Посмотреть репозиторий</string>
     <string name="settings_telegram">Telegram</string>
     <string name="settings_telegram_description">Подписаться на канал</string>
-    <string name="settings_app_widget">Добавить виджет на главный экран</string>
+    <string name="settings_app_widget">Добавить виджет на главную</string>
     <string name="settings_app_widget_description">3x2 %1$s</string>
     <string name="settings_tile">Добавить плитку в шторку</string>
     <string name="settings_tile_description">Плитка для запуска аппки</string>
@@ -118,7 +124,7 @@
     <string name="settings_gender_neutral">Средний</string>
     <string name="settings_gender_feminine">Женский</string>
     <string name="settings_gender_masculine">Мужской</string>
-    <string name="settings_lock_app">Запаролить приложение</string>
+    <string name="settings_lock_app">Установить отпечаток</string>
     <string name="settings_biometric_added">Биометрия включена</string>
     <string name="settings_biometric_not_added">Биометрия отключена</string>
     <string name="settings_update">Обнови приложение</string>
@@ -143,6 +149,7 @@
     <string name="content_description_back_icon">Иконка Назад</string>
     <string name="content_description_close_icon">Иконка Закрытия</string>
     <string name="content_description_download_icon">Иконка Загрузки</string>
+    <string name="content_description_favorite_icon">Иконка Избранного</string>
     <string name="content_description_history_icon">Иконка Истории Поиска</string>
     <string name="content_description_movie_details_image">Изображение Фильма</string>
     <string name="content_description_password_icon">Иконка Показать Пароль</string>

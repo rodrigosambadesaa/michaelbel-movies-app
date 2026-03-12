@@ -11,6 +11,7 @@ import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.ui.navigation.MainNavigator
+import org.michaelbel.movies.ui.pending.PendingActionStore
 
 class AuthViewModel(
     private val interactor: Interactor
@@ -18,7 +19,10 @@ class AuthViewModel(
 
     override fun dispatch(intent: AuthIntent) {
         when (intent) {
-            is AuthIntent.BackClick -> launch { MainNavigator.back() }
+            is AuthIntent.BackClick -> {
+                PendingActionStore.clear()
+                launch { MainNavigator.back() }
+            }
             is AuthIntent.LoginClick -> {
                 val job = launch {
                     reduce { it.copy(error = null) }
@@ -40,7 +44,7 @@ class AuthViewModel(
                         createSession(sessionToken.requestToken)
                         accountDetails()
                     }
-                    dispatch(AuthIntent.BackClick)
+                    MainNavigator.back()
                 }
                 reduce { it.copy(signInJob = job) }
             }

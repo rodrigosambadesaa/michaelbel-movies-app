@@ -9,10 +9,16 @@ import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
+import org.michaelbel.movies.main.event.MainEvent
 import org.michaelbel.movies.main.tabs.event.MainTabsEvent
+import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.main.tabs.intent.MainTabsIntent
 import org.michaelbel.movies.main.tabs.model.MainTabsModel
-import org.michaelbel.movies.persistence.database.ktx.isEmpty
+import org.michaelbel.movies.persistence.database.ktx.isNotEmpty
+import org.michaelbel.movies.ui.navigation.AuthDestination
+import org.michaelbel.movies.ui.navigation.MainNavigator
+import org.michaelbel.movies.ui.pending.PendingAction
+import org.michaelbel.movies.ui.pending.PendingActionStore
 import org.michaelbel.movies.ui.strings.MoviesStrings
 
 class MainTabsViewModel(
@@ -33,30 +39,63 @@ class MainTabsViewModel(
             is MainTabsIntent.CollectAuthorizedState -> {
                 launch {
                     interactor.accountPojoFlow.collectLatest { accountPojo ->
-                        reduce { it.copy(isAuthorized = !accountPojo.isEmpty) }
+                        val isAuthorized = accountPojo.isNotEmpty
+                        if (isAuthorized && !stateFlow.value.isAuthorized) {
+                            when (val pendingAuthAction = PendingActionStore.action) {
+                                PendingAction.OpenFave -> {
+                                    PendingActionStore.clear()
+                                    MainTabsEventManager.push(MainEvent.OpenFave)
+                                }
+                                is PendingAction.AddFavorite -> {
+                                    PendingActionStore.clear()
+                                    interactor.updateFavorite(pendingAuthAction.movieId, favorite = true)
+                                }
+                                else -> Unit
+                            }
+                        }
+                        reduce { it.copy(isAuthorized = isAuthorized) }
                     }
                 }
             }
             is MainTabsIntent.HandleRedirect -> {
-                val requestToken = intent.requestToken
-                val approved = intent.approved
-                if (requestToken == null || approved == null) return
-                if (!approved) {
-                    launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
-                    return
+                when {
+                    intent.requestToken == null || intent.approved == null -> Unit
+                    !intent.approved -> {
+                        PendingActionStore.clear()
+                        launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+                    }
+                    else -> dispatch(MainTabsIntent.AuthorizeAccount(intent.requestToken))
                 }
-                dispatch(MainTabsIntent.AuthorizeAccount(requestToken))
             }
             is MainTabsIntent.AuthorizeAccount -> {
                 launch {
                     interactor.run {
                         createSession(intent.requestToken)
                         accountDetails()
-                        push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_success))
+                    }
+                    push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_success))
+                    MainNavigator.back()
+                }
+            }
+            is MainTabsIntent.FeedClick -> {
+                launch { FeedEventManager.push(FeedEvent.ReselectFeed) }
+                launch { MainTabsEventManager.push(MainEvent.OpenFeed) }
+            }
+            is MainTabsIntent.FaveClick -> {
+                launch {
+                    when {
+                        stateFlow.value.isAuthorized -> {
+                            PendingActionStore.clear()
+                            MainTabsEventManager.push(MainEvent.OpenFave)
+                        }
+                        else -> {
+                            PendingActionStore.set(PendingAction.OpenFave)
+                            MainNavigator.forward(AuthDestination)
+                        }
                     }
                 }
             }
-            is MainTabsIntent.FeedReselected -> launch { FeedEventManager.push(FeedEvent.ReselectFeed) }
+            is MainTabsIntent.SettingsClick -> launch { MainTabsEventManager.push(MainEvent.OpenSettings) }
         }
     }
 

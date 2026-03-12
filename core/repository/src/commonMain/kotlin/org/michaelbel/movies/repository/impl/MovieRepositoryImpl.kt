@@ -4,12 +4,16 @@ package org.michaelbel.movies.repository.impl
 
 import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
+import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
 import org.michaelbel.movies.common.exceptions.MovieDetailsException
 import org.michaelbel.movies.common.exceptions.MoviesUpcomingException
-import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
 import org.michaelbel.movies.common.list.MovieList
+import org.michaelbel.movies.network.AccountNetworkService
 import org.michaelbel.movies.network.MovieNetworkService
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
+import org.michaelbel.movies.network.model.Fave
+import org.michaelbel.movies.network.model.Mark
+import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
 import org.michaelbel.movies.persistence.database.MoviePersistence
@@ -21,13 +25,16 @@ import org.michaelbel.movies.persistence.database.typealiases.Limit
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
+import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.MovieRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class MovieRepositoryImpl(
     private val movieNetworkService: MovieNetworkService,
-    private val moviePersistence: MoviePersistence
+    private val accountNetworkService: AccountNetworkService,
+    private val moviePersistence: MoviePersistence,
+    private val preferences: MoviesPreferences
 ): MovieRepository {
 
     override fun moviesPagingSource(pagingKey: PagingKey): PagingSource<Int, MoviePojo> {
@@ -43,8 +50,17 @@ class MovieRepositoryImpl(
     }
 
     override suspend fun moviesResult(pagingKey: PagingKey, language: String, page: Page): Result<MovieResponse> {
-        if (isTmdbApiKeyEmpty && moviePersistence.isEmpty(MoviePojo.MOVIES_LOCAL_LIST)) throw ApiKeyNotNullException()
-        return movieNetworkService.movies(pagingKey, language, page)
+        return when {
+            pagingKey == Movie.FAVORITE -> {
+                val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
+                val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
+                accountNetworkService.favoriteMovies(accountId, sessionId, language, page)
+            }
+            else -> {
+                if (isTmdbApiKeyEmpty && moviePersistence.isEmpty(MoviePojo.MOVIES_LOCAL_LIST)) throw ApiKeyNotNullException()
+                movieNetworkService.movies(pagingKey, language, page)
+            }
+        }
     }
 
     override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
@@ -111,6 +127,31 @@ class MovieRepositoryImpl(
                 position = maxPosition.plus(1)
             )
         )
+    }
+
+    override suspend fun updateFavorite(movieId: MovieId, favorite: Boolean) {
+        val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
+        val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
+        if (sessionId.isEmpty() || accountId == 0) return
+        val movie = moviePersistence.movieById(movieId) ?: return
+
+        val mark = accountNetworkService.markAsFavorite(
+            accountId = accountId,
+            sessionId = sessionId,
+            fave = Fave(
+                mediaType = Movie.MOVIE,
+                mediaId = movieId.toLong(),
+                favorite = favorite
+            )
+        )
+
+        if (mark.statusCode in setOf(Mark.ADDED, Mark.UPDATED, Mark.DELETED)) {
+            if (favorite) {
+                insertMovie(Movie.FAVORITE, movie)
+            } else {
+                removeMovie(Movie.FAVORITE, movieId)
+            }
+        }
     }
 
     override suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {

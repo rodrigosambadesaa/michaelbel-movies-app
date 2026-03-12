@@ -52,7 +52,7 @@ class UiInteractorImpl(
 
     override val isFeedViewFeatureEnabled: Boolean = true
 
-    override val isFaveFeatureEnabled: Boolean = false
+    override val isFaveFeatureEnabled: Boolean = true
 
     override val isMovieListFeatureEnabled: Boolean = true
 

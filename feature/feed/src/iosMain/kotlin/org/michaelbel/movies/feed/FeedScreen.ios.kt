@@ -29,10 +29,15 @@ import org.michaelbel.movies.network.connectivity.NetworkStatus
 
 @Composable
 actual fun FeedScreen(
-    viewModel: FeedViewModel
+    viewModel: FeedViewModel,
+    onSearchActiveChange: (Boolean) -> Unit
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
     val pagingData by viewModel.moviesFlow.collectAsStateCommon()
+
+    LaunchedEffect(onSearchActiveChange) {
+        onSearchActiveChange(false)
+    }
 
     FeedScreenContent(
         state = state,

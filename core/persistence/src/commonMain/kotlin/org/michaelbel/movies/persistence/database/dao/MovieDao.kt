@@ -52,6 +52,9 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE movieList = :pagingKey AND movieId = :movieId")
     suspend fun movieById(pagingKey: PagingKey, movieId: MovieId): MoviePojo?
 
+    @Query("SELECT * FROM movies WHERE movieId = :movieId ORDER BY dateAdded DESC LIMIT 1")
+    suspend fun movieById(movieId: MovieId): MoviePojo?
+
     @Query("SELECT COALESCE(MAX(position), 0) FROM movies WHERE movieList = :pagingKey")
     suspend fun maxPosition(pagingKey: PagingKey): Int
 

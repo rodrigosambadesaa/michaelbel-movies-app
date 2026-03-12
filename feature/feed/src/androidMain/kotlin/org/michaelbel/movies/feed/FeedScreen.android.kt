@@ -27,6 +27,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -72,7 +74,8 @@ import java.net.UnknownHostException
 
 @Composable
 actual fun FeedScreen(
-    viewModel: FeedViewModel
+    viewModel: FeedViewModel,
+    onSearchActiveChange: (Boolean) -> Unit
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
 
@@ -92,7 +95,8 @@ actual fun FeedScreen(
         snackbarHostState = snackbarHostState,
         feedLazyListState = feedLazyListState,
         feedLazyGridState = feedLazyGridState,
-        feedLazyStaggeredGridState = feedLazyStaggeredGridState
+        feedLazyStaggeredGridState = feedLazyStaggeredGridState,
+        onSearchActiveChange = onSearchActiveChange
     )
 
     ObserveAsEvents(
@@ -106,9 +110,9 @@ actual fun FeedScreen(
                 scope.launch { feedLazyStaggeredGridState.animateScrollToItem(0) }
             }
             is FeedEvent.ShowSnackbar -> {
+                snackbarHostState.currentSnackbarData?.dismiss()
                 scope.launch {
                     snackbarHostState.run {
-                        currentSnackbarData?.dismiss()
                         showSnackbar(
                             message = event.message,
                             duration = if (event.isLong) SnackbarDuration.Long else SnackbarDuration.Short
@@ -130,12 +134,27 @@ private fun FeedScreenContent(
     snackbarHostState: SnackbarHostState,
     feedLazyListState: LazyListState,
     feedLazyGridState: LazyGridState,
-    feedLazyStaggeredGridState: LazyStaggeredGridState
+    feedLazyStaggeredGridState: LazyStaggeredGridState,
+    onSearchActiveChange: (Boolean) -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchActive by rememberSaveable { mutableStateOf(false) }
     var isSearchAutoFocusEnabled by rememberSaveable { mutableStateOf(true) }
+    val contentBottomPadding = when {
+        isSearchActive -> 16.dp
+        else -> 80.dp
+    }
+
+    LaunchedEffect(isSearchActive, onSearchActiveChange) {
+        onSearchActiveChange(isSearchActive)
+    }
+
+    DisposableEffect(onSearchActiveChange) {
+        onDispose {
+            onSearchActiveChange(false)
+        }
+    }
 
     fun clearSearchState() {
         query = ""
@@ -252,7 +271,7 @@ private fun FeedScreenContent(
                                 dispatch(FeedIntent.MovieDetailsClick(searchQuery, movieId))
                             },
                             modifier = modifier,
-                            contentPadding = PaddingValues(bottom = 96.dp),
+                            contentPadding = PaddingValues(bottom = contentBottomPadding),
                             cardColor = MaterialTheme.colorScheme.primaryContainer
                         )
                     },
@@ -290,7 +309,7 @@ private fun FeedScreenContent(
             start = innerPadding.calculateStartPadding(layoutDirection),
             top = innerPadding.calculateTopPadding() + if (isGridLayout) 8.dp else 4.dp,
             end = innerPadding.calculateEndPadding(layoutDirection),
-            bottom = innerPadding.calculateBottomPadding() + 80.dp
+            bottom = innerPadding.calculateBottomPadding() + contentBottomPadding
         )
         when {
             pagingItems.isLoading -> {

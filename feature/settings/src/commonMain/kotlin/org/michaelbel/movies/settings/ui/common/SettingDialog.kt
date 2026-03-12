@@ -4,25 +4,28 @@ package org.michaelbel.movies.settings.ui.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,7 +54,8 @@ fun <T: SealedString> SettingsDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(
-                onClick = onDismissRequest
+                onClick = onDismissRequest,
+                shapes = ButtonDefaults.shapes()
             ) {
                 Text(
                     text = stringResource(MoviesStrings.settings_action_cancel),
@@ -78,31 +82,44 @@ fun <T: SealedString> SettingsDialog(
             Column(
                 modifier = Modifier.verticalScroll(scrollState)
             ) {
-                items.forEach { item ->
-                    Row(
+                items.forEachIndexed { index, item ->
+                    val itemShape = when {
+                        items.size == 1 -> RoundedCornerShape(16.dp)
+                        index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
+                        index == items.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
+                        else -> RoundedCornerShape(4.dp)
+                    }
+
+                    ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(52.dp)
+                            .clip(itemShape)
                             .clickable {
                                 onItemSelect(item)
                                 onDismissRequest()
                             },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = currentItem == item,
-                            onClick = null,
-                            colors = RadioButtonDefaults.colors(
-                                selectedColor = MaterialTheme.colorScheme.primary,
-                                unselectedColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .6F)
-                            ),
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
+                        headlineContent = {
+                            Text(
+                                text = item.stringText,
+                                style = MaterialTheme.typography.titleMediumEmphasized
+                            )
+                        },
+                        leadingContent = {
+                            RadioButton(
+                                selected = currentItem == item,
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = MaterialTheme.colorScheme.primary,
+                                    unselectedColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .6F)
+                                )
+                            )
+                        }
+                    )
 
-                        Text(
-                            text = item.stringText,
-                            modifier = Modifier.padding(start = 8.dp),
-                            style = MaterialTheme.typography.titleMediumEmphasized
+                    if (index != items.lastIndex) {
+                        Spacer(
+                            modifier = Modifier.height(2.dp)
                         )
                     }
                 }

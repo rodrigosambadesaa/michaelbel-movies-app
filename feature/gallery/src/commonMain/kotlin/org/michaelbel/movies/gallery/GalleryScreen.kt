@@ -20,14 +20,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LinearWavyProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.WavyProgressIndicatorDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -285,20 +290,34 @@ private fun GalleryScreenContent(
                             .padding(end = 4.dp, top = 8.dp)
                             .statusBarsPadding()
                     ) {
-                        IconButton(
-                            onClick = { dispatch(GalleryIntent.DownloadClick(state.movieImages[currentPage])) },
-                            modifier = Modifier
-                                .windowInsetsPadding(displayCutoutWindowInsets)
-                                .minimumInteractiveComponentSize()
-                                .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
-                            shape = IconButtonDefaults.extraSmallSquareShape
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                positioning = TooltipAnchorPosition.Below
+                            ),
+                            tooltip = {
+                                PlainTooltip {
+                                    Text(
+                                        text = stringResource(MoviesStrings.download)
+                                    )
+                                }
+                            },
+                            state = rememberTooltipState()
                         ) {
-                            Image(
-                                imageVector = MoviesIcons.FileDownload,
-                                contentDescription = stringResource(MoviesContentDescriptionCommon.DownloadIcon),
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                            )
+                            IconButton(
+                                onClick = { dispatch(GalleryIntent.DownloadClick(state.movieImages[currentPage])) },
+                                modifier = Modifier
+                                    .windowInsetsPadding(displayCutoutWindowInsets)
+                                    .minimumInteractiveComponentSize()
+                                    .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                                shape = IconButtonDefaults.extraSmallSquareShape
+                            ) {
+                                Image(
+                                    imageVector = MoviesIcons.FileDownload,
+                                    contentDescription = stringResource(MoviesContentDescriptionCommon.DownloadIcon),
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                                )
+                            }
                         }
                     }
                 }

@@ -14,6 +14,8 @@ interface MovieInteractor {
 
     fun moviesPagingData(movieList: MovieList): Flow<PagingData<MoviePojo>>
 
+    fun favoriteMoviesPagingData(): Flow<PagingData<MoviePojo>>
+
     fun moviesPagingData(searchQuery: Query): Flow<PagingData<MoviePojo>>
 
     fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?>
@@ -31,6 +33,8 @@ interface MovieInteractor {
     suspend fun removeMovie(pagingKey: PagingKey, movieId: MovieId)
 
     suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo)
+
+    suspend fun updateFavorite(movieId: MovieId, favorite: Boolean)
 
     suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int)
 

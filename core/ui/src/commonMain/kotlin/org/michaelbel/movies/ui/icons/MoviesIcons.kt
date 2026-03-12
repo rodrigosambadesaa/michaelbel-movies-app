@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material.icons.filled.Widgets
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import movies.core.ui.generated.resources.Res
 import movies.core.ui.generated.resources.ic_launcher_icon_red
 import movies.core.ui.generated.resources.ic_tmdb
@@ -50,6 +51,7 @@ object MoviesIcons {
     val FileDownload = Icons.Filled.FileDownload
     val Fingerprint = Icons.Filled.Fingerprint
     val Favorite = Icons.Filled.Favorite
+    val FavoriteBorder = Icons.Outlined.FavoriteBorder
     val GridView = Icons.Filled.GridView
     val History = Icons.Filled.History
     val KeyboardVoice = Icons.Filled.KeyboardVoice

@@ -53,6 +53,10 @@ class MoviePersistence(
         return moviesDatabase.movieDao.movieById(pagingKey, movieId)
     }
 
+    suspend fun movieById(movieId: MovieId): MoviePojo? {
+        return moviesDatabase.movieDao.movieById(movieId)
+    }
+
     suspend fun maxPosition(pagingKey: PagingKey): Int {
         return moviesDatabase.movieDao.maxPosition(pagingKey)
     }

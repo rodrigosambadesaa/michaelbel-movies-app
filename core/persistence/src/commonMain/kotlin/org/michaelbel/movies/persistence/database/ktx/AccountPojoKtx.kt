@@ -22,6 +22,9 @@ internal val AccountPojo.accountDb: AccountDb
 val AccountPojo.isEmpty: Boolean
     get() = this == AccountPojo.Empty
 
+val AccountPojo.isNotEmpty: Boolean
+    get() = this != AccountPojo.Empty
+
 val AccountPojo?.orEmpty: AccountPojo
     get() = this ?: AccountPojo.Empty
 

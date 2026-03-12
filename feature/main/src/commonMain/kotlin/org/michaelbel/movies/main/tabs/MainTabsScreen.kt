@@ -2,10 +2,7 @@
 
 package org.michaelbel.movies.main.tabs
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -32,9 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.saveable.rememberSerializable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -56,6 +56,7 @@ import org.michaelbel.movies.main.event.MainEvent
 import org.michaelbel.movies.main.tabs.event.MainTabsEvent
 import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.main.tabs.intent.MainTabsIntent
+import org.michaelbel.movies.main.tabs.model.MainTabsModel
 import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
@@ -86,17 +87,12 @@ fun MainTabsScreen(
     }
 
     MainTabsScreenContent(
+        state = state,
+        dispatch = viewModel::dispatch,
         backStack = backStack,
         feedDestination = feedDestination,
-        showFaveTab = state.isFaveFeatureEnabled && state.isAuthorized,
         snackbarHostState = snackbarHostState,
-        layoutDirection = layoutDirection,
-        onFeedClick = {
-            viewModel.dispatch(MainTabsIntent.FeedReselected)
-            backStack[backStack.lastIndex] = feedDestination
-        },
-        onFaveClick = { backStack[backStack.lastIndex] = FaveDestination },
-        onSettingsClick = { backStack[backStack.lastIndex] = SettingsDestination }
+        layoutDirection = layoutDirection
     )
 
     LaunchedEffect(feedDestination.requestToken, feedDestination.approved) {
@@ -108,6 +104,7 @@ fun MainTabsScreen(
     ) { event ->
         when (event) {
             MainEvent.OpenFeed -> backStack[backStack.lastIndex] = feedDestination
+            MainEvent.OpenFave -> backStack[backStack.lastIndex] = FaveDestination
             MainEvent.OpenSettings -> backStack[backStack.lastIndex] = SettingsDestination
         }
     }
@@ -137,100 +134,92 @@ fun MainTabsScreen(
 
 @Composable
 private fun MainTabsScreenContent(
+    state: MainTabsModel,
+    dispatch: (MainTabsIntent) -> Unit,
     backStack: MutableList<AppRoute>,
     feedDestination: FeedDestination,
-    showFaveTab: Boolean,
     snackbarHostState: SnackbarHostState,
-    layoutDirection: LayoutDirection,
-    onFeedClick: () -> Unit,
-    onFaveClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    layoutDirection: LayoutDirection
 ) {
-    LaunchedEffect(showFaveTab) {
-        if (!showFaveTab && backStack[backStack.lastIndex] == FaveDestination) {
-            backStack[backStack.lastIndex] = feedDestination
-        }
-    }
+    var isFeedSearchActive by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = if (isDesktop) 16.dp else 0.dp, top = 8.dp)
-                    .navigationBarsPadding(),
-                contentAlignment = Alignment.Center
-            ) {
-                HorizontalFloatingToolbar(
-                    expanded = true
+            if (backStack[backStack.lastIndex] != feedDestination || !isFeedSearchActive) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = if (isDesktop) 16.dp else 0.dp, top = 8.dp)
+                        .navigationBarsPadding(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        modifier = Modifier.animateContentSize(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    HorizontalFloatingToolbar(
+                        expanded = true
                     ) {
-                        ShortNavigationBarItem(
-                            icon = {
-                                Icon(
-                                    imageVector = MoviesIcons.GridView,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = stringResource(MoviesStrings.main_nav_feed),
-                                    style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
-                                )
-                            },
-                            selected = backStack[backStack.lastIndex] == feedDestination,
-                            onClick = onFeedClick,
-                            iconPosition = NavigationItemIconPosition.Start,
-                        )
-
-                        AnimatedVisibility(
-                            visible = showFaveTab,
-                            enter = fadeIn(),
-                            exit = fadeOut()
+                        Row(
+                            modifier = Modifier.animateContentSize(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             ShortNavigationBarItem(
                                 icon = {
                                     Icon(
-                                        imageVector = MoviesIcons.Favorite,
+                                        imageVector = MoviesIcons.GridView,
                                         contentDescription = null,
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                     )
                                 },
                                 label = {
                                     Text(
-                                        text = stringResource(MoviesStrings.main_nav_fave),
+                                        text = stringResource(MoviesStrings.main_nav_feed),
                                         style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
                                     )
                                 },
-                                selected = backStack[backStack.lastIndex] == FaveDestination,
-                                onClick = onFaveClick,
+                                selected = backStack[backStack.lastIndex] == feedDestination,
+                                onClick = { dispatch(MainTabsIntent.FeedClick) },
+                                iconPosition = NavigationItemIconPosition.Start,
+                            )
+
+                            if (state.isFaveFeatureEnabled) {
+                                ShortNavigationBarItem(
+                                    icon = {
+                                        Icon(
+                                            imageVector = MoviesIcons.Favorite,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            text = stringResource(MoviesStrings.main_nav_fave),
+                                            style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
+                                        )
+                                    },
+                                    selected = backStack[backStack.lastIndex] == FaveDestination,
+                                    onClick = { dispatch(MainTabsIntent.FaveClick) },
+                                    iconPosition = NavigationItemIconPosition.Start
+                                )
+                            }
+
+                            ShortNavigationBarItem(
+                                icon = {
+                                    Icon(
+                                        imageVector = MoviesIcons.Settings,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                    )
+                                },
+                                label = {
+                                    Text(
+                                        text = stringResource(MoviesStrings.main_nav_settings),
+                                        style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
+                                    )
+                                },
+                                selected = backStack[backStack.lastIndex] == SettingsDestination,
+                                onClick = { dispatch(MainTabsIntent.SettingsClick) },
                                 iconPosition = NavigationItemIconPosition.Start
                             )
                         }
-
-                        ShortNavigationBarItem(
-                            icon = {
-                                Icon(
-                                    imageVector = MoviesIcons.Settings,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = stringResource(MoviesStrings.main_nav_settings),
-                                    style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
-                                )
-                            },
-                            selected = backStack[backStack.lastIndex] == SettingsDestination,
-                            onClick = onSettingsClick,
-                            iconPosition = NavigationItemIconPosition.Start
-                        )
                     }
                 }
             }
@@ -258,7 +247,7 @@ private fun MainTabsScreenContent(
             popTransitionSpec = fadeTransitionSpec(),
             predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
             entryProvider = entryProvider {
-                entry<FeedDestination> { FeedScreen() }
+                entry<FeedDestination> { FeedScreen(onSearchActiveChange = { isFeedSearchActive = it }) }
                 entry<FaveDestination> { FaveScreen() }
                 entry<SettingsDestination> { SettingsScreen() }
             }

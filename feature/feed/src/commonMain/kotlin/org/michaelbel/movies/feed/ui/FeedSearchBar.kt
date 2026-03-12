@@ -2,6 +2,14 @@
 
 package org.michaelbel.movies.feed.ui
 
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,10 +57,15 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +78,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -74,6 +88,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.stringResource
+import org.michaelbel.movies.feed.ktx.SearchTrailingAction
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
@@ -138,6 +153,12 @@ fun FeedSearchBar(
     val safeDrawingHorizontalPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
     val safeDrawingStartPadding = safeDrawingHorizontalPadding.calculateStartPadding(layoutDirection)
     val safeDrawingEndPadding = safeDrawingHorizontalPadding.calculateEndPadding(layoutDirection)
+    val searchInputTextStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
+    val searchTrailingAction = when {
+        textFieldState.text.isNotEmpty() -> SearchTrailingAction.Clear
+        active -> SearchTrailingAction.Voice
+        else -> SearchTrailingAction.None
+    }
 
     LaunchedEffect(query) {
         if (textFieldState.text.toString() != query) {
@@ -180,10 +201,11 @@ fun FeedSearchBar(
                 },
                 expanded = active,
                 onExpandedChange = onActiveChange,
+                textStyle = searchInputTextStyle,
                 placeholder = {
                     Text(
                         text = stringResource(MoviesStrings.search_title),
-                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
+                        style = searchInputTextStyle
                     )
                 },
                 leadingIcon = {
@@ -214,53 +236,103 @@ fun FeedSearchBar(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (textFieldState.text.isNotEmpty()) {
-                            IconButton(
-                                onClick = {
-                                    onCloseClick()
-                                    requestFocusAfterClose.value = true
-                                }
+                        Box(
+                            modifier = Modifier.size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = searchTrailingAction == SearchTrailingAction.Clear,
+                                enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
+                                exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
                             ) {
-                                Image(
-                                    imageVector = MoviesIcons.Close,
-                                    contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
-                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                                )
+                                IconButton(
+                                    onClick = {
+                                        onCloseClick()
+                                        requestFocusAfterClose.value = true
+                                    }
+                                ) {
+                                    Image(
+                                        imageVector = MoviesIcons.Close,
+                                        contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                                    )
+                                }
                             }
-                        } else if (active) {
-                            IconButton(
-                                onClick = rememberSpeechRecognitionLauncher { text ->
-                                    onInputText(text)
-                                    clearInputFocus()
-                                }
+
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = searchTrailingAction == SearchTrailingAction.Voice,
+                                enter = scaleIn(transformOrigin = TransformOrigin(0F, 0F)) + fadeIn() + expandIn(expandFrom = Alignment.TopStart),
+                                exit = scaleOut(transformOrigin = TransformOrigin(0F, 0F)) + fadeOut() + shrinkOut(shrinkTowards = Alignment.TopStart)
                             ) {
-                                Image(
-                                    imageVector = MoviesIcons.KeyboardVoice,
-                                    contentDescription = stringResource(MoviesContentDescriptionCommon.VoiceIcon),
-                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                                )
+                                TooltipBox(
+                                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                        positioning = TooltipAnchorPosition.Below
+                                    ),
+                                    tooltip = {
+                                        PlainTooltip {
+                                            Text(
+                                                text = stringResource(MoviesStrings.voice_search)
+                                            )
+                                        }
+                                    },
+                                    state = rememberTooltipState()
+                                ) {
+                                    IconButton(
+                                        onClick = rememberSpeechRecognitionLauncher { text ->
+                                            onInputText(text)
+                                            clearInputFocus()
+                                        }
+                                    ) {
+                                        Image(
+                                            imageVector = MoviesIcons.KeyboardVoice,
+                                            contentDescription = stringResource(MoviesContentDescriptionCommon.VoiceIcon),
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                                        )
+                                    }
+                                }
                             }
                         }
 
                         if (!active && !isSearchResultsVisible) {
-                            IconButton(
-                                onClick = if (account.isEmpty) onAuthIconClick else onAccountIconClick
-                            ) {
-                                if (account.isEmpty) {
-                                    Image(
-                                        imageVector = MoviesIcons.AccountCircle,
-                                        contentDescription = stringResource(MoviesContentDescriptionCommon.AccountIcon),
-                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                                    )
-                                } else {
-                                    AccountAvatar(
-                                        account = account,
-                                        fontSize = if (account.letters.length == 1) 16.sp else 13.sp,
-                                        modifier = Modifier.size(IconButtonDefaults.largeIconSize)
-                                    )
+                            when {
+                                account.isEmpty -> {
+                                    TooltipBox(
+                                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                            positioning = TooltipAnchorPosition.Below
+                                        ),
+                                        tooltip = {
+                                            PlainTooltip {
+                                                Text(
+                                                    text = stringResource(MoviesStrings.login)
+                                                )
+                                            }
+                                        },
+                                        state = rememberTooltipState()
+                                    ) {
+                                        IconButton(
+                                            onClick = onAuthIconClick
+                                        ) {
+                                            Image(
+                                                imageVector = MoviesIcons.AccountCircle,
+                                                contentDescription = stringResource(MoviesContentDescriptionCommon.AccountIcon),
+                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                                            )
+                                        }
+                                    }
+                                }
+                                else -> {
+                                    IconButton(
+                                        onClick = onAccountIconClick
+                                    ) {
+                                        AccountAvatar(
+                                            account = account,
+                                            fontSize = if (account.letters.length == 1) 16.sp else 13.sp,
+                                            modifier = Modifier.size(IconButtonDefaults.largeIconSize)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -335,10 +407,7 @@ fun FeedSearchBar(
                                 headlineContent = {
                                     Text(
                                         text = stringResource(MoviesStrings.search_recent),
-                                        style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            textAlign = TextAlign.Start
-                                        )
+                                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
                                     )
                                 },
                                 trailingContent = {
@@ -424,21 +493,23 @@ fun FeedSearchBar(
                                             onDismissRequest = { expandedHistoryMovieId.value = null },
                                             modifier = Modifier.widthIn(min = 180.dp),
                                             shape = RoundedCornerShape(16.dp),
-                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                            containerColor = MaterialTheme.colorScheme.errorContainer,
                                             tonalElevation = 2.dp,
                                             shadowElevation = 4.dp
                                         ) {
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text = stringResource(MoviesStrings.search_remove)
+                                                        text = stringResource(MoviesStrings.search_remove),
+                                                        color = MaterialTheme.colorScheme.onErrorContainer
                                                     )
                                                 },
                                                 leadingIcon = {
                                                     Icon(
                                                         imageVector = MoviesIcons.Delete,
                                                         contentDescription = null,
-                                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                        tint = MaterialTheme.colorScheme.onErrorContainer
                                                     )
                                                 },
                                                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),

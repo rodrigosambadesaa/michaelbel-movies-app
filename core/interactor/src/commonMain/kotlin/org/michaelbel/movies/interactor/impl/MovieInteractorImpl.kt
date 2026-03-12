@@ -15,6 +15,7 @@ import org.michaelbel.movies.interactor.MovieInteractor
 import org.michaelbel.movies.interactor.ktx.nameOrLocalList
 import org.michaelbel.movies.interactor.remote.FeedMoviesRemoteMediator
 import org.michaelbel.movies.interactor.remote.SearchMoviesRemoteMediator
+import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.persistence.database.MoviesDatabase
 import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
@@ -51,6 +52,23 @@ class MovieInteractorImpl(
                 pagingKey = MovieList.name(movieList)
             ),
             pagingSourceFactory = { movieRepository.moviesPagingSource(movieList.nameOrLocalList) }
+        ).flow
+    }
+
+    override fun favoriteMoviesPagingData(): Flow<PagingData<MoviePojo>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = MovieResponse.DEFAULT_PAGE_SIZE,
+                enablePlaceholders = true
+            ),
+            remoteMediator = FeedMoviesRemoteMediator(
+                localeInteractor = localeInteractor,
+                movieRepository = movieRepository,
+                pagingKeyRepository = pagingKeyRepository,
+                moviesDatabase = moviesDatabase,
+                pagingKey = Movie.FAVORITE
+            ),
+            pagingSourceFactory = { movieRepository.moviesPagingSource(Movie.FAVORITE) }
         ).flow
     }
 
@@ -102,6 +120,10 @@ class MovieInteractorImpl(
 
     override suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo) {
         return withContext(dispatchers.io) { movieRepository.insertMovie(pagingKey, movie) }
+    }
+
+    override suspend fun updateFavorite(movieId: MovieId, favorite: Boolean) {
+        return withContext(dispatchers.io) { movieRepository.updateFavorite(movieId, favorite) }
     }
 
     override suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {

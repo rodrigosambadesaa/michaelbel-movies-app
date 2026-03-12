@@ -23,6 +23,8 @@ import movies.core.ui.generated.resources.auth_sign_in
 import movies.core.ui.generated.resources.auth_sign_up
 import movies.core.ui.generated.resources.auth_terms_of_use
 import movies.core.ui.generated.resources.auth_title
+import movies.core.ui.generated.resources.add_to_favorites
+import movies.core.ui.generated.resources.download
 import movies.core.ui.generated.resources.details_error_loading
 import movies.core.ui.generated.resources.details_url_copied
 import movies.core.ui.generated.resources.error_api_key_null
@@ -47,10 +49,12 @@ import movies.core.ui.generated.resources.language_code
 import movies.core.ui.generated.resources.main_nav_feed
 import movies.core.ui.generated.resources.main_nav_fave
 import movies.core.ui.generated.resources.main_nav_settings
+import movies.core.ui.generated.resources.login
 import movies.core.ui.generated.resources.notification_continue
 import movies.core.ui.generated.resources.notification_enable_subtitle
 import movies.core.ui.generated.resources.notification_enable_title
 import movies.core.ui.generated.resources.notification_go_to_settings
+import movies.core.ui.generated.resources.remove_from_favorites
 import movies.core.ui.generated.resources.retry
 import movies.core.ui.generated.resources.search_clear
 import movies.core.ui.generated.resources.search_history_empty
@@ -58,6 +62,7 @@ import movies.core.ui.generated.resources.search_recent
 import movies.core.ui.generated.resources.search_remove
 import movies.core.ui.generated.resources.search_results_empty
 import movies.core.ui.generated.resources.search_title
+import movies.core.ui.generated.resources.share
 import movies.core.ui.generated.resources.settings_action_cancel
 import movies.core.ui.generated.resources.settings_action_go
 import movies.core.ui.generated.resources.settings_app_debug
@@ -127,6 +132,7 @@ import movies.core.ui.generated.resources.shortcuts_search_title
 import movies.core.ui.generated.resources.shortcuts_settings_title
 import movies.core.ui.generated.resources.tile_added
 import movies.core.ui.generated.resources.tile_title
+import movies.core.ui.generated.resources.voice_search
 import org.jetbrains.compose.resources.stringResource
 
 object MoviesStrings {
@@ -144,7 +150,13 @@ object MoviesStrings {
     val error_api_key_null = Res.string.error_api_key_null
     val error_loading = Res.string.error_loading
     val error_check_internet_connectivity = Res.string.error_check_internet_connectivity
+    val add_to_favorites = Res.string.add_to_favorites
+    val remove_from_favorites = Res.string.remove_from_favorites
+    val download = Res.string.download
+    val login = Res.string.login
+    val share = Res.string.share
     val share_via = Res.string.share_via
+    val voice_search = Res.string.voice_search
     val tile_title = Res.string.tile_title
     val tile_added = Res.string.tile_added
 

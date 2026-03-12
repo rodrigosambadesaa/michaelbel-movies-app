@@ -36,6 +36,7 @@ import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.ui.navigation.NotifyDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
+import org.michaelbel.movies.ui.pending.PendingActionStore
 
 class FeedViewModel(
     private val uiInteractor: UiInteractor,
@@ -163,7 +164,10 @@ class FeedViewModel(
                 }
             }
             is FeedIntent.SettingsClick -> launch { MainNavigator.forward(SettingsDestination) }
-            is FeedIntent.AuthClick -> launch { MainNavigator.forward(AuthDestination) }
+            is FeedIntent.AuthClick -> {
+                PendingActionStore.clear()
+                launch { MainNavigator.forward(AuthDestination) }
+            }
             is FeedIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
             is FeedIntent.ClearSearchHistoryClick -> launch { interactor.removeMovies(MoviePojo.MOVIES_SEARCH_HISTORY) }
             is FeedIntent.RemoveMovieFromHistoryClick -> launch { interactor.removeMovie(MoviePojo.MOVIES_SEARCH_HISTORY, intent.movieId) }

@@ -90,7 +90,11 @@ fun MainScreen(
     ) { dest ->
         when (dest) {
             is MainNavigator.NavigationEvent.Back -> if (backStack.size > 1) backStack.removeLastOrNull()
-            is MainNavigator.NavigationEvent.Forward -> backStack.add(dest.destination)
+            is MainNavigator.NavigationEvent.Forward -> {
+                if (backStack.lastOrNull() != dest.destination) {
+                    backStack.add(dest.destination)
+                }
+            }
             is MainNavigator.NavigationEvent.RequestReview -> onRequestReview()
             is MainNavigator.NavigationEvent.RequestUpdate -> onRequestUpdate()
         }

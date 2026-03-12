@@ -5,5 +5,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 expect fun FeedScreen(
-    viewModel: FeedViewModel = koinViewModel()
+    viewModel: FeedViewModel = koinViewModel(),
+    onSearchActiveChange: (Boolean) -> Unit = {}
 )

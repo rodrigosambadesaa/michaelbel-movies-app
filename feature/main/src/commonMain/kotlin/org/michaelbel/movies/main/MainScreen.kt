@@ -101,6 +101,8 @@ fun MainScreen(
 private fun MainScreenContent(
     backStack: MutableList<AppRoute>
 ) {
+    val dialogSceneStrategy = remember { DialogSceneStrategy<AppRoute>() }
+
     NavDisplay(
         backStack = backStack,
         modifier = Modifier.fillMaxSize(),
@@ -108,7 +110,7 @@ private fun MainScreenContent(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
-        sceneStrategy = remember { DialogSceneStrategy() },
+        sceneStrategies = listOf(dialogSceneStrategy),
         transitionSpec = fadeTransitionSpec(),
         popTransitionSpec = fadeTransitionSpec(),
         predictivePopTransitionSpec = fadePredictiveTransitionSpec(),

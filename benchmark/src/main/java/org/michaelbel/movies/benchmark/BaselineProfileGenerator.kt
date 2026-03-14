@@ -3,7 +3,7 @@ package org.michaelbel.movies.benchmark
 /**
  * ./gradlew :benchmark:connectedCheck
  */
-/*internal class BaselineProfileGenerator {
+/*class BaselineProfileGenerator {
 
     @get:Rule
     val baselineProfileRule = BaselineProfileRule()

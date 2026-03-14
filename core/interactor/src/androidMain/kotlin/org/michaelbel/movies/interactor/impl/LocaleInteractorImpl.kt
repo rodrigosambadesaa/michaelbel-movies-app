@@ -16,7 +16,7 @@ import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.entity.AppLanguage
 import java.util.Locale
 
-internal class LocaleInteractorImpl(
+class LocaleInteractorImpl(
     private val context: Context,
     private val dispatchers: MoviesDispatchers,
     private val analytics: MoviesAnalytics

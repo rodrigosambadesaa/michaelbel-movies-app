@@ -4,7 +4,9 @@ package org.michaelbel.movies.feed
 
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -47,6 +50,7 @@ class FeedViewModel(
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
     private val searchQuery: StateFlow<String> get() = _searchQuery.asStateFlow()
+    private var searchFallbackJob: Job? = null
 
     private val currentMovieList: StateFlow<MovieList> = interactor.currentMovieList
         .stateIn(
@@ -73,6 +77,19 @@ class FeedViewModel(
         initialValue = emptyList()
     )
 
+    val searchMoviesFlow: StateFlow<List<MoviePojo>> = searchQuery.flatMapLatest { query ->
+        when {
+            query.isBlank() -> flowOf(emptyList())
+            else -> interactor.moviesFlow(query, MovieResponse.DEFAULT_PAGE_SIZE)
+        }
+    }.catch {
+        emit(emptyList())
+    }.stateIn(
+        scope = this,
+        started = SharingStarted.Lazily,
+        initialValue = emptyList()
+    )
+
     val pagingDataFlow2: StateFlow<List<MoviePojo>> = moviesFlow
 
     init {
@@ -81,6 +98,7 @@ class FeedViewModel(
         dispatch(FeedIntent.CollectMovieList)
         dispatch(FeedIntent.CollectNetworkStatus)
         dispatch(FeedIntent.CollectPageFailureButtonVisible)
+        dispatch(FeedIntent.CollectFeatureFlags)
         dispatch(FeedIntent.CollectSuggestions)
         dispatch(FeedIntent.CollectSearchHistoryMovies)
         dispatch(FeedIntent.LoadSuggestions)
@@ -121,6 +139,14 @@ class FeedViewModel(
                 }
             }
             is FeedIntent.CollectPageFailureButtonVisible -> reduce { it.copy(isPageFailureButtonVisible = uiInteractor.isPageFailureButtonVisible) }
+            is FeedIntent.CollectFeatureFlags -> {
+                reduce {
+                    it.copy(
+                        isFeedAuthIconFeatureEnabled = uiInteractor.isFeedAuthIconFeatureEnabled,
+                        isFeedVoiceInputFeatureEnabled = uiInteractor.isFeedVoiceInputFeatureEnabled
+                    )
+                }
+            }
             is FeedIntent.RefreshMovies -> { // TODO Fallback iOS
                 if (stateFlow.value.isFeedLoading) return
                 launch {
@@ -181,6 +207,31 @@ class FeedViewModel(
             is FeedIntent.ScrollToTop -> launch { push(FeedEvent.ScrollToTop) }
             is FeedIntent.ShowSnackbar -> launch { push(FeedEvent.ShowSnackbar(intent.message, intent.isLong)) }
             is FeedIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
+        }
+    }
+
+    fun refreshSearchMovies(query: String) {
+        searchFallbackJob?.cancel()
+
+        when {
+            query.isBlank() -> reduce { it.copy(isSearchLoading = false, searchFailure = null) }
+            else -> {
+                searchFallbackJob = launch {
+                    reduce { it.copy(isSearchLoading = true, searchFailure = null) }
+                    try {
+                        interactor.fetchAndInsertSearchMovies(query)
+                        reduce { it.copy(isSearchLoading = false, searchFailure = null) }
+                    } catch (throwable: Throwable) {
+                        when (throwable) {
+                            is CancellationException -> throw throwable
+                            else -> {
+                                log(throwable)
+                                reduce { it.copy(isSearchLoading = false, searchFailure = throwable) }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

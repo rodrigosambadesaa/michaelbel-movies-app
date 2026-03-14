@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.color.TonalPalettes
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.theme.a1
@@ -29,7 +29,7 @@ import org.michaelbel.movies.ui.theme.a2
 import org.michaelbel.movies.ui.theme.a3
 
 @Composable
-internal fun RowScope.SettingPaletteColor(
+fun RowScope.SettingPaletteColor(
     tonalPalettes: TonalPalettes,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -91,7 +91,7 @@ internal fun RowScope.SettingPaletteColor(
                 ) {
                     Icon(
                         imageVector = MoviesIcons.Check,
-                        contentDescription = MoviesContentDescriptionCommon.None,
+                        contentDescription = MoviesContentDescription.None,
                         modifier = Modifier
                             .size(iconSize)
                             .align(Alignment.Center),

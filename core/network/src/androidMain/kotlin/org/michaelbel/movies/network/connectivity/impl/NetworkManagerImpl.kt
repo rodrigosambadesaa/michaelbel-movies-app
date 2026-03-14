@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import org.michaelbel.movies.network.connectivity.NetworkManager
 import org.michaelbel.movies.network.connectivity.NetworkStatus
 
-internal class NetworkManagerImpl(
+class NetworkManagerImpl(
     private val connectivityManager: ConnectivityManager
 ): NetworkManager {
     override val status: Flow<NetworkStatus> = callbackFlow {

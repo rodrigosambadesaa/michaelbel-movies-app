@@ -4,6 +4,12 @@ import androidx.compose.runtime.Composable
 import java.awt.Desktop
 import java.net.URI
 
+actual fun tmdbAuthRedirectUrl(): String = runCatching {
+    DesktopTmdbAuthCallbackServer.redirectUrl()
+}.getOrElse {
+    defaultTmdbAuthRedirectUrl
+}
+
 @Composable
 actual fun navigateToUrl(url: String): () -> Unit {
     val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null

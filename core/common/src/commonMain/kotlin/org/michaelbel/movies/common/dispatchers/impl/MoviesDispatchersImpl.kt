@@ -6,7 +6,7 @@ import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
 import org.michaelbel.movies.common.dispatchers.ioDispatcher
 import org.michaelbel.movies.common.dispatchers.uiDispatcher
 
-internal class MoviesDispatchersImpl: MoviesDispatchers {
+class MoviesDispatchersImpl: MoviesDispatchers {
 
     override val default: CoroutineDispatcher
         get() = Dispatchers.Default

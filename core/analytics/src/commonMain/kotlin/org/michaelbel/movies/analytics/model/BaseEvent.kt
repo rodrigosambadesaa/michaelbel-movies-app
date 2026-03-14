@@ -1,6 +1,6 @@
 package org.michaelbel.movies.analytics.model
 
-open class BaseEvent internal constructor(
+open class BaseEvent constructor(
     val name: String
 ) {
     val params = hashMapOf<String, String>()

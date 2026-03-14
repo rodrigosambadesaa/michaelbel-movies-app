@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -47,7 +49,7 @@ import org.michaelbel.movies.details.ui.DetailsFailure
 import org.michaelbel.movies.details.ui.DetailsLoading
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.modifierDisplayCutoutWindowInsets
@@ -98,33 +100,39 @@ fun DetailsScreen(
                     )
                 },
                 actions = {
-                    TooltipBox(
-                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                            positioning = TooltipAnchorPosition.Below
-                        ),
-                        tooltip = {
-                            PlainTooltip {
-                                Text(
-                                    text = stringResource(if (state.isAuthorized && state.isFavorite) MoviesStrings.remove_from_favorites else MoviesStrings.add_to_favorites)
+                    AnimatedVisibility(
+                        visible = state.isDetailsFavoriteFeatureEnabled,
+                        enter = fadeIn()
+                    ) {
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                positioning = TooltipAnchorPosition.Below
+                            ),
+                            tooltip = {
+                                PlainTooltip {
+                                    Text(
+                                        text = stringResource(if (state.isAuthorized && state.isFavorite) MoviesStrings.remove_from_favorites else MoviesStrings.add_to_favorites)
+                                    )
+                                }
+                            },
+                            state = rememberTooltipState()
+                        ) {
+                            IconButton(
+                                onClick = { viewModel.dispatch(DetailsIntent.FavoriteClick) },
+                                enabled = !state.isFavoriteJobActive,
+                                modifier = Modifier
+                                    .minimumInteractiveComponentSize()
+                                    .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform))
+                                    .pointerHoverIcon(PointerIcon.Hand),
+                                shape = IconButtonDefaults.extraSmallSquareShape
+                            ) {
+                                Image(
+                                    imageVector = if (state.isAuthorized && state.isFavorite) MoviesIcons.Favorite else MoviesIcons.FavoriteBorder,
+                                    contentDescription = stringResource(MoviesContentDescription.FavoriteIcon),
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                    colorFilter = ColorFilter.tint(animateOnContainerColor.value)
                                 )
                             }
-                        },
-                        state = rememberTooltipState()
-                    ) {
-                        IconButton(
-                            onClick = { viewModel.dispatch(DetailsIntent.FavoriteClick) },
-                            enabled = !state.isFavoriteJobActive,
-                            modifier = Modifier
-                                .minimumInteractiveComponentSize()
-                                .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
-                            shape = IconButtonDefaults.extraSmallSquareShape
-                        ) {
-                            Image(
-                                imageVector = if (state.isAuthorized && state.isFavorite) MoviesIcons.Favorite else MoviesIcons.FavoriteBorder,
-                                contentDescription = stringResource(MoviesContentDescriptionCommon.FavoriteIcon),
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                colorFilter = ColorFilter.tint(animateOnContainerColor.value)
-                            )
                         }
                     }
 
@@ -155,7 +163,7 @@ fun DetailsScreen(
                                 ) {
                                     Image(
                                         imageVector = MoviesIcons.Share,
-                                        contentDescription = stringResource(MoviesContentDescriptionCommon.ShareIcon),
+                                        contentDescription = stringResource(MoviesContentDescription.ShareIcon),
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                         colorFilter = ColorFilter.tint(animateOnContainerColor.value)
                                     )
@@ -166,11 +174,12 @@ fun DetailsScreen(
                 },
                 navigationIcon = {
                     IconButton(
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                         onClick = { viewModel.dispatch(DetailsIntent.BackClick) }
                     ) {
                         Image(
                             imageVector = MoviesIcons.ArrowBack,
-                            contentDescription = stringResource(MoviesContentDescriptionCommon.BackIcon),
+                            contentDescription = stringResource(MoviesContentDescription.BackIcon),
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                             colorFilter = ColorFilter.tint(animateOnContainerColor.value)
                         )
@@ -204,12 +213,9 @@ fun DetailsScreen(
                         .fillMaxSize(),
                     additionalBottomContentPadding = innerPadding.calculateBottomPadding(),
                     movie = detailsState.movie,
+                    isDetailsGalleryFeatureEnabled = state.isDetailsGalleryFeatureEnabled,
                     onContainerColor = animateOnContainerColor.value,
-                    onNavigateToGallery = {
-                        if (state.isDetailsGalleryFeatureEnabled) {
-                            viewModel.dispatch(DetailsIntent.GalleryClick)
-                        }
-                    },
+                    onNavigateToGallery = { viewModel.dispatch(DetailsIntent.GalleryClick) },
                     placeholder = false,
                     shouldGenerateColors = shouldGenerateColors,
                     onGenerateColors = { movieId, containerColor, onContainerColor ->

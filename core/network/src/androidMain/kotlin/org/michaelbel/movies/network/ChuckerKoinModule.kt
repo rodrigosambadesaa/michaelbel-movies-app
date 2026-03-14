@@ -6,7 +6,7 @@ import com.chuckerteam.chucker.api.RetentionManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
-internal val chuckerKoinModule = module {
+val chuckerKoinModule = module {
     single<ChuckerInterceptor> {
         val chuckerCollector = ChuckerCollector(
             context = androidContext(),

@@ -67,6 +67,7 @@ import movies.core.ui.generated.resources.settings_action_cancel
 import movies.core.ui.generated.resources.settings_action_go
 import movies.core.ui.generated.resources.settings_app_debug
 import movies.core.ui.generated.resources.settings_app_launcher_icon
+import movies.core.ui.generated.resources.settings_app_launcher_icon_description
 import movies.core.ui.generated.resources.settings_app_launcher_icon_amoled
 import movies.core.ui.generated.resources.settings_app_launcher_icon_brown
 import movies.core.ui.generated.resources.settings_app_launcher_icon_changed_to
@@ -236,6 +237,7 @@ object MoviesStrings {
     val settings_movie_list_top_rated = Res.string.settings_movie_list_top_rated
     val settings_movie_list_upcoming = Res.string.settings_movie_list_upcoming
     val settings_app_launcher_icon = Res.string.settings_app_launcher_icon
+    val settings_app_launcher_icon_description = Res.string.settings_app_launcher_icon_description
     val settings_app_launcher_icon_red = Res.string.settings_app_launcher_icon_red
     val settings_app_launcher_icon_purple = Res.string.settings_app_launcher_icon_purple
     val settings_app_launcher_icon_brown = Res.string.settings_app_launcher_icon_brown

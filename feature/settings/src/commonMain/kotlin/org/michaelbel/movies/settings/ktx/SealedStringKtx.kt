@@ -10,7 +10,7 @@ import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.interactor.entity.AppLanguage
 import org.michaelbel.movies.ui.strings.MoviesStrings
 
-internal val SealedString.stringText: String
+val SealedString.stringText: String
     @Composable get() = when (this) {
         is AppLanguage.English -> stringResource(MoviesStrings.settings_language_en)
         is AppLanguage.Russian -> stringResource(MoviesStrings.settings_language_ru)

@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package org.michaelbel.movies.gallery
 
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -71,7 +72,7 @@ import org.michaelbel.movies.gallery.zoomable.rememberZoomState
 import org.michaelbel.movies.gallery.zoomable.zoomable
 import org.michaelbel.movies.network.config.isNotOriginal
 import org.michaelbel.movies.persistence.database.ktx.original
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.PlatformBackHandler
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
@@ -224,7 +225,7 @@ private fun GalleryScreenContent(
                                     .crossfade(true)
                                     .placeholderMemoryCacheKey(imageDiskCacheKey)
                                     .build(),
-                                contentDescription = MoviesContentDescriptionCommon.None,
+                                contentDescription = MoviesContentDescription.None,
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .zoomable(zoomState),
@@ -269,7 +270,7 @@ private fun GalleryScreenContent(
                         ) {
                             Image(
                                 imageVector = MoviesIcons.ArrowBack,
-                                contentDescription = stringResource(MoviesContentDescriptionCommon.BackIcon),
+                                contentDescription = stringResource(MoviesContentDescription.BackIcon),
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                             )
@@ -313,7 +314,7 @@ private fun GalleryScreenContent(
                             ) {
                                 Image(
                                     imageVector = MoviesIcons.FileDownload,
-                                    contentDescription = stringResource(MoviesContentDescriptionCommon.DownloadIcon),
+                                    contentDescription = stringResource(MoviesContentDescription.DownloadIcon),
                                     modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                                 )

@@ -8,7 +8,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.typealiases.AccountId
 import org.michaelbel.movies.repository.AccountRepository
 
-internal class AccountInteractorImpl(
+class AccountInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val accountRepository: AccountRepository
 ): AccountInteractor {

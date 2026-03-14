@@ -101,6 +101,7 @@
     <string name="settings_movie_list_top_rated">Top Rated</string>
     <string name="settings_movie_list_upcoming">Upcoming</string>
     <string name="settings_app_launcher_icon">App Icon</string>
+    <string name="settings_app_launcher_icon_description">Shown on your home screen</string>
     <string name="settings_app_launcher_icon_red">Red</string>
     <string name="settings_app_launcher_icon_purple">Purple</string>
     <string name="settings_app_launcher_icon_brown">Brown</string>

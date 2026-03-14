@@ -32,7 +32,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 
 @Composable
@@ -99,7 +99,7 @@ fun <T> SwipeToDismiss(
                     ) {
                         Icon(
                             imageVector = MoviesIcons.Delete,
-                            contentDescription = MoviesContentDescriptionCommon.None,
+                            contentDescription = MoviesContentDescription.None,
                             modifier = Modifier.graphicsLayer {
                                 alpha = iconAlpha
                                 scaleX = iconScale

@@ -49,7 +49,7 @@ import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.notify.event.NotifyEvent
 import org.michaelbel.movies.notify.intent.NotifyIntent
 import org.michaelbel.movies.notify.model.NotifyModel
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
@@ -64,7 +64,7 @@ fun NotifyScreen(
     val state by viewModel.stateFlow.collectAsStateCommon()
     val navigateToAppNotificationSettings = uiInteractor.navigateToAppNotificationSettings()
     val requestPostNotificationsPermission = uiInteractor.rememberPostNotificationsPermissionHandler(
-        areNotificationsEnabled = false,
+        enabled = false,
         onPermissionGranted = {},
         onPermissionDenied = navigateToAppNotificationSettings
     )
@@ -148,7 +148,7 @@ private fun NotifyScreenContent(
             ) {
                 Image(
                     imageVector = MoviesIcons.Notifications,
-                    contentDescription = MoviesContentDescriptionCommon.None,
+                    contentDescription = MoviesContentDescription.None,
                     modifier = Modifier
                         .size(IconButtonDefaults.smallIconSize)
                         .graphicsLayer(

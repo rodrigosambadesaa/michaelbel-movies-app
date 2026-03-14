@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.net.toUri
 
+actual fun tmdbAuthRedirectUrl(): String = defaultTmdbAuthRedirectUrl
+
 @Composable
 actual fun navigateToUrl(url: String): () -> Unit {
     val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}

@@ -10,7 +10,7 @@ import org.michaelbel.movies.persistence.database.dao.PagingKeyDao
 import org.michaelbel.movies.persistence.database.dao.SuggestionDao
 import org.michaelbel.movies.persistence.database.db.AppDatabase
 
-actual class MoviesDatabase internal constructor(
+actual class MoviesDatabase constructor(
     private val database: AppDatabase
 ) {
 

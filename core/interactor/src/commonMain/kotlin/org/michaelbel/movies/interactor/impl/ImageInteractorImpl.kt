@@ -8,7 +8,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.repository.ImageRepository
 
-internal class ImageInteractorImpl(
+class ImageInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val imageRepository: ImageRepository
 ): ImageInteractor {

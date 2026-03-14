@@ -9,7 +9,7 @@ import org.michaelbel.movies.platform.impl.messaging.ktx.mapToMoviesPush
 /**
  * See [Receive messages in an Android app](https://firebase.google.com/docs/cloud-messaging/android/receive)
  */
-internal class MoviesMessagingService: FirebaseMessagingService() {
+class MoviesMessagingService: FirebaseMessagingService() {
 
     private val appNotificationInteractor: AppNotificationInteractor by inject()
 

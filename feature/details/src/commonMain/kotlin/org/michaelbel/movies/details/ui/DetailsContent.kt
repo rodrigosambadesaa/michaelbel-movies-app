@@ -38,7 +38,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.network.config.formatBackdropImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.isNotEmpty
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
 import org.michaelbel.movies.ui.placeholder.material3.fade
 import org.michaelbel.movies.ui.placeholder.placeholder
@@ -49,6 +49,7 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 fun DetailsContent(
     movie: MoviePojo,
     onNavigateToGallery: () -> Unit,
+    isDetailsGalleryFeatureEnabled: Boolean = false,
     modifier: Modifier = Modifier,
     additionalBottomContentPadding: Dp = 0.dp,
     onContainerColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -88,13 +89,13 @@ fun DetailsContent(
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.largeIncreased)
                     .clickable(
-                        enabled = !placeholder && !isNoImageVisible,
+                        enabled = isDetailsGalleryFeatureEnabled && !placeholder && !isNoImageVisible,
                         onClick = onNavigateToGallery
                     )
             ) {
                 AsyncImage(
                     model = imageRequest,
-                    contentDescription = stringResource(MoviesContentDescriptionCommon.MovieDetailsImage),
+                    contentDescription = stringResource(MoviesContentDescription.MovieDetailsImage),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(220.dp)

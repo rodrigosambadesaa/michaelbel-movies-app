@@ -27,14 +27,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.IconAliasPreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun RowScope.SettingAppIcon(
+fun RowScope.SettingAppIcon(
     iconAlias: IconAlias,
     isEnabled: Boolean,
     onClick: (IconAlias) -> Unit,
@@ -69,7 +69,7 @@ internal fun RowScope.SettingAppIcon(
         ) {
             Image(
                 painter = painterResource(iconAlias.iconRes),
-                contentDescription = stringResource(MoviesContentDescriptionCommon.AppIcon),
+                contentDescription = stringResource(MoviesContentDescription.AppIcon),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -88,7 +88,7 @@ internal fun RowScope.SettingAppIcon(
         ) {
             Icon(
                 imageVector = MoviesIcons.Check,
-                contentDescription = MoviesContentDescriptionCommon.None,
+                contentDescription = MoviesContentDescription.None,
                 modifier = Modifier
                     .size(iconSize)
                     .align(Alignment.Center),

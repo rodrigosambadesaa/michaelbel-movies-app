@@ -19,7 +19,7 @@ import movies.core.ui.generated.resources.content_description_share_icon
 import movies.core.ui.generated.resources.content_description_user_location_icon
 import movies.core.ui.generated.resources.content_description_voice_icon
 
-object MoviesContentDescriptionCommon {
+object MoviesContentDescription {
     val AccountIcon = Res.string.content_description_account_icon
     val AccountAvatarImage = Res.string.content_description_account_avatar_image
     val AdultIcon = Res.string.content_description_adult_icon

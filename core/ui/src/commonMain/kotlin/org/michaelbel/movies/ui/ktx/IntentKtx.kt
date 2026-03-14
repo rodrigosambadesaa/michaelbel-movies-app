@@ -13,3 +13,6 @@ expect fun navigateToImageUri(): (uri: String) -> Unit
 
 @Composable
 expect fun requestTileService(onSuccess: (String) -> Unit): () -> Unit
+
+@Composable
+expect fun rememberConnectivityClickHandler(): () -> Unit

@@ -8,7 +8,7 @@ import org.michaelbel.movies.persistence.database.entity.ImageDb
 import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 import org.michaelbel.movies.persistence.database.entity.pojo.ImageType
 
-internal val ImagePojo.imageDb: ImageDb
+val ImagePojo.imageDb: ImageDb
     get() = ImageDb(
         movieId = movieId,
         filePath = filePath,

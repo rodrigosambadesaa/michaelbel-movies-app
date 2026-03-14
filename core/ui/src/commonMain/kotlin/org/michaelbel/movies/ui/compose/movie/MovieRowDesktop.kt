@@ -25,12 +25,12 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import org.michaelbel.movies.network.config.formatBackdropImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun MovieRowDesktop(
+fun MovieRowDesktop(
     movie: MoviePojo,
     modifier: Modifier = Modifier,
     maxLines: Int = 10
@@ -50,7 +50,7 @@ internal fun MovieRowDesktop(
                     .data(movie.backdropPath.formatBackdropImage)
                     .crossfade(true)
                     .build(),
-                contentDescription = MoviesContentDescriptionCommon.None,
+                contentDescription = MoviesContentDescription.None,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )

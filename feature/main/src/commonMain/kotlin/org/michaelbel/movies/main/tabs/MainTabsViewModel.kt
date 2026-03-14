@@ -62,7 +62,10 @@ class MainTabsViewModel(
                     intent.requestToken == null || intent.approved == null -> Unit
                     !intent.approved -> {
                         PendingActionStore.clear()
-                        launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+                        launch {
+                            push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure))
+                            MainNavigator.back()
+                        }
                     }
                     else -> dispatch(MainTabsIntent.AuthorizeAccount(intent.requestToken))
                 }

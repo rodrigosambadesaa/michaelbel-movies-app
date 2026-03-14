@@ -64,6 +64,7 @@ include(
     ":core:work",
 
     ":feature:account",
+    ":feature:about",
     ":feature:auth",
     ":feature:debug",
     ":feature:details",

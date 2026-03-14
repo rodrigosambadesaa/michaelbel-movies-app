@@ -22,13 +22,13 @@ kotlin {
             api(projects.core.interactor)
             api(projects.feature.feed)
             api(projects.core.ui)
+            implementation(libs.androidx.paging.compose)
         }
         androidMain.dependencies {
             implementation(libs.bundles.paging.android)
         }
         jvmMain.dependencies {
             implementation(libs.bundles.paging.desktop)
-            implementation(libs.androidx.paging.compose)
         }
     }
 

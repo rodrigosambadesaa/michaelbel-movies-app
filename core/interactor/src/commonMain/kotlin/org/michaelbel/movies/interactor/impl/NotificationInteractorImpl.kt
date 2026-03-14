@@ -5,7 +5,7 @@ import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
 import org.michaelbel.movies.interactor.NotificationInteractor
 import org.michaelbel.movies.repository.NotificationRepository
 
-internal class NotificationInteractorImpl(
+class NotificationInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val notificationRepository: NotificationRepository
 ): NotificationInteractor {

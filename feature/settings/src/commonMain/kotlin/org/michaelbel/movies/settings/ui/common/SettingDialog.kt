@@ -35,7 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.interactor.entity.AppLanguage
 import org.michaelbel.movies.settings.ktx.stringText
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.AppearancePreviewParameterProvider
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -67,7 +67,7 @@ fun <T: SealedString> SettingsDialog(
             Icon(
                 imageVector = icon,
                 modifier = Modifier.size(IconButtonDefaults.largeIconSize),
-                contentDescription = MoviesContentDescriptionCommon.None
+                contentDescription = MoviesContentDescription.None
             )
         },
         title = {

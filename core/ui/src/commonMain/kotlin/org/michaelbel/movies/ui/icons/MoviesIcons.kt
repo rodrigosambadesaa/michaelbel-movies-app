@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ManageSearch
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BatterySaver
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -42,6 +43,7 @@ object MoviesIcons {
     val LauncherRed = Res.drawable.ic_launcher_icon_red
 
     val AccountCircle = Icons.Filled.AccountCircle
+    val Apps = Icons.Filled.Apps
     val ArrowBack = Icons.AutoMirrored.Filled.ArrowBack
     val BatterySaver = Icons.Filled.BatterySaver
     val Check = Icons.Filled.Check

@@ -13,6 +13,7 @@ data class DetailsModel(
     val isAuthorized: Boolean = false,
     val isFavorite: Boolean = false,
     val favoriteJob: Job? = null,
+    val isDetailsFavoriteFeatureEnabled: Boolean = false,
     val isDetailsGalleryFeatureEnabled: Boolean = false,
     val isDetailsShareFeatureEnabled: Boolean = false
 ): Model {

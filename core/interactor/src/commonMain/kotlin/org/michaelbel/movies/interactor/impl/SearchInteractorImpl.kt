@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.michaelbel.movies.interactor.SearchInteractor
 
-internal class SearchInteractorImpl: SearchInteractor {
+class SearchInteractorImpl: SearchInteractor {
 
     private val isActiveMutableFlow: MutableStateFlow<Boolean> = MutableStateFlow(true)
 

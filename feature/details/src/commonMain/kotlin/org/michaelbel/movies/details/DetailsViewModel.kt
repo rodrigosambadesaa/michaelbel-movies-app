@@ -56,6 +56,7 @@ class DetailsViewModel(
             is DetailsIntent.CollectFeatureFlags -> {
                 reduce {
                     it.copy(
+                        isDetailsFavoriteFeatureEnabled = uiInteractor.isDetailsFavoriteFeatureEnabled,
                         isDetailsGalleryFeatureEnabled = uiInteractor.isDetailsGalleryFeatureEnabled,
                         isDetailsShareFeatureEnabled = uiInteractor.isDetailsShareFeatureEnabled
                     )

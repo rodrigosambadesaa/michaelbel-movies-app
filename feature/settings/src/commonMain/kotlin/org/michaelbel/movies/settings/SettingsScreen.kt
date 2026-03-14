@@ -75,7 +75,7 @@ import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.settings.ui.SettingsAppIconsBox
 import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
 import org.michaelbel.movies.settings.ui.common.SettingsDialog
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.Cat
 import org.michaelbel.movies.ui.icons.Github
@@ -110,7 +110,7 @@ fun SettingsScreen(
     val permissionMessage = stringResource(MoviesStrings.settings_post_notifications_should_request)
     val permissionAction = stringResource(MoviesStrings.settings_action_go)
     val onRequestPostNotificationsPermission = uiInteractor.rememberPostNotificationsPermissionHandler(
-        areNotificationsEnabled = state.areNotificationsEnabled,
+        enabled = state.areNotificationsEnabled,
         onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
         onPermissionDenied = { viewModel.dispatch(SettingsIntent.ShowPermissionSnackbar(permissionMessage, permissionAction)) }
     )
@@ -125,10 +125,9 @@ fun SettingsScreen(
             is SettingsEvent.PinWidget -> {}
             is SettingsEvent.RequestPostNotificationsPermission -> onRequestPostNotificationsPermission()
             is SettingsEvent.RequestIgnoreBatteryOptimizations -> {
-                if (state.isIgnoringBatteryOptimizations) {
-                    openBatteryOptimizationSettings()
-                } else {
-                    requestIgnoreBatteryOptimizations()
+                when {
+                    state.isIgnoringBatteryOptimizations -> openBatteryOptimizationSettings()
+                    else -> requestIgnoreBatteryOptimizations()
                 }
             }
             is SettingsEvent.RequestTileService -> onRequestTileService()
@@ -289,7 +288,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(if (state.isLanguageFeatureEnabled) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
                             .clickable(onClick = { themeDialog = true }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -509,7 +508,7 @@ private fun SettingsScreenContent(
                                     {
                                         Icon(
                                             imageVector = MoviesIcons.Check,
-                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            contentDescription = MoviesContentDescription.None,
                                             modifier = Modifier.size(SwitchDefaults.IconSize)
                                         )
                                     }
@@ -573,7 +572,7 @@ private fun SettingsScreenContent(
                                         {
                                             Icon(
                                                 imageVector = MoviesIcons.Check,
-                                                contentDescription = MoviesContentDescriptionCommon.None,
+                                                contentDescription = MoviesContentDescription.None,
                                                 modifier = Modifier.size(SwitchDefaults.IconSize)
                                             )
                                         }
@@ -612,13 +611,30 @@ private fun SettingsScreenContent(
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
                             .background(MaterialTheme.colorScheme.inversePrimary)
-                    )
-                    {
-                        Text(
-                            text = stringResource(MoviesStrings.settings_app_launcher_icon),
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            style = MaterialTheme.typography.titleLarge
+                    ) {
+                        ListItem(
+                            headlineContent = {
+                                Text(
+                                    text = stringResource(MoviesStrings.settings_app_launcher_icon),
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                            },
+                            supportingContent = {
+                                Text(
+                                    text = stringResource(MoviesStrings.settings_app_launcher_icon_description),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            },
+                            leadingContent = {
+                                Icon(
+                                    imageVector = MoviesIcons.Apps,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                )
+                            },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
                         )
+
                         SettingsAppIconsBox(
                             enabledIcon = state.enabledIcon,
                             onChange = { iconAlias ->
@@ -672,7 +688,7 @@ private fun SettingsScreenContent(
                                     {
                                         Icon(
                                             imageVector = MoviesIcons.Check,
-                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            contentDescription = MoviesContentDescription.None,
                                             modifier = Modifier.size(SwitchDefaults.IconSize)
                                         )
                                     }
@@ -723,7 +739,7 @@ private fun SettingsScreenContent(
                                     {
                                         Icon(
                                             imageVector = MoviesIcons.Check,
-                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            contentDescription = MoviesContentDescription.None,
                                             modifier = Modifier.size(SwitchDefaults.IconSize)
                                         )
                                     }
@@ -846,7 +862,7 @@ private fun SettingsScreenContent(
                                     {
                                         Icon(
                                             imageVector = MoviesIcons.Check,
-                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            contentDescription = MoviesContentDescription.None,
                                             modifier = Modifier.size(SwitchDefaults.IconSize)
                                         )
                                     }
@@ -897,7 +913,7 @@ private fun SettingsScreenContent(
                                     {
                                         Icon(
                                             imageVector = MoviesIcons.Check,
-                                            contentDescription = MoviesContentDescriptionCommon.None,
+                                            contentDescription = MoviesContentDescription.None,
                                             modifier = Modifier.size(SwitchDefaults.IconSize)
                                         )
                                     }
@@ -1069,7 +1085,7 @@ private fun SettingsScreenContent(
                     ) {
                         Icon(
                             imageVector = MoviesIcons.MovieFilter,
-                            contentDescription = MoviesContentDescriptionCommon.None,
+                            contentDescription = MoviesContentDescription.None,
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                             tint = MaterialTheme.colorScheme.primary
                         )

@@ -30,6 +30,9 @@ kotlin {
             implementation(libs.bundles.paging.desktop)
             implementation(libs.androidx.paging.compose)
         }
+        iosMain.dependencies {
+            implementation(libs.androidx.paging.compose)
+        }
     }
 
     compilerOptions {

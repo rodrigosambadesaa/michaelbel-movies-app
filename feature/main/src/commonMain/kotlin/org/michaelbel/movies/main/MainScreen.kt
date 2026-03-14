@@ -27,6 +27,8 @@ import org.michaelbel.movies.main.tabs.MainTabsScreen
 import org.michaelbel.movies.notify.NotifyScreen
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.settings.SettingsScreen
+import org.michaelbel.movies.ui.ktx.ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH
+import org.michaelbel.movies.ui.ktx.AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.USE_PLATFORM_DEFAULT_WIDTH
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
@@ -114,21 +116,21 @@ private fun MainScreenContent(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
-        sceneStrategies = listOf(dialogSceneStrategy),
+        sceneStrategy = dialogSceneStrategy,
         transitionSpec = fadeTransitionSpec(),
         popTransitionSpec = fadeTransitionSpec(),
         predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
         entryProvider = entryProvider {
             entry<AuthDestination>(
                 metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = USE_PLATFORM_DEFAULT_WIDTH)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH)
                 )
             ) {
                 AuthScreen()
             }
             entry<AccountDestination>(
                 metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = USE_PLATFORM_DEFAULT_WIDTH)
+                    dialogProperties = DialogProperties(usePlatformDefaultWidth = ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH)
                 )
             ) {
                 AccountScreen()

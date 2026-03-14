@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalComposeUiApi::class)
 
 package org.michaelbel.movies.feed.ui
 
@@ -72,6 +72,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
@@ -79,6 +80,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -88,18 +91,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.stringResource
+import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.ktx.SearchTrailingAction
-import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
-import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
+import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.persistence.database.ktx.isEmpty
 import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Query
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.ktx.onSecondaryClick
 import org.michaelbel.movies.ui.ktx.rememberSpeechRecognitionLauncher
 import org.michaelbel.movies.ui.strings.MoviesStrings
 
@@ -115,9 +118,8 @@ fun FeedSearchBar(
     onBackClick: () -> Unit,
     onCloseClick: () -> Unit,
     onInputText: (Query) -> Unit,
-    account: AccountPojo,
-    onAuthIconClick: () -> Unit,
-    onAccountIconClick: () -> Unit,
+    state: FeedModel,
+    dispatch: (FeedIntent) -> Unit,
     isSearchRefreshLoading: Boolean,
     isSearchFailure: Boolean,
     isSearchEmptyFailure: Boolean,
@@ -129,10 +131,6 @@ fun FeedSearchBar(
         lazyGridState: LazyGridState,
         lazyStaggeredGridState: LazyStaggeredGridState
     ) -> Unit,
-    suggestions: List<SuggestionPojo>,
-    searchHistoryMovies: List<MoviePojo>,
-    onHistoryMovieRemoveClick: (MovieId) -> Unit,
-    onClearHistoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val searchContainerColor = MaterialTheme.colorScheme.inversePrimary
@@ -154,9 +152,12 @@ fun FeedSearchBar(
     val safeDrawingStartPadding = safeDrawingHorizontalPadding.calculateStartPadding(layoutDirection)
     val safeDrawingEndPadding = safeDrawingHorizontalPadding.calculateEndPadding(layoutDirection)
     val searchInputTextStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
+    val account = state.accountPojo
+    val searchHistoryMovies = state.searchHistoryMovies
+    val suggestions = state.suggestions
     val searchTrailingAction = when {
         textFieldState.text.isNotEmpty() -> SearchTrailingAction.Clear
-        active -> SearchTrailingAction.Voice
+        state.isFeedVoiceInputFeatureEnabled && active -> SearchTrailingAction.Voice
         else -> SearchTrailingAction.None
     }
 
@@ -211,6 +212,7 @@ fun FeedSearchBar(
                 leadingIcon = {
                     if (active || isSearchResultsVisible) {
                         IconButton(
+                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                             onClick = {
                                 clearInputFocus()
                                 onBackClick()
@@ -218,7 +220,7 @@ fun FeedSearchBar(
                         ) {
                             Image(
                                 imageVector = MoviesIcons.ArrowBack,
-                                contentDescription = stringResource(MoviesContentDescriptionCommon.BackIcon),
+                                contentDescription = stringResource(MoviesContentDescription.BackIcon),
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                             )
@@ -226,7 +228,7 @@ fun FeedSearchBar(
                     } else {
                         Image(
                             imageVector = MoviesIcons.Search,
-                            contentDescription = stringResource(MoviesContentDescriptionCommon.SearchIcon),
+                            contentDescription = stringResource(MoviesContentDescription.SearchIcon),
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                         )
@@ -246,6 +248,7 @@ fun FeedSearchBar(
                                 exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
                             ) {
                                 IconButton(
+                                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                                     onClick = {
                                         onCloseClick()
                                         requestFocusAfterClose.value = true
@@ -253,7 +256,7 @@ fun FeedSearchBar(
                                 ) {
                                     Image(
                                         imageVector = MoviesIcons.Close,
-                                        contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                                        contentDescription = stringResource(MoviesContentDescription.CloseIcon),
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                                     )
@@ -286,7 +289,7 @@ fun FeedSearchBar(
                                     ) {
                                         Image(
                                             imageVector = MoviesIcons.KeyboardVoice,
-                                            contentDescription = stringResource(MoviesContentDescriptionCommon.VoiceIcon),
+                                            contentDescription = stringResource(MoviesContentDescription.VoiceIcon),
                                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                                         )
@@ -295,7 +298,7 @@ fun FeedSearchBar(
                             }
                         }
 
-                        if (!active && !isSearchResultsVisible) {
+                        if (state.isFeedAuthIconFeatureEnabled && !active && !isSearchResultsVisible) {
                             when {
                                 account.isEmpty -> {
                                     TooltipBox(
@@ -312,11 +315,12 @@ fun FeedSearchBar(
                                         state = rememberTooltipState()
                                     ) {
                                         IconButton(
-                                            onClick = onAuthIconClick
+                                            onClick = { dispatch(FeedIntent.AuthClick) },
+                                            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
                                         ) {
                                             Image(
                                                 imageVector = MoviesIcons.AccountCircle,
-                                                contentDescription = stringResource(MoviesContentDescriptionCommon.AccountIcon),
+                                                contentDescription = stringResource(MoviesContentDescription.AccountIcon),
                                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                                             )
@@ -325,7 +329,8 @@ fun FeedSearchBar(
                                 }
                                 else -> {
                                     IconButton(
-                                        onClick = onAccountIconClick
+                                        onClick = { dispatch(FeedIntent.AccountClick) },
+                                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
                                     ) {
                                         AccountAvatar(
                                             account = account,
@@ -412,7 +417,8 @@ fun FeedSearchBar(
                                 },
                                 trailingContent = {
                                     TextButton(
-                                        onClick = onClearHistoryClick,
+                                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
+                                        onClick = { dispatch(FeedIntent.ClearSearchHistoryClick) },
                                         shapes = ButtonDefaults.shapes()
                                     ) {
                                         Text(
@@ -437,7 +443,7 @@ fun FeedSearchBar(
                             Column {
                                 SwipeToDismiss(
                                     item = movie,
-                                    onDelete = { onHistoryMovieRemoveClick(it.movieId) },
+                                    onDelete = { dispatch(FeedIntent.RemoveMovieFromHistoryClick(it.movieId)) },
                                     modifier = Modifier.padding(horizontal = 16.dp),
                                     shape = itemShape
                                 ) { historyMovie, _ ->
@@ -452,10 +458,9 @@ fun FeedSearchBar(
                                                         onInputText(historyMovie.title)
                                                         clearInputFocus()
                                                     },
-                                                    onLongClick = {
-                                                        expandedHistoryMovieId.value = historyMovie.movieId
-                                                    }
-                                                ),
+                                                    onLongClick = { expandedHistoryMovieId.value = historyMovie.movieId }
+                                                )
+                                                .onSecondaryClick { expandedHistoryMovieId.value = historyMovie.movieId },
                                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
                                             headlineContent = {
                                                 Text(
@@ -473,9 +478,10 @@ fun FeedSearchBar(
                                             },
                                             trailingContent = {
                                                 IconButton(
+                                                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                                                     onClick = {
                                                         expandedHistoryMovieId.value = null
-                                                        onHistoryMovieRemoveClick(historyMovie.movieId)
+                                                        dispatch(FeedIntent.RemoveMovieFromHistoryClick(historyMovie.movieId))
                                                     }
                                                 ) {
                                                     Icon(
@@ -515,7 +521,7 @@ fun FeedSearchBar(
                                                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
                                                 onClick = {
                                                     expandedHistoryMovieId.value = null
-                                                    onHistoryMovieRemoveClick(historyMovie.movieId)
+                                                    dispatch(FeedIntent.RemoveMovieFromHistoryClick(historyMovie.movieId))
                                                 }
                                             )
                                         }

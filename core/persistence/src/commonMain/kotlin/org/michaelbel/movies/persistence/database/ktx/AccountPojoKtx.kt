@@ -8,7 +8,7 @@ private const val SPACE_UNICODE = "\u0020"
 private const val LETTERS_LIMIT = 2
 private const val FIRST_LETTER_INDEX = 1
 
-internal val AccountPojo.accountDb: AccountDb
+val AccountPojo.accountDb: AccountDb
     get() = AccountDb(
         accountId = accountId,
         avatarUrl = avatarUrl,

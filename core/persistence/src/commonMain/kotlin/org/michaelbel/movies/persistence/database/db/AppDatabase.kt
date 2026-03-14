@@ -28,11 +28,11 @@ import org.michaelbel.movies.persistence.database.entity.SuggestionDb
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase: RoomDatabase() {
 
-    internal abstract fun movieDao(): MovieDao
-    internal abstract fun imageDao(): ImageDao
-    internal abstract fun accountDao(): AccountDao
-    internal abstract fun pagingKeyDao(): PagingKeyDao
-    internal abstract fun suggestionDao(): SuggestionDao
+    abstract fun movieDao(): MovieDao
+    abstract fun imageDao(): ImageDao
+    abstract fun accountDao(): AccountDao
+    abstract fun pagingKeyDao(): PagingKeyDao
+    abstract fun suggestionDao(): SuggestionDao
 
     companion object {
         const val DATABASE_NAME = "movies.db"

@@ -1,9 +1,6 @@
 package org.michaelbel.movies.interactor.impl
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.interactor.UiInteractor
@@ -18,7 +15,7 @@ class UiInteractorImpl: UiInteractor {
 
     override val isFeedViewFeatureEnabled: Boolean = true
 
-    override val isFaveFeatureEnabled: Boolean = false
+    override val isFaveFeatureEnabled: Boolean = true
 
     override val isMovieListFeatureEnabled: Boolean = true
 
@@ -28,7 +25,7 @@ class UiInteractorImpl: UiInteractor {
 
     override val defaultDynamicColorsEnabled: Boolean = false
 
-    override val isPaletteColorsFeatureEnabled: Boolean = false
+    override val isPaletteColorsFeatureEnabled: Boolean = true
 
     override val isNotificationsFeatureEnabled: Boolean = false
 
@@ -54,44 +51,34 @@ class UiInteractorImpl: UiInteractor {
 
     override val isAboutFeatureEnabled: Boolean = true
 
+    override val isFeedAuthIconFeatureEnabled: Boolean = true
+
+    override val isFeedVoiceInputFeatureEnabled: Boolean = false
+
+    override val isDetailsFavoriteFeatureEnabled: Boolean = true
+
     override val isDetailsGalleryFeatureEnabled: Boolean = false
 
     override val isDetailsShareFeatureEnabled: Boolean = false
 
     override val isPageFailureButtonVisible: Boolean = false
 
-    override val settingsWindowInsets: WindowInsets
-        @Composable get() = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
-
-    override val bottomBarModifier: Modifier
-        get() = Modifier
-
     @Composable
-    override fun navigateToAppNotificationSettings(): () -> Unit {
-        return {}
-    }
+    override fun navigateToAppNotificationSettings(): () -> Unit = {}
 
     override val isIgnoringBatteryOptimizations: Boolean = false
 
     @Composable
-    override fun requestIgnoreBatteryOptimizations(): () -> Unit {
-        return {}
-    }
+    override fun requestIgnoreBatteryOptimizations(): () -> Unit = {}
 
     @Composable
-    override fun navigateToBatteryOptimizationSettings(): () -> Unit {
-        return {}
-    }
+    override fun navigateToBatteryOptimizationSettings(): () -> Unit = {}
 
     @Composable
-    override fun navigateToAppSettings(): () -> Unit {
-        return {}
-    }
+    override fun navigateToAppSettings(): () -> Unit = {}
 
     @Composable
-    override fun navigateToDeveloperSettings(): () -> Unit {
-        return {}
-    }
+    override fun navigateToDeveloperSettings(): () -> Unit = {}
 
     @Composable
     override fun rememberCopyToClipboardHandler(): (String) -> Unit {
@@ -100,12 +87,10 @@ class UiInteractorImpl: UiInteractor {
 
     @Composable
     override fun rememberPostNotificationsPermissionHandler(
-        areNotificationsEnabled: Boolean,
+        enabled: Boolean,
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
-    ): () -> Unit {
-        return {}
-    }
+    ): () -> Unit = {}
 
     @Composable
     override fun DetailsPaletteEffect(

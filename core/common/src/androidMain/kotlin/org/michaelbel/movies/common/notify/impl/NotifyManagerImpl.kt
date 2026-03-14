@@ -4,7 +4,7 @@ import android.content.Context
 import org.michaelbel.movies.common.ktx.notificationManager
 import org.michaelbel.movies.common.notify.NotifyManager
 
-internal class NotifyManagerImpl(
+class NotifyManagerImpl(
     private val context: Context
 ): NotifyManager {
 

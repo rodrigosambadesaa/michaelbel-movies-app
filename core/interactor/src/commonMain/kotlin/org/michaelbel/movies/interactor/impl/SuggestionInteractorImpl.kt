@@ -8,7 +8,7 @@ import org.michaelbel.movies.interactor.SuggestionInteractor
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 import org.michaelbel.movies.repository.SuggestionRepository
 
-internal class SuggestionInteractorImpl(
+class SuggestionInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val localeInteractor: LocaleInteractor,
     private val suggestionRepository: SuggestionRepository

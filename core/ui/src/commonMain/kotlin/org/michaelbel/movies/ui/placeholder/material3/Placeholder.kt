@@ -42,7 +42,7 @@ import org.michaelbel.movies.ui.placeholder.placeholder
  * on top of [backgroundColor]. Defaults to `0.1F`.
  */
 @Composable
-internal fun PlaceholderDefaults.color(
+fun PlaceholderDefaults.color(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = contentColorFor(backgroundColor),
     contentAlpha: Float = 0.1F
@@ -57,7 +57,7 @@ internal fun PlaceholderDefaults.color(
  * @param alpha The alpha component to set on [backgroundColor]. Defaults to `0.3F`.
  */
 @Composable
-internal fun PlaceholderDefaults.fadeHighlightColor(
+fun PlaceholderDefaults.fadeHighlightColor(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     alpha: Float = 0.3F
 ): Color = backgroundColor.copy(alpha = alpha)
@@ -71,7 +71,7 @@ internal fun PlaceholderDefaults.fadeHighlightColor(
  * @param alpha The alpha component to set on [backgroundColor]. Defaults to `0.75F`.
  */
 @Composable
-internal fun PlaceholderDefaults.shimmerHighlightColor(
+fun PlaceholderDefaults.shimmerHighlightColor(
     backgroundColor: Color = MaterialTheme.colorScheme.inverseSurface,
     alpha: Float = 0.75F
 ): Color {
@@ -108,7 +108,7 @@ internal fun PlaceholderDefaults.shimmerHighlightColor(
  * @param contentFadeTransitionSpec The transition spec to use when fading the content
  * on/off screen. The boolean parameter defined for the transition is [visible].
  */
-internal fun Modifier.placeholder(
+fun Modifier.placeholder(
     visible: Boolean,
     color: Color = Color.Unspecified,
     shape: Shape? = null,

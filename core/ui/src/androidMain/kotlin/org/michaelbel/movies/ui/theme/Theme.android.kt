@@ -2,6 +2,7 @@
 
 package org.michaelbel.movies.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
@@ -40,13 +41,19 @@ actual fun MoviesTheme(
     val (colorScheme, detectDarkMode) = when (themeData.appTheme) {
         AppTheme.NightNo -> {
             ComposeTheme(
-                colorScheme = if (themeData.dynamicColors) dynamicLightColorScheme(context) else paletteLightColorScheme,
+                colorScheme = when {
+                    Build.VERSION.SDK_INT >= 31 && themeData.dynamicColors -> dynamicLightColorScheme(context)
+                    else -> paletteLightColorScheme
+                },
                 detectDarkMode = false
             )
         }
         AppTheme.NightYes -> {
             ComposeTheme(
-                colorScheme = if (themeData.dynamicColors) dynamicDarkColorScheme(context) else paletteDarkColorScheme,
+                colorScheme = when {
+                    Build.VERSION.SDK_INT >= 31 && themeData.dynamicColors -> dynamicDarkColorScheme(context)
+                    else -> paletteDarkColorScheme
+                },
                 detectDarkMode = true
             )
         }
@@ -54,7 +61,7 @@ actual fun MoviesTheme(
             val darkTheme = isSystemInDarkTheme()
             ComposeTheme(
                 colorScheme = when {
-                    themeData.dynamicColors -> if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+                    Build.VERSION.SDK_INT >= 31 && themeData.dynamicColors -> if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
                     else -> if (darkTheme) paletteDarkColorScheme else paletteLightColorScheme
                 },
                 detectDarkMode = darkTheme

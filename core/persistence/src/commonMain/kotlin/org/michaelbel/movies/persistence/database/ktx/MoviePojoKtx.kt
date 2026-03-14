@@ -4,7 +4,7 @@ import org.michaelbel.movies.network.config.TMDB_MOVIE_URL
 import org.michaelbel.movies.persistence.database.entity.MovieDb
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 
-internal val MoviePojo.movieDb: MovieDb
+val MoviePojo.movieDb: MovieDb
     get() = MovieDb(
         movieList = movieList,
         dateAdded = dateAdded,

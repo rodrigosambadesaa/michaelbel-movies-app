@@ -10,6 +10,7 @@ sealed interface FeedIntent: Intent {
     data object CollectMovieList: FeedIntent
     data object CollectNetworkStatus: FeedIntent
     data object CollectPageFailureButtonVisible: FeedIntent
+    data object CollectFeatureFlags: FeedIntent
     data object CollectSuggestions: FeedIntent
     data object CollectSearchHistoryMovies: FeedIntent
     data object LoadSuggestions: FeedIntent

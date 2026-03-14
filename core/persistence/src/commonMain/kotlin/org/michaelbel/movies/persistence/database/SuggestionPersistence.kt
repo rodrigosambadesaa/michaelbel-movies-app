@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 import org.michaelbel.movies.persistence.database.ktx.suggestionDb
 
-class SuggestionPersistence internal constructor(
+class SuggestionPersistence constructor(
     private val moviesDatabase: MoviesDatabase
 ) {
 

@@ -104,7 +104,12 @@ class MainViewModel(
                 biometricController.authenticate(intent.activity, biometricListener)
             }
             is MainIntent.NavigateToDetails -> launch { MainNavigator.forward(DetailsDestination(movieList = null, movieId = intent.movieId)) }
-            is MainIntent.NavigateToMain -> launch { MainNavigator.forward(MainDestination(intent.requestToken, intent.approved)) }
+            is MainIntent.NavigateToMain -> {
+                launch {
+                    MainNavigator.back()
+                    MainNavigator.forward(MainDestination(intent.requestToken, intent.approved))
+                }
+            }
             is MainIntent.ShortcutSearchClick -> {
                 launch {
                     MainNavigator.forward(MainDestination())

@@ -58,6 +58,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
@@ -75,13 +77,13 @@ import org.michaelbel.movies.auth.intent.AuthIntent
 import org.michaelbel.movies.auth.ktx.text
 import org.michaelbel.movies.auth.model.AuthModel
 import org.michaelbel.movies.common.browser.navigateToUrl
+import org.michaelbel.movies.common.browser.tmdbAuthRedirectUrl
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
 import org.michaelbel.movies.interactor.ktx.UsernameSaver
 import org.michaelbel.movies.interactor.ktx.isNotEmpty
 import org.michaelbel.movies.interactor.ktx.trim
-import org.michaelbel.movies.network.config.TMDB_AUTH_REDIRECT_URL
 import org.michaelbel.movies.network.config.TMDB_AUTH_URL_2
 import org.michaelbel.movies.network.config.TMDB_AUTH_URL_3
 import org.michaelbel.movies.network.config.TMDB_PRIVACY_POLICY
@@ -89,7 +91,7 @@ import org.michaelbel.movies.network.config.TMDB_REGISTER
 import org.michaelbel.movies.network.config.TMDB_RESET_PASSWORD
 import org.michaelbel.movies.network.config.TMDB_TERMS_OF_USE
 import org.michaelbel.movies.network.config.TMDB_URL
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
@@ -127,7 +129,7 @@ private fun AuthScreenContent(
     val navigateToTmdbRegisterUrl = navigateToUrl(TMDB_REGISTER)
 
     state.requestToken?.let { requestToken ->
-        val signUrl = "$TMDB_AUTH_URL_2/$requestToken$TMDB_AUTH_URL_3$TMDB_AUTH_REDIRECT_URL"
+        val signUrl = "$TMDB_AUTH_URL_2/$requestToken$TMDB_AUTH_URL_3${tmdbAuthRedirectUrl()}"
         val navigateToTmdbAuthUrl = navigateToUrl(signUrl)
         LaunchedEffect(requestToken) {
             navigateToTmdbAuthUrl()
@@ -188,7 +190,7 @@ private fun AuthScreenContent(
                 ) {
                     Image(
                         imageVector = MoviesIcons.Close,
-                        contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                        contentDescription = stringResource(MoviesContentDescription.CloseIcon),
                         modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                     )
@@ -199,7 +201,7 @@ private fun AuthScreenContent(
 
         Icon(
             painter = painterResource(MoviesIcons.TmdbLogo),
-            contentDescription = MoviesContentDescriptionCommon.None,
+            contentDescription = MoviesContentDescription.None,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .clickableWithoutRipple { navigateToTmdbUrl() }
@@ -250,11 +252,12 @@ private fun AuthScreenContent(
                     exit = fadeOut()
                 ) {
                     IconButton(
-                        onClick = { passwordVisible = !passwordVisible }
+                        onClick = { passwordVisible = !passwordVisible },
+                        modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
                     ) {
                         Image(
                             imageVector = if (passwordVisible) MoviesIcons.Visibility else MoviesIcons.VisibilityOff,
-                            contentDescription = stringResource(if (passwordVisible) MoviesContentDescriptionCommon.PasswordIcon else MoviesContentDescriptionCommon.PasswordOffIcon),
+                            contentDescription = stringResource(if (passwordVisible) MoviesContentDescription.PasswordIcon else MoviesContentDescription.PasswordOffIcon),
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                         )
@@ -376,16 +379,20 @@ private fun AuthScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = stringResource(MoviesStrings.auth_terms_of_use),
-                    modifier = Modifier
-                        .weight(1F)
-                        .padding(vertical = 16.dp)
-                        .clickableWithoutRipple(navigateToTermsOfUseUrl),
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.End)
-                )
+                TextButton(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    onClick = navigateToTermsOfUseUrl,
+                    shapes = ButtonDefaults.shapes(),
+                    contentPadding = PaddingValues(8.dp)
+                ) {
+                    Text(
+                        text = stringResource(MoviesStrings.auth_terms_of_use),
+                        style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center)
+                    )
+                }
 
                 Box(
                     modifier = Modifier
@@ -395,14 +402,17 @@ private fun AuthScreenContent(
                         .background(MaterialTheme.colorScheme.onPrimaryContainer)
                 )
 
-                Text(
-                    text = stringResource(MoviesStrings.auth_privacy_policy),
-                    modifier = Modifier
-                        .weight(1F)
-                        .padding(vertical = 16.dp)
-                        .clickableWithoutRipple(navigateToPrivacyPolicyUrl),
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
-                )
+                TextButton(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    onClick = navigateToPrivacyPolicyUrl,
+                    shapes = ButtonDefaults.shapes(),
+                    contentPadding = PaddingValues(8.dp)
+                ) {
+                    Text(
+                        text = stringResource(MoviesStrings.auth_privacy_policy),
+                        style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center)
+                    )
+                }
             }
         }
     }

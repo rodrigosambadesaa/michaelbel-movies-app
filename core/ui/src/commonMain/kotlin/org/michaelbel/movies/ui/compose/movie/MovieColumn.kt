@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,12 +22,13 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import org.michaelbel.movies.network.config.formatPosterImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.ktx.movieColumnPosterModifier
 import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-internal fun MovieColumn(
+fun MovieColumn(
     movie: MoviePojo,
     modifier: Modifier = Modifier
 ) {
@@ -36,16 +36,14 @@ internal fun MovieColumn(
         modifier = modifier.fillMaxWidth()
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp)
+            modifier = movieColumnPosterModifier
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalPlatformContext.current)
                     .data(movie.posterPath.formatPosterImage)
                     .crossfade(true)
                     .build(),
-                contentDescription = MoviesContentDescriptionCommon.None,
+                contentDescription = MoviesContentDescription.None,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )

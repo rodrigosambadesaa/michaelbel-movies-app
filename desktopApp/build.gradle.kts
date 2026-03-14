@@ -1,4 +1,20 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.nio.charset.StandardCharsets
+
+private val desktopVersionName = "3.0.0"
+private val gitCommitsCount by lazy {
+    try {
+        val isWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)
+        val processBuilder = when {
+            isWindows -> ProcessBuilder("cmd", "/c", "git", "rev-list", "--count", "HEAD")
+            else -> ProcessBuilder("git", "rev-list", "--count", "HEAD")
+        }
+        processBuilder.redirectErrorStream(true)
+        processBuilder.start().inputStream.bufferedReader(StandardCharsets.UTF_8).readLine().trim().toInt()
+    } catch (_: Exception) {
+        1
+    }
+}
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -12,6 +28,7 @@ kotlin {
     sourceSets {
         jvmMain.dependencies {
             implementation(projects.core.platformServices.injectJvm)
+            implementation(projects.feature.about)
             implementation(projects.feature.main)
             implementation(libs.slf4j.simple)
         }
@@ -21,11 +38,17 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "org.michaelbel.movies.MainWindowKt"
+        jvmArgs += listOf(
+            "-Dapple.awt.application.name=Movies",
+            "-Xdock:name=Movies",
+            "-Dmovies.version=$desktopVersionName",
+            "-Dmovies.build=$gitCommitsCount"
+        )
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Movies"
-            packageVersion = "2.1.0"
+            packageVersion = desktopVersionName
 
             val iconsRoot = project.file("desktop-icons")
             macOS {

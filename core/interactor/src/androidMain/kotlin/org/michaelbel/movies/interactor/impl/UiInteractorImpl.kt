@@ -11,12 +11,10 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ChecksSdkIntAtLeast
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
@@ -37,7 +35,6 @@ import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
 import org.michaelbel.movies.ui.appicon.setIcon
 import org.michaelbel.movies.ui.ktx.currentGrammaticalGender
-import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.ktx.rememberNavigateToAppSettings
 import org.michaelbel.movies.ui.ktx.rememberNavigateToDeveloperSettings
 import org.michaelbel.movies.ui.ktx.supportSetRequestedApplicationGrammaticalGender
@@ -74,8 +71,7 @@ class UiInteractorImpl(
 
     override val isBiometricFeatureEnabled: Boolean = true
 
-    override val isWidgetFeatureEnabled: Boolean
-        get() = true
+    override val isWidgetFeatureEnabled: Boolean = true
 
     override val isTileFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
@@ -94,18 +90,18 @@ class UiInteractorImpl(
 
     override val isAboutFeatureEnabled: Boolean = true
 
+    override val isFeedAuthIconFeatureEnabled: Boolean = true
+
+    override val isFeedVoiceInputFeatureEnabled: Boolean = true
+
+    override val isDetailsFavoriteFeatureEnabled: Boolean = true
+
     override val isDetailsGalleryFeatureEnabled: Boolean = true
 
     override val isDetailsShareFeatureEnabled: Boolean = true
 
     override val isPageFailureButtonVisible: Boolean
         @ChecksSdkIntAtLeast(29) get() = Build.VERSION.SDK_INT >= 29
-
-    override val settingsWindowInsets: WindowInsets
-        @Composable get() = displayCutoutWindowInsets
-
-    override val bottomBarModifier: Modifier
-        get() = Modifier
 
     @Composable
     override fun navigateToAppNotificationSettings(): () -> Unit {
@@ -165,7 +161,7 @@ class UiInteractorImpl(
 
     @Composable
     override fun rememberPostNotificationsPermissionHandler(
-        areNotificationsEnabled: Boolean,
+        enabled: Boolean,
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
     ): () -> Unit {
@@ -189,7 +185,7 @@ class UiInteractorImpl(
         val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
         return {
             when {
-                areNotificationsEnabled -> resultContract.launch(context.appNotificationSettingsIntent)
+                enabled -> resultContract.launch(context.appNotificationSettingsIntent)
                 Build.VERSION.SDK_INT >= 33 -> postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }

@@ -128,7 +128,7 @@ fun Activity.resolveNotificationPreferencesIntent() {
 }
 
 @Composable
-fun rememberConnectivityClickHandler(): () -> Unit {
+actual fun rememberConnectivityClickHandler(): () -> Unit {
     if (Build.VERSION.SDK_INT >= 29) {
         val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
         return {

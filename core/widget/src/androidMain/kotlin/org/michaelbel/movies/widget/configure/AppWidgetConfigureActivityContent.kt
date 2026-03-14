@@ -29,7 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
@@ -99,7 +99,7 @@ private fun Toolbar(
             ) {
                 Image(
                     imageVector = MoviesIcons.Close,
-                    contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                    contentDescription = stringResource(MoviesContentDescription.CloseIcon),
                     modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                 )

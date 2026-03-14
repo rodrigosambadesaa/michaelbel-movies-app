@@ -40,7 +40,7 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.debug.intent.DebugIntent
 import org.michaelbel.movies.interactor.UiInteractor
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.icons.SettingsAccountBox
 import org.michaelbel.movies.ui.icons.SettingsCinematic
@@ -93,7 +93,7 @@ fun DebugScreen(
                 ) {
                     Icon(
                         imageVector = MoviesIcons.Close,
-                        contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                        contentDescription = stringResource(MoviesContentDescription.CloseIcon),
                         modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )

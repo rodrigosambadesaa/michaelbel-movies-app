@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flowOf
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
 
-internal class BiometricInteractorImpl: BiometricInteractor {
+class BiometricInteractorImpl: BiometricInteractor {
 
     override val isBiometricAvailable: Flow<Boolean> = flowOf(false)
 

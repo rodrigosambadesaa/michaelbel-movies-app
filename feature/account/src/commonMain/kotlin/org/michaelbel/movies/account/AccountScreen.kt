@@ -45,7 +45,7 @@ import org.michaelbel.movies.account.intent.AccountIntent
 import org.michaelbel.movies.account.model.AccountModel
 import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.ktx.letters
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.icons.Adult
 import org.michaelbel.movies.ui.icons.MoviesIcons
@@ -108,7 +108,7 @@ private fun AccountScreenContent(
                 ) {
                     Image(
                         imageVector = MoviesIcons.Close,
-                        contentDescription = stringResource(MoviesContentDescriptionCommon.CloseIcon),
+                        contentDescription = stringResource(MoviesContentDescription.CloseIcon),
                         modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                     )
@@ -135,7 +135,7 @@ private fun AccountScreenContent(
                 if (state.accountPojo.adult) {
                     Icon(
                         imageVector = MoviesIcons.Adult,
-                        contentDescription = stringResource(MoviesContentDescriptionCommon.AdultIcon),
+                        contentDescription = stringResource(MoviesContentDescription.AdultIcon),
                         modifier = Modifier
                             .size(IconButtonDefaults.smallIconSize)
                             .align(Alignment.BottomEnd)
@@ -185,7 +185,7 @@ private fun AccountScreenContent(
             ) {
                 Icon(
                     imageVector = MoviesIcons.LocationOn,
-                    contentDescription = stringResource(MoviesContentDescriptionCommon.UserLocationIcon),
+                    contentDescription = stringResource(MoviesContentDescription.UserLocationIcon),
                     modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )

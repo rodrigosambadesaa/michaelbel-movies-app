@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
@@ -50,7 +50,7 @@ fun DetailsFailure(
         ) {
             Icon(
                 imageVector = MoviesIcons.Info,
-                contentDescription = MoviesContentDescriptionCommon.None,
+                contentDescription = MoviesContentDescription.None,
                 modifier = Modifier.size(54.dp),
                 tint = MaterialTheme.colorScheme.onPrimary
             )

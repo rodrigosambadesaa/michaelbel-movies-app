@@ -11,7 +11,7 @@ import org.michaelbel.movies.common.R
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
 
-internal class BiometricInteractorImpl(
+class BiometricInteractorImpl(
     private val context: Context
 ): BiometricInteractor {
 

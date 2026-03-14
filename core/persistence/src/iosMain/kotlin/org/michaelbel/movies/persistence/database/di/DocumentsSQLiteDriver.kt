@@ -12,14 +12,14 @@ import platform.Foundation.NSUserDomainMask
 import platform.Foundation.NSURL
 
 @OptIn(ExperimentalForeignApi::class)
-internal fun createDocumentsDriver(): SQLiteDriver {
+fun createDocumentsDriver(): SQLiteDriver {
     return DocumentsSQLiteDriver(
         directory = documentsDirectoryPath(),
         delegate = BundledSQLiteDriver()
     )
 }
 
-internal fun documentDatabasePath(): String {
+fun documentDatabasePath(): String {
     return "${documentsDirectoryPath()}/${AppDatabase.DATABASE_NAME}"
 }
 

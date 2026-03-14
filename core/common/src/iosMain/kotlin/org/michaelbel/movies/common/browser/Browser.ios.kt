@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 
+actual fun tmdbAuthRedirectUrl(): String = defaultTmdbAuthRedirectUrl
+
 @Composable
 actual fun navigateToUrl(url: String): () -> Unit {
     val nsUrl = NSURL.URLWithString(url)

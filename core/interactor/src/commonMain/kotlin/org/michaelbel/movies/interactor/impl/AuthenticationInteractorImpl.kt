@@ -9,7 +9,7 @@ import org.michaelbel.movies.network.model.Session
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.repository.AuthenticationRepository
 
-internal class AuthenticationInteractorImpl(
+class AuthenticationInteractorImpl(
     private val dispatchers: MoviesDispatchers,
     private val authenticationRepository: AuthenticationRepository
 ): AuthenticationInteractor {

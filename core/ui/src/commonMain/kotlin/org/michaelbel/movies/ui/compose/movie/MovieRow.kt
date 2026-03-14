@@ -24,7 +24,7 @@ import coil3.request.crossfade
 import org.michaelbel.movies.network.config.formatBackdropImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.isNotEmpty
-import org.michaelbel.movies.ui.accessibility.MoviesContentDescriptionCommon
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
@@ -48,7 +48,7 @@ fun MovieRow(
                         .data(movie.backdropPath.formatBackdropImage)
                     .crossfade(true)
                     .build(),
-                    contentDescription = MoviesContentDescriptionCommon.None,
+                    contentDescription = MoviesContentDescription.None,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )

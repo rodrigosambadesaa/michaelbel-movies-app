@@ -1,6 +1,6 @@
 package org.michaelbel.movies.ui.pagerindicator
 
-internal interface PagerStateBridge {
+interface PagerStateBridge {
     val currentPage: Int
     val currentPageOffset: Float
 }

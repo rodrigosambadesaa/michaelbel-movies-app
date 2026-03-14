@@ -6,7 +6,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.ktx.accountDb
 import org.michaelbel.movies.persistence.database.typealiases.AccountId
 
-class AccountPersistence internal constructor(
+class AccountPersistence constructor(
     private val moviesDatabase: MoviesDatabase
 ) {
 

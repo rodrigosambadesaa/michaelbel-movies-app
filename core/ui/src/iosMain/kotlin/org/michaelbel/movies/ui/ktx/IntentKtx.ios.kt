@@ -35,3 +35,6 @@ actual fun navigateToImageUri(): (uri: String) -> Unit = { uri ->
 actual fun requestTileService(onSuccess: (String) -> Unit): () -> Unit {
     return {}
 }
+
+@Composable
+actual fun rememberConnectivityClickHandler(): () -> Unit = {}

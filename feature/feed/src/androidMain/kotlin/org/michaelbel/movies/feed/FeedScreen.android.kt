@@ -244,9 +244,8 @@ private fun FeedScreenContent(
                         isSearchActive = true
                         isSearchAutoFocusEnabled = true
                     },
-                    account = state.accountPojo,
-                    onAuthIconClick = { dispatch(FeedIntent.AuthClick) },
-                    onAccountIconClick = { dispatch(FeedIntent.AccountClick) },
+                    state = state,
+                    dispatch = dispatch,
                     isSearchRefreshLoading = searchPagingItems.isRefreshLoading,
                     isSearchFailure = isSearchFailure,
                     isSearchEmptyFailure = isSearchEmptyFailure,
@@ -275,10 +274,6 @@ private fun FeedScreenContent(
                             cardColor = MaterialTheme.colorScheme.primaryContainer
                         )
                     },
-                    suggestions = state.suggestions,
-                    searchHistoryMovies = state.searchHistoryMovies,
-                    onHistoryMovieRemoveClick = { dispatch(FeedIntent.RemoveMovieFromHistoryClick(it)) },
-                    onClearHistoryClick = { dispatch(FeedIntent.ClearSearchHistoryClick) },
                     modifier = Modifier
                         .padding(horizontal = searchBarHorizontalPadding)
                         .fillMaxWidth()

@@ -1,8 +1,6 @@
 package org.michaelbel.movies.interactor
 
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
@@ -51,16 +49,17 @@ interface UiInteractor {
 
     val isAboutFeatureEnabled: Boolean
 
+    val isFeedAuthIconFeatureEnabled: Boolean
+
+    val isFeedVoiceInputFeatureEnabled: Boolean
+
+    val isDetailsFavoriteFeatureEnabled: Boolean
+
     val isDetailsGalleryFeatureEnabled: Boolean
 
     val isDetailsShareFeatureEnabled: Boolean
 
     val isPageFailureButtonVisible: Boolean
-
-    @get:Composable
-    val settingsWindowInsets: WindowInsets
-
-    val bottomBarModifier: Modifier
 
     @Composable
     fun navigateToAppNotificationSettings(): () -> Unit
@@ -84,7 +83,7 @@ interface UiInteractor {
 
     @Composable
     fun rememberPostNotificationsPermissionHandler(
-        areNotificationsEnabled: Boolean,
+        enabled: Boolean,
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
     ): () -> Unit

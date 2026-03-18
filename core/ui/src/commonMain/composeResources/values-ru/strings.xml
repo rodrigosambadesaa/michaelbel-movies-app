@@ -70,6 +70,7 @@
     <string name="main_nav_settings">Настройки</string>
 
     <string name="settings_title">Настройки</string>
+    <string name="settings_reset">Сбросить настройки</string>
     <string name="settings_theme">Тема</string>
     <string name="settings_theme_system">По умолчанию</string>
     <string name="settings_theme_light">Светлая</string>
@@ -85,6 +86,8 @@
     <string name="settings_battery_optimization_ignored">Для Movies оптимизация отключена</string>
     <string name="settings_review">Оцени приложение</string>
     <string name="settings_review_description">Используя In-App Review API</string>
+    <string name="settings_reset_confirmation">Вы уверены что хотите сбросить настройки приложения?</string>
+    <string name="settings_action_reset">Сбросить</string>
     <string name="settings_post_notifications_should_request">Уведомления отключены. Активируйте их в настройках приложения</string>
     <string name="settings_action_go">Перейти</string>
     <string name="settings_error_play_services_not_available">Сервисы Google play недоступны</string>
@@ -155,6 +158,7 @@
     <string name="content_description_movie_details_image">Изображение Фильма</string>
     <string name="content_description_password_icon">Иконка Показать Пароль</string>
     <string name="content_description_password_off_icon">Иконка Скрыть Пароль</string>
+    <string name="content_description_reset_settings_icon">Иконка Сброса настроек</string>
     <string name="content_description_share_icon">Иконка Поделиться</string>
     <string name="content_description_search_icon">Иконка Поиска</string>
     <string name="content_description_settings_icon">Иконка Настроек</string>

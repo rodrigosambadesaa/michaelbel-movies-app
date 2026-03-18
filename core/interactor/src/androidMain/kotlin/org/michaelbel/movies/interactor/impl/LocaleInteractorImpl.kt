@@ -66,4 +66,23 @@ class LocaleInteractorImpl(
             analytics.logEvent(SelectLanguageEvent(language.toString()))
         }
     }
+
+    override suspend fun resetLanguage() {
+        withContext(dispatchers.io) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+            when {
+                Build.VERSION.SDK_INT >= 33 -> {
+                    val localeManager = context.getSystemService(LocaleManager::class.java)
+                    localeManager.applicationLocales = LocaleList.getEmptyLocaleList()
+                }
+                else -> {
+                    val locale = Locale.getDefault()
+                    Locale.setDefault(locale)
+                    val configuration = context.resources.configuration
+                    configuration.setLocale(locale)
+                    context.createConfigurationContext(configuration)
+                }
+            }
+        }
+    }
 }

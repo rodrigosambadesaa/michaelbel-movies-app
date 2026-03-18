@@ -13,6 +13,7 @@ import movies.core.ui.generated.resources.content_description_favorite_icon
 import movies.core.ui.generated.resources.content_description_movie_details_image
 import movies.core.ui.generated.resources.content_description_password_icon
 import movies.core.ui.generated.resources.content_description_password_off_icon
+import movies.core.ui.generated.resources.content_description_reset_settings_icon
 import movies.core.ui.generated.resources.content_description_search_icon
 import movies.core.ui.generated.resources.content_description_settings_icon
 import movies.core.ui.generated.resources.content_description_share_icon
@@ -33,6 +34,7 @@ object MoviesContentDescription {
     val MovieDetailsImage = Res.string.content_description_movie_details_image
     val PasswordIcon = Res.string.content_description_password_icon
     val PasswordOffIcon = Res.string.content_description_password_off_icon
+    val ResetSettingsIcon = Res.string.content_description_reset_settings_icon
     val ShareIcon = Res.string.content_description_share_icon
     val SearchIcon = Res.string.content_description_search_icon
     val SettingsIcon = Res.string.content_description_settings_icon

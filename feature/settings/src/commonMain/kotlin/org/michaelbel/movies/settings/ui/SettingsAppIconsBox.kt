@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.settings.ui.common.SettingAppIcon
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.ktx.isPortrait
 import org.michaelbel.movies.ui.pagerindicator.HorizontalPagerIndicator

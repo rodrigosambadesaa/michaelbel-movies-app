@@ -25,14 +25,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.rounded.FormatPaint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -42,7 +46,14 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,15 +85,18 @@ import org.michaelbel.movies.settings.ktx.stringText
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.settings.ui.SettingsAppIconsBox
 import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
-import org.michaelbel.movies.settings.ui.common.SettingsDialog
+import org.michaelbel.movies.settings.ui.SettingsDialog
+import org.michaelbel.movies.settings.ui.SettingsResetDialog
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.Cat
 import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.icons.SettingsReset
 import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
+import org.michaelbel.movies.ui.icons.TileSmall
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.OnResume
 import org.michaelbel.movies.ui.ktx.SettingsGenderText
@@ -193,6 +207,48 @@ private fun SettingsScreenContent(
                     Text(
                         text = stringResource(MoviesStrings.settings_title)
                     )
+                },
+                actions = {
+                    if (state.isSettingsResetFeatureEnabled) {
+                        TooltipBox(
+                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                positioning = TooltipAnchorPosition.Below
+                            ),
+                            tooltip = {
+                                PlainTooltip {
+                                    Text(
+                                        text = stringResource(MoviesStrings.settings_reset)
+                                    )
+                                }
+                            },
+                            state = rememberTooltipState()
+                        ) {
+                            var resetSettingsDialog by remember { mutableStateOf(false) }
+                            if (resetSettingsDialog) {
+                                SettingsResetDialog(
+                                    onDismissRequest = { resetSettingsDialog = false },
+                                    onResetClick = {
+                                        dispatch(SettingsIntent.ResetSettings)
+                                        resetSettingsDialog = false
+                                    }
+                                )
+                            }
+
+                            IconButton(
+                                onClick = { resetSettingsDialog = true },
+                                modifier = Modifier
+                                    .minimumInteractiveComponentSize()
+                                    .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                                shape = IconButtonDefaults.extraSmallSquareShape
+                            ) {
+                                Icon(
+                                    imageVector = MoviesIcons.SettingsReset,
+                                    contentDescription = stringResource(MoviesContentDescription.ResetSettingsIcon),
+                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                )
+                            }
+                        }
+                    }
                 },
                 modifier = Modifier.clickableWithoutRipple { dispatch(SettingsIntent.ScrollToTop) },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -318,18 +374,17 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (state.isFeedViewFeatureEnabled) {
+            if (state.isGenderFeatureEnabled) {
                 item {
-                    var appearanceDialog by remember { mutableStateOf(false) }
-
-                    if (appearanceDialog) {
+                    var genderDialog by remember { mutableStateOf(false) }
+                    if (genderDialog) {
                         SettingsDialog(
-                            icon = MoviesIcons.GridView,
-                            title = stringResource(MoviesStrings.settings_appearance),
-                            items = FeedView.VALUES,
-                            currentItem = state.feedView,
-                            onItemSelect = { dispatch(SettingsIntent.SelectFeedView(it)) },
-                            onDismissRequest = { appearanceDialog = false }
+                            icon = MoviesIcons.Cat,
+                            title = stringResource(MoviesStrings.settings_gender),
+                            items = GrammaticalGender.VALUES,
+                            currentItem = state.grammaticalGender,
+                            onItemSelect = { dispatch(SettingsIntent.SetGrammaticalGender(GrammaticalGender.value(it))) },
+                            onDismissRequest = { genderDialog = false }
                         )
                     }
 
@@ -338,23 +393,23 @@ private fun SettingsScreenContent(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .clickable(onClick = { appearanceDialog = true }),
+                            .clickable(onClick = { genderDialog = true }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
-                                text = stringResource(MoviesStrings.settings_appearance),
+                                text = SettingsGenderText,
                                 style = MaterialTheme.typography.titleLarge
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = state.feedView.stringText,
+                                text = state.grammaticalGender.stringText,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         },
                         leadingContent = {
                             Icon(
-                                imageVector = MoviesIcons.GridView,
+                                imageVector = MoviesIcons.Cat,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
@@ -416,42 +471,77 @@ private fun SettingsScreenContent(
                     )
                 }
             }
-            if (state.isGenderFeatureEnabled) {
+            if (state.isFeedViewFeatureEnabled) {
                 item {
-                    var genderDialog by remember { mutableStateOf(false) }
-                    if (genderDialog) {
-                        SettingsDialog(
-                            icon = MoviesIcons.Cat,
-                            title = stringResource(MoviesStrings.settings_gender),
-                            items = GrammaticalGender.VALUES,
-                            currentItem = state.grammaticalGender,
-                            onItemSelect = { dispatch(SettingsIntent.SetGrammaticalGender(GrammaticalGender.value(it))) },
-                            onDismissRequest = { genderDialog = false }
-                        )
-                    }
-
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .clickable(onClick = { genderDialog = true }),
+                            .clip(RoundedCornerShape(4.dp)),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
-                                text = SettingsGenderText,
+                                text = stringResource(MoviesStrings.settings_appearance),
                                 style = MaterialTheme.typography.titleLarge
                             )
                         },
                         supportingContent = {
-                            Text(
-                                text = state.grammaticalGender.stringText,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp)
+                            ) {
+                                ToggleButton(
+                                    checked = state.feedView == FeedView.FeedList,
+                                    onCheckedChange = { dispatch(SettingsIntent.SelectFeedView(FeedView.FeedList)) },
+                                    modifier = Modifier
+                                        .weight(1F)
+                                        .height(40.dp),
+                                    shapes = ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                ) {
+                                    Icon(
+                                        imageVector = MoviesIcons.ViewAgenda,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                    )
+
+                                    Spacer(
+                                        modifier = Modifier.size(ToggleButtonDefaults.IconSpacing)
+                                    )
+
+                                    Text(
+                                        text = stringResource(MoviesStrings.settings_appearance_list)
+                                    )
+                                }
+
+                                ToggleButton(
+                                    checked = state.feedView == FeedView.FeedGrid,
+                                    onCheckedChange = { dispatch(SettingsIntent.SelectFeedView(FeedView.FeedGrid)) },
+                                    modifier = Modifier
+                                        .weight(1F)
+                                        .height(40.dp),
+                                    shapes = ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                ) {
+                                    Icon(
+                                        imageVector = MoviesIcons.Dashboard,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                    )
+
+                                    Spacer(
+                                        modifier = Modifier.size(ToggleButtonDefaults.IconSpacing)
+                                    )
+
+                                    Text(
+                                        text = stringResource(MoviesStrings.settings_appearance_grid)
+                                    )
+                                }
+                            }
                         },
                         leadingContent = {
                             Icon(
-                                imageVector = MoviesIcons.Cat,
+                                imageVector = MoviesIcons.GridView,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
@@ -495,7 +585,7 @@ private fun SettingsScreenContent(
                         },
                         leadingContent = {
                             Icon(
-                                imageVector = MoviesIcons.Wallpaper,
+                                imageVector = MoviesIcons.FormatPaint,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
@@ -813,7 +903,7 @@ private fun SettingsScreenContent(
                         },
                         leadingContent = {
                             Icon(
-                                imageVector = MoviesIcons.ViewAgenda,
+                                imageVector = MoviesIcons.TileSmall,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )

@@ -62,9 +62,11 @@ import movies.core.ui.generated.resources.search_recent
 import movies.core.ui.generated.resources.search_remove
 import movies.core.ui.generated.resources.search_results_empty
 import movies.core.ui.generated.resources.search_title
+import movies.core.ui.generated.resources.settings_reset
 import movies.core.ui.generated.resources.share
 import movies.core.ui.generated.resources.settings_action_cancel
 import movies.core.ui.generated.resources.settings_action_go
+import movies.core.ui.generated.resources.settings_action_reset
 import movies.core.ui.generated.resources.settings_app_debug
 import movies.core.ui.generated.resources.settings_app_launcher_icon
 import movies.core.ui.generated.resources.settings_app_launcher_icon_description
@@ -111,6 +113,7 @@ import movies.core.ui.generated.resources.settings_post_notifications
 import movies.core.ui.generated.resources.settings_post_notifications_denied
 import movies.core.ui.generated.resources.settings_post_notifications_granted
 import movies.core.ui.generated.resources.settings_post_notifications_should_request
+import movies.core.ui.generated.resources.settings_reset_confirmation
 import movies.core.ui.generated.resources.settings_review
 import movies.core.ui.generated.resources.settings_review_description
 import movies.core.ui.generated.resources.settings_screenshots
@@ -205,7 +208,9 @@ object MoviesStrings {
     val search_clear = Res.string.search_clear
     val search_remove = Res.string.search_remove
 
+
     val settings_title = Res.string.settings_title
+    val settings_reset = Res.string.settings_reset
     val settings_theme = Res.string.settings_theme
     val settings_theme_system = Res.string.settings_theme_system
     val settings_theme_light = Res.string.settings_theme_light
@@ -222,6 +227,8 @@ object MoviesStrings {
     val settings_review = Res.string.settings_review
     val settings_review_description = Res.string.settings_review_description
     val settings_post_notifications_should_request = Res.string.settings_post_notifications_should_request
+    val settings_reset_confirmation = Res.string.settings_reset_confirmation
+    val settings_action_reset = Res.string.settings_action_reset
     val settings_action_go = Res.string.settings_action_go
     val settings_error_play_services_not_available = Res.string.settings_error_play_services_not_available
     val settings_error_app_from_google_play = Res.string.settings_error_app_from_google_play

@@ -90,6 +90,8 @@ class UiInteractorImpl(
 
     override val isAboutFeatureEnabled: Boolean = true
 
+    override val isSettingsResetFeatureEnabled: Boolean = true
+
     override val isFeedAuthIconFeatureEnabled: Boolean = true
 
     override val isFeedVoiceInputFeatureEnabled: Boolean = true

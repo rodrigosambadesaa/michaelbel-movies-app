@@ -35,6 +35,14 @@ class MoviesPreferences(
         }
     }
 
+    suspend fun removeValues(vararg keys: PreferenceKey<*>) {
+        dataStore.edit { preferences ->
+            keys.forEach { key ->
+                preferences.remove(key.preferenceKey)
+            }
+        }
+    }
+
     sealed class PreferenceKey<T>(
         val preferenceKey: Preferences.Key<T>
     ) {

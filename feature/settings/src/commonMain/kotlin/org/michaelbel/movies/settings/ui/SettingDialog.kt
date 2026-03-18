@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
-package org.michaelbel.movies.settings.ui.common
+package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

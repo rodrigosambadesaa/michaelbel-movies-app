@@ -1,4 +1,4 @@
-package org.michaelbel.movies.settings.ui.common
+package org.michaelbel.movies.settings.ui
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background

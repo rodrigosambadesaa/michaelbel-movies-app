@@ -31,6 +31,7 @@ sealed interface SettingsIntent: Intent {
     data object ReviewClick: SettingsIntent
     data object UpdateClick: SettingsIntent
     data object ScrollToTop: SettingsIntent
+    data object ResetSettings: SettingsIntent
     data class ShowSnackbar(val message: String): SettingsIntent
     data class ShowPermissionSnackbar(val message: String, val actionLabel: String): SettingsIntent
     data class SelectLanguage(val language: AppLanguage): SettingsIntent

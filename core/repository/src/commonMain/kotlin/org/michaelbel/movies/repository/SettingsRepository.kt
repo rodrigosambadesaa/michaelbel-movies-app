@@ -41,4 +41,6 @@ interface SettingsRepository {
     suspend fun setBiometricEnabled(enabled: Boolean)
 
     suspend fun setScreenshotBlockEnabled(enabled: Boolean)
+
+    suspend fun resetSettings()
 }

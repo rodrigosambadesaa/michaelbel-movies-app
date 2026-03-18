@@ -4,6 +4,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.biometric.BiometricInteractor
+import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.common.notify.NotifyManager
 import org.michaelbel.movies.common.version.AppVersionData
@@ -17,6 +18,7 @@ import org.michaelbel.movies.platform.update.UpdateService
 import org.michaelbel.movies.settings.event.SettingsEvent
 import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.model.SettingsModel
+import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class SettingsViewModel(
@@ -117,6 +119,7 @@ class SettingsViewModel(
                         isReviewAppFeatureEnabled = uiInteractor.isReviewAppFeatureEnabled,
                         isUpdateAppFeatureEnabled = uiInteractor.isUpdateAppFeatureEnabled,
                         isAboutFeatureEnabled = uiInteractor.isAboutFeatureEnabled,
+                        isSettingsResetFeatureEnabled = uiInteractor.isSettingsResetFeatureEnabled,
                     )
                 }
             }
@@ -155,6 +158,15 @@ class SettingsViewModel(
             is SettingsIntent.SetAppIcon -> {
                 uiInteractor.setIcon(intent.icon)
                 reduce { it.copy(enabledIcon = intent.icon) }
+            }
+            is SettingsIntent.ResetSettings -> {
+                launch {
+                    interactor.resetSettings()
+                    interactor.resetLanguage()
+                    uiInteractor.setGrammaticalGender(GrammaticalGender.NotSpecified().value)
+                    uiInteractor.setIcon(IconAlias.Red)
+                    reduce { it.copy(grammaticalGender = uiInteractor.grammaticalGender, enabledIcon = uiInteractor.enabledIcon) }
+                }
             }
         }
     }

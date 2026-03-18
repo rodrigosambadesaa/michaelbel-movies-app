@@ -95,4 +95,8 @@ class SettingsInteractorImpl(
     override suspend fun setScreenshotBlockEnabled(enabled: Boolean) {
         withContext(dispatchers.main) { settingsRepository.setScreenshotBlockEnabled(enabled) }
     }
+
+    override suspend fun resetSettings() {
+        withContext(dispatchers.main) { settingsRepository.resetSettings() }
+    }
 }

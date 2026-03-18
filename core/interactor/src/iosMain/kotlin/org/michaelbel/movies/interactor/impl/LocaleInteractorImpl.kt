@@ -22,4 +22,6 @@ class LocaleInteractorImpl(
     override suspend fun selectLanguage(language: AppLanguage) {
         withContext(dispatchers.io) { analytics.logEvent(SelectLanguageEvent(language.toString())) }
     }
+
+    override suspend fun resetLanguage() {}
 }

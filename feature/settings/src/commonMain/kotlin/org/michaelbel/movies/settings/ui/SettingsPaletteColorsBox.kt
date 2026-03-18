@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.ThemeData
-import org.michaelbel.movies.settings.ui.common.SettingPaletteColor
 import org.michaelbel.movies.ui.color.PaletteStyle
 import org.michaelbel.movies.ui.color.TonalPalettes.Companion.toTonalPalettes
 import org.michaelbel.movies.ui.ktx.isPortrait

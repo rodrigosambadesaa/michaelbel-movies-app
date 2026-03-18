@@ -49,6 +49,8 @@ interface UiInteractor {
 
     val isAboutFeatureEnabled: Boolean
 
+    val isSettingsResetFeatureEnabled: Boolean
+
     val isFeedAuthIconFeatureEnabled: Boolean
 
     val isFeedVoiceInputFeatureEnabled: Boolean

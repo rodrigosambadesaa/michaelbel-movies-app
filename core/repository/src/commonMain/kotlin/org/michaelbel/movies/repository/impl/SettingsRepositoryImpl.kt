@@ -91,4 +91,18 @@ class SettingsRepositoryImpl(
     override suspend fun setScreenshotBlockEnabled(enabled: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceScreenshotBlockKey, enabled)
     }
+
+    override suspend fun resetSettings() {
+        preferences.removeValues(
+            MoviesPreferences.PreferenceKey.PreferenceThemeKey,
+            MoviesPreferences.PreferenceKey.PreferenceFeedViewKey,
+            MoviesPreferences.PreferenceKey.PreferenceMovieListKey,
+            MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey,
+            MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey,
+            MoviesPreferences.PreferenceKey.PreferencePaletteKey,
+            MoviesPreferences.PreferenceKey.PreferenceSeedColorKey,
+            MoviesPreferences.PreferenceKey.PreferenceBiometricKey,
+            MoviesPreferences.PreferenceKey.PreferenceScreenshotBlockKey
+        )
+    }
 }

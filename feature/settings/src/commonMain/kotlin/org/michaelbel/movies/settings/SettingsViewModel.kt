@@ -113,6 +113,7 @@ class SettingsViewModel(
                         isWidgetFeatureEnabled = uiInteractor.isWidgetFeatureEnabled,
                         isTileFeatureEnabled = uiInteractor.isTileFeatureEnabled,
                         isAppIconFeatureEnabled = uiInteractor.isAppIconFeatureEnabled,
+                        isAppOpenByDefaultFeatureEnabled = uiInteractor.isAppOpenByDefaultFeatureEnabled,
                         isScreenshotFeatureEnabled = uiInteractor.isScreenshotFeatureEnabled,
                         isGithubFeatureEnabled = uiInteractor.isGithubFeatureEnabled,
                         isTelegramFeatureEnabled = uiInteractor.isTelegramFeatureEnabled,

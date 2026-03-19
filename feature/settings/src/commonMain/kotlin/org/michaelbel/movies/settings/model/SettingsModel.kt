@@ -23,6 +23,7 @@ data class SettingsModel(
     val isWidgetFeatureEnabled: Boolean = false,
     val isTileFeatureEnabled: Boolean = false,
     val isAppIconFeatureEnabled: Boolean = false,
+    val isAppOpenByDefaultFeatureEnabled: Boolean = false,
     val isScreenshotFeatureEnabled: Boolean = false,
     val isGithubFeatureEnabled: Boolean = false,
     val isTelegramFeatureEnabled: Boolean = false,

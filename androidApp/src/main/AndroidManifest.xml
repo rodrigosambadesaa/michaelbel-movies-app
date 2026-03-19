@@ -48,7 +48,7 @@
 
                 <data
                     android:host="www.themoviedb.org"
-                    android:path="/movie"
+                    android:pathPrefix="/movie/"
                     android:scheme="http" />
             </intent-filter>
 
@@ -60,7 +60,7 @@
 
                 <data
                     android:host="www.themoviedb.org"
-                    android:path="/movie"
+                    android:pathPrefix="/movie/"
                     android:scheme="https" />
             </intent-filter>
 

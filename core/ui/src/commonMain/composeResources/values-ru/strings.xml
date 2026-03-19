@@ -105,6 +105,8 @@
     <string name="settings_movie_list_upcoming">Скоро</string>
     <string name="settings_app_launcher_icon">Иконка Приложения</string>
     <string name="settings_app_launcher_icon_description">Показывается на главном экране</string>
+    <string name="settings_open_by_default">Открывать по умолчанию</string>
+    <string name="settings_open_by_default_description">Управление поддерживаемыми ссылками приложения</string>
     <string name="settings_app_launcher_icon_red">Красную</string>
     <string name="settings_app_launcher_icon_purple">Фиолетовую</string>
     <string name="settings_app_launcher_icon_brown">Коричневую</string>

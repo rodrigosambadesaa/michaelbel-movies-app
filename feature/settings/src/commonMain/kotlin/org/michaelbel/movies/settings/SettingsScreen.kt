@@ -114,6 +114,7 @@ fun SettingsScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
     val openAppNotificationSettings = uiInteractor.navigateToAppNotificationSettings()
+    val openAppOpenByDefaultSettings = uiInteractor.navigateToAppOpenByDefaultSettings()
     val requestIgnoreBatteryOptimizations = uiInteractor.requestIgnoreBatteryOptimizations()
     val openBatteryOptimizationSettings = uiInteractor.navigateToBatteryOptimizationSettings()
     val navigateToGithubUrl = navigateToUrl(MOVIES_GITHUB_URL)
@@ -168,7 +169,8 @@ fun SettingsScreen(
         state = state,
         dispatch = viewModel::dispatch,
         snackbarHostState = snackbarHostState,
-        lazyListState = lazyListState
+        lazyListState = lazyListState,
+        onNavigateToAppOpenByDefaultSettings = openAppOpenByDefaultSettings
     )
 
     OnResume {
@@ -182,7 +184,8 @@ private fun SettingsScreenContent(
     state: SettingsModel,
     dispatch: (SettingsIntent) -> Unit,
     snackbarHostState: SnackbarHostState,
-    lazyListState: LazyListState
+    lazyListState: LazyListState,
+    onNavigateToAppOpenByDefaultSettings: () -> Unit
 ) {
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         state = rememberTopAppBarState(),
@@ -735,6 +738,42 @@ private fun SettingsScreenContent(
                             }
                         )
                     }
+                }
+                item {
+                    Spacer(
+                        modifier = Modifier.height(2.dp)
+                    )
+                }
+            }
+            if (state.isAppOpenByDefaultFeatureEnabled) {
+                item {
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .clickable(onClick = onNavigateToAppOpenByDefaultSettings),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        headlineContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_open_by_default),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_open_by_default_description),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.OpenInNew,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        }
+                    )
                 }
                 item {
                     Spacer(

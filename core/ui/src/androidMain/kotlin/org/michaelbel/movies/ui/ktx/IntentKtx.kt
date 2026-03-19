@@ -155,6 +155,23 @@ fun rememberNavigateToAppSettings(): () -> Unit {
 }
 
 @Composable
+fun rememberNavigateToAppOpenByDefaultSettings(): () -> Unit {
+    val context = LocalContext.current
+    val appSettingsContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+    val fallback = rememberNavigateToAppSettings()
+    val intent = Intent(
+        Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS,
+        "package:${context.packageName}".toUri()
+    ).apply {
+        addCategory(Intent.CATEGORY_DEFAULT)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    return remember(appSettingsContract, intent, fallback) {
+        { runCatching { appSettingsContract.launch(intent) }.getOrElse { fallback() } }
+    }
+}
+
+@Composable
 fun rememberNavigateToDeveloperSettings(): () -> Unit {
     val appSettingsContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
     return remember { { appSettingsContract.launch(Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)) } }

@@ -85,7 +85,12 @@ class DetailsViewModel(
                     }
                 }
             }
-            is DetailsIntent.LoadMovie -> launch { interactor.movieDetails(destination.movieList.orEmpty(), destination.movieId) }
+            is DetailsIntent.LoadMovie -> {
+                launch {
+                    val movie = interactor.movieDetails(destination.movieList.orEmpty(), destination.movieId)
+                    reduce { it.copy(detailsState = ScreenState.Content(movie)) }
+                }
+            }
             is DetailsIntent.BackClick -> launch { MainNavigator.back() }
             is DetailsIntent.GalleryClick -> launch { MainNavigator.forward(GalleryDestination(destination.movieId)) }
             is DetailsIntent.FavoriteClick -> when {

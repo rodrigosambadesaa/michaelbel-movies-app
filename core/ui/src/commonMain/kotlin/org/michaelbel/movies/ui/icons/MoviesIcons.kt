@@ -3,6 +3,7 @@ package org.michaelbel.movies.ui.icons
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ManageSearch
+import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -66,6 +67,7 @@ object MoviesIcons {
     val MovieFilter = Icons.Rounded.MovieFilter
     val LocalMovies = Icons.Rounded.LocalMovies
     val Notifications = Icons.Rounded.Notifications
+    val OpenInNew = Icons.AutoMirrored.Rounded.OpenInNew
     val Palette = Icons.Rounded.Palette
     val Screenshot = Icons.Rounded.Screenshot
     val Search = Icons.Rounded.Search

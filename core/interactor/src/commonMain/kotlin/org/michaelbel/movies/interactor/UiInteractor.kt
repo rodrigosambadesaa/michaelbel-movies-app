@@ -37,6 +37,8 @@ interface UiInteractor {
 
     val isAppIconFeatureEnabled: Boolean
 
+    val isAppOpenByDefaultFeatureEnabled: Boolean
+
     val isScreenshotFeatureEnabled: Boolean
 
     val isGithubFeatureEnabled: Boolean
@@ -76,6 +78,9 @@ interface UiInteractor {
 
     @Composable
     fun navigateToAppSettings(): () -> Unit
+
+    @Composable
+    fun navigateToAppOpenByDefaultSettings(): () -> Unit
 
     @Composable
     fun navigateToDeveloperSettings(): () -> Unit

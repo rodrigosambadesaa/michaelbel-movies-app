@@ -35,6 +35,7 @@ import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
 import org.michaelbel.movies.ui.appicon.setIcon
 import org.michaelbel.movies.ui.ktx.currentGrammaticalGender
+import org.michaelbel.movies.ui.ktx.rememberNavigateToAppOpenByDefaultSettings
 import org.michaelbel.movies.ui.ktx.rememberNavigateToAppSettings
 import org.michaelbel.movies.ui.ktx.rememberNavigateToDeveloperSettings
 import org.michaelbel.movies.ui.ktx.supportSetRequestedApplicationGrammaticalGender
@@ -77,6 +78,8 @@ class UiInteractorImpl(
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
 
     override val isAppIconFeatureEnabled: Boolean = true
+
+    override val isAppOpenByDefaultFeatureEnabled: Boolean = true
 
     override val isScreenshotFeatureEnabled: Boolean = true
 
@@ -141,6 +144,11 @@ class UiInteractorImpl(
     @Composable
     override fun navigateToAppSettings(): () -> Unit {
         return rememberNavigateToAppSettings()
+    }
+
+    @Composable
+    override fun navigateToAppOpenByDefaultSettings(): () -> Unit {
+        return rememberNavigateToAppOpenByDefaultSettings()
     }
 
     @Composable

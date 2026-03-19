@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import movies.core.ui.generated.resources.Res
 import movies.core.ui.generated.resources.account_logout
 import movies.core.ui.generated.resources.account_title
+import movies.core.ui.generated.resources.add_to_favorites
 import movies.core.ui.generated.resources.appwidget_configure
 import movies.core.ui.generated.resources.appwidget_configure_soon
 import movies.core.ui.generated.resources.appwidget_description
@@ -23,10 +24,9 @@ import movies.core.ui.generated.resources.auth_sign_in
 import movies.core.ui.generated.resources.auth_sign_up
 import movies.core.ui.generated.resources.auth_terms_of_use
 import movies.core.ui.generated.resources.auth_title
-import movies.core.ui.generated.resources.add_to_favorites
-import movies.core.ui.generated.resources.download
 import movies.core.ui.generated.resources.details_error_loading
 import movies.core.ui.generated.resources.details_url_copied
+import movies.core.ui.generated.resources.download
 import movies.core.ui.generated.resources.error_api_key_null
 import movies.core.ui.generated.resources.error_check_internet_connectivity
 import movies.core.ui.generated.resources.error_loading
@@ -46,10 +46,10 @@ import movies.core.ui.generated.resources.gallery_logo
 import movies.core.ui.generated.resources.gallery_poster
 import movies.core.ui.generated.resources.gallery_success
 import movies.core.ui.generated.resources.language_code
-import movies.core.ui.generated.resources.main_nav_feed
-import movies.core.ui.generated.resources.main_nav_fave
-import movies.core.ui.generated.resources.main_nav_settings
 import movies.core.ui.generated.resources.login
+import movies.core.ui.generated.resources.main_nav_fave
+import movies.core.ui.generated.resources.main_nav_feed
+import movies.core.ui.generated.resources.main_nav_settings
 import movies.core.ui.generated.resources.notification_continue
 import movies.core.ui.generated.resources.notification_enable_subtitle
 import movies.core.ui.generated.resources.notification_enable_title
@@ -62,17 +62,15 @@ import movies.core.ui.generated.resources.search_recent
 import movies.core.ui.generated.resources.search_remove
 import movies.core.ui.generated.resources.search_results_empty
 import movies.core.ui.generated.resources.search_title
-import movies.core.ui.generated.resources.settings_reset
-import movies.core.ui.generated.resources.share
 import movies.core.ui.generated.resources.settings_action_cancel
 import movies.core.ui.generated.resources.settings_action_go
 import movies.core.ui.generated.resources.settings_action_reset
 import movies.core.ui.generated.resources.settings_app_debug
 import movies.core.ui.generated.resources.settings_app_launcher_icon
-import movies.core.ui.generated.resources.settings_app_launcher_icon_description
 import movies.core.ui.generated.resources.settings_app_launcher_icon_amoled
 import movies.core.ui.generated.resources.settings_app_launcher_icon_brown
 import movies.core.ui.generated.resources.settings_app_launcher_icon_changed_to
+import movies.core.ui.generated.resources.settings_app_launcher_icon_description
 import movies.core.ui.generated.resources.settings_app_launcher_icon_purple
 import movies.core.ui.generated.resources.settings_app_launcher_icon_red
 import movies.core.ui.generated.resources.settings_app_version_code
@@ -107,12 +105,15 @@ import movies.core.ui.generated.resources.settings_movie_list_now_playing
 import movies.core.ui.generated.resources.settings_movie_list_popular
 import movies.core.ui.generated.resources.settings_movie_list_top_rated
 import movies.core.ui.generated.resources.settings_movie_list_upcoming
+import movies.core.ui.generated.resources.settings_open_by_default
+import movies.core.ui.generated.resources.settings_open_by_default_description
 import movies.core.ui.generated.resources.settings_palette_colors
 import movies.core.ui.generated.resources.settings_palette_colors_description
 import movies.core.ui.generated.resources.settings_post_notifications
 import movies.core.ui.generated.resources.settings_post_notifications_denied
 import movies.core.ui.generated.resources.settings_post_notifications_granted
 import movies.core.ui.generated.resources.settings_post_notifications_should_request
+import movies.core.ui.generated.resources.settings_reset
 import movies.core.ui.generated.resources.settings_reset_confirmation
 import movies.core.ui.generated.resources.settings_review
 import movies.core.ui.generated.resources.settings_review_description
@@ -131,6 +132,7 @@ import movies.core.ui.generated.resources.settings_tile_error_already_added
 import movies.core.ui.generated.resources.settings_title
 import movies.core.ui.generated.resources.settings_update
 import movies.core.ui.generated.resources.settings_update_description
+import movies.core.ui.generated.resources.share
 import movies.core.ui.generated.resources.share_via
 import movies.core.ui.generated.resources.shortcuts_search_title
 import movies.core.ui.generated.resources.shortcuts_settings_title
@@ -245,6 +247,8 @@ object MoviesStrings {
     val settings_movie_list_upcoming = Res.string.settings_movie_list_upcoming
     val settings_app_launcher_icon = Res.string.settings_app_launcher_icon
     val settings_app_launcher_icon_description = Res.string.settings_app_launcher_icon_description
+    val settings_open_by_default = Res.string.settings_open_by_default
+    val settings_open_by_default_description = Res.string.settings_open_by_default_description
     val settings_app_launcher_icon_red = Res.string.settings_app_launcher_icon_red
     val settings_app_launcher_icon_purple = Res.string.settings_app_launcher_icon_purple
     val settings_app_launcher_icon_brown = Res.string.settings_app_launcher_icon_brown

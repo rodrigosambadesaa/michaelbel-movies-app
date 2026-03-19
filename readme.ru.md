@@ -206,6 +206,7 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] [Settings Panel](https://d.android.com/reference/android/provider/Settings.Panel)
 - [x] [Benchmark](https://d.android.com/topic/performance/benchmarking/benchmarking-overview)
 - [x] [Support Localization](https://d.android.com/guide/topics/resources/localization)
+- [x] [Open Supported Links](https://developer.android.com/training/app-links)
 - [x] [Notification Runtime Permission](https://d.android.com/develop/ui/views/notifications/notification-permission)
 - [x] [Changing Launcher App Icon](https://d.android.com/guide/topics/manifest/activity-alias-element)
 - [x] [Predictive Back Gesture](https://d.android.com/guide/navigation/custom-back/predictive-back-gesture)

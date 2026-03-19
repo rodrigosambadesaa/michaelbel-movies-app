@@ -39,6 +39,8 @@ class UiInteractorImpl: UiInteractor {
 
     override val isAppIconFeatureEnabled: Boolean = false
 
+    override val isAppOpenByDefaultFeatureEnabled: Boolean = false
+
     override val isScreenshotFeatureEnabled: Boolean = false
 
     override val isGithubFeatureEnabled: Boolean = true
@@ -78,6 +80,9 @@ class UiInteractorImpl: UiInteractor {
 
     @Composable
     override fun navigateToAppSettings(): () -> Unit = {}
+
+    @Composable
+    override fun navigateToAppOpenByDefaultSettings(): () -> Unit = {}
 
     @Composable
     override fun navigateToDeveloperSettings(): () -> Unit = {}

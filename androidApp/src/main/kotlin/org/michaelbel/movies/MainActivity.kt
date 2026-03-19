@@ -1,6 +1,7 @@
 package org.michaelbel.movies
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
@@ -35,6 +36,17 @@ class MainActivity: FragmentActivity() {
                 ScreenCaptureCallback {}
             } else {
                 Unit
+            }
+        }
+
+    private val Uri.tmdbMovieId: Int?
+        get() {
+            return when (host) {
+                "www.themoviedb.org" -> when (pathSegments.firstOrNull()) {
+                    "movie" -> pathSegments.getOrNull(1)?.takeWhile(Char::isDigit)?.toIntOrNull()
+                    else -> null
+                }
+                else -> null
             }
         }
 
@@ -83,9 +95,8 @@ class MainActivity: FragmentActivity() {
 
     private fun resolveIntent(intent: Intent?) {
         val uri = intent?.data
-        val isDebugDeepLink = (uri?.scheme == "movies" && uri.host == "debug") ||
-            uri?.toString() == DEBUG_DEEP_LINK_URI ||
-            intent?.getBooleanExtra(DEBUG_DEEP_LINK_EXTRA, false) == true
+        val isDebugDeepLink = (uri?.scheme == "movies" && uri.host == "debug") || uri?.toString() == DEBUG_DEEP_LINK_URI || intent?.getBooleanExtra(DEBUG_DEEP_LINK_EXTRA, false) == true
+        val tmdbMovieId = uri?.tmdbMovieId
 
         when {
             intent?.dataString == INTENT_ACTION_SEARCH -> viewModel.dispatch(MainIntent.ShortcutSearchClick)
@@ -105,6 +116,7 @@ class MainActivity: FragmentActivity() {
                 val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
                 movieId?.let { viewModel.dispatch(MainIntent.NavigateToDetails(it)) }
             }
+            tmdbMovieId != null -> viewModel.dispatch(MainIntent.NavigateToDetails(tmdbMovieId))
             isDebugDeepLink -> {
                 viewModel.dispatch(MainIntent.NavigateToDebug)
                 intent.let { deepLinkIntent ->

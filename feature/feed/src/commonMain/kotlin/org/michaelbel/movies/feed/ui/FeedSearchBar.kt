@@ -42,7 +42,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.ButtonDefaults
@@ -105,6 +104,10 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.onSecondaryClick
 import org.michaelbel.movies.ui.ktx.rememberSpeechRecognitionLauncher
 import org.michaelbel.movies.ui.strings.MoviesStrings
+import org.michaelbel.movies.ui.theme.bottomListItemShape
+import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
+import org.michaelbel.movies.ui.theme.topListItemShape
 
 @Composable
 fun FeedSearchBar(
@@ -434,10 +437,10 @@ fun FeedSearchBar(
                             key = { index, movie -> movie.movieId }
                         ) { index, movie ->
                             val itemShape = when {
-                                searchHistoryMovies.size == 1 -> RoundedCornerShape(16.dp)
-                                index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-                                index == searchHistoryMovies.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-                                else -> RoundedCornerShape(4.dp)
+                                searchHistoryMovies.size == 1 -> middleLargeIncreasedListItemShape
+                                index == 0 -> topListItemShape
+                                index == searchHistoryMovies.lastIndex -> bottomListItemShape
+                                else -> middleExtraSmallListItemShape
                             }
 
                             Column {
@@ -498,7 +501,7 @@ fun FeedSearchBar(
                                             expanded = expandedHistoryMovieId.value == historyMovie.movieId,
                                             onDismissRequest = { expandedHistoryMovieId.value = null },
                                             modifier = Modifier.widthIn(min = 180.dp),
-                                            shape = RoundedCornerShape(16.dp),
+                                            shape = middleLargeIncreasedListItemShape,
                                             containerColor = MaterialTheme.colorScheme.errorContainer,
                                             tonalElevation = 2.dp,
                                             shadowElevation = 4.dp
@@ -551,10 +554,10 @@ fun FeedSearchBar(
                                 items = suggestions
                             ) { index, suggestion ->
                                 val itemShape = when {
-                                    suggestions.size == 1 -> RoundedCornerShape(16.dp)
-                                    index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-                                    index == suggestions.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-                                    else -> RoundedCornerShape(4.dp)
+                                    suggestions.size == 1 -> middleLargeIncreasedListItemShape
+                                    index == 0 -> topListItemShape
+                                    index == suggestions.lastIndex -> bottomListItemShape
+                                    else -> middleExtraSmallListItemShape
                                 }
 
                                 Column(

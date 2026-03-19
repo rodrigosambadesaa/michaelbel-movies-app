@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -40,6 +39,10 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.AppearancePreviewParameterProvider
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.bottomListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
+import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
+import org.michaelbel.movies.ui.theme.topListItemShape
 
 @Composable
 fun <T: SealedString> SettingsDialog(
@@ -84,10 +87,10 @@ fun <T: SealedString> SettingsDialog(
             ) {
                 items.forEachIndexed { index, item ->
                     val itemShape = when {
-                        items.size == 1 -> RoundedCornerShape(16.dp)
-                        index == 0 -> RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp)
-                        index == items.lastIndex -> RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-                        else -> RoundedCornerShape(4.dp)
+                        items.size == 1 -> middleLargeIncreasedListItemShape
+                        index == 0 -> topListItemShape
+                        index == items.lastIndex -> bottomListItemShape
+                        else -> middleExtraSmallListItemShape
                     }
 
                     ListItem(

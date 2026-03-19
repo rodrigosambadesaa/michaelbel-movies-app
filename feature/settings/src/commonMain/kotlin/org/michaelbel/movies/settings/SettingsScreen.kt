@@ -24,8 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.rounded.FormatPaint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ButtonGroupDefaults
@@ -105,6 +103,9 @@ import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isDebug
 import org.michaelbel.movies.ui.ktx.requestTileService
 import org.michaelbel.movies.ui.strings.MoviesStrings
+import org.michaelbel.movies.ui.theme.bottomListItemShape
+import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
+import org.michaelbel.movies.ui.theme.topListItemShape
 import org.michaelbel.movies.widget.ktx.rememberAndPinAppWidgetProvider
 
 @Composable
@@ -282,7 +283,6 @@ private fun SettingsScreenContent(
             if (state.isLanguageFeatureEnabled) {
                 item {
                     var languageDialog by remember { mutableStateOf(false) }
-
                     if (languageDialog) {
                         SettingsDialog(
                             icon = MoviesIcons.Language,
@@ -298,7 +298,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
+                            .clip(topListItemShape)
                             .clickable(onClick = { languageDialog = true }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -331,7 +331,6 @@ private fun SettingsScreenContent(
             if (state.isThemeFeatureEnabled) {
                 item {
                     var themeDialog by remember { mutableStateOf(false) }
-
                     if (themeDialog) {
                         SettingsDialog(
                             icon = MoviesIcons.ThemeLightDark,
@@ -347,7 +346,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(if (state.isLanguageFeatureEnabled) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
+                            .clip(if (state.isLanguageFeatureEnabled) middleExtraSmallListItemShape else topListItemShape)
                             .clickable(onClick = { themeDialog = true }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -395,7 +394,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { genderDialog = true }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -428,7 +427,6 @@ private fun SettingsScreenContent(
             if (state.isMovieListFeatureEnabled) {
                 item {
                     var movieListDialog by remember { mutableStateOf(false) }
-
                     if (movieListDialog) {
                         SettingsDialog(
                             icon = MoviesIcons.LocalMovies,
@@ -444,7 +442,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { movieListDialog = true }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -480,7 +478,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp)),
+                            .clip(middleExtraSmallListItemShape),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
@@ -563,7 +561,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(
                                 onClick = {
                                     val enabled = !state.themeData.dynamicColors
@@ -622,7 +620,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .background(MaterialTheme.colorScheme.inversePrimary)
                     ) {
                         ListItem(
@@ -702,7 +700,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .background(MaterialTheme.colorScheme.inversePrimary)
                     ) {
                         ListItem(
@@ -751,7 +749,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = onNavigateToAppOpenByDefaultSettings),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -787,7 +785,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestPostNotificationsPermission) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -838,7 +836,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestIgnoreBatteryOptimizations) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -889,7 +887,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = rememberAndPinAppWidgetProvider()),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -925,7 +923,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestTileService) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -961,7 +959,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.SetBiometricEnabled(!state.isBiometricEnabled)) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -1012,7 +1010,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.SetScreenshotBlockEnabled(!state.isScreenshotBlockEnabled)) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -1063,7 +1061,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(4.dp))
+                            .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestGithub) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -1099,7 +1097,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
+                            .clip(if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) middleExtraSmallListItemShape else bottomListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestTelegram) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -1137,7 +1135,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) RoundedCornerShape(4.dp) else RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
+                            .clip(if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) middleExtraSmallListItemShape else bottomListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.ReviewClick) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
@@ -1173,7 +1171,7 @@ private fun SettingsScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
+                            .clip(bottomListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.UpdateClick) }),
                         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {

@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -45,6 +44,9 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.icons.SettingsAccountBox
 import org.michaelbel.movies.ui.icons.SettingsCinematic
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
+import org.michaelbel.movies.ui.theme.bottomListItemShape
+import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
+import org.michaelbel.movies.ui.theme.topListItemShape
 
 @Composable
 fun DebugScreen(
@@ -104,7 +106,7 @@ fun DebugScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 4.dp, bottomEnd = 4.dp))
+                    .clip(topListItemShape)
                     .clickable(onClick = navigateToAppSettings),
                 headlineContent = {
                     Text(
@@ -131,7 +133,7 @@ fun DebugScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(4.dp))
+                    .clip(middleExtraSmallListItemShape)
                     .clickable(onClick = navigateToDeveloperSettings),
                 headlineContent = {
                     Text(
@@ -158,7 +160,7 @@ fun DebugScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .clip(if (!state.isFirebaseTokenFeatureEnabled) RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp) else RoundedCornerShape(4.dp))
+                    .clip(if (state.isFirebaseTokenFeatureEnabled) middleExtraSmallListItemShape else topListItemShape)
                     .clickable(onClick = { viewModel.dispatch(DebugIntent.ResetNotificationExpireTime) }),
                 headlineContent = {
                     Text(
@@ -186,7 +188,7 @@ fun DebugScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 16.dp, bottomEnd = 16.dp))
+                        .clip(bottomListItemShape)
                         .clickable(onClick = { copyToClipboard(state.firebaseToken) }),
                     headlineContent = {
                         Text(

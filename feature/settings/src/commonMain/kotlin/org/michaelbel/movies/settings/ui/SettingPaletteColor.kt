@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,6 +26,7 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.theme.a1
 import org.michaelbel.movies.ui.theme.a2
 import org.michaelbel.movies.ui.theme.a3
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
 
 @Composable
 fun RowScope.SettingPaletteColor(
@@ -50,7 +50,7 @@ fun RowScope.SettingPaletteColor(
             .sizeIn(maxHeight = 80.dp, maxWidth = 80.dp, minHeight = 64.dp, minWidth = 64.dp)
             .weight(1F, false)
             .aspectRatio(1F)
-            .clip(RoundedCornerShape(16.dp))
+            .clip(middleLargeIncreasedListItemShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable(onClick = onClick)
     ) {

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,6 +28,7 @@ import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
 
 @Composable
 fun AboutDialog(
@@ -61,8 +61,10 @@ fun AboutDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                val listItemShape = middleLargeIncreasedListItemShape
+
                 Surface(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = listItemShape,
                     shadowElevation = 12.dp,
                     color = MaterialTheme.colorScheme.surface
                 ) {
@@ -71,10 +73,10 @@ fun AboutDialog(
                         contentDescription = null,
                         modifier = Modifier
                             .size(64.dp)
-                            .clip(RoundedCornerShape(16.dp))
+                            .clip(listItemShape)
                             .graphicsLayer {
                                 shadowElevation = 12.dp.toPx()
-                                shape = RoundedCornerShape(16.dp)
+                                shape = listItemShape
                                 clip = true
                             }
                     )

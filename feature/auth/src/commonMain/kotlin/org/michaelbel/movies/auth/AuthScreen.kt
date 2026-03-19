@@ -92,6 +92,7 @@ import org.michaelbel.movies.network.config.TMDB_RESET_PASSWORD
 import org.michaelbel.movies.network.config.TMDB_TERMS_OF_USE
 import org.michaelbel.movies.network.config.TMDB_URL
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.compose.PasswordVisibilityIcon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
@@ -255,11 +256,11 @@ private fun AuthScreenContent(
                         onClick = { passwordVisible = !passwordVisible },
                         modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
                     ) {
-                        Image(
-                            imageVector = if (passwordVisible) MoviesIcons.Visibility else MoviesIcons.VisibilityOff,
+                        PasswordVisibilityIcon(
+                            passwordVisible = passwordVisible,
                             contentDescription = stringResource(if (passwordVisible) MoviesContentDescription.PasswordIcon else MoviesContentDescription.PasswordOffIcon),
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }

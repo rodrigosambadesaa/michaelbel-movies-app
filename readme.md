@@ -207,6 +207,7 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Support Localization](https://d.android.com/guide/topics/resources/localization)
 - [x] [Open Supported Links](https://developer.android.com/training/app-links)
 - [x] [Notification Runtime Permission](https://d.android.com/develop/ui/views/notifications/notification-permission)
+- [x] [Do Not Disturb Access](https://developer.android.com/reference/android/provider/Settings#ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
 - [x] [Changing Launcher App Icon](https://d.android.com/guide/topics/manifest/activity-alias-element)
 - [x] [Predictive Back Gesture](https://d.android.com/guide/navigation/custom-back/predictive-back-gesture)
 - [x] [Codacy Static Code Analysis](https://app.codacy.com/gh/michaelbel/movies/dashboard)

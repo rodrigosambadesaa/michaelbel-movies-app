@@ -81,6 +81,10 @@
     <string name="settings_post_notifications">Уведомления</string>
     <string name="settings_post_notifications_denied">Разрешение отклонено</string>
     <string name="settings_post_notifications_granted">Разрешение предоставлено</string>
+    <string name="settings_do_not_disturb">Не беспокоить</string>
+    <string name="settings_do_not_disturb_not_granted">Разрешите Movies управлять режимом «Не беспокоить»</string>
+    <string name="settings_do_not_disturb_enabled">Режим «Не беспокоить» включен</string>
+    <string name="settings_do_not_disturb_disabled">Режим «Не беспокоить» выключен</string>
     <string name="settings_battery_optimization">Оптимизация батареи</string>
     <string name="settings_battery_optimization_optimized">Для Movies оптимизация включена</string>
     <string name="settings_battery_optimization_ignored">Для Movies оптимизация отключена</string>

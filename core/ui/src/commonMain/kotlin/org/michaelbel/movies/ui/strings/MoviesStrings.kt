@@ -85,6 +85,10 @@ import movies.core.ui.generated.resources.settings_battery_optimization_ignored
 import movies.core.ui.generated.resources.settings_battery_optimization_optimized
 import movies.core.ui.generated.resources.settings_biometric_added
 import movies.core.ui.generated.resources.settings_biometric_not_added
+import movies.core.ui.generated.resources.settings_do_not_disturb
+import movies.core.ui.generated.resources.settings_do_not_disturb_disabled
+import movies.core.ui.generated.resources.settings_do_not_disturb_enabled
+import movies.core.ui.generated.resources.settings_do_not_disturb_not_granted
 import movies.core.ui.generated.resources.settings_dynamic_colors
 import movies.core.ui.generated.resources.settings_dynamic_colors_description
 import movies.core.ui.generated.resources.settings_error_app_from_google_play
@@ -223,6 +227,10 @@ object MoviesStrings {
     val settings_post_notifications = Res.string.settings_post_notifications
     val settings_post_notifications_denied = Res.string.settings_post_notifications_denied
     val settings_post_notifications_granted = Res.string.settings_post_notifications_granted
+    val settings_do_not_disturb = Res.string.settings_do_not_disturb
+    val settings_do_not_disturb_not_granted = Res.string.settings_do_not_disturb_not_granted
+    val settings_do_not_disturb_enabled = Res.string.settings_do_not_disturb_enabled
+    val settings_do_not_disturb_disabled = Res.string.settings_do_not_disturb_disabled
     val settings_battery_optimization = Res.string.settings_battery_optimization
     val settings_battery_optimization_optimized = Res.string.settings_battery_optimization_optimized
     val settings_battery_optimization_ignored = Res.string.settings_battery_optimization_ignored

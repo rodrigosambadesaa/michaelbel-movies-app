@@ -5,6 +5,7 @@ import org.michaelbel.movies.common.mvi.Event
 sealed interface SettingsEvent: Event {
     data object PinWidget: SettingsEvent
     data object RequestPostNotificationsPermission: SettingsEvent
+    data object RequestDoNotDisturbAccess: SettingsEvent
     data object RequestIgnoreBatteryOptimizations: SettingsEvent
     data object RequestTileService: SettingsEvent
     data object RequestGithub: SettingsEvent

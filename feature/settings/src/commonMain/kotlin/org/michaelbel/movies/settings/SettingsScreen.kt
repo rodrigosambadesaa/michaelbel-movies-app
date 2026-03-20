@@ -115,6 +115,7 @@ fun SettingsScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
     val openAppNotificationSettings = uiInteractor.navigateToAppNotificationSettings()
+    val openDoNotDisturbSettings = uiInteractor.navigateToDoNotDisturbSettings()
     val openAppOpenByDefaultSettings = uiInteractor.navigateToAppOpenByDefaultSettings()
     val requestIgnoreBatteryOptimizations = uiInteractor.requestIgnoreBatteryOptimizations()
     val openBatteryOptimizationSettings = uiInteractor.navigateToBatteryOptimizationSettings()
@@ -140,6 +141,7 @@ fun SettingsScreen(
         when (event) {
             is SettingsEvent.PinWidget -> {}
             is SettingsEvent.RequestPostNotificationsPermission -> onRequestPostNotificationsPermission()
+            is SettingsEvent.RequestDoNotDisturbAccess -> openDoNotDisturbSettings()
             is SettingsEvent.RequestIgnoreBatteryOptimizations -> {
                 when {
                     state.isIgnoringBatteryOptimizations -> openBatteryOptimizationSettings()
@@ -176,6 +178,7 @@ fun SettingsScreen(
 
     OnResume {
         viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled)
+        viewModel.dispatch(SettingsIntent.CollectDoNotDisturbState)
         viewModel.dispatch(SettingsIntent.CollectIgnoringBatteryOptimizations)
     }
 }
@@ -812,6 +815,70 @@ private fun SettingsScreenContent(
                                 checked = state.areNotificationsEnabled,
                                 onCheckedChange = null,
                                 thumbContent = if (state.areNotificationsEnabled) {
+                                    {
+                                        Icon(
+                                            imageVector = MoviesIcons.Check,
+                                            contentDescription = MoviesContentDescription.None,
+                                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                                        )
+                                    }
+                                } else null
+                            )
+                        }
+                    )
+                }
+                item {
+                    Spacer(
+                        modifier = Modifier.height(2.dp)
+                    )
+                }
+            }
+            if (state.isDoNotDisturbFeatureEnabled) {
+                item {
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .clip(middleExtraSmallListItemShape)
+                            .clickable(
+                                onClick = {
+                                    when {
+                                        state.isDoNotDisturbAccessGranted -> dispatch(SettingsIntent.SetDoNotDisturbEnabled(!state.isDoNotDisturbEnabled))
+                                        else -> dispatch(SettingsIntent.RequestDoNotDisturbAccess)
+                                    }
+                                }
+                            ),
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        headlineContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_do_not_disturb),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(
+                                    when {
+                                        !state.isDoNotDisturbAccessGranted -> MoviesStrings.settings_do_not_disturb_not_granted
+                                        state.isDoNotDisturbEnabled -> MoviesStrings.settings_do_not_disturb_enabled
+                                        else -> MoviesStrings.settings_do_not_disturb_disabled
+                                    }
+                                ),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.DoNotDisturbOn,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        },
+                        trailingContent = {
+                            Switch(
+                                checked = state.isDoNotDisturbAccessGranted && state.isDoNotDisturbEnabled,
+                                onCheckedChange = null,
+                                thumbContent = if (state.isDoNotDisturbAccessGranted && state.isDoNotDisturbEnabled) {
                                     {
                                         Icon(
                                             imageVector = MoviesIcons.Check,

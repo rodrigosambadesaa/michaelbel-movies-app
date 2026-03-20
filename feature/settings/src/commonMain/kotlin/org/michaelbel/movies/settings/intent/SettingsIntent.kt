@@ -13,6 +13,7 @@ sealed interface SettingsIntent: Intent {
     data object CollectMovieList: SettingsIntent
     data object CollectAppServiceData: SettingsIntent
     data object CollectNotificationsEnabled: SettingsIntent
+    data object CollectDoNotDisturbState: SettingsIntent
     data object CollectIgnoringBatteryOptimizations: SettingsIntent
     data object CollectBiometricFeatureEnabled: SettingsIntent
     data object CollectBiometricEnabled: SettingsIntent
@@ -23,6 +24,7 @@ sealed interface SettingsIntent: Intent {
     data object CollectAppIcon: SettingsIntent
     data object FetchUpdateAvailable: SettingsIntent
     data object RequestPostNotificationsPermission: SettingsIntent
+    data object RequestDoNotDisturbAccess: SettingsIntent
     data object RequestIgnoreBatteryOptimizations: SettingsIntent
     data object RequestTileService: SettingsIntent
     data object RequestGithub: SettingsIntent
@@ -43,6 +45,7 @@ sealed interface SettingsIntent: Intent {
     data class SetPaletteKey(val paletteKey: Int): SettingsIntent
     data class SetSeedColor(val seedColor: Int): SettingsIntent
     data class SetBiometricEnabled(val enabled: Boolean): SettingsIntent
+    data class SetDoNotDisturbEnabled(val enabled: Boolean): SettingsIntent
     data class SetScreenshotBlockEnabled(val enabled: Boolean): SettingsIntent
     data class SetUpdateAvailable(val state: Boolean): SettingsIntent
     data class SetGrammaticalGender(val value: Int): SettingsIntent

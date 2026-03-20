@@ -18,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
 import androidx.palette.graphics.Palette
@@ -68,6 +69,9 @@ class UiInteractorImpl(
     override val isNotificationsFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
 
+    override val isDoNotDisturbFeatureEnabled: Boolean
+        @ChecksSdkIntAtLeast(23) get() = Build.VERSION.SDK_INT >= 23
+
     override val isBatteryOptimizationFeatureEnabled: Boolean = true
 
     override val isBiometricFeatureEnabled: Boolean = true
@@ -115,9 +119,16 @@ class UiInteractorImpl(
         return { resultContract.launch(context.appNotificationSettingsIntent) }
     }
 
+    @Composable
+    override fun navigateToDoNotDisturbSettings(): () -> Unit {
+        val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+        val intent = remember { Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS) }
+        return remember(resultContract, intent) { { resultContract.launch(intent) } }
+    }
+
     override val isIgnoringBatteryOptimizations: Boolean
         get() {
-            val powerManager = context.getSystemService(PowerManager::class.java)
+            val powerManager = ContextCompat.getSystemService(context, PowerManager::class.java)
             return powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
         }
 

@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -26,16 +27,14 @@ class LocaleInteractorImpl(
         get() {
             val appCompatLocales = AppCompatDelegate.getApplicationLocales()
             val appCompatLanguage = if (appCompatLocales.size() > 0) appCompatLocales[0]?.language else null
-            if (!appCompatLanguage.isNullOrBlank()) {
-                return appCompatLanguage
-            }
+            if (!appCompatLanguage.isNullOrBlank()) return appCompatLanguage
 
             if (Build.VERSION.SDK_INT >= 33) {
-                val localeManager = context.getSystemService(LocaleManager::class.java)
-                val frameworkLocales = localeManager.applicationLocales
-                val frameworkLanguage = if (frameworkLocales.size() > 0) frameworkLocales[0].language else null
-                if (!frameworkLanguage.isNullOrBlank()) {
-                    return frameworkLanguage
+                val localeManager = ContextCompat.getSystemService(context, LocaleManager::class.java)
+                if (localeManager != null) {
+                    val frameworkLocales = localeManager.applicationLocales
+                    val frameworkLanguage = if (frameworkLocales.size() > 0) frameworkLocales[0].language else null
+                    if (!frameworkLanguage.isNullOrBlank()) return frameworkLanguage
                 }
             }
 
@@ -52,8 +51,8 @@ class LocaleInteractorImpl(
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
             when {
                 Build.VERSION.SDK_INT >= 33 -> {
-                    val localeManager = context.getSystemService(LocaleManager::class.java)
-                    localeManager.applicationLocales = LocaleList.forLanguageTags(languageCode)
+                    val localeManager = ContextCompat.getSystemService(context, LocaleManager::class.java)
+                    localeManager?.applicationLocales = LocaleList.forLanguageTags(languageCode)
                 }
                 else -> {
                     val locale = Locale(languageCode)
@@ -72,8 +71,8 @@ class LocaleInteractorImpl(
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
             when {
                 Build.VERSION.SDK_INT >= 33 -> {
-                    val localeManager = context.getSystemService(LocaleManager::class.java)
-                    localeManager.applicationLocales = LocaleList.getEmptyLocaleList()
+                    val localeManager = ContextCompat.getSystemService(context, LocaleManager::class.java)
+                    localeManager?.applicationLocales = LocaleList.getEmptyLocaleList()
                 }
                 else -> {
                     val locale = Locale.getDefault()

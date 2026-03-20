@@ -37,6 +37,7 @@ class SettingsViewModel(
         dispatch(SettingsIntent.CollectMovieList)
         dispatch(SettingsIntent.CollectAppServiceData)
         dispatch(SettingsIntent.CollectNotificationsEnabled)
+        dispatch(SettingsIntent.CollectDoNotDisturbState)
         dispatch(SettingsIntent.CollectIgnoringBatteryOptimizations)
         dispatch(SettingsIntent.CollectBiometricFeatureEnabled)
         dispatch(SettingsIntent.CollectBiometricEnabled)
@@ -73,6 +74,12 @@ class SettingsViewModel(
             }
             is SettingsIntent.CollectAppServiceData -> reduce { it.copy(isReviewFeatureEnabled = appService.flavor == Flavor.Gms, isUpdateFeatureEnabled = appService.flavor == Flavor.Gms, appVersionData = AppVersionData(appService.flavor.name)) }
             is SettingsIntent.CollectNotificationsEnabled -> reduce { it.copy(areNotificationsEnabled = notifyManager.areNotificationsEnabled) }
+            is SettingsIntent.CollectDoNotDisturbState -> reduce {
+                it.copy(
+                    isDoNotDisturbAccessGranted = notifyManager.isDoNotDisturbAccessGranted,
+                    isDoNotDisturbEnabled = notifyManager.isDoNotDisturbEnabled
+                )
+            }
             is SettingsIntent.CollectIgnoringBatteryOptimizations -> reduce { it.copy(isIgnoringBatteryOptimizations = uiInteractor.isIgnoringBatteryOptimizations) }
             is SettingsIntent.CollectBiometricFeatureEnabled -> {
                 launch {
@@ -108,6 +115,7 @@ class SettingsViewModel(
                         isDynamicColorsFeatureEnabled = uiInteractor.isDynamicColorsFeatureEnabled,
                         isPaletteColorsFeatureEnabled = uiInteractor.isPaletteColorsFeatureEnabled,
                         isNotificationsFeatureEnabled = uiInteractor.isNotificationsFeatureEnabled,
+                        isDoNotDisturbFeatureEnabled = uiInteractor.isDoNotDisturbFeatureEnabled,
                         isBatteryOptimizationFeatureEnabled = uiInteractor.isBatteryOptimizationFeatureEnabled,
                         isBiometricFeatureEnabled = uiInteractor.isBiometricFeatureEnabled,
                         isWidgetFeatureEnabled = uiInteractor.isWidgetFeatureEnabled,
@@ -134,6 +142,7 @@ class SettingsViewModel(
                 })
             }
             is SettingsIntent.RequestPostNotificationsPermission -> launch { push(SettingsEvent.RequestPostNotificationsPermission) }
+            is SettingsIntent.RequestDoNotDisturbAccess -> launch { push(SettingsEvent.RequestDoNotDisturbAccess) }
             is SettingsIntent.RequestIgnoreBatteryOptimizations -> launch { push(SettingsEvent.RequestIgnoreBatteryOptimizations) }
             is SettingsIntent.RequestTileService -> launch { push(SettingsEvent.RequestTileService) }
             is SettingsIntent.RequestGithub -> launch { push(SettingsEvent.RequestGithub) }
@@ -153,6 +162,10 @@ class SettingsViewModel(
             is SettingsIntent.SetPaletteKey -> launch { interactor.setPaletteKey(intent.paletteKey) }
             is SettingsIntent.SetSeedColor -> launch { interactor.setSeedColor(intent.seedColor) }
             is SettingsIntent.SetBiometricEnabled -> launch { interactor.setBiometricEnabled(intent.enabled) }
+            is SettingsIntent.SetDoNotDisturbEnabled -> {
+                notifyManager.setDoNotDisturbEnabled(intent.enabled)
+                reduce { it.copy(isDoNotDisturbEnabled = notifyManager.isDoNotDisturbEnabled) }
+            }
             is SettingsIntent.SetScreenshotBlockEnabled -> launch { interactor.setScreenshotBlockEnabled(intent.enabled) }
             is SettingsIntent.SetUpdateAvailable -> { reduce { it.copy(isUpdateAvailable = intent.state) } }
             is SettingsIntent.SetGrammaticalGender -> {

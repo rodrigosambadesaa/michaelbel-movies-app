@@ -13,6 +13,7 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Dashboard
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.DoNotDisturbOn
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material.icons.rounded.Fingerprint
@@ -52,6 +53,7 @@ object MoviesIcons {
     val Close = Icons.Rounded.Close
     val Dashboard = Icons.Rounded.Dashboard
     val Delete = Icons.Rounded.Delete
+    val DoNotDisturbOn = Icons.Rounded.DoNotDisturbOn
     val Info = Icons.Rounded.Info
     val FileDownload = Icons.Rounded.FileDownload
     val Fingerprint = Icons.Rounded.Fingerprint

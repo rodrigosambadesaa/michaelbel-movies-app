@@ -81,6 +81,10 @@
     <string name="settings_post_notifications">Notifications</string>
     <string name="settings_post_notifications_denied">Permission denied</string>
     <string name="settings_post_notifications_granted">Permission granted</string>
+    <string name="settings_do_not_disturb">Do Not Disturb</string>
+    <string name="settings_do_not_disturb_not_granted">Allow Movies to manage Do Not Disturb</string>
+    <string name="settings_do_not_disturb_enabled">Do Not Disturb is on</string>
+    <string name="settings_do_not_disturb_disabled">Do Not Disturb is off</string>
     <string name="settings_battery_optimization">Battery optimization</string>
     <string name="settings_battery_optimization_optimized">Optimization is on for Movies</string>
     <string name="settings_battery_optimization_ignored">Optimization is off for Movies</string>

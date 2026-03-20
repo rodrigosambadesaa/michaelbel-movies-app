@@ -29,6 +29,8 @@ class UiInteractorImpl: UiInteractor {
 
     override val isNotificationsFeatureEnabled: Boolean = false
 
+    override val isDoNotDisturbFeatureEnabled: Boolean = false
+
     override val isBatteryOptimizationFeatureEnabled: Boolean = false
 
     override val isBiometricFeatureEnabled: Boolean = false
@@ -69,6 +71,9 @@ class UiInteractorImpl: UiInteractor {
 
     @Composable
     override fun navigateToAppNotificationSettings(): () -> Unit = {}
+
+    @Composable
+    override fun navigateToDoNotDisturbSettings(): () -> Unit = {}
 
     override val isIgnoringBatteryOptimizations: Boolean = false
 

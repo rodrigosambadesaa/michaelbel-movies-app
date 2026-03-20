@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.ui.R
 
@@ -15,7 +16,7 @@ val Context.currentGrammaticalGender: GrammaticalGender
     get() {
         return when {
             Build.VERSION.SDK_INT >= 34 -> {
-                val grammaticalInflectionManager = getSystemService(GrammaticalInflectionManager::class.java)
+                val grammaticalInflectionManager = ContextCompat.getSystemService(this, GrammaticalInflectionManager::class.java) ?: return GrammaticalGender.NotSpecified()
                 val grammaticalGender = grammaticalInflectionManager.applicationGrammaticalGender
                 GrammaticalGender.transform(grammaticalGender)
             }
@@ -25,7 +26,7 @@ val Context.currentGrammaticalGender: GrammaticalGender
 
 fun Context.supportSetRequestedApplicationGrammaticalGender(grammaticalGender: Int) {
     if (Build.VERSION.SDK_INT >= 34) {
-        val grammaticalInflectionManager = getSystemService(GrammaticalInflectionManager::class.java)
+        val grammaticalInflectionManager = ContextCompat.getSystemService(this, GrammaticalInflectionManager::class.java) ?: return
         grammaticalInflectionManager.setRequestedApplicationGrammaticalGender(grammaticalGender)
     }
 }

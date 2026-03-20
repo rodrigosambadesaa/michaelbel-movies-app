@@ -27,6 +27,8 @@ interface UiInteractor {
 
     val isNotificationsFeatureEnabled: Boolean
 
+    val isDoNotDisturbFeatureEnabled: Boolean
+
     val isBatteryOptimizationFeatureEnabled: Boolean
 
     val isBiometricFeatureEnabled: Boolean
@@ -67,6 +69,9 @@ interface UiInteractor {
 
     @Composable
     fun navigateToAppNotificationSettings(): () -> Unit
+
+    @Composable
+    fun navigateToDoNotDisturbSettings(): () -> Unit
 
     val isIgnoringBatteryOptimizations: Boolean
 

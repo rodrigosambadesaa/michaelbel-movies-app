@@ -58,6 +58,7 @@ import org.michaelbel.movies.ui.ktx.isFailure
 import org.michaelbel.movies.ui.ktx.isLoading
 import org.michaelbel.movies.ui.ktx.isPortrait
 import org.michaelbel.movies.ui.ktx.isRefreshLoading
+import org.michaelbel.movies.ui.ktx.isWideFoldableMode
 import org.michaelbel.movies.ui.ktx.refreshThrowable
 import java.net.UnknownHostException
 
@@ -266,7 +267,7 @@ private fun FeedScreenContent(
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
         val layoutDirection = LocalLayoutDirection.current
-        val isGridLayout = state.feedView is FeedView.FeedGrid || state.feedView is FeedView.FeedList && !isPortrait
+        val isGridLayout = state.feedView is FeedView.FeedGrid || state.feedView is FeedView.FeedList && (!isPortrait || isWideFoldableMode)
         val feedContentPadding = PaddingValues(
             start = innerPadding.calculateStartPadding(layoutDirection),
             top = innerPadding.calculateTopPadding() + if (isGridLayout) 8.dp else 4.dp,

@@ -17,6 +17,7 @@ import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.ui.ktx.PageLoadingColumnItem
 import org.michaelbel.movies.ui.ktx.PageLoadingRowItem
 import org.michaelbel.movies.ui.ktx.isPortrait
+import org.michaelbel.movies.ui.ktx.isWideFoldableMode
 import org.michaelbel.movies.ui.ktx.pageLoadingGridCells
 import org.michaelbel.movies.ui.ktx.pageLoadingStaggeredGridCells
 
@@ -30,7 +31,7 @@ fun PageLoading(
     when (feedView) {
         is FeedView.FeedList -> {
             when {
-                isPortrait -> {
+                isPortrait && !isWideFoldableMode -> {
                     PageLoadingColumn(
                         modifier = modifier,
                         paddingValues = paddingValues,
@@ -86,7 +87,7 @@ private fun PageLoadingGrid(
 ) {
     LazyVerticalGrid(
         columns = pageLoadingGridCells(),
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         contentPadding = paddingValues,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         userScrollEnabled = false
@@ -110,7 +111,7 @@ private fun PageLoadingStaggeredGrid(
 ) {
     LazyVerticalStaggeredGrid(
         columns = pageLoadingStaggeredGridCells(),
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         contentPadding = paddingValues,
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),

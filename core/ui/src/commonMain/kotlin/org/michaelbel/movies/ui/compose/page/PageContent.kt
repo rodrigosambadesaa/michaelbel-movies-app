@@ -35,6 +35,7 @@ import org.michaelbel.movies.ui.ktx.PageContentGridMovieItem
 import org.michaelbel.movies.ui.ktx.isPagingFailure
 import org.michaelbel.movies.ui.ktx.isPagingLoading
 import org.michaelbel.movies.ui.ktx.isPortrait
+import org.michaelbel.movies.ui.ktx.isWideFoldableMode
 import org.michaelbel.movies.ui.ktx.pageContentGridCells
 import org.michaelbel.movies.ui.ktx.pageContentStaggeredGridCells
 import org.michaelbel.movies.ui.ktx.pageContentStaggeredGridModifier
@@ -52,7 +53,7 @@ fun PageContent(
     cardColor: Color = MaterialTheme.colorScheme.inversePrimary
 ) {
     when (feedView) {
-        is FeedView.FeedList -> when (isPortrait) {
+        is FeedView.FeedList -> when (isPortrait && !isWideFoldableMode) {
             true -> {
                 PagingContentColumn(
                     lazyListState = lazyListState,
@@ -177,7 +178,7 @@ private fun PagingContentGrid(
 ) {
     LazyVerticalGrid(
         columns = pageContentGridCells(),
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         state = lazyGridState,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -236,7 +237,7 @@ private fun ListContentGrid(
 ) {
     LazyVerticalGrid(
         columns = pageContentGridCells(),
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         state = lazyGridState,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -262,7 +263,7 @@ private fun PagingContentStaggeredGrid(
 ) {
     LazyVerticalStaggeredGrid(
         columns = pageContentStaggeredGridCells(),
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         state = lazyStaggeredGridState,
         contentPadding = contentPadding,
         verticalItemSpacing = 8.dp,
@@ -322,7 +323,7 @@ private fun ListContentStaggeredGrid(
 ) {
     LazyVerticalStaggeredGrid(
         columns = pageContentStaggeredGridCells(),
-        modifier = modifier.padding(start = 8.dp, end = 8.dp),
+        modifier = modifier.padding(horizontal = 8.dp),
         state = lazyStaggeredGridState,
         contentPadding = contentPadding,
         verticalItemSpacing = 8.dp,

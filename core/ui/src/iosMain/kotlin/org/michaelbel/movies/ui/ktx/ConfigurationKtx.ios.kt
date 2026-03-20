@@ -27,6 +27,9 @@ actual val isDebug: Boolean
 actual val isPortrait: Boolean
     get() = UIDevice.currentDevice.orientation in listOf(UIDeviceOrientation.UIDeviceOrientationPortrait, UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown)
 
+actual val isWideFoldableMode: Boolean
+    get() = false
+
 actual fun statusBarStyle(detectDarkMode: Boolean): Any {
     return Any()
 }
@@ -39,11 +42,11 @@ actual fun navigationBarStyle(detectDarkMode: Boolean): Any {
 actual val displayCutoutWindowInsets: WindowInsets
     get() = WindowInsets(0, 0, 0, 0)
 
-actual const val USE_PLATFORM_DEFAULT_WIDTH: Boolean = true
+actual val dialogUsePlatformDefaultWidth: Boolean
+    get() = false
 
-actual const val AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH: Boolean = false
-
-actual const val ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH: Boolean = false
+actual val bottomSheetUsePlatformDefaultWidth: Boolean
+    get() = true
 
 actual val movieColumnPosterModifier: Modifier = Modifier
     .fillMaxWidth()

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -28,6 +29,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.RotatingCookie12SidedBox
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.ktx.isWideFoldableMode
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
@@ -68,7 +70,7 @@ fun PageFailure(
                 onClick = onButtonClick,
                 shapes = ButtonDefaults.shapes(),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .then(if (isWideFoldableMode) Modifier.wrapContentWidth() else Modifier.fillMaxWidth())
                     .padding(start = 16.dp, top = 16.dp, end = 16.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceTint

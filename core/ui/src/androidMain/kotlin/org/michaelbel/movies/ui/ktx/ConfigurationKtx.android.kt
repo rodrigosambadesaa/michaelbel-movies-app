@@ -39,6 +39,12 @@ actual val isPortrait: Boolean
         return configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     }
 
+actual val isWideFoldableMode: Boolean
+    @Composable get() {
+        val configuration = LocalConfiguration.current
+        return configuration.screenWidthDp >= 600
+    }
+
 actual fun statusBarStyle(detectDarkMode: Boolean): Any {
     return SystemBarStyle.auto(Color.Transparent.toArgb(), Color.Transparent.toArgb()) { detectDarkMode }
 }
@@ -57,11 +63,11 @@ actual fun navigationBarStyle(detectDarkMode: Boolean): Any {
 actual val displayCutoutWindowInsets: WindowInsets
     @Composable get() = if (isPortrait) WindowInsets(0, 0, 0, 0) else WindowInsets.displayCutout
 
-actual const val USE_PLATFORM_DEFAULT_WIDTH: Boolean = false
+actual val dialogUsePlatformDefaultWidth: Boolean
+    @Composable get() = isWideFoldableMode
 
-actual const val AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH: Boolean = false
-
-actual const val ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH: Boolean = false
+actual val bottomSheetUsePlatformDefaultWidth: Boolean
+    get() = false
 
 actual val movieColumnPosterModifier: Modifier = Modifier
     .fillMaxWidth()

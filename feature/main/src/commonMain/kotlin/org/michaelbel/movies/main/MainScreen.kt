@@ -27,11 +27,10 @@ import org.michaelbel.movies.main.tabs.MainTabsScreen
 import org.michaelbel.movies.notify.NotifyScreen
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.settings.SettingsScreen
-import org.michaelbel.movies.ui.ktx.ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH
-import org.michaelbel.movies.ui.ktx.AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.USE_PLATFORM_DEFAULT_WIDTH
+import org.michaelbel.movies.ui.ktx.bottomSheetUsePlatformDefaultWidth
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
+import org.michaelbel.movies.ui.ktx.dialogUsePlatformDefaultWidth
 import org.michaelbel.movies.ui.ktx.fadePredictiveTransitionSpec
 import org.michaelbel.movies.ui.ktx.fadeTransitionSpec
 import org.michaelbel.movies.ui.navigation.AccountDestination
@@ -121,34 +120,10 @@ private fun MainScreenContent(
         popTransitionSpec = fadeTransitionSpec(),
         predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
         entryProvider = entryProvider {
-            entry<AuthDestination>(
-                metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH)
-                )
-            ) {
-                AuthScreen()
-            }
-            entry<AccountDestination>(
-                metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH)
-                )
-            ) {
-                AccountScreen()
-            }
-            entry<NotifyDestination>(
-                metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = USE_PLATFORM_DEFAULT_WIDTH)
-                )
-            ) {
-                NotifyScreen()
-            }
-            entry<DebugDestination>(
-                metadata = DialogSceneStrategy.dialog(
-                    dialogProperties = DialogProperties(usePlatformDefaultWidth = USE_PLATFORM_DEFAULT_WIDTH)
-                )
-            ) {
-                DebugScreen()
-            }
+            entry<AuthDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))) { AuthScreen() }
+            entry<AccountDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))) { AccountScreen() }
+            entry<NotifyDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))) { NotifyScreen() }
+            entry<DebugDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))) { DebugScreen() }
             entry<MainDestination> { MainTabsScreen(feedDestination = FeedDestination(requestToken = it.requestToken, approved = it.approved.orEmpty())) }
             entry<DetailsDestination> { DetailsScreen(destination = it) }
             entry<GalleryDestination> { GalleryScreen(destination = it) }

@@ -11,11 +11,19 @@ import androidx.compose.ui.unit.Dp
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 
 val gridColumnsCount: Int
-    @Composable get() = if (isPortrait) 2 else 4
+    @Composable get() = when {
+        isPortrait -> when {
+            isWideFoldableMode -> 4
+            else -> 2
+        }
+        else -> 4
+    }
 
 expect val isDebug: Boolean
 
 expect val isPortrait: Boolean
+
+expect val isWideFoldableMode: Boolean
 
 expect fun statusBarStyle(detectDarkMode: Boolean): Any
 
@@ -24,11 +32,9 @@ expect fun navigationBarStyle(detectDarkMode: Boolean): Any
 
 expect val displayCutoutWindowInsets: WindowInsets
 
-expect val USE_PLATFORM_DEFAULT_WIDTH: Boolean
+expect val dialogUsePlatformDefaultWidth: Boolean
 
-expect val AUTH_DIALOG_USE_PLATFORM_DEFAULT_WIDTH: Boolean
-
-expect val ACCOUNT_DIALOG_USE_PLATFORM_DEFAULT_WIDTH: Boolean
+expect val bottomSheetUsePlatformDefaultWidth: Boolean
 
 expect val movieColumnPosterModifier: Modifier
 

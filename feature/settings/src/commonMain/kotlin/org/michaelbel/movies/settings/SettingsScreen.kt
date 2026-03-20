@@ -382,7 +382,7 @@ private fun SettingsScreenContent(
                     if (genderDialog) {
                         SettingsDialog(
                             icon = MoviesIcons.Cat,
-                            title = stringResource(MoviesStrings.settings_gender),
+                            title = SettingsGenderText,
                             items = GrammaticalGender.VALUES,
                             currentItem = state.grammaticalGender,
                             onItemSelect = { dispatch(SettingsIntent.SetGrammaticalGender(GrammaticalGender.value(it))) },

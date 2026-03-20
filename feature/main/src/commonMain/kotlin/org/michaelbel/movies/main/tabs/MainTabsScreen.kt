@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 
 package org.michaelbel.movies.main.tabs
 
@@ -11,20 +11,28 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationItemIconPosition
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ShortNavigationBarItem
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -161,64 +170,124 @@ private fun MainTabsScreenContent(
                             modifier = Modifier.animateContentSize(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            ShortNavigationBarItem(
-                                icon = {
+                            TooltipBox(
+                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                    positioning = TooltipAnchorPosition.Above
+                                ),
+                                tooltip = {
+                                    PlainTooltip {
+                                        Text(
+                                            text = stringResource(MoviesStrings.main_nav_feed)
+                                        )
+                                    }
+                                },
+                                state = rememberTooltipState(),
+                                enableUserInput = backStack.lastOrNull() != feedDestination && !isDesktop
+                            ) {
+                                ToggleButton(
+                                    checked = backStack.lastOrNull() == feedDestination,
+                                    onCheckedChange = { dispatch(MainTabsIntent.FeedClick) },
+                                    shapes = ToggleButtonDefaults.shapes(CircleShape, CircleShape, CircleShape),
+                                    modifier = Modifier.height(56.dp)
+                                ) {
                                     Icon(
                                         imageVector = MoviesIcons.GridView,
-                                        contentDescription = null,
+                                        contentDescription = stringResource(MoviesStrings.main_nav_feed),
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                     )
-                                },
-                                label = {
-                                    Text(
-                                        text = stringResource(MoviesStrings.main_nav_feed),
-                                        style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
-                                    )
-                                },
-                                selected = backStack[backStack.lastIndex] == feedDestination,
-                                onClick = { dispatch(MainTabsIntent.FeedClick) },
-                                iconPosition = NavigationItemIconPosition.Start,
-                            )
 
-                            if (state.isFaveFeatureEnabled) {
-                                ShortNavigationBarItem(
-                                    icon = {
-                                        Icon(
-                                            imageVector = MoviesIcons.Favorite,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                        )
-                                    },
-                                    label = {
+                                    if (backStack.lastOrNull() == feedDestination || isDesktop) {
                                         Text(
-                                            text = stringResource(MoviesStrings.main_nav_fave),
-                                            style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
+                                            text = stringResource(MoviesStrings.main_nav_feed),
+                                            style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
+                                            maxLines = 1,
+                                            softWrap = false,
+                                            overflow = TextOverflow.Clip,
+                                            modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
                                         )
-                                    },
-                                    selected = backStack[backStack.lastIndex] == FaveDestination,
-                                    onClick = { dispatch(MainTabsIntent.FaveClick) },
-                                    iconPosition = NavigationItemIconPosition.Start
-                                )
+                                    }
+                                }
                             }
 
-                            ShortNavigationBarItem(
-                                icon = {
+                            if (state.isFaveFeatureEnabled) {
+                                TooltipBox(
+                                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                        positioning = TooltipAnchorPosition.Above
+                                    ),
+                                    tooltip = {
+                                        PlainTooltip {
+                                            Text(
+                                                text = stringResource(MoviesStrings.main_nav_fave)
+                                            )
+                                        }
+                                    },
+                                    state = rememberTooltipState(),
+                                    enableUserInput = backStack.lastOrNull() != FaveDestination && !isDesktop
+                                ) {
+                                    ToggleButton(
+                                        checked = backStack.lastOrNull() == FaveDestination,
+                                        onCheckedChange = { dispatch(MainTabsIntent.FaveClick) },
+                                        shapes = ToggleButtonDefaults.shapes(CircleShape, CircleShape, CircleShape),
+                                        modifier = Modifier.height(56.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = MoviesIcons.Favorite,
+                                            contentDescription = stringResource(MoviesStrings.main_nav_fave),
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                        )
+
+                                        if (backStack.lastOrNull() == FaveDestination || isDesktop) {
+                                            Text(
+                                                text = stringResource(MoviesStrings.main_nav_fave),
+                                                style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
+                                                maxLines = 1,
+                                                softWrap = false,
+                                                overflow = TextOverflow.Clip,
+                                                modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            TooltipBox(
+                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                    positioning = TooltipAnchorPosition.Above
+                                ),
+                                tooltip = {
+                                    PlainTooltip {
+                                        Text(
+                                            text = stringResource(MoviesStrings.main_nav_settings)
+                                        )
+                                    }
+                                },
+                                state = rememberTooltipState(),
+                                enableUserInput = backStack.lastOrNull() != SettingsDestination && !isDesktop
+                            ) {
+                                ToggleButton(
+                                    checked = backStack.lastOrNull() == SettingsDestination,
+                                    onCheckedChange = { dispatch(MainTabsIntent.SettingsClick) },
+                                    shapes = ToggleButtonDefaults.shapes(CircleShape, CircleShape, CircleShape),
+                                    modifier = Modifier.height(56.dp)
+                                ) {
                                     Icon(
                                         imageVector = MoviesIcons.Settings,
-                                        contentDescription = null,
+                                        contentDescription = stringResource(MoviesStrings.main_nav_settings),
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                     )
-                                },
-                                label = {
-                                    Text(
-                                        text = stringResource(MoviesStrings.main_nav_settings),
-                                        style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp)
-                                    )
-                                },
-                                selected = backStack[backStack.lastIndex] == SettingsDestination,
-                                onClick = { dispatch(MainTabsIntent.SettingsClick) },
-                                iconPosition = NavigationItemIconPosition.Start
-                            )
+
+                                    if (backStack.lastOrNull() == SettingsDestination || isDesktop) {
+                                        Text(
+                                            text = stringResource(MoviesStrings.main_nav_settings),
+                                            style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
+                                            maxLines = 1,
+                                            softWrap = false,
+                                            overflow = TextOverflow.Clip,
+                                            modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

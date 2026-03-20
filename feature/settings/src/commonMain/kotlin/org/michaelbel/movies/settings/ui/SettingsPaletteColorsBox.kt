@@ -4,6 +4,7 @@ package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,11 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.ui.color.PaletteStyle
 import org.michaelbel.movies.ui.color.TonalPalettes.Companion.toTonalPalettes
-import org.michaelbel.movies.ui.ktx.isPortrait
 import org.michaelbel.movies.ui.pagerindicator.HorizontalPagerIndicator
 import org.michaelbel.movies.ui.theme.colorList
 import org.michaelbel.movies.ui.theme.paletteStyles
@@ -33,65 +34,74 @@ fun SettingsPaletteColorsBox(
     seedColor: Int,
     onChange: (Int, Int) -> Unit
 ) {
-    val colorsPerPage = if (isPortrait) 1 else 2
-    val colorPages = remember(colorsPerPage) { colorList.chunked(colorsPerPage) }
-    val pageCount = colorPages.size + 1
-    val selectedColorIndex = colorList.indexOf(Color(seedColor)).run { if (this == -1) 0 else this }
-    val selectedPage = if (paletteKey == ThemeData.STYLE_MONOCHROME) pageCount - 1 else selectedColorIndex / colorsPerPage
-    val pagerState = rememberPagerState(initialPage = selectedPage) { pageCount }
+    val density = LocalDensity.current
 
-    LaunchedEffect(selectedPage, pageCount) {
-        val targetPage = selectedPage.coerceIn(0, pageCount - 1)
-        if (pagerState.currentPage != targetPage) {
-            pagerState.scrollToPage(targetPage)
-        }
-    }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+    BoxWithConstraints(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        HorizontalPager(
-            modifier = Modifier.fillMaxWidth(),
-            state = pagerState
-        ) { page ->
-            if (page < colorPages.size) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    colorPages[page].forEach { color ->
-                        val colorArgb = color.toArgb()
-                        paletteStyles.subList(ThemeData.STYLE_TONAL_SPOT, ThemeData.STYLE_MONOCHROME).forEachIndexed { index, style ->
-                            SettingPaletteColor(
-                                tonalPalettes = color.toTonalPalettes(style),
-                                isSelected = paletteKey == index && seedColor == colorArgb,
-                                onClick = { onChange(index, colorArgb) }
-                            )
-                        }
+        val paletteItems = remember {
+            buildList {
+                colorList.forEach { color ->
+                    val colorArgb = color.toArgb()
+                    paletteStyles.subList(ThemeData.STYLE_TONAL_SPOT, ThemeData.STYLE_MONOCHROME).forEachIndexed { index, style ->
+                        add(Triple(index, colorArgb, style))
                     }
                 }
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    SettingPaletteColor(
-                        tonalPalettes = Color.Black.toTonalPalettes(PaletteStyle.Monochrome),
-                        isSelected = paletteKey == ThemeData.STYLE_MONOCHROME,
-                        onClick = { onChange(ThemeData.STYLE_MONOCHROME, Color.Black.toArgb()) }
-                    )
-                }
+                add(Triple(ThemeData.STYLE_MONOCHROME, Color.Black.toArgb(), PaletteStyle.Monochrome))
             }
         }
+        val horizontalPaddingPx = with(density) { 16.dp.roundToPx() }
+        val horizontalSpacingPx = with(density) { 8.dp.roundToPx() }
+        val itemWidthPx = with(density) { 80.dp.roundToPx() }
+        val availableWidthPx = (constraints.maxWidth - horizontalPaddingPx * 2).coerceAtLeast(0)
+        val itemsPerPage = ((availableWidthPx + horizontalSpacingPx) / (itemWidthPx + horizontalSpacingPx)).coerceAtLeast(1)
+        val palettePages = remember(itemsPerPage) { paletteItems.chunked(itemsPerPage) }
+        val selectedItemIndex = paletteItems.indexOfFirst { (localPaletteKey, localSeedColor, _) ->
+            localPaletteKey == paletteKey && localSeedColor == seedColor
+        }.run { if (this == -1) 0 else this }
+        val selectedPage = selectedItemIndex / itemsPerPage
+        val pagerState = rememberPagerState(initialPage = selectedPage) { palettePages.size }
 
-        HorizontalPagerIndicator(
-            pagerState = pagerState,
-            modifier = Modifier.padding(vertical = 12.dp),
-            activeColor = MaterialTheme.colorScheme.primary,
-            inactiveColor = MaterialTheme.colorScheme.outline,
-            indicatorWidth = 6.dp,
-            indicatorHeight = 6.dp,
-            spacing = 2.dp
-        )
+        LaunchedEffect(selectedPage, palettePages.size) {
+            val targetPage = selectedPage.coerceIn(0, palettePages.size - 1)
+            if (pagerState.currentPage != targetPage) {
+                pagerState.scrollToPage(targetPage)
+            }
+        }
+        
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            HorizontalPager(
+                modifier = Modifier.fillMaxWidth(),
+                state = pagerState
+            ) { page ->
+                val paletteItemsOnPage = palettePages[page]
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(space =  8.dp, alignment = Alignment.CenterHorizontally)
+                ) {
+                    paletteItemsOnPage.forEach { (localPaletteKey, localSeedColor, localStyle) ->
+                        SettingPaletteColor(
+                            tonalPalettes = Color(localSeedColor).toTonalPalettes(localStyle),
+                            isSelected = paletteKey == localPaletteKey && seedColor == localSeedColor,
+                            onClick = { onChange(localPaletteKey, localSeedColor) }
+                        )
+                    }
+                }
+            }
+
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                modifier = Modifier.padding(vertical = 12.dp),
+                activeColor = MaterialTheme.colorScheme.primary,
+                inactiveColor = MaterialTheme.colorScheme.outline,
+                indicatorWidth = 6.dp,
+                indicatorHeight = 6.dp,
+                spacing = 2.dp
+            )
+        }
     }
 }

@@ -7,10 +7,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -51,10 +50,7 @@ fun RowScope.SettingAppIcon(
 
     Box(
         modifier = modifier
-            .padding(4.dp)
-            .sizeIn(maxHeight = 80.dp, maxWidth = 80.dp, minHeight = 64.dp, minWidth = 64.dp)
-            .weight(1F, false)
-            .aspectRatio(1F)
+            .requiredSize(80.dp)
             .clip(middleLargeIncreasedListItemShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable { onClick(iconAlias) }

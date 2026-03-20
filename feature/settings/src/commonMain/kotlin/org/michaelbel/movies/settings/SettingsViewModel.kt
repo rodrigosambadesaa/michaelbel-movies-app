@@ -155,7 +155,10 @@ class SettingsViewModel(
             is SettingsIntent.SetBiometricEnabled -> launch { interactor.setBiometricEnabled(intent.enabled) }
             is SettingsIntent.SetScreenshotBlockEnabled -> launch { interactor.setScreenshotBlockEnabled(intent.enabled) }
             is SettingsIntent.SetUpdateAvailable -> { reduce { it.copy(isUpdateAvailable = intent.state) } }
-            is SettingsIntent.SetGrammaticalGender -> uiInteractor.setGrammaticalGender(intent.value)
+            is SettingsIntent.SetGrammaticalGender -> {
+                uiInteractor.setGrammaticalGender(intent.value)
+                reduce { it.copy(grammaticalGender = GrammaticalGender.transform(intent.value)) }
+            }
             is SettingsIntent.SetAppIcon -> {
                 uiInteractor.setIcon(intent.icon)
                 reduce { it.copy(enabledIcon = intent.icon) }
@@ -166,7 +169,7 @@ class SettingsViewModel(
                     interactor.resetLanguage()
                     uiInteractor.setGrammaticalGender(GrammaticalGender.NotSpecified().value)
                     uiInteractor.setIcon(IconAlias.Red)
-                    reduce { it.copy(grammaticalGender = uiInteractor.grammaticalGender, enabledIcon = uiInteractor.enabledIcon) }
+                    reduce { it.copy(grammaticalGender = GrammaticalGender.NotSpecified(), enabledIcon = uiInteractor.enabledIcon) }
                 }
             }
         }

@@ -8,17 +8,18 @@ import androidx.compose.ui.res.stringResource
 import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.ui.R
 
-val SettingsGenderText: String
+actual val SettingsGenderText: String
     @Composable get() = stringResource(R.string.settings_gender)
 
 val Context.currentGrammaticalGender: GrammaticalGender
     get() {
-        return if (Build.VERSION.SDK_INT >= 34) {
-            val grammaticalInflectionManager = getSystemService(GrammaticalInflectionManager::class.java)
-            val grammaticalGender = grammaticalInflectionManager.applicationGrammaticalGender
-            GrammaticalGender.transform(grammaticalGender)
-        } else {
-            GrammaticalGender.NotSpecified()
+        return when {
+            Build.VERSION.SDK_INT >= 34 -> {
+                val grammaticalInflectionManager = getSystemService(GrammaticalInflectionManager::class.java)
+                val grammaticalGender = grammaticalInflectionManager.applicationGrammaticalGender
+                GrammaticalGender.transform(grammaticalGender)
+            }
+            else -> GrammaticalGender.NotSpecified()
         }
     }
 

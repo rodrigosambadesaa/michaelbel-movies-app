@@ -24,9 +24,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -43,15 +43,15 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.rememberTooltipState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -82,8 +82,8 @@ import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.ktx.stringText
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.settings.ui.SettingsAppIconsBox
-import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
 import org.michaelbel.movies.settings.ui.SettingsDialog
+import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
 import org.michaelbel.movies.settings.ui.SettingsResetDialog
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
@@ -98,6 +98,7 @@ import org.michaelbel.movies.ui.icons.TileSmall
 import org.michaelbel.movies.ui.ktx.ObserveAsEvents
 import org.michaelbel.movies.ui.ktx.OnResume
 import org.michaelbel.movies.ui.ktx.SettingsGenderText
+import org.michaelbel.movies.ui.ktx.calculateBottomContentPadding
 import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
 import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.ktx.isDebug
@@ -280,7 +281,10 @@ private fun SettingsScreenContent(
                 start = innerPadding.calculateStartPadding(layoutDirection),
                 top = innerPadding.calculateTopPadding() + 16.dp,
                 end = innerPadding.calculateEndPadding(layoutDirection),
-                bottom = innerPadding.calculateBottomPadding() + 80.dp
+                bottom = calculateBottomContentPadding(
+                    innerPadding = innerPadding,
+                    compactBottomPadding = 72.dp
+                )
             )
         ) {
             if (state.isLanguageFeatureEnabled) {
@@ -1272,7 +1276,7 @@ private fun SettingsScreenContent(
                 item {
                     Row(
                         modifier = Modifier
-                            .padding(start = 16.dp, top = 4.dp, end = 16.dp)
+                            .padding(horizontal = 16.dp, vertical = 4.dp)
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically

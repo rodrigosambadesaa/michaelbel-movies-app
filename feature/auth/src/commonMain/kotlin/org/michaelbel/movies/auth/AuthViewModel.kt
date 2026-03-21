@@ -35,6 +35,8 @@ class AuthViewModel(
                 stateFlow.value.loginJob?.cancel()
                 reduce { it.copy(requestToken = null, loginJob = null) }
             }
+            is AuthIntent.UsernameChange -> reduce { it.copy(username = intent.username) }
+            is AuthIntent.PasswordChange -> reduce { it.copy(password = intent.password) }
             is AuthIntent.SignInClick -> {
                 reduce { it.copy(error = null) }
                 val job = launch {

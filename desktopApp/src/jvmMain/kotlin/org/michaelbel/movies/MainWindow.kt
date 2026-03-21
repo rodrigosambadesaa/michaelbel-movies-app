@@ -50,14 +50,14 @@ fun main() {
             onCloseRequest = ::exitApplication,
             state = WindowState(
                 position = WindowPosition.Aligned(Alignment.Center),
-                size = DpSize(600.dp, 500.dp)
+                size = DpSize(800.dp, 600.dp)
             ),
             title = "Movies",
             icon = painterResource(MoviesIcons.LauncherRed),
             alwaysOnTop = false,
             onKeyEvent = { false }
         ) {
-            window.minimumSize = Dimension(600, 500)
+            window.minimumSize = Dimension(800, 600)
             App()
         }
     }

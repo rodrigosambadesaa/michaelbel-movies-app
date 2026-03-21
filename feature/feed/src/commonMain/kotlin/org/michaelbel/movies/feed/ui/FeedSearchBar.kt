@@ -352,6 +352,7 @@ fun FeedSearchBar(
         expanded = active,
         onExpandedChange = onActiveChange,
         modifier = modifier,
+        shadowElevation = 2.dp,
         colors = searchBarColors
     ) {
         Box(

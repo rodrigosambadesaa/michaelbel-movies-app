@@ -1,13 +1,21 @@
 package org.michaelbel.movies.ui.ktx
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import org.michaelbel.movies.common.platform.isDesktop
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 
 val gridColumnsCount: Int
@@ -57,6 +65,41 @@ expect fun PageLoadingColumnItem(
 )
 
 expect val pageContentTopPadding: Dp
+
+val useRailNavigation: Boolean
+    @Composable get() = isWideFoldableMode || isDesktop
+
+@Composable
+fun calculateBottomContentPadding(
+    innerPadding: PaddingValues,
+    compactBottomPadding: Dp,
+    bottomInsetPadding: Dp = 0.dp
+): Dp {
+    return when {
+        useRailNavigation -> innerPadding.calculateBottomPadding() + bottomInsetPadding
+        else -> innerPadding.calculateBottomPadding() + bottomInsetPadding + compactBottomPadding
+    }
+}
+
+@Composable
+fun calculatePageContentPadding(
+    innerPadding: PaddingValues
+): PaddingValues {
+    val layoutDirection = LocalLayoutDirection.current
+    val safeDrawingPadding = WindowInsets.safeDrawing.asPaddingValues()
+    val topInsetPadding = safeDrawingPadding.calculateTopPadding()
+    val bottomInsetPadding = safeDrawingPadding.calculateBottomPadding()
+    return PaddingValues(
+        start = innerPadding.calculateStartPadding(layoutDirection),
+        top = innerPadding.calculateTopPadding() + topInsetPadding + pageContentTopPadding,
+        end = innerPadding.calculateEndPadding(layoutDirection),
+        bottom = calculateBottomContentPadding(
+            innerPadding = innerPadding,
+            compactBottomPadding = 72.dp + pageContentTopPadding,
+            bottomInsetPadding = bottomInsetPadding
+        )
+    )
+}
 
 @Composable
 expect fun pageContentGridCells(): GridCells

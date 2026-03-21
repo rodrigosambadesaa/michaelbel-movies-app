@@ -2,12 +2,12 @@
 
 package org.michaelbel.movies.gallery
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -31,6 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.WavyProgressIndicatorDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberTooltipState
@@ -45,14 +47,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
@@ -152,6 +158,10 @@ private fun GalleryScreenContent(
     val pagerPageCount = if (imageCount > 1) INFINITE_PAGER_PAGE_COUNT else imageCount
     val pagerState = rememberPagerState(pageCount = { pagerPageCount })
     var currentPage by remember { mutableIntStateOf(0) }
+    var topBarHeightPx by remember { mutableIntStateOf(0) }
+    val density = LocalDensity.current
+    val topBarHeight = with(density) { topBarHeightPx.toDp() }
+    val navigationBarBottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     LaunchedEffect(pagerState, imageCount) {
         if (imageCount == 0) {
@@ -181,7 +191,8 @@ private fun GalleryScreenContent(
                 hostState = snackbarHostState
             )
         },
-        containerColor = MaterialTheme.colorScheme.primaryContainer
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { _ ->
         when {
             state.movieImages.isEmpty() -> {
@@ -216,7 +227,9 @@ private fun GalleryScreenContent(
                         val zoomState = rememberZoomState()
 
                         Box(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .zoomable(zoomState),
                             contentAlignment = Alignment.Center
                         ) {
                             AsyncImage(
@@ -228,7 +241,7 @@ private fun GalleryScreenContent(
                                 contentDescription = MoviesContentDescription.None,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .zoomable(zoomState),
+                                    .padding(top = topBarHeight, bottom = navigationBarBottomPadding),
                                 transform = { state ->
                                     loading = state is AsyncImagePainter.State.Loading
                                     if (state is AsyncImagePainter.State.Success) {
@@ -257,70 +270,71 @@ private fun GalleryScreenContent(
                         }
                     }
 
-                    Row(
+                    TopAppBar(
+                        title = {
+                            Text(
+                                text = stringResource(MoviesStrings.gallery_image_of, currentPage.plus(1), state.movieImages.size),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    textAlign = TextAlign.Start
+                                )
+                            )
+                        },
                         modifier = Modifier
                             .align(Alignment.TopStart)
-                            .padding(start = 4.dp, top = 8.dp, end = 4.dp)
+                            .onSizeChanged { topBarHeightPx = it.height }
                             .statusBarsPadding()
-                            .windowInsetsPadding(displayCutoutWindowInsets),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(
-                            onClick = { dispatch(GalleryIntent.BackClick) }
-                        ) {
-                            Image(
-                                imageVector = MoviesIcons.ArrowBack,
-                                contentDescription = stringResource(MoviesContentDescription.BackIcon),
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
-                            )
-                        }
-
-                        Text(
-                            text = stringResource(MoviesStrings.gallery_image_of, currentPage.plus(1), state.movieImages.size),
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
-                        )
-                    }
-
-                    AnimatedVisibility(
-                        visible = true,
-                        enter = fadeIn(),
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(end = 4.dp, top = 8.dp)
-                            .statusBarsPadding()
-                    ) {
-                        TooltipBox(
-                            positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                                positioning = TooltipAnchorPosition.Below
-                            ),
-                            tooltip = {
-                                PlainTooltip {
-                                    Text(
-                                        text = stringResource(MoviesStrings.download)
-                                    )
-                                }
-                            },
-                            state = rememberTooltipState()
-                        ) {
+                            .windowInsetsPadding(displayCutoutWindowInsets)
+                            .zIndex(1F),
+                        navigationIcon = {
                             IconButton(
-                                onClick = { dispatch(GalleryIntent.DownloadClick(state.movieImages[currentPage])) },
-                                modifier = Modifier
-                                    .windowInsetsPadding(displayCutoutWindowInsets)
-                                    .minimumInteractiveComponentSize()
-                                    .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
-                                shape = IconButtonDefaults.extraSmallSquareShape
+                                onClick = { dispatch(GalleryIntent.BackClick) }
                             ) {
                                 Image(
-                                    imageVector = MoviesIcons.FileDownload,
-                                    contentDescription = stringResource(MoviesContentDescription.DownloadIcon),
+                                    imageVector = MoviesIcons.ArrowBack,
+                                    contentDescription = stringResource(MoviesContentDescription.BackIcon),
                                     modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
                                 )
                             }
-                        }
-                    }
+                        },
+                        actions = {
+                            TooltipBox(
+                                positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                                    positioning = TooltipAnchorPosition.Below
+                                ),
+                                tooltip = {
+                                    PlainTooltip {
+                                        Text(
+                                            text = stringResource(MoviesStrings.download)
+                                        )
+                                    }
+                                },
+                                state = rememberTooltipState()
+                            ) {
+                                IconButton(
+                                    onClick = { dispatch(GalleryIntent.DownloadClick(state.movieImages[currentPage])) },
+                                    modifier = Modifier
+                                        .minimumInteractiveComponentSize()
+                                        .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                                    shape = IconButtonDefaults.extraSmallSquareShape
+                                ) {
+                                    Image(
+                                        imageVector = MoviesIcons.FileDownload,
+                                        contentDescription = stringResource(MoviesContentDescription.DownloadIcon),
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer)
+                                    )
+                                }
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent,
+                            scrolledContainerColor = Color.Transparent
+                        )
+                    )
                 }
             }
         }

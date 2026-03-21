@@ -24,6 +24,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.byValue
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -51,6 +52,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
@@ -68,20 +70,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.auth.intent.AuthIntent
 import org.michaelbel.movies.auth.ktx.text
 import org.michaelbel.movies.auth.model.AuthModel
+import org.michaelbel.movies.auth.preview.AuthModelPreviewParameterProvider
 import org.michaelbel.movies.common.browser.navigateToUrl
 import org.michaelbel.movies.common.browser.tmdbAuthRedirectUrl
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
-import org.michaelbel.movies.interactor.ktx.UsernameSaver
 import org.michaelbel.movies.interactor.ktx.isNotEmpty
 import org.michaelbel.movies.interactor.ktx.trim
 import org.michaelbel.movies.network.config.TMDB_AUTH_URL_2
@@ -119,9 +122,7 @@ private fun AuthScreenContent(
 ) {
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
-
-    var username by rememberSaveable(saver = UsernameSaver) { mutableStateOf(Username("")) }
-    val passwordTextFieldState = rememberTextFieldState()
+    val passwordTextFieldState = rememberTextFieldState(initialText = state.password.value)
     val password = Password(passwordTextFieldState.text.toString())
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -144,6 +145,21 @@ private fun AuthScreenContent(
     val buttonContentColor = contentColorFor(buttonContainerColor).let { color ->
         if (color == Color.Unspecified) MaterialTheme.colorScheme.onSurface else color
     }
+
+    LaunchedEffect(state.password) {
+        if (passwordTextFieldState.text.toString() != state.password.value) {
+            passwordTextFieldState.setTextAndPlaceCursorAtEnd(state.password.value)
+        }
+    }
+
+    LaunchedEffect(passwordTextFieldState, dispatch) {
+        snapshotFlow { passwordTextFieldState.text.toString() }
+            .distinctUntilChanged()
+            .collect { value ->
+                dispatch(AuthIntent.PasswordChange(Password(value.filterNot(Char::isWhitespace))))
+            }
+    }
+
     val signInButtonColors = ButtonDefaults.buttonColors(
         containerColor = buttonContainerColor,
         contentColor = buttonContentColor,
@@ -211,9 +227,9 @@ private fun AuthScreenContent(
         )
 
         OutlinedTextField(
-            value = username.value,
+            value = state.username.value,
             onValueChange = { value ->
-                username = Username(value.filterNot(Char::isWhitespace))
+                dispatch(AuthIntent.UsernameChange(Username(value.filterNot(Char::isWhitespace))))
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -282,7 +298,7 @@ private fun AuthScreenContent(
             ),
             onKeyboardAction = {
                 focusManager.clearFocus()
-                dispatch(AuthIntent.SignInClick(username, password))
+                dispatch(AuthIntent.SignInClick(state.username.trim, password.trim))
             }
         )
 
@@ -319,12 +335,12 @@ private fun AuthScreenContent(
         }
 
         Button(
-            onClick = { dispatch(AuthIntent.SignInClick(username.trim, password.trim)) },
+            onClick = { dispatch(AuthIntent.SignInClick(state.username.trim, password.trim)) },
             shapes = ButtonDefaults.shapes(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, top = 4.dp, end = 16.dp),
-            enabled = username.isNotEmpty && password.isNotEmpty && !state.isSignInJobActive,
+            enabled = state.username.isNotEmpty && password.isNotEmpty && !state.isSignInJobActive,
             colors = signInButtonColors,
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
@@ -421,48 +437,12 @@ private fun AuthScreenContent(
 
 @Preview
 @Composable
-private fun AuthScreenContentPreview() {
+private fun AuthScreenContentPreview(
+    @PreviewParameter(AuthModelPreviewParameterProvider::class) state: AuthModel
+) {
     MoviesTheme {
         AuthScreenContent(
-            state = AuthModel(),
-            dispatch = {}
-        )
-    }
-}
-
-@Composable
-private fun AuthScreenContentPreview2() {
-    MoviesTheme {
-        AuthScreenContent(
-            state = AuthModel(
-                error = CreateSessionWithLoginException()
-            ),
-            dispatch = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun AuthScreenContentPreview3() {
-    MoviesTheme {
-        AuthScreenContent(
-            state = AuthModel(
-                signInJob = Job()
-            ),
-            dispatch = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun AuthScreenContentPreview4() {
-    MoviesTheme {
-        AuthScreenContent(
-            state = AuthModel(
-                loginJob = Job()
-            ),
+            state = state,
             dispatch = {}
         )
     }

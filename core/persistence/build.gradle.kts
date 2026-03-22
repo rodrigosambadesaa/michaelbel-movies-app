@@ -16,7 +16,7 @@ kotlin {
         kotlin.srcDir("build/generated/ksp/metadata")
     }*/
 
-    androidLibrary {
+    android {
         namespace = "org.michaelbel.movies.persistence"
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()

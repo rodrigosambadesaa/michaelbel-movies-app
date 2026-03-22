@@ -22,7 +22,7 @@ kotlin {
         binaries.executable()
     }
 
-    androidLibrary {
+    android {
         namespace = "org.michaelbel.movies.platform.foss"
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()

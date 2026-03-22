@@ -8,7 +8,7 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
-    androidLibrary {
+    android {
         namespace = "org.michaelbel.movies.analytics"
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()

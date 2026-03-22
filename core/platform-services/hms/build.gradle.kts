@@ -4,16 +4,16 @@ plugins {
 }
 
 kotlin {
+    android {
+        namespace = "org.michaelbel.movies.platform.hms"
+        minSdk = libs.versions.min.sdk.get().toInt()
+        compileSdk = libs.versions.compile.sdk.get().toInt()
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(projects.core.platformServices.interactor)
         }
-    }
-
-    androidLibrary {
-        namespace = "org.michaelbel.movies.platform.hms"
-        minSdk = libs.versions.min.sdk.get().toInt()
-        compileSdk = libs.versions.compile.sdk.get().toInt()
     }
 
     compilerOptions {

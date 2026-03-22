@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,18 +46,23 @@ import org.michaelbel.movies.details.ktx.movieUrl
 import org.michaelbel.movies.details.ktx.onPrimaryContainer
 import org.michaelbel.movies.details.ktx.primaryContainer
 import org.michaelbel.movies.details.ktx.toolbarTitle
+import org.michaelbel.movies.details.model.DetailsModel
+import org.michaelbel.movies.details.preview.DetailsModelPreviewParameterProvider
 import org.michaelbel.movies.details.ui.DetailsContent
 import org.michaelbel.movies.details.ui.DetailsFailure
 import org.michaelbel.movies.details.ui.DetailsLoading
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
+import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.modifierDisplayCutoutWindowInsets
-import org.michaelbel.movies.ui.ktx.shareText
+import org.michaelbel.movies.ui.modifierDetailsContentWindowInsets
+import org.michaelbel.movies.ui.modifierDetailsTopAppBarWindowInsets
 import org.michaelbel.movies.ui.navigation.DetailsDestination
+import org.michaelbel.movies.ui.shareText
 import org.michaelbel.movies.ui.strings.MoviesStrings
+import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
 fun DetailsScreen(
@@ -64,6 +71,27 @@ fun DetailsScreen(
     uiInteractor: UiInteractor = koinInject()
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
+
+    DetailsScreenContent(
+        state = state,
+        dispatch = viewModel::dispatch,
+        detailsPaletteEffect = { movie, placeholder, shouldGenerateColors, onGenerateColors ->
+            uiInteractor.DetailsPaletteEffect(
+                movie = movie,
+                placeholder = placeholder,
+                shouldGenerateColors = shouldGenerateColors,
+                onGenerateColors = onGenerateColors
+            )
+        }
+    )
+}
+
+@Composable
+private fun DetailsScreenContent(
+    state: DetailsModel,
+    dispatch: (DetailsIntent) -> Unit,
+    detailsPaletteEffect: @Composable (MoviePojo, Boolean, Boolean, (Int, Int?, Int?) -> Unit) -> Unit
+) {
     val shouldGenerateColors = state.appTheme !is AppTheme.Amoled
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val isAmoledTheme = !shouldGenerateColors
@@ -93,7 +121,7 @@ fun DetailsScreen(
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                modifier = modifierDisplayCutoutWindowInsets,
+                modifier = modifierDetailsTopAppBarWindowInsets,
                 title = {
                     Text(
                         text = state.detailsState.toolbarTitle
@@ -118,7 +146,7 @@ fun DetailsScreen(
                             state = rememberTooltipState()
                         ) {
                             IconButton(
-                                onClick = { viewModel.dispatch(DetailsIntent.FavoriteClick) },
+                                onClick = { dispatch(DetailsIntent.FavoriteClick) },
                                 enabled = !state.isFavoriteJobActive,
                                 modifier = Modifier
                                     .minimumInteractiveComponentSize()
@@ -175,7 +203,7 @@ fun DetailsScreen(
                 navigationIcon = {
                     IconButton(
                         modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                        onClick = { viewModel.dispatch(DetailsIntent.BackClick) }
+                        onClick = { dispatch(DetailsIntent.BackClick) }
                     ) {
                         Image(
                             imageVector = MoviesIcons.ArrowBack,
@@ -187,7 +215,7 @@ fun DetailsScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
-                    scrolledContainerColor = animateContainerColor.value.copy(alpha = .95F),
+                    scrolledContainerColor = Color.Transparent,
                     titleContentColor = animateOnContainerColor.value,
                     actionIconContentColor = animateOnContainerColor.value,
                     navigationIconContentColor = animateOnContainerColor.value
@@ -210,16 +238,17 @@ fun DetailsScreen(
                 DetailsContent(
                     modifier = Modifier
                         .padding(top = innerPadding.calculateTopPadding())
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .then(modifierDetailsContentWindowInsets),
                     additionalBottomContentPadding = innerPadding.calculateBottomPadding(),
                     movie = detailsState.movie,
                     isDetailsGalleryFeatureEnabled = state.isDetailsGalleryFeatureEnabled,
                     onContainerColor = animateOnContainerColor.value,
-                    onNavigateToGallery = { viewModel.dispatch(DetailsIntent.GalleryClick) },
+                    onNavigateToGallery = { dispatch(DetailsIntent.GalleryClick) },
                     placeholder = false,
                     shouldGenerateColors = shouldGenerateColors,
                     onGenerateColors = { movieId, containerColor, onContainerColor ->
-                        viewModel.dispatch(
+                        dispatch(
                             DetailsIntent.GenerateColors(
                                 movieId = movieId,
                                 containerColor = containerColor,
@@ -228,12 +257,7 @@ fun DetailsScreen(
                         )
                     },
                     detailsPaletteEffect = { movie, placeholder, shouldGenerateColorsValue, onGenerateColors ->
-                        uiInteractor.DetailsPaletteEffect(
-                            movie = movie,
-                            placeholder = placeholder,
-                            shouldGenerateColors = shouldGenerateColorsValue,
-                            onGenerateColors = onGenerateColors
-                        )
+                        detailsPaletteEffect(movie, placeholder, shouldGenerateColorsValue, onGenerateColors)
                     }
                 )
             }
@@ -245,5 +269,19 @@ fun DetailsScreen(
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun DetailsScreenContentPreview(
+    @PreviewParameter(DetailsModelPreviewParameterProvider::class) state: DetailsModel
+) {
+    MoviesTheme {
+        DetailsScreenContent(
+            state = state,
+            dispatch = {},
+            detailsPaletteEffect = { _, _, _, _ -> }
+        )
     }
 }

@@ -59,17 +59,17 @@ import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
-import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
-import org.michaelbel.movies.ui.ktx.isFailure
-import org.michaelbel.movies.ui.ktx.isLoading
-import org.michaelbel.movies.ui.ktx.isPortrait
-import org.michaelbel.movies.ui.ktx.isRefreshLoading
-import org.michaelbel.movies.ui.ktx.refreshThrowable
-import org.michaelbel.movies.ui.ktx.rememberConnectivityClickHandler
-import org.michaelbel.movies.ui.ktx.useRailNavigation
+import org.michaelbel.movies.ui.ObserveAsEvents
+import org.michaelbel.movies.ui.clickableWithoutRipple
+import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.displayCutoutWindowInsets
+import org.michaelbel.movies.ui.isFailure
+import org.michaelbel.movies.ui.isLoading
+import org.michaelbel.movies.ui.isPortrait
+import org.michaelbel.movies.ui.isRefreshLoading
+import org.michaelbel.movies.ui.refreshThrowable
+import org.michaelbel.movies.ui.rememberConnectivityClickHandler
+import org.michaelbel.movies.ui.useRailNavigation
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import java.net.UnknownHostException
 
@@ -312,7 +312,6 @@ private fun FeedScreenContent(
             pagingItems.isLoading -> {
                 PageLoading(
                     feedView = state.feedView,
-                    modifier = Modifier.windowInsetsPadding(displayCutoutWindowInsets),
                     paddingValues = feedContentPadding
                 )
             }
@@ -346,8 +345,7 @@ private fun FeedScreenContent(
                     onMovieClick = { pagingKey, movieId ->
                         dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId))
                     },
-                    contentPadding = feedContentPadding,
-                    modifier = Modifier.windowInsetsPadding(displayCutoutWindowInsets)
+                    contentPadding = feedContentPadding
                 )
             }
         }

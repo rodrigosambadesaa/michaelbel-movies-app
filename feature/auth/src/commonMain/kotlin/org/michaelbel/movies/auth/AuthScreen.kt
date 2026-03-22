@@ -24,8 +24,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.foundation.text.input.byValue
-import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -95,11 +95,11 @@ import org.michaelbel.movies.network.config.TMDB_RESET_PASSWORD
 import org.michaelbel.movies.network.config.TMDB_TERMS_OF_USE
 import org.michaelbel.movies.network.config.TMDB_URL
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.clickableWithoutRipple
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.compose.PasswordVisibilityIcon
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.isPortrait
+import org.michaelbel.movies.ui.isPortrait
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 

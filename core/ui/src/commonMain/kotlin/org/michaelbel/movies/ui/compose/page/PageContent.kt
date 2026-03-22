@@ -29,16 +29,16 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
+import org.michaelbel.movies.ui.PageContentColumnMovieItem
+import org.michaelbel.movies.ui.PageContentGridMovieItem
 import org.michaelbel.movies.ui.compose.movie.MovieColumn
-import org.michaelbel.movies.ui.ktx.PageContentColumnMovieItem
-import org.michaelbel.movies.ui.ktx.PageContentGridMovieItem
-import org.michaelbel.movies.ui.ktx.isPagingFailure
-import org.michaelbel.movies.ui.ktx.isPagingLoading
-import org.michaelbel.movies.ui.ktx.isPortrait
-import org.michaelbel.movies.ui.ktx.isWideFoldableMode
-import org.michaelbel.movies.ui.ktx.pageContentGridCells
-import org.michaelbel.movies.ui.ktx.pageContentStaggeredGridCells
-import org.michaelbel.movies.ui.ktx.pageContentStaggeredGridModifier
+import org.michaelbel.movies.ui.isPagingFailure
+import org.michaelbel.movies.ui.isPagingLoading
+import org.michaelbel.movies.ui.isPortrait
+import org.michaelbel.movies.ui.isWideFoldableMode
+import org.michaelbel.movies.ui.pageContentGridCells
+import org.michaelbel.movies.ui.pageContentStaggeredGridCells
+import org.michaelbel.movies.ui.pageContentStaggeredGridModifier
 
 @Composable
 fun PageContent(
@@ -48,8 +48,8 @@ fun PageContent(
     lazyStaggeredGridState: LazyStaggeredGridState,
     pagingItems: LazyPagingItems<MoviePojo>,
     onMovieClick: (String, Int) -> Unit,
-    modifier: Modifier,
     contentPadding: PaddingValues,
+    modifier: Modifier = Modifier,
     cardColor: Color = MaterialTheme.colorScheme.inversePrimary
 ) {
     when (feedView) {

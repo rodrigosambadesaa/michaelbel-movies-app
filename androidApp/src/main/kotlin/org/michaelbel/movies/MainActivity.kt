@@ -14,11 +14,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.michaelbel.movies.main.MainScreen
 import org.michaelbel.movies.main.MainViewModel
 import org.michaelbel.movies.main.intent.MainIntent
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.resolveNotificationPreferencesIntent
-import org.michaelbel.movies.ui.ktx.setScreenshotBlockEnabled
-import org.michaelbel.movies.ui.ktx.supportRegisterScreenCaptureCallback
-import org.michaelbel.movies.ui.ktx.supportUnregisterScreenCaptureCallback
+import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.resolveNotificationPreferencesIntent
+import org.michaelbel.movies.ui.setScreenshotBlockEnabled
+import org.michaelbel.movies.ui.supportRegisterScreenCaptureCallback
+import org.michaelbel.movies.ui.supportUnregisterScreenCaptureCallback
 import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_EXTRA
 import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_URI
 import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SEARCH

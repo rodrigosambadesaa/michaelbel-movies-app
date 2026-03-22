@@ -15,10 +15,7 @@ actual fun PasswordVisibilityIcon(
     tint: Color
 ) {
     Image(
-        imageVector = when (passwordVisible) {
-            true -> MoviesIcons.Visibility
-            false -> MoviesIcons.VisibilityOff
-        },
+        imageVector = if (passwordVisible) MoviesIcons.Visibility else MoviesIcons.VisibilityOff,
         contentDescription = contentDescription,
         modifier = modifier,
         colorFilter = ColorFilter.tint(tint)

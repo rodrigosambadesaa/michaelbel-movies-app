@@ -23,7 +23,7 @@ import coil3.request.crossfade
 import org.michaelbel.movies.network.config.formatPosterImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
-import org.michaelbel.movies.ui.ktx.movieColumnPosterModifier
+import org.michaelbel.movies.ui.movieColumnPosterModifier
 import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
 import org.michaelbel.movies.ui.theme.MoviesTheme
 

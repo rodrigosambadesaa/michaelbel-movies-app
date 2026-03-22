@@ -14,12 +14,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -85,8 +88,14 @@ import org.michaelbel.movies.settings.ui.SettingsAppIconsBox
 import org.michaelbel.movies.settings.ui.SettingsDialog
 import org.michaelbel.movies.settings.ui.SettingsPaletteColorsBox
 import org.michaelbel.movies.settings.ui.SettingsResetDialog
+import org.michaelbel.movies.ui.ObserveAsEvents
+import org.michaelbel.movies.ui.OnResume
+import org.michaelbel.movies.ui.SettingsGenderText
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
+import org.michaelbel.movies.ui.calculateBottomContentPadding
+import org.michaelbel.movies.ui.clickableWithoutRipple
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.Cat
 import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
@@ -95,14 +104,10 @@ import org.michaelbel.movies.ui.icons.SettingsReset
 import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
 import org.michaelbel.movies.ui.icons.TileSmall
-import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.OnResume
-import org.michaelbel.movies.ui.ktx.SettingsGenderText
-import org.michaelbel.movies.ui.ktx.calculateBottomContentPadding
-import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.isDebug
-import org.michaelbel.movies.ui.ktx.requestTileService
+import org.michaelbel.movies.ui.isDebug
+import org.michaelbel.movies.ui.requestTileService
+import org.michaelbel.movies.ui.settingsContentWindowInsets
+import org.michaelbel.movies.ui.settingsTopAppBarWindowInsets
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.bottomListItemShape
 import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
@@ -197,6 +202,8 @@ private fun SettingsScreenContent(
         canScroll = { true }
     )
     val layoutDirection = LocalLayoutDirection.current
+    val safeDrawingPadding = WindowInsets.safeDrawing.asPaddingValues()
+    val settingsContentPadding = settingsContentWindowInsets.asPaddingValues()
     val iconChangedMessages: Map<IconAlias, String> = if (state.isAppIconFeatureEnabled) {
         IconAlias.VALUES.associateWith { iconAlias ->
             stringResource(MoviesStrings.settings_app_launcher_icon_changed_to, iconAlias.title)
@@ -263,6 +270,7 @@ private fun SettingsScreenContent(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     scrolledContainerColor = MaterialTheme.colorScheme.inversePrimary
                 ),
+                windowInsets = settingsTopAppBarWindowInsets,
                 scrollBehavior = topAppBarScrollBehavior
             )
         },
@@ -272,18 +280,20 @@ private fun SettingsScreenContent(
                 modifier = Modifier.padding(bottom = 64.dp)
             )
         },
-        containerColor = MaterialTheme.colorScheme.primaryContainer
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = lazyListState,
             contentPadding = PaddingValues(
-                start = innerPadding.calculateStartPadding(layoutDirection),
+                start = innerPadding.calculateStartPadding(layoutDirection) + settingsContentPadding.calculateStartPadding(layoutDirection),
                 top = innerPadding.calculateTopPadding() + 16.dp,
-                end = innerPadding.calculateEndPadding(layoutDirection),
+                end = innerPadding.calculateEndPadding(layoutDirection) + settingsContentPadding.calculateEndPadding(layoutDirection),
                 bottom = calculateBottomContentPadding(
                     innerPadding = innerPadding,
-                    compactBottomPadding = 72.dp
+                    compactBottomPadding = 72.dp,
+                    bottomInsetPadding = safeDrawingPadding.calculateBottomPadding()
                 )
             )
         ) {

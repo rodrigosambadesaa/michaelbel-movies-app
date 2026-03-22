@@ -40,10 +40,10 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.debug.intent.DebugIntent
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.icons.SettingsAccountBox
 import org.michaelbel.movies.ui.icons.SettingsCinematic
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.theme.bottomListItemShape
 import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
 import org.michaelbel.movies.ui.theme.topListItemShape

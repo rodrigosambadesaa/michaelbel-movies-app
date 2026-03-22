@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -73,17 +72,18 @@ import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.main.tabs.intent.MainTabsIntent
 import org.michaelbel.movies.main.tabs.model.MainTabsModel
 import org.michaelbel.movies.settings.SettingsScreen
+import org.michaelbel.movies.ui.ObserveAsEvents
+import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.fadePredictiveTransitionSpec
+import org.michaelbel.movies.ui.fadeTransitionSpec
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.fadePredictiveTransitionSpec
-import org.michaelbel.movies.ui.ktx.fadeTransitionSpec
-import org.michaelbel.movies.ui.ktx.useRailNavigation
+import org.michaelbel.movies.ui.modifierDisplayCutoutWindowInsets
 import org.michaelbel.movies.ui.navigation.AppRoute
 import org.michaelbel.movies.ui.navigation.FaveDestination
 import org.michaelbel.movies.ui.navigation.FeedDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
+import org.michaelbel.movies.ui.useRailNavigation
 
 @Composable
 fun MainTabsScreen(
@@ -383,63 +383,66 @@ private fun MainTabsNavigationRail(
         NavigationRailItem(
             selected = currentDestination == feedDestination,
             onClick = { dispatch(MainTabsIntent.FeedClick) },
-            colors = NavigationRailItemDefaults.colors(
-                indicatorColor = MaterialTheme.colorScheme.inversePrimary
-            ),
             icon = {
                 Icon(
                     imageVector = MoviesIcons.GridView,
                     contentDescription = stringResource(MoviesStrings.main_nav_feed)
                 )
             },
+            modifier = modifierDisplayCutoutWindowInsets,
             label = {
                 Text(
                     text = stringResource(MoviesStrings.main_nav_feed)
                 )
             },
-            alwaysShowLabel = true
+            alwaysShowLabel = true,
+            colors = NavigationRailItemDefaults.colors(
+                indicatorColor = MaterialTheme.colorScheme.inversePrimary
+            )
         )
 
         if (state.isFaveFeatureEnabled) {
             NavigationRailItem(
                 selected = currentDestination == FaveDestination,
                 onClick = { dispatch(MainTabsIntent.FaveClick) },
-                colors = NavigationRailItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.inversePrimary
-                ),
                 icon = {
                     Icon(
                         imageVector = MoviesIcons.Favorite,
                         contentDescription = stringResource(MoviesStrings.main_nav_fave)
                     )
                 },
+                modifier = modifierDisplayCutoutWindowInsets,
                 label = {
                     Text(
                         text = stringResource(MoviesStrings.main_nav_fave)
                     )
                 },
-                alwaysShowLabel = true
+                alwaysShowLabel = true,
+                colors = NavigationRailItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.inversePrimary
+                )
             )
         }
 
         NavigationRailItem(
             selected = currentDestination == SettingsDestination,
             onClick = { dispatch(MainTabsIntent.SettingsClick) },
-            colors = NavigationRailItemDefaults.colors(
-                indicatorColor = MaterialTheme.colorScheme.inversePrimary
-            ),
             icon = {
                 Icon(
                     imageVector = MoviesIcons.Settings,
                     contentDescription = stringResource(MoviesStrings.main_nav_settings)
                 )
             },
+            modifier = modifierDisplayCutoutWindowInsets,
             label = {
                 Text(
                     text = stringResource(MoviesStrings.main_nav_settings)
                 )
             },
-            alwaysShowLabel = true
+            alwaysShowLabel = true,
+            colors = NavigationRailItemDefaults.colors(
+                indicatorColor = MaterialTheme.colorScheme.inversePrimary
+            )
         )
 
         Spacer(

@@ -51,15 +51,15 @@ import org.michaelbel.movies.ui.compose.PlatformBackHandler
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
-import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.isFailure
-import org.michaelbel.movies.ui.ktx.isLoading
-import org.michaelbel.movies.ui.ktx.isPortrait
-import org.michaelbel.movies.ui.ktx.isRefreshLoading
-import org.michaelbel.movies.ui.ktx.isWideFoldableMode
-import org.michaelbel.movies.ui.ktx.refreshThrowable
+import org.michaelbel.movies.ui.ObserveAsEvents
+import org.michaelbel.movies.ui.clickableWithoutRipple
+import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.isFailure
+import org.michaelbel.movies.ui.isLoading
+import org.michaelbel.movies.ui.isPortrait
+import org.michaelbel.movies.ui.isRefreshLoading
+import org.michaelbel.movies.ui.isWideFoldableMode
+import org.michaelbel.movies.ui.refreshThrowable
 import java.net.UnknownHostException
 
 @Composable

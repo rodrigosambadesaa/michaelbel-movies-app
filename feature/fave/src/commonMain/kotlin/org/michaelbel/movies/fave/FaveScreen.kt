@@ -19,17 +19,17 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.fave.intent.FaveIntent
 import org.michaelbel.movies.feed.ui.FeedEmpty
+import org.michaelbel.movies.ui.calculatePageContentPadding
+import org.michaelbel.movies.ui.clickableWithoutRipple
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
-import org.michaelbel.movies.ui.ktx.calculatePageContentPadding
-import org.michaelbel.movies.ui.ktx.clickableWithoutRipple
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.isFailure
-import org.michaelbel.movies.ui.ktx.isLoading
-import org.michaelbel.movies.ui.ktx.modifierDisplayCutoutWindowInsets
-import org.michaelbel.movies.ui.ktx.refreshThrowable
-import org.michaelbel.movies.ui.ktx.rememberConnectivityClickHandler
+import org.michaelbel.movies.ui.isFailure
+import org.michaelbel.movies.ui.isLoading
+import org.michaelbel.movies.ui.modifierDisplayCutoutWindowInsets
+import org.michaelbel.movies.ui.refreshThrowable
+import org.michaelbel.movies.ui.rememberConnectivityClickHandler
 
 @Composable
 fun FaveScreen(
@@ -49,7 +49,6 @@ fun FaveScreen(
             pagingItems.isLoading -> {
                 PageLoading(
                     feedView = state.feedView,
-                    modifier = modifierDisplayCutoutWindowInsets,
                     paddingValues = contentPadding
                 )
             }
@@ -84,8 +83,7 @@ fun FaveScreen(
                     lazyStaggeredGridState = rememberLazyStaggeredGridState(),
                     pagingItems = pagingItems,
                     onMovieClick = { pagingKey, movieId -> viewModel.dispatch(FaveIntent.MovieDetailsClick(pagingKey, movieId)) },
-                    contentPadding = contentPadding,
-                    modifier = modifierDisplayCutoutWindowInsets
+                    contentPadding = contentPadding
                 )
             }
         }

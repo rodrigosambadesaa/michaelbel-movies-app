@@ -6,9 +6,9 @@ import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
 import org.michaelbel.movies.common.mvi.MoviesViewModel
-import org.michaelbel.movies.interactor.DebugNotificationInteractor
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
+import org.michaelbel.movies.interactor.DebugNotificationInteractor
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.main.event.MainEvent
 import org.michaelbel.movies.main.intent.MainIntent
@@ -18,7 +18,7 @@ import org.michaelbel.movies.platform.config.ConfigService
 import org.michaelbel.movies.platform.messaging.MessagingService
 import org.michaelbel.movies.platform.review.ReviewService
 import org.michaelbel.movies.platform.update.UpdateService
-import org.michaelbel.movies.ui.ktx.isDebug
+import org.michaelbel.movies.ui.isDebug
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.navigation.MainDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator

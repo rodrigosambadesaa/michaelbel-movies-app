@@ -78,13 +78,14 @@ import org.michaelbel.movies.gallery.zoomable.rememberZoomState
 import org.michaelbel.movies.gallery.zoomable.zoomable
 import org.michaelbel.movies.network.config.isNotOriginal
 import org.michaelbel.movies.persistence.database.ktx.original
+import org.michaelbel.movies.ui.ObserveAsEvents
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.compose.PlatformBackHandler
+import org.michaelbel.movies.ui.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
-import org.michaelbel.movies.ui.ktx.navigateToImageUri
+import org.michaelbel.movies.ui.modifierDisplayCutoutWindowInsets
+import org.michaelbel.movies.ui.navigateToImageUri
 import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
@@ -215,7 +216,8 @@ private fun GalleryScreenContent(
                         state = pagerState,
                         modifier = Modifier
                             .fillMaxSize()
-                            .align(Alignment.Center),
+                            .align(Alignment.Center)
+                            .then(modifierDisplayCutoutWindowInsets),
                         pageSpacing = 8.dp,
                         flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
                     ) { page ->
@@ -224,12 +226,13 @@ private fun GalleryScreenContent(
                         var image by remember { mutableStateOf("") }
                         image = imageDb.original
                         var loading by remember { mutableStateOf(true) }
+                        var isZoomEnabled by remember { mutableStateOf(false) }
                         val zoomState = rememberZoomState()
 
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .zoomable(zoomState),
+                                .then(if (isZoomEnabled) Modifier.zoomable(zoomState) else Modifier),
                             contentAlignment = Alignment.Center
                         ) {
                             AsyncImage(
@@ -244,6 +247,7 @@ private fun GalleryScreenContent(
                                     .padding(top = topBarHeight, bottom = navigationBarBottomPadding),
                                 transform = { state ->
                                     loading = state is AsyncImagePainter.State.Loading
+                                    isZoomEnabled = state is AsyncImagePainter.State.Success
                                     if (state is AsyncImagePainter.State.Success) {
                                         zoomState.setContentSize(state.painter.intrinsicSize)
                                         imageDiskCacheKey = state.result.diskCacheKey

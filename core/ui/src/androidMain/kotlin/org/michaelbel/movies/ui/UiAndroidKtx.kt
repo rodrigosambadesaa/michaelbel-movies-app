@@ -1,89 +1,45 @@
-package org.michaelbel.movies.ui.ktx
+package org.michaelbel.movies.ui
 
 import android.Manifest
 import android.app.Activity
-import android.app.StatusBarManager
-import android.content.ComponentName
+import android.app.GrammaticalInflectionManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.speech.RecognizerIntent
+import android.util.DisplayMetrics
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import org.jetbrains.compose.resources.stringResource
-import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
+import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SETTINGS
-import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.tile.MoviesTileService
 
-@Composable
-actual fun rememberSpeechRecognitionLauncher(onInputText: (String) -> Unit): () -> Unit {
-    val speechRecognizeContract = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { activityResult ->
-        val data = activityResult.data
-        val spokenText = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.let { results ->
-            results[0]
-        }
-        if (!spokenText.isNullOrEmpty()) {
-            onInputText(spokenText)
-        }
-    }
-
-    return {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        }
-        speechRecognizeContract.launch(intent)
-    }
-}
-
-@Composable
-actual fun shareText(text: String, title: String): () -> Unit {
-    val context = LocalContext.current
-    return {
-        context.navigateToShareText(text, title)
-    }
-}
-
-@Composable
-actual fun navigateToImageUri(): (uri: String) -> Unit {
-    val context = LocalContext.current
-    return { uri ->
-        context.navigateToImageUri(uri.toUri())
-    }
-}
-
-@Composable
-actual fun requestTileService(onSuccess: (String) -> Unit): () -> Unit {
-    val context = LocalContext.current
-    val tileTitleLabel = stringResource(MoviesStrings.tile_title)
-    val tileMessage = stringResource(MoviesStrings.settings_tile_error_already_added)
-    return {
-        if (Build.VERSION.SDK_INT >= 33) {
-            val statusBarManager = ContextCompat.getSystemService(context, StatusBarManager::class.java)
-            statusBarManager?.requestAddTileService(
-                ComponentName(context, MoviesTileService::class.java),
-                tileTitleLabel,
-                Icon.createWithResource(context, MoviesAndroidIcons.MovieFilter24),
-                context.mainExecutor
-            ) { result ->
-                when (result) {
-                    StatusBarManager.TILE_ADD_REQUEST_RESULT_TILE_ALREADY_ADDED -> {
-                        onSuccess(tileMessage)
-                    }
-                }
+val Context.currentGrammaticalGender: GrammaticalGender
+    get() {
+        return when {
+            Build.VERSION.SDK_INT >= 34 -> {
+                val grammaticalInflectionManager = ContextCompat.getSystemService(this, GrammaticalInflectionManager::class.java) ?: return GrammaticalGender.NotSpecified()
+                val grammaticalGender = grammaticalInflectionManager.applicationGrammaticalGender
+                GrammaticalGender.transform(grammaticalGender)
             }
+            else -> GrammaticalGender.NotSpecified()
         }
+    }
+
+fun Context.supportSetRequestedApplicationGrammaticalGender(grammaticalGender: Int) {
+    if (Build.VERSION.SDK_INT >= 34) {
+        val grammaticalInflectionManager = ContextCompat.getSystemService(this, GrammaticalInflectionManager::class.java) ?: return
+        grammaticalInflectionManager.setRequestedApplicationGrammaticalGender(grammaticalGender)
     }
 }
 
@@ -124,19 +80,6 @@ fun Activity.resolveNotificationPreferencesIntent() {
         if (isCategoryNotificationPreferences) {
             startActivity(Intent(Intent.ACTION_VIEW, INTENT_ACTION_SETTINGS.toUri()))
         }
-    }
-}
-
-@Composable
-actual fun rememberConnectivityClickHandler(): () -> Unit {
-    if (Build.VERSION.SDK_INT >= 29) {
-        val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-        return {
-            val intent = Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
-            launcher.launch(intent)
-        }
-    } else {
-        return {}
     }
 }
 
@@ -205,5 +148,70 @@ fun rememberRequestNotificationPermission(
         }
     } else {
         return {}
+    }
+}
+
+fun Window.setScreenshotBlockEnabled(enabled: Boolean) {
+    if (enabled) {
+        setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    } else {
+        clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+    }
+}
+
+val screenWidth: Dp
+    @Composable get() {
+        val context = LocalContext.current
+        val density = LocalDensity.current
+        return density.run { context.deviceWidth.toDp() }
+    }
+
+val screenHeight: Dp
+    @Composable get() {
+        val context = LocalContext.current
+        val density = LocalDensity.current
+        return density.run { context.deviceHeight.toDp() }
+    }
+
+private inline val Context.deviceWidth: Int
+    get() {
+        val windowManager = ContextCompat.getSystemService(this, WindowManager::class.java) as WindowManager
+        return if (Build.VERSION.SDK_INT >= 30) {
+            val windowMetrics = windowManager.currentWindowMetrics
+            val insets = windowMetrics.windowInsets.getInsetsIgnoringVisibility(
+                android.view.WindowInsets.Type.systemBars()
+            )
+            windowMetrics.bounds.width() - insets.left - insets.right
+        } else {
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            displayMetrics.widthPixels
+        }
+    }
+
+private inline val Context.deviceHeight: Int
+    get() {
+        val windowManager = ContextCompat.getSystemService(this, WindowManager::class.java) as WindowManager
+        return if (Build.VERSION.SDK_INT >= 30) {
+            val windowMetrics = windowManager.currentWindowMetrics
+            windowMetrics.bounds.height()
+        } else {
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            displayMetrics.heightPixels
+        }
+    }
+
+fun Activity.supportRegisterScreenCaptureCallback(screenCaptureCallback: Any) {
+    if (Build.VERSION.SDK_INT >= 34) {
+        registerScreenCaptureCallback(mainExecutor, screenCaptureCallback as Activity.ScreenCaptureCallback)
+    }
+}
+
+fun Activity.supportUnregisterScreenCaptureCallback(screenCaptureCallback: Any) {
+    if (Build.VERSION.SDK_INT >= 34) {
+        try {
+            unregisterScreenCaptureCallback(screenCaptureCallback as Activity.ScreenCaptureCallback)
+        } catch (_: Exception) {}
     }
 }

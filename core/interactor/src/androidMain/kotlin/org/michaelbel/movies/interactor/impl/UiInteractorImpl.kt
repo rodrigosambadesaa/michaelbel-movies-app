@@ -35,11 +35,11 @@ import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
 import org.michaelbel.movies.ui.appicon.setIcon
-import org.michaelbel.movies.ui.ktx.currentGrammaticalGender
-import org.michaelbel.movies.ui.ktx.rememberNavigateToAppOpenByDefaultSettings
-import org.michaelbel.movies.ui.ktx.rememberNavigateToAppSettings
-import org.michaelbel.movies.ui.ktx.rememberNavigateToDeveloperSettings
-import org.michaelbel.movies.ui.ktx.supportSetRequestedApplicationGrammaticalGender
+import org.michaelbel.movies.ui.currentGrammaticalGender
+import org.michaelbel.movies.ui.rememberNavigateToAppOpenByDefaultSettings
+import org.michaelbel.movies.ui.rememberNavigateToAppSettings
+import org.michaelbel.movies.ui.rememberNavigateToDeveloperSettings
+import org.michaelbel.movies.ui.supportSetRequestedApplicationGrammaticalGender
 
 class UiInteractorImpl(
     private val context: Context

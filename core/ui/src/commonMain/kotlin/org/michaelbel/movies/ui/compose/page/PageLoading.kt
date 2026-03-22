@@ -14,12 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.network.model.MovieResponse
-import org.michaelbel.movies.ui.ktx.PageLoadingColumnItem
-import org.michaelbel.movies.ui.ktx.PageLoadingRowItem
-import org.michaelbel.movies.ui.ktx.isPortrait
-import org.michaelbel.movies.ui.ktx.isWideFoldableMode
-import org.michaelbel.movies.ui.ktx.pageLoadingGridCells
-import org.michaelbel.movies.ui.ktx.pageLoadingStaggeredGridCells
+import org.michaelbel.movies.ui.PageLoadingColumnItem
+import org.michaelbel.movies.ui.PageLoadingRowItem
+import org.michaelbel.movies.ui.isPortrait
+import org.michaelbel.movies.ui.isWideFoldableMode
+import org.michaelbel.movies.ui.pageLoadingGridCells
+import org.michaelbel.movies.ui.pageLoadingStaggeredGridCells
 
 @Composable
 fun PageLoading(

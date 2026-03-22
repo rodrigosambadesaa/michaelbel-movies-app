@@ -31,8 +31,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
-import org.michaelbel.movies.ui.ktx.displayCutoutWindowInsets
+import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.displayCutoutWindowInsets
 import org.michaelbel.movies.ui.theme.MoviesTheme
 import org.michaelbel.movies.widget.R
 

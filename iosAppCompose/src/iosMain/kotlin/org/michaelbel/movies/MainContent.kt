@@ -17,7 +17,7 @@ import org.michaelbel.movies.di.appKoinModule
 import org.michaelbel.movies.main.MainScreen
 import org.michaelbel.movies.main.MainViewModel
 import org.michaelbel.movies.main.intent.MainIntent
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable

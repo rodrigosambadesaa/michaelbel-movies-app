@@ -101,8 +101,8 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.onSecondaryClick
-import org.michaelbel.movies.ui.ktx.rememberSpeechRecognitionLauncher
+import org.michaelbel.movies.ui.onSecondaryClick
+import org.michaelbel.movies.ui.rememberSpeechRecognitionLauncher
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.bottomListItemShape
 import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape

@@ -49,10 +49,10 @@ import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.notify.event.NotifyEvent
 import org.michaelbel.movies.notify.intent.NotifyIntent
 import org.michaelbel.movies.notify.model.NotifyModel
+import org.michaelbel.movies.ui.ObserveAsEvents
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.ktx.ObserveAsEvents
-import org.michaelbel.movies.ui.ktx.collectAsStateCommon
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 

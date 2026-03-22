@@ -21,8 +21,8 @@ import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.ui.color.PaletteStyle
 import org.michaelbel.movies.ui.color.TonalPalettes.Companion.toTonalPalettes
-import org.michaelbel.movies.ui.ktx.navigationBarStyle
-import org.michaelbel.movies.ui.ktx.statusBarStyle
+import org.michaelbel.movies.ui.navigationBarStyle
+import org.michaelbel.movies.ui.statusBarStyle
 import org.michaelbel.movies.ui.theme.model.ComposeTheme
 import kotlin.math.min
 

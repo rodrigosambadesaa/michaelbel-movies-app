@@ -38,10 +38,5 @@ actual fun PasswordVisibilityIcon(
 }
 
 private fun passwordVisibilityState(passwordVisible: Boolean): IntArray {
-    return intArrayOf(
-        android.R.attr.state_checked * when (passwordVisible) {
-            true -> 1
-            false -> -1
-        }
-    )
+    return intArrayOf(android.R.attr.state_checked * if (passwordVisible) 1 else -1)
 }

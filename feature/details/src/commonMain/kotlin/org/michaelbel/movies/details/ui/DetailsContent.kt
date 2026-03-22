@@ -130,7 +130,7 @@ fun DetailsContent(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = onContainerColor,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15f
+                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15F
                     )
                 )
             }

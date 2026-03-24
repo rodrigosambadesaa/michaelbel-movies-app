@@ -38,8 +38,6 @@ interface MovieInteractor {
 
     suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int)
 
-    suspend fun fetchAndInsertMovies(pagingKey: PagingKey): List<MoviePojo> // TODO Fallback iOS
-
     suspend fun fetchAndInsertSearchMovies(query: Query)
 
     suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo>

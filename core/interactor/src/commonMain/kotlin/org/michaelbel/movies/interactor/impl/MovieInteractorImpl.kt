@@ -8,8 +8,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.MovieInteractor
@@ -135,16 +135,6 @@ class MovieInteractorImpl(
         }
     }
 
-    override suspend fun fetchAndInsertMovies(pagingKey: PagingKey): List<MoviePojo> { // TODO Fallback iOS
-        return withContext(dispatchers.io) {
-            val moviesResult = movieRepository.moviesResult(pagingKey, localeInteractor.language, 1)
-            movieRepository.insertMovies(pagingKey, moviesResult.page, moviesResult.results)
-            moviesResult.results.mapIndexed { index, movieResponse ->
-                movieResponse.moviePojo(pagingKey, index, moviesResult.page)
-            }
-        }
-    }
-
     override suspend fun fetchAndInsertSearchMovies(query: Query) {
         return withContext(dispatchers.io) {
             if (query.isEmpty()) throw PageEmptyException()
@@ -167,9 +157,8 @@ class MovieInteractorImpl(
 
     override suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo> {
         return withContext(dispatchers.io) {
-            movieRepository.moviesResult(pagingKey, localeInteractor.language, 1).results.mapIndexed { index, movieResponse ->
-                movieResponse.moviePojo(pagingKey, index, 1)
-            }
+            val movieResult = movieRepository.moviesResult(pagingKey, localeInteractor.language, 1).results
+            movieResult.mapIndexed { index, movieResponse -> movieResponse.moviePojo(pagingKey, index, 1) }
         }
     }
 }

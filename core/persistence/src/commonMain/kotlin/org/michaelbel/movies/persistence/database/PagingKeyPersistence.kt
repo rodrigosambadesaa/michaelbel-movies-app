@@ -4,7 +4,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.PagingKeyPojo
 import org.michaelbel.movies.persistence.database.ktx.pagingKeyDb
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
-class PagingKeyPersistence constructor(
+class PagingKeyPersistence(
     private val moviesDatabase: MoviesDatabase
 ) {
 

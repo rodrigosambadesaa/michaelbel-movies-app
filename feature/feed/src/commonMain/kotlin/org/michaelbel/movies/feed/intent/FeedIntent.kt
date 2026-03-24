@@ -14,7 +14,6 @@ sealed interface FeedIntent: Intent {
     data object CollectSuggestions: FeedIntent
     data object CollectSearchHistoryMovies: FeedIntent
     data object LoadSuggestions: FeedIntent
-    data object RefreshMovies: FeedIntent // TODO Fallback iOS
     data object SubscribeNotificationsPermissionRequired: FeedIntent
     data object SettingsClick: FeedIntent
     data object AuthClick: FeedIntent

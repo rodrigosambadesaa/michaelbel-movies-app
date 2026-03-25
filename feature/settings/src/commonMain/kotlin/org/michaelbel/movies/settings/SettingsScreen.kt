@@ -97,6 +97,7 @@ import org.michaelbel.movies.ui.calculateBottomContentPadding
 import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.Cat
+import org.michaelbel.movies.ui.icons.DropperEye
 import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
 import org.michaelbel.movies.ui.icons.MoviesIcons
@@ -137,6 +138,7 @@ fun SettingsScreen(
         onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
         onPermissionDenied = { viewModel.dispatch(SettingsIntent.ShowPermissionSnackbar(permissionMessage, permissionAction)) }
     )
+    val requestEyeDropper = uiInteractor.rememberEyeDropperHandler()
     val onRequestTileService = requestTileService { message -> viewModel.dispatch(SettingsIntent.ShowSnackbar(message)) }
 
     ObserveAsEvents(
@@ -157,6 +159,7 @@ fun SettingsScreen(
             is SettingsEvent.RequestTileService -> onRequestTileService()
             is SettingsEvent.RequestGithub -> navigateToGithubUrl()
             is SettingsEvent.RequestTelegram -> navigateToTelegramUrl()
+            is SettingsEvent.RequestEyeDropper -> requestEyeDropper()
             is SettingsEvent.ScrollToTop -> scope.launch { lazyListState.animateScrollToItem(0) }
             is SettingsEvent.ShowSnackbar -> {
                 snackbarHostState.currentSnackbarData?.dismiss()
@@ -1126,6 +1129,42 @@ private fun SettingsScreenContent(
                                         )
                                     }
                                 } else null
+                            )
+                        }
+                    )
+                }
+                item {
+                    Spacer(
+                        modifier = Modifier.height(2.dp)
+                    )
+                }
+            }
+            if (state.isEyeDropperFeatureEnabled) {
+                item {
+                    ListItem(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .clip(middleExtraSmallListItemShape)
+                            .clickable { dispatch(SettingsIntent.RequestEyeDropper) },
+                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        headlineContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_eye_dropper),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_eye_dropper_description),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.DropperEye,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         }
                     )

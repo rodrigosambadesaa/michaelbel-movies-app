@@ -1,12 +1,15 @@
 package org.michaelbel.movies.interactor.impl
 
 import android.Manifest
+import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,6 +35,7 @@ import org.michaelbel.movies.common.ktx.appNotificationSettingsIntent
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.formatBackdropImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
+import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
 import org.michaelbel.movies.ui.appicon.setIcon
@@ -69,8 +73,7 @@ class UiInteractorImpl(
     override val isNotificationsFeatureEnabled: Boolean
         @ChecksSdkIntAtLeast(33) get() = Build.VERSION.SDK_INT >= 33
 
-    override val isDoNotDisturbFeatureEnabled: Boolean
-        @ChecksSdkIntAtLeast(23) get() = Build.VERSION.SDK_INT >= 23
+    override val isDoNotDisturbFeatureEnabled: Boolean = true
 
     override val isBatteryOptimizationFeatureEnabled: Boolean = true
 
@@ -86,6 +89,9 @@ class UiInteractorImpl(
     override val isAppOpenByDefaultFeatureEnabled: Boolean = true
 
     override val isScreenshotFeatureEnabled: Boolean = true
+
+    override val isEyeDropperFeatureEnabled: Boolean
+        @ChecksSdkIntAtLeast(37) get() = Build.VERSION.SDK_INT >= 37
 
     override val isGithubFeatureEnabled: Boolean = true
 
@@ -210,6 +216,20 @@ class UiInteractorImpl(
                 Build.VERSION.SDK_INT >= 33 -> postNotificationsPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
+    }
+
+    @Composable
+    override fun rememberEyeDropperHandler(): (() -> Unit) {
+        val context = LocalContext.current
+        val intent = remember { Intent("android.intent.action.OPEN_EYE_DROPPER") }
+        val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK && result.data?.hasExtra("android.intent.extra.COLOR") == true) {
+                val color = result.data?.getIntExtra("android.intent.extra.COLOR", Color.BLACK).orEmpty()
+                val hex = String.format("#%06X", 0xFFFFFF and color)
+                Toast.makeText(context, hex, Toast.LENGTH_SHORT).show()
+            }
+        }
+        return remember(resultContract, intent) { { resultContract.launch(intent) } }
     }
 
     @Composable

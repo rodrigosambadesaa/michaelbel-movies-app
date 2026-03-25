@@ -123,6 +123,7 @@ class SettingsViewModel(
                         isAppIconFeatureEnabled = uiInteractor.isAppIconFeatureEnabled,
                         isAppOpenByDefaultFeatureEnabled = uiInteractor.isAppOpenByDefaultFeatureEnabled,
                         isScreenshotFeatureEnabled = uiInteractor.isScreenshotFeatureEnabled,
+                        isEyeDropperFeatureEnabled = uiInteractor.isEyeDropperFeatureEnabled,
                         isGithubFeatureEnabled = uiInteractor.isGithubFeatureEnabled,
                         isTelegramFeatureEnabled = uiInteractor.isTelegramFeatureEnabled,
                         isReviewAppFeatureEnabled = uiInteractor.isReviewAppFeatureEnabled,
@@ -144,6 +145,7 @@ class SettingsViewModel(
             is SettingsIntent.RequestPostNotificationsPermission -> launch { push(SettingsEvent.RequestPostNotificationsPermission) }
             is SettingsIntent.RequestDoNotDisturbAccess -> launch { push(SettingsEvent.RequestDoNotDisturbAccess) }
             is SettingsIntent.RequestIgnoreBatteryOptimizations -> launch { push(SettingsEvent.RequestIgnoreBatteryOptimizations) }
+            is SettingsIntent.RequestEyeDropper -> launch { push(SettingsEvent.RequestEyeDropper) }
             is SettingsIntent.RequestTileService -> launch { push(SettingsEvent.RequestTileService) }
             is SettingsIntent.RequestGithub -> launch { push(SettingsEvent.RequestGithub) }
             is SettingsIntent.RequestTelegram -> launch { push(SettingsEvent.RequestTelegram) }

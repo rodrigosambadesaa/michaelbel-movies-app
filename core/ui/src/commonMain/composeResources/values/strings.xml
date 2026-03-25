@@ -141,6 +141,8 @@
     <string name="settings_update_description">Using In-App Update API</string>
     <string name="settings_palette_colors">Palette Colors</string>
     <string name="settings_palette_colors_description">Apply colors from Palette</string>
+    <string name="settings_eye_dropper">EyeDropper</string>
+    <string name="settings_eye_dropper_description">Built-in Android color picker</string>
     <string name="settings_screenshots">Screenshots</string>
     <string name="settings_screenshots_description">Block taking screenshots</string>
 

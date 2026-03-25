@@ -93,6 +93,8 @@ import movies.core.ui.generated.resources.settings_dynamic_colors
 import movies.core.ui.generated.resources.settings_dynamic_colors_description
 import movies.core.ui.generated.resources.settings_error_app_from_google_play
 import movies.core.ui.generated.resources.settings_error_play_services_not_available
+import movies.core.ui.generated.resources.settings_eye_dropper
+import movies.core.ui.generated.resources.settings_eye_dropper_description
 import movies.core.ui.generated.resources.settings_gender
 import movies.core.ui.generated.resources.settings_gender_feminine
 import movies.core.ui.generated.resources.settings_gender_masculine
@@ -287,6 +289,8 @@ object MoviesStrings {
     val settings_update_description = Res.string.settings_update_description
     val settings_palette_colors = Res.string.settings_palette_colors
     val settings_palette_colors_description = Res.string.settings_palette_colors_description
+    val settings_eye_dropper = Res.string.settings_eye_dropper
+    val settings_eye_dropper_description = Res.string.settings_eye_dropper_description
     val settings_screenshots = Res.string.settings_screenshots
     val settings_screenshots_description = Res.string.settings_screenshots_description
 

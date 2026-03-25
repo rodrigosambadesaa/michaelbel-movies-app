@@ -45,6 +45,8 @@ class UiInteractorImpl: UiInteractor {
 
     override val isScreenshotFeatureEnabled: Boolean = false
 
+    override val isEyeDropperFeatureEnabled: Boolean = false
+
     override val isGithubFeatureEnabled: Boolean = true
 
     override val isTelegramFeatureEnabled: Boolean = true
@@ -103,6 +105,9 @@ class UiInteractorImpl: UiInteractor {
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
     ): () -> Unit = {}
+
+    @Composable
+    override fun rememberEyeDropperHandler(): (() -> Unit) = {}
 
     @Composable
     override fun DetailsPaletteEffect(

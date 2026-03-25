@@ -26,6 +26,7 @@ sealed interface SettingsIntent: Intent {
     data object RequestPostNotificationsPermission: SettingsIntent
     data object RequestDoNotDisturbAccess: SettingsIntent
     data object RequestIgnoreBatteryOptimizations: SettingsIntent
+    data object RequestEyeDropper: SettingsIntent
     data object RequestTileService: SettingsIntent
     data object RequestGithub: SettingsIntent
     data object RequestTelegram: SettingsIntent

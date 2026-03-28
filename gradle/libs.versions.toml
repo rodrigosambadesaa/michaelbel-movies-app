@@ -167,6 +167,7 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanary" }
@@ -259,9 +260,11 @@ sqlite-common = [
 ]
 ktor-common = [
     "ktor-client-core",
-    "ktor-client-cio",
     "ktor-client-content-negotiation",
     "ktor-serialization-kotlinx-json"
+]
+ktor-jvm = [
+    "ktor-client-cio"
 ]
 koin-common = [
     "koin-compose",
@@ -428,6 +431,9 @@ sqlite-bundled-ios = [
 ]
 ktor-ios = [
     "ktor-client-darwin"
+]
+ktor-web = [
+    "ktor-client-js"
 ]
 
 [plugins]

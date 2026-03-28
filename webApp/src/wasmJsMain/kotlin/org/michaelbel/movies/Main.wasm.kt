@@ -1,5 +1,14 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package org.michaelbel.movies
 
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.ComposeViewport
+
 fun main() {
-    // Web app modules were removed from the project.
+    ComposeViewport(
+        viewportContainerId = "ComposeTarget"
+    ) {
+        WebApp()
+    }
 }

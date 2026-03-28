@@ -790,3 +790,8 @@ style:
     active: true
     excludeImports:
       - 'java.util.*'
+
+michaelbel:
+  active: true
+  ModifierPaddingArgumentOrder:
+    active: true

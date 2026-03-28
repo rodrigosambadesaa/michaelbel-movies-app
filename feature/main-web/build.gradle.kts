@@ -1,0 +1,25 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
+plugins {
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.compose)
+}
+
+kotlin {
+    js { browser {} }
+    wasmJs { browser {} }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.core.interactorWeb)
+            implementation(projects.feature.detailsWeb)
+            implementation(projects.feature.feedWeb)
+            implementation(projects.feature.settingsWeb)
+            implementation(libs.koin.compose)
+            implementation(libs.bundles.jetbrains.compose.runtime.common)
+        }
+    }
+}

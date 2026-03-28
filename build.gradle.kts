@@ -21,12 +21,20 @@ plugins {
     alias(libs.plugins.palantir.git)
 }
 
+private val michaelbelDetektRules = "org.michaelbel:detekt-rules:0.1.1-SNAPSHOT"
+
+dependencies {
+    detektPlugins(michaelbelDetektRules)
+}
+
 detekt {
     config.setFrom("$projectDir/.github/detekt.yml")
 }
 
 subprojects {
-    if (name != "desktopApp") {
-        apply(plugin = "io.gitlab.arturbosch.detekt")
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+
+    dependencies {
+        add("detektPlugins", michaelbelDetektRules)
     }
 }

@@ -1,11 +1,11 @@
 package org.michaelbel.movies.common.log
 
-import kotlin.js.Console
+import kotlin.js.console
 
 actual fun log(throwable: Throwable) {
-    Console.error(throwable.toString())
+    console.error(throwable.toString())
 }
 
 actual fun log(message: String) {
-    Console.log(message)
+    console.log(message)
 }

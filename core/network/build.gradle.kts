@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 
@@ -18,6 +22,8 @@ kotlin {
     jvm()
     iosArm64()
     iosSimulatorArm64()
+    js { browser {} }
+    wasmJs { browser {} }
 
     android {
         namespace = "org.michaelbel.movies.network"
@@ -38,8 +44,14 @@ kotlin {
             implementation(libs.bundles.chucker.library.no.op.android)
             implementation(libs.bundles.flaker.noop.android)
         }
+        jvmMain.dependencies {
+            implementation(libs.bundles.ktor.jvm)
+        }
         iosMain.dependencies {
             implementation(libs.bundles.ktor.ios)
+        }
+        webMain.dependencies {
+            implementation(libs.bundles.ktor.web)
         }
     }
 

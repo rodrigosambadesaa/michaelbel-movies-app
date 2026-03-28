@@ -9,3 +9,4 @@ build-cache
 generated
 local.properties
 releaseNotes.txt
+/.claude/settings.local.json

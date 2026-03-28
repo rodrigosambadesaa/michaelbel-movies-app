@@ -30,6 +30,7 @@ dependencyResolutionManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
+        mavenLocal()
         mavenCentral()
         maven(url = "https://developer.huawei.com/repo/")
     }
@@ -56,9 +57,12 @@ include(
     ":core:analytics",
     ":core:common",
     ":core:interactor",
+    ":core:interactor-web",
     ":core:network",
     ":core:persistence",
+    ":core:persistence-web",
     ":core:repository",
+    ":core:repository-web",
     ":core:ui",
     ":core:widget",
     ":core:work",
@@ -68,10 +72,14 @@ include(
     ":feature:auth",
     ":feature:debug",
     ":feature:details",
+    ":feature:details-web",
     ":feature:fave",
     ":feature:feed",
+    ":feature:feed-web",
     ":feature:gallery",
     ":feature:main",
+    ":feature:main-web",
     ":feature:notify",
-    ":feature:settings"
+    ":feature:settings",
+    ":feature:settings-web"
 )

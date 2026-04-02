@@ -57,8 +57,6 @@ Get interactive AI-powered documentation for the repository on [DeepWiki](https:
     <img src=".github/pics/ios/ios2.png" alt="iOS Image 2" width="24%">
     <img src=".github/pics/ios/ios3.png" alt="iOS Image 3" width="24%">
     <img src=".github/pics/ios/ios4.png" alt="iOS Image 4" width="24%">
-    <img src=".github/pics/ios/ios5.png" alt="iOS Image 5" width="49%">
-    <img src=".github/pics/ios/ios6.png" alt="iOS Image 6" width="49%">
 </div>
 <br/>
 
@@ -68,15 +66,6 @@ Get interactive AI-powered documentation for the repository on [DeepWiki](https:
     <img src=".github/pics/macos/macos2.png" alt="macOS Image 2" width="49%">
     <img src=".github/pics/macos/macos3.png" alt="macOS Image 3" width="49%">
     <img src=".github/pics/macos/macos4.png" alt="macOS Image 4" width="49%">
-</div>
-<br/>
-
-**Windows**
-<div align="center">
-    <img src=".github/pics/windows/windows1.png" alt="Windows Image 1" width="49%">
-    <img src=".github/pics/windows/windows2.png" alt="Windows Image 2" width="49%">
-    <img src=".github/pics/windows/windows3.png" alt="Windows Image 3" width="49%">
-    <img src=".github/pics/windows/windows4.png" alt="Windows Image 4" width="49%">
 </div>
 
 

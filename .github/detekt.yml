@@ -622,6 +622,7 @@ style:
       - '30'
       - '31'
       - '33'
+      - '34'
     ignoreHashCodeFunction: true
     ignorePropertyDeclaration: false
     ignoreLocalVariableDeclaration: false

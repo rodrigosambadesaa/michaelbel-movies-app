@@ -30,7 +30,6 @@ dependencyResolutionManagement {
                 includeGroupAndSubgroups("com.google")
             }
         }
-        mavenLocal()
         mavenCentral()
         maven(url = "https://developer.huawei.com/repo/")
     }

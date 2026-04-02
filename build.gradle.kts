@@ -27,6 +27,9 @@ detekt {
 
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
+    configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
+        config.setFrom("${rootProject.projectDir}/.github/detekt.yml")
+    }
     dependencies {
         val catalog = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
         "detektPlugins"(catalog.findLibrary("detekt-rules").get())

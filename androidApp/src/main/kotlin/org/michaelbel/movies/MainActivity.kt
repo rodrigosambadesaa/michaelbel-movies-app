@@ -95,37 +95,49 @@ class MainActivity: FragmentActivity() {
 
     private fun resolveIntent(intent: Intent?) {
         val uri = intent?.data
-        val isDebugDeepLink = (uri?.scheme == "movies" && uri.host == "debug") || uri?.toString() == DEBUG_DEEP_LINK_URI || intent?.getBooleanExtra(DEBUG_DEEP_LINK_EXTRA, false) == true
         val tmdbMovieId = uri?.tmdbMovieId
-
         when {
             intent?.dataString == INTENT_ACTION_SEARCH -> viewModel.dispatch(MainIntent.ShortcutSearchClick)
             intent?.dataString == INTENT_ACTION_SETTINGS -> viewModel.dispatch(MainIntent.ShortcutSettingsClick)
-            uri?.scheme == "movies" && uri.host == "redirect_url" -> {
-                val requestToken = uri.getQueryParameter("request_token")?.takeIf(String::isNotBlank)
-                val approved = when (uri.getQueryParameter("approved")?.lowercase()) {
-                    "true", "1" -> true
-                    "false", "0" -> false
-                    else -> null
-                }
-                if (requestToken != null && approved != null) {
-                    viewModel.dispatch(MainIntent.NavigateToMain(requestToken, approved))
-                }
-            }
-            uri?.scheme == "movies" && uri.host == "details" -> {
-                val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
-                movieId?.let { viewModel.dispatch(MainIntent.NavigateToDetails(it)) }
-            }
+            uri?.scheme == "movies" && uri.host == "redirect_url" -> handleRedirectUrl(uri)
+            uri?.scheme == "movies" && uri.host == "details" -> handleDetailsDeepLink(uri)
             tmdbMovieId != null -> viewModel.dispatch(MainIntent.NavigateToDetails(tmdbMovieId))
-            isDebugDeepLink -> {
-                viewModel.dispatch(MainIntent.NavigateToDebug)
-                intent.let { deepLinkIntent ->
-                    deepLinkIntent.removeExtra(DEBUG_DEEP_LINK_EXTRA)
-                    if (deepLinkIntent.data?.scheme == "movies" && deepLinkIntent.data?.host == "debug") {
-                        deepLinkIntent.data = null
-                    }
-                }
-            }
+            isDebugDeepLink(uri, intent) -> handleDebugDeepLink(intent)
+        }
+    }
+
+    private fun isDebugDeepLink(uri: Uri?, intent: Intent?): Boolean {
+        return (uri?.scheme == "movies" && uri.host == "debug")
+            || uri?.toString() == DEBUG_DEEP_LINK_URI
+            || intent?.getBooleanExtra(DEBUG_DEEP_LINK_EXTRA, false) == true
+    }
+
+    private fun handleRedirectUrl(uri: Uri) {
+        val requestToken = uri.getQueryParameter("request_token")?.takeIf(String::isNotBlank)
+        val approved = parseApproved(uri.getQueryParameter("approved"))
+        if (requestToken != null && approved != null) {
+            viewModel.dispatch(MainIntent.NavigateToMain(requestToken, approved))
+        }
+    }
+
+    private fun parseApproved(value: String?): Boolean? {
+        return when (value?.lowercase()) {
+            "true", "1" -> true
+            "false", "0" -> false
+            else -> null
+        }
+    }
+
+    private fun handleDetailsDeepLink(uri: Uri) {
+        val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
+        movieId?.let { viewModel.dispatch(MainIntent.NavigateToDetails(it)) }
+    }
+
+    private fun handleDebugDeepLink(intent: Intent?) {
+        viewModel.dispatch(MainIntent.NavigateToDebug)
+        intent?.removeExtra(DEBUG_DEEP_LINK_EXTRA)
+        if (intent?.data?.scheme == "movies" && intent.data?.host == "debug") {
+            intent.data = null
         }
     }
 }

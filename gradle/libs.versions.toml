@@ -149,6 +149,7 @@ jetbrains-compose-runtime-saveable = { module = "org.jetbrains.compose.runtime:r
 jetbrains-compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose" }
 jetbrains-compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "compose" }
 jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "jetbrains-compose-material3" }
+jetbrains-compose-material3-adaptive-navigation-suite = { module = "org.jetbrains.compose.material3:material3-adaptive-navigation-suite", version.ref = "jetbrains-compose-material3" }
 jetbrains-compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose" }
 jetbrains-compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
 jetbrains-compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "jetbrains-compose-material-icons" }

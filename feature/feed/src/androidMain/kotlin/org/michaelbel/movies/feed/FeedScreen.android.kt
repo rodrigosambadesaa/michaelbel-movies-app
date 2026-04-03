@@ -76,6 +76,7 @@ import java.net.UnknownHostException
 @Composable
 actual fun FeedScreen(
     viewModel: FeedViewModel,
+    initialSearchActive: Boolean,
     onSearchActiveChange: (Boolean) -> Unit
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
@@ -97,6 +98,7 @@ actual fun FeedScreen(
         feedLazyListState = feedLazyListState,
         feedLazyGridState = feedLazyGridState,
         feedLazyStaggeredGridState = feedLazyStaggeredGridState,
+        initialSearchActive = initialSearchActive,
         onSearchActiveChange = onSearchActiveChange
     )
 
@@ -136,11 +138,12 @@ private fun FeedScreenContent(
     feedLazyListState: LazyListState,
     feedLazyGridState: LazyGridState,
     feedLazyStaggeredGridState: LazyStaggeredGridState,
+    initialSearchActive: Boolean,
     onSearchActiveChange: (Boolean) -> Unit
 ) {
     var query by rememberSaveable { mutableStateOf("") }
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    var isSearchActive by rememberSaveable { mutableStateOf(false) }
+    var isSearchActive by rememberSaveable { mutableStateOf(initialSearchActive) }
     var isSearchAutoFocusEnabled by rememberSaveable { mutableStateOf(true) }
     val contentBottomPadding = when {
         isSearchActive -> 16.dp

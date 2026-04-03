@@ -28,7 +28,9 @@ kotlin {
             api(projects.feature.notify)
             api(projects.feature.settings)
             api(projects.feature.debug)
-            implementation(libs.bundles.jetbrains.androidx.lifecycle.viewmodel.common)
+            implementation(libs.jetbrains.compose.material3) // fixme
+            implementation(libs.jetbrains.compose.material3.adaptive.navigation.suite) // fixme
+            implementation(libs.bundles.jetbrains.androidx.lifecycle.viewmodel.common) // fixme
         }
     }
 

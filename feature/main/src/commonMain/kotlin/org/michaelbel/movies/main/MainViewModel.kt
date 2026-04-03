@@ -112,7 +112,7 @@ class MainViewModel(
             }
             is MainIntent.ShortcutSearchClick -> {
                 launch {
-                    MainNavigator.forward(MainDestination())
+                    MainNavigator.forward(MainDestination(openSearch = true))
                     dispatch(MainIntent.OpenFeed)
                     FeedEventManager.push(FeedEvent.OpenSearch)
                 }

@@ -33,13 +33,13 @@ data object DebugDestination: AppRoute
 @Serializable
 data class MainDestination(
     val requestToken: String? = null,
-    val approved: Boolean? = null
+    val approved: Boolean? = null,
+    val openSearch: Boolean = false
 ): AppRoute
 
 @Serializable
 data class FeedDestination(
-    val requestToken: String? = null,
-    val approved: Boolean = false
+    val mainDestination: MainDestination = MainDestination()
 ): AppRoute
 
 @Serializable

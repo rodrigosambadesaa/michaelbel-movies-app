@@ -4,9 +4,8 @@
 .kotlin-js-store
 .gradle
 .idea
+.claude
 build
 build-cache
 generated
 local.properties
-releaseNotes.txt
-/.claude/settings.local.json

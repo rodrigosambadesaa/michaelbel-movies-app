@@ -124,7 +124,13 @@ private fun MainScreenContent(
             entry<AccountDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))) { AccountScreen() }
             entry<NotifyDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))) { NotifyScreen() }
             entry<DebugDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))) { DebugScreen() }
-            entry<MainDestination> { MainTabsScreen(feedDestination = FeedDestination(requestToken = it.requestToken, approved = it.approved.orEmpty())) }
+            entry<MainDestination> {
+                MainTabsScreen(
+                    feedDestination = FeedDestination(
+                        mainDestination = it.copy(approved = it.approved.orEmpty())
+                    )
+                )
+            }
             entry<DetailsDestination> { DetailsScreen(destination = it) }
             entry<GalleryDestination> { GalleryScreen(destination = it) }
             entry<SettingsDestination> { SettingsScreen() }

@@ -2,14 +2,13 @@
 
 package org.michaelbel.movies.details.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,33 +29,40 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
 fun DetailsFailure(
-    modifier: Modifier = Modifier
+    contentPadding: PaddingValues = PaddingValues()
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        RotatingCookie12SidedBox(
-            modifier = Modifier.size(164.dp),
-            color = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(
-                imageVector = MoviesIcons.Info,
-                contentDescription = MoviesContentDescription.None,
-                modifier = Modifier.size(72.dp),
-                tint = MaterialTheme.colorScheme.onPrimary
+        item {
+            RotatingCookie12SidedBox(
+                modifier = Modifier.size(164.dp),
+                color = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(
+                    imageVector = MoviesIcons.Info,
+                    contentDescription = MoviesContentDescription.None,
+                    modifier = Modifier.size(72.dp),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+        item {
+            Text(
+                text = stringResource(MoviesStrings.details_error_loading),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center
+                )
             )
         }
-
-        Text(
-            text = stringResource(MoviesStrings.details_error_loading),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(start = 16.dp, top = 12.dp, end = 16.dp),
-            style = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
-        )
     }
 }
 
@@ -64,10 +70,6 @@ fun DetailsFailure(
 @Composable
 private fun DetailsFailurePreview() {
     MoviesTheme {
-        DetailsFailure(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        )
+        DetailsFailure()
     }
 }

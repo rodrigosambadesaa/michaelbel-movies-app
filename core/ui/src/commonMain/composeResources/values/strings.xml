@@ -64,6 +64,7 @@
     <string name="search_recent">Recent Searches</string>
     <string name="search_clear">Clear</string>
     <string name="search_remove">Remove</string>
+    <string name="search_recommendations">Recommendations</string>
 
     <string name="main_nav_feed">Feed</string>
     <string name="main_nav_fave">Fave</string>

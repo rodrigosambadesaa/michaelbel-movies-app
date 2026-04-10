@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,6 +32,7 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -41,14 +44,10 @@ import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.currentWindowDpSize
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
@@ -75,7 +74,6 @@ import androidx.savedstate.compose.serialization.serializers.SnapshotStateListSe
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.michaelbel.movies.common.platform.isDesktop
 import org.michaelbel.movies.fave.FaveScreen
 import org.michaelbel.movies.feed.FeedScreen
 import org.michaelbel.movies.main.event.MainEvent
@@ -89,11 +87,16 @@ import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.fadePredictiveTransitionSpec
 import org.michaelbel.movies.ui.fadeTransitionSpec
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.isNavigationBar
+import org.michaelbel.movies.ui.isNavigationRail
+import org.michaelbel.movies.ui.isWideNavigationRailCollapsed
+import org.michaelbel.movies.ui.isWideNavigationRailExpanded
 import org.michaelbel.movies.ui.modifierDisplayCutoutWindowInsets
 import org.michaelbel.movies.ui.navigation.AppRoute
 import org.michaelbel.movies.ui.navigation.FaveDestination
 import org.michaelbel.movies.ui.navigation.FeedDestination
 import org.michaelbel.movies.ui.navigation.SettingsDestination
+import org.michaelbel.movies.ui.navigationSuiteType
 import org.michaelbel.movies.ui.strings.MoviesStrings
 
 @Composable
@@ -177,15 +180,6 @@ private fun MainTabsScreenContent(
     val currentDestination = backStack.lastOrNull()
     val shouldShowNavigation = currentDestination != feedDestination || !isFeedSearchActive
 
-    val navigationSuiteType = when {
-        currentWindowDpSize().width >= 1200.dp -> NavigationSuiteType.WideNavigationRailExpanded // fixme
-        else -> NavigationSuiteScaffoldDefaults.navigationSuiteType(currentWindowAdaptiveInfo())
-    }
-    val isNavigationBar = navigationSuiteType == NavigationSuiteType.ShortNavigationBarCompact ||
-            navigationSuiteType == NavigationSuiteType.ShortNavigationBarMedium
-    val isWideNavigationRailCollapsed = navigationSuiteType == NavigationSuiteType.WideNavigationRailCollapsed
-    val isWideNavigationRailExpanded = navigationSuiteType == NavigationSuiteType.WideNavigationRailExpanded
-    val isNavigationRail = isWideNavigationRailCollapsed || isWideNavigationRailExpanded
     val navigationSuiteScaffoldState = rememberNavigationSuiteScaffoldState(
         initialValue = when {
             shouldShowNavigation -> NavigationSuiteScaffoldValue.Visible
@@ -223,7 +217,7 @@ private fun MainTabsScreenContent(
     }
 
     when {
-        isNavigationBar -> {
+        isNavigationBar ->
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {
@@ -241,11 +235,10 @@ private fun MainTabsScreenContent(
                         hostState = snackbarHostState
                     )
                 },
-                contentWindowInsets = WindowInsets(0, 0, 0, 0)
+                contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Horizontal)
             ) { innerPadding ->
                 navDisplay(Modifier.fillMaxSize())
             }
-        }
         isNavigationRail -> {
             val toggleButtonColors = ToggleButtonDefaults.toggleButtonColors()
             val navigationRailItemColors = NavigationRailItemDefaults.colors(
@@ -485,7 +478,7 @@ private fun MainTabsBottomBar(
                 start = 16.dp,
                 top = 8.dp,
                 end = 16.dp,
-                bottom = if (isDesktop) 16.dp else 0.dp
+                bottom = if (isNavigationRail) 16.dp else 0.dp
             )
             .navigationBarsPadding(),
         contentAlignment = Alignment.Center
@@ -509,7 +502,7 @@ private fun MainTabsBottomBar(
                         }
                     },
                     state = rememberTooltipState(),
-                    enableUserInput = currentDestination != feedDestination && !isDesktop
+                    enableUserInput = currentDestination != feedDestination && !isNavigationRail
                 ) {
                     ToggleButton(
                         checked = currentDestination == feedDestination,
@@ -523,7 +516,7 @@ private fun MainTabsBottomBar(
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                         )
 
-                        if (currentDestination == feedDestination || isDesktop) {
+                        if (currentDestination == feedDestination || isNavigationRail) {
                             Text(
                                 text = stringResource(MoviesStrings.main_nav_feed),
                                 style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
@@ -549,7 +542,7 @@ private fun MainTabsBottomBar(
                             }
                         },
                         state = rememberTooltipState(),
-                        enableUserInput = currentDestination != FaveDestination && !isDesktop
+                        enableUserInput = currentDestination != FaveDestination && !isNavigationRail
                     ) {
                         ToggleButton(
                             checked = currentDestination == FaveDestination,
@@ -563,7 +556,7 @@ private fun MainTabsBottomBar(
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
 
-                            if (currentDestination == FaveDestination || isDesktop) {
+                            if (currentDestination == FaveDestination || isNavigationRail) {
                                 Text(
                                     text = stringResource(MoviesStrings.main_nav_fave),
                                     style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
@@ -589,7 +582,7 @@ private fun MainTabsBottomBar(
                         }
                     },
                     state = rememberTooltipState(),
-                    enableUserInput = currentDestination != SettingsDestination && !isDesktop
+                    enableUserInput = currentDestination != SettingsDestination && !isNavigationRail
                 ) {
                     ToggleButton(
                         checked = currentDestination == SettingsDestination,
@@ -603,7 +596,7 @@ private fun MainTabsBottomBar(
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                         )
 
-                        if (currentDestination == SettingsDestination || isDesktop) {
+                        if (currentDestination == SettingsDestination || isNavigationRail) {
                             Text(
                                 text = stringResource(MoviesStrings.main_nav_settings),
                                 style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),

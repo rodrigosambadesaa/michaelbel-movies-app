@@ -8,8 +8,8 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -28,13 +28,13 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -50,15 +50,12 @@ import org.michaelbel.movies.details.model.DetailsModel
 import org.michaelbel.movies.details.preview.DetailsModelPreviewParameterProvider
 import org.michaelbel.movies.details.ui.DetailsContent
 import org.michaelbel.movies.details.ui.DetailsFailure
-import org.michaelbel.movies.details.ui.DetailsLoading
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.modifierDetailsContentWindowInsets
-import org.michaelbel.movies.ui.modifierDetailsTopAppBarWindowInsets
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.shareText
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -121,7 +118,6 @@ private fun DetailsScreenContent(
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
         topBar = {
             LargeTopAppBar(
-                modifier = modifierDetailsTopAppBarWindowInsets,
                 title = {
                     Text(
                         text = state.detailsState.toolbarTitle
@@ -214,8 +210,8 @@ private fun DetailsScreenContent(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent,
+                    containerColor = animateContainerColor.value,
+                    scrolledContainerColor = animateContainerColor.value,
                     titleContentColor = animateOnContainerColor.value,
                     actionIconContentColor = animateOnContainerColor.value,
                     navigationIconContentColor = animateOnContainerColor.value
@@ -227,25 +223,25 @@ private fun DetailsScreenContent(
     ) { innerPadding ->
         when (val detailsState = state.detailsState) {
             is ScreenState.Loading -> {
-                DetailsLoading(
-                    modifier = Modifier
-                        .padding(top = innerPadding.calculateTopPadding())
-                        .fillMaxSize(),
-                    additionalBottomContentPadding = innerPadding.calculateBottomPadding()
+                DetailsContent(
+                    movie = MoviePojo.Empty,
+                    placeholder = true,
+                    contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding().plus(16.dp),
+                        bottom = innerPadding.calculateBottomPadding()
+                    )
                 )
             }
             is ScreenState.Content<*> -> {
                 DetailsContent(
-                    modifier = Modifier
-                        .padding(top = innerPadding.calculateTopPadding())
-                        .fillMaxSize()
-                        .then(modifierDetailsContentWindowInsets),
-                    additionalBottomContentPadding = innerPadding.calculateBottomPadding(),
+                    contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding().plus(16.dp),
+                        bottom = innerPadding.calculateBottomPadding()
+                    ),
                     movie = detailsState.movie,
                     isDetailsGalleryFeatureEnabled = state.isDetailsGalleryFeatureEnabled,
                     onContainerColor = animateOnContainerColor.value,
                     onNavigateToGallery = { dispatch(DetailsIntent.GalleryClick) },
-                    placeholder = false,
                     shouldGenerateColors = shouldGenerateColors,
                     onGenerateColors = { movieId, containerColor, onContainerColor ->
                         dispatch(
@@ -263,9 +259,10 @@ private fun DetailsScreenContent(
             }
             is ScreenState.Failure -> {
                 DetailsFailure(
-                    modifier = Modifier
-                        .padding(top = innerPadding.calculateTopPadding())
-                        .fillMaxSize()
+                    contentPadding = PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = innerPadding.calculateBottomPadding()
+                    )
                 )
             }
         }

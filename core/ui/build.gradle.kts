@@ -35,7 +35,6 @@ kotlin {
             api(libs.bundles.jetbrains.compose.ui.common)
             api(libs.bundles.jetbrains.compose.ui.tooling.common)
             implementation(libs.bundles.jetbrains.compose.material.icons.common)
-            implementation(libs.androidx.paging.compose)
         }
         androidMain.dependencies {
             api(libs.bundles.core.splashscreen.android)
@@ -43,7 +42,6 @@ kotlin {
             api(libs.bundles.coil.android)
             api(libs.bundles.compose.android)
             api(libs.bundles.google.material.android)
-            implementation(libs.bundles.paging.android)
         }
         jvmMain.dependencies {
             api(compose.desktop.currentOs)

@@ -50,7 +50,7 @@ import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.icons.Adult
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.isPortrait
+import org.michaelbel.movies.ui.isNavigationBar
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
@@ -78,7 +78,7 @@ private fun AccountScreenContent(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = if (isPortrait) 16.dp else 64.dp)
+            .padding(horizontal = if (isNavigationBar) 16.dp else 64.dp)
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.primaryContainer,

@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,21 +39,19 @@ import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
-import org.michaelbel.movies.feed.ui.FeedEmpty
 import org.michaelbel.movies.feed.ui.FeedSearchBar
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.ui.compose.PlatformBackHandler
-import org.michaelbel.movies.ui.compose.page.PageContent
-import org.michaelbel.movies.ui.compose.page.PageFailure
-import org.michaelbel.movies.ui.compose.page.PageLoading
 import org.michaelbel.movies.ui.ObserveAsEvents
 import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.compose.PlatformBackHandler
+import org.michaelbel.movies.ui.compose.page.FeedEmpty
+import org.michaelbel.movies.ui.compose.page.PageContent
+import org.michaelbel.movies.ui.compose.page.PageFailure
+import org.michaelbel.movies.ui.compose.page.PageLoading
 import org.michaelbel.movies.ui.isFailure
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.isLoading
-import org.michaelbel.movies.ui.isPortrait
-import org.michaelbel.movies.ui.isRefreshLoading
-import org.michaelbel.movies.ui.isWideFoldableMode
 import org.michaelbel.movies.ui.refreshThrowable
 
 @Composable
@@ -71,8 +65,6 @@ actual fun FeedScreen(
     val searchPagingItems = viewModel.searchPagingDataFlow.collectAsLazyPagingItems()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val feedLazyListState = rememberLazyListState()
-    val feedLazyGridState = rememberLazyGridState()
     val feedLazyStaggeredGridState = rememberLazyStaggeredGridState()
 
     FeedScreenContent(
@@ -81,8 +73,6 @@ actual fun FeedScreen(
         pagingItems = pagingItems,
         searchPagingItems = searchPagingItems,
         snackbarHostState = snackbarHostState,
-        feedLazyListState = feedLazyListState,
-        feedLazyGridState = feedLazyGridState,
         feedLazyStaggeredGridState = feedLazyStaggeredGridState,
         initialSearchActive = initialSearchActive,
         onSearchActiveChange = onSearchActiveChange
@@ -94,8 +84,6 @@ actual fun FeedScreen(
     ) { event ->
         when (event) {
             is FeedEvent.ScrollToTop -> {
-                scope.launch { feedLazyListState.animateScrollToItem(0) }
-                scope.launch { feedLazyGridState.animateScrollToItem(0) }
                 scope.launch { feedLazyStaggeredGridState.animateScrollToItem(0) }
             }
             is FeedEvent.ShowSnackbar -> {
@@ -120,8 +108,6 @@ private fun FeedScreenContent(
     pagingItems: LazyPagingItems<MoviePojo>,
     searchPagingItems: LazyPagingItems<MoviePojo>,
     snackbarHostState: SnackbarHostState,
-    feedLazyListState: LazyListState,
-    feedLazyGridState: LazyGridState,
     feedLazyStaggeredGridState: LazyStaggeredGridState,
     initialSearchActive: Boolean,
     onSearchActiveChange: (Boolean) -> Unit
@@ -226,7 +212,7 @@ private fun FeedScreenContent(
                 },
                 state = state,
                 dispatch = dispatch,
-                isSearchRefreshLoading = searchPagingItems.isRefreshLoading,
+                isSearchRefreshLoading = searchPagingItems.isLoading,
                 isSearchFailure = isSearchFailure,
                 isSearchEmptyFailure = isSearchEmptyFailure,
                 onSearchRetryClick = searchPagingItems::retry,
@@ -236,11 +222,9 @@ private fun FeedScreenContent(
                         modifier = modifier
                     )
                 },
-                searchContent = { modifier, lazyListState, lazyGridState, lazyStaggeredGridState ->
+                searchContent = { modifier, lazyStaggeredGridState ->
                     PageContent(
                         feedView = state.feedView,
-                        lazyListState = lazyListState,
-                        lazyGridState = lazyGridState,
                         lazyStaggeredGridState = lazyStaggeredGridState,
                         pagingItems = searchPagingItems,
                         onMovieClick = { _, movieId ->
@@ -266,7 +250,7 @@ private fun FeedScreenContent(
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
         val layoutDirection = LocalLayoutDirection.current
-        val isGridLayout = state.feedView is FeedView.FeedGrid || (state.feedView is FeedView.FeedList && (!isPortrait || isWideFoldableMode))
+        val isGridLayout = state.feedView is FeedView.FeedGrid || (state.feedView is FeedView.FeedList && isNavigationRail)
         val feedContentPadding = PaddingValues(
             start = innerPadding.calculateStartPadding(layoutDirection),
             top = innerPadding.calculateTopPadding() + if (isGridLayout) 8.dp else 4.dp,
@@ -278,7 +262,7 @@ private fun FeedScreenContent(
             pagingItems.isLoading -> {
                 PageLoading(
                     feedView = state.feedView,
-                    paddingValues = feedContentPadding
+                    contentPadding = feedContentPadding
                 )
             }
             pagingItems.isFailure -> {
@@ -300,8 +284,6 @@ private fun FeedScreenContent(
             else -> {
                 PageContent(
                     feedView = state.feedView,
-                    lazyListState = feedLazyListState,
-                    lazyGridState = feedLazyGridState,
                     lazyStaggeredGridState = feedLazyStaggeredGridState,
                     pagingItems = pagingItems,
                     onMovieClick = { pagingKey, movieId -> dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId)) },

@@ -13,18 +13,10 @@ import android.speech.RecognizerIntent
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -34,8 +26,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
@@ -47,13 +37,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.ui.compose.movie.MovieColumn
-import org.michaelbel.movies.ui.compose.movie.MovieRow
+import org.michaelbel.movies.ui.entity.MovieCardStyle
 import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
-import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
-import org.michaelbel.movies.ui.placeholder.material3.fade
-import org.michaelbel.movies.ui.placeholder.placeholder
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.tile.MoviesTileService
 import kotlin.coroutines.CoroutineContext
@@ -66,18 +51,6 @@ actual val isDebug: Boolean
             .invoke(null) as? Application
         application?.applicationInfo?.flags?.and(ApplicationInfo.FLAG_DEBUGGABLE) != 0
     }.getOrDefault(false)
-
-actual val isPortrait: Boolean
-    @Composable get() {
-        val configuration = LocalConfiguration.current
-        return configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-    }
-
-actual val isWideFoldableMode: Boolean
-    @Composable get() {
-        val configuration = LocalConfiguration.current
-        return configuration.screenWidthDp >= 600
-    }
 
 actual fun statusBarStyle(detectDarkMode: Boolean): Any {
     return SystemBarStyle.auto(Color.Transparent.toArgb(), Color.Transparent.toArgb()) { detectDarkMode }
@@ -95,19 +68,7 @@ actual fun navigationBarStyle(detectDarkMode: Boolean): Any {
 }
 
 actual val displayCutoutWindowInsets: WindowInsets
-    @Composable get() = if (isPortrait) WindowInsets(0, 0, 0, 0) else WindowInsets.displayCutout
-
-actual val settingsTopAppBarWindowInsets: WindowInsets
-    @Composable get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-
-actual val settingsContentWindowInsets: WindowInsets
-    get() = WindowInsets(0, 0, 0, 0)
-
-actual val modifierDetailsTopAppBarWindowInsets: Modifier
-    @Composable get() = Modifier.windowInsetsPadding(displayCutoutWindowInsets)
-
-actual val modifierDetailsContentWindowInsets: Modifier
-    @Composable get() = Modifier.windowInsetsPadding(displayCutoutWindowInsets)
+    @Composable get() = if (isNavigationBar) WindowInsets(0, 0, 0, 0) else WindowInsets.displayCutout
 
 actual val dialogUsePlatformDefaultWidth: Boolean
     @Composable get() {
@@ -118,89 +79,9 @@ actual val dialogUsePlatformDefaultWidth: Boolean
 actual val bottomSheetUsePlatformDefaultWidth: Boolean
     get() = false
 
-actual val movieColumnPosterModifier: Modifier = Modifier
-    .fillMaxWidth()
-    .height(220.dp)
-
 @Composable
-actual fun pageLoadingGridCells(): GridCells {
-    return GridCells.Fixed(2)
-}
-
-@Composable
-actual fun pageLoadingStaggeredGridCells(): StaggeredGridCells {
-    return StaggeredGridCells.Fixed(gridColumnsCount)
-}
-
-@Composable
-actual fun PageLoadingRowItem(
-    modifier: Modifier,
-    cardColor: Color
-) {
-    MovieRow(
-        movie = MoviePojo.Empty,
-        modifier = modifier
-            .height(280.dp)
-            .placeholder(
-                visible = true,
-                color = cardColor,
-                shape = MaterialTheme.shapes.large,
-                highlight = PlaceholderHighlight.fade()
-            )
-    )
-}
-
-@Composable
-actual fun PageLoadingColumnItem(
-    modifier: Modifier,
-    cardColor: Color
-) {
-    MovieColumn(
-        movie = MoviePojo.Empty,
-        modifier = modifier.placeholder(
-            visible = true,
-            color = cardColor,
-            shape = MaterialTheme.shapes.large,
-            highlight = PlaceholderHighlight.fade()
-        )
-    )
-}
-
-actual val pageContentTopPadding: Dp = 0.dp
-
-@Composable
-actual fun pageContentGridCells(): GridCells = GridCells.Fixed(2)
-
-@Composable
-actual fun pageContentStaggeredGridCells(): StaggeredGridCells = StaggeredGridCells.Fixed(
-    gridColumnsCount
-)
-
-@Composable
-actual fun PageContentColumnMovieItem(
-    movie: MoviePojo,
-    onMovieClick: (String, Int) -> Unit,
-    cardColor: Color
-) {
-    MovieRow(
-        movie = movie,
-        modifier = pageContentColumnModifier(cardColor)
-            .clickable { onMovieClick(movie.movieList, movie.movieId) }
-    )
-}
-
-@Composable
-actual fun PageContentGridMovieItem(
-    movie: MoviePojo,
-    onMovieClick: (String, Int) -> Unit,
-    cardColor: Color
-) {
-    MovieRow(
-        movie = movie,
-        maxLines = 1,
-        modifier = pageContentGridModifier(cardColor)
-            .clickable { onMovieClick(movie.movieList, movie.movieId) }
-    )
+actual fun pageStaggeredGridCells(style: MovieCardStyle): StaggeredGridCells {
+    return StaggeredGridCells.Fixed(2)
 }
 
 actual val modifierDisplayCutoutWindowInsets: Modifier

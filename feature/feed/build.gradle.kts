@@ -19,19 +19,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.ui)
             api(projects.core.interactor)
             api(projects.core.platformServices.interactor)
-        }
-        androidMain.dependencies {
-            implementation(libs.bundles.paging.android)
-        }
-        jvmMain.dependencies {
-            implementation(libs.bundles.paging.desktop)
-            implementation(libs.androidx.paging.compose)
-        }
-        iosMain.dependencies {
-            implementation(libs.androidx.paging.compose)
+            api(projects.core.ui)
         }
     }
 

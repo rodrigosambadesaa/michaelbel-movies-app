@@ -22,7 +22,6 @@ kotlin {
             api(projects.core.analytics)
             api(projects.core.repository)
             api(projects.core.ui)
-            api(libs.bundles.room.paging.common)
         }
     }
 

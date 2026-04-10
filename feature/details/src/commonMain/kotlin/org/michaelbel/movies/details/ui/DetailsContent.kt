@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
@@ -48,10 +47,9 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 @Composable
 fun DetailsContent(
     movie: MoviePojo,
-    onNavigateToGallery: () -> Unit,
+    onNavigateToGallery: () -> Unit = {},
     isDetailsGalleryFeatureEnabled: Boolean = false,
-    modifier: Modifier = Modifier,
-    additionalBottomContentPadding: Dp = 0.dp,
+    contentPadding: PaddingValues = PaddingValues(),
     onContainerColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     placeholder: Boolean = false,
     shouldGenerateColors: Boolean = true,
@@ -64,28 +62,15 @@ fun DetailsContent(
     var isNoImageVisible by remember { mutableStateOf(false) }
 
     LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            top = 16.dp,
-            end = 16.dp,
-            bottom = 16.dp + additionalBottomContentPadding
-        ),
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        val imageRequest: ImageRequest? = if (placeholder) {
-            null
-        } else {
-            ImageRequest.Builder(platformContext)
-                .data(movie.backdropPath.formatBackdropImage)
-                .crossfade(true)
-                .build()
-        }
-
         item {
             ElevatedCard(
                 shape = MaterialTheme.shapes.largeIncreased,
                 modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.largeIncreased)
                     .clickable(
@@ -93,6 +78,15 @@ fun DetailsContent(
                         onClick = onNavigateToGallery
                     )
             ) {
+                val imageRequest: ImageRequest? = if (placeholder) {
+                    null
+                } else {
+                    ImageRequest.Builder(platformContext)
+                        .data(movie.backdropPath.formatBackdropImage)
+                        .crossfade(true)
+                        .build()
+                }
+
                 AsyncImage(
                     model = imageRequest,
                     contentDescription = stringResource(MoviesContentDescription.MovieDetailsImage),
@@ -117,6 +111,7 @@ fun DetailsContent(
         item {
             SelectionContainer(
                 modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
                     .placeholder(
                         visible = placeholder,
@@ -145,9 +140,6 @@ private fun DetailsContentPreview(
 ) {
     MoviesTheme {
         DetailsContent(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer),
             movie = movie,
             onNavigateToGallery = {}
         )

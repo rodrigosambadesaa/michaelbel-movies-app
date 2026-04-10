@@ -21,6 +21,9 @@ val MoviePojo.movieDb: MovieDb
         onContainerColor = onContainerColor
     )
 
+val MoviePojo.isEmpty: Boolean
+    get() = this == MoviePojo.Empty
+
 val MoviePojo.isNotEmpty: Boolean
     get() = this != MoviePojo.Empty
 

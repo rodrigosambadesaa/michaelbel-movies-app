@@ -3,8 +3,7 @@
 package org.michaelbel.movies.ui.compose.page
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -21,10 +20,11 @@ import org.michaelbel.movies.ui.theme.MoviesTheme
 fun PagingLoadingBox(
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(80.dp),
+        contentAlignment = Alignment.Center
     ) {
         LoadingIndicator()
     }
@@ -36,8 +36,6 @@ private fun PagingLoadingBoxPreview() {
     MoviesTheme {
         PagingLoadingBox(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
                 .background(MaterialTheme.colorScheme.primaryContainer)
         )
     }

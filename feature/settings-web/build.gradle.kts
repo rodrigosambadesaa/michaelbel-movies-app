@@ -15,13 +15,13 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(projects.core.interactorWeb)
-            implementation(libs.koin.compose)
             implementation(libs.bundles.jetbrains.compose.animation.common)
             implementation(libs.bundles.jetbrains.compose.foundation.common)
             implementation(libs.bundles.jetbrains.compose.material.icons.common)
             implementation(libs.bundles.jetbrains.compose.material3.common)
             implementation(libs.bundles.jetbrains.compose.runtime.common)
             implementation(libs.bundles.jetbrains.compose.ui.common)
+            implementation(libs.bundles.koin.common)
         }
     }
 }

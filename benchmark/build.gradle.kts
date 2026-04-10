@@ -30,8 +30,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.bundles.test.espresso.android)
     implementation(libs.bundles.benchmark.macro.android)
+    implementation(libs.bundles.test.espresso.android)
     implementation(libs.bundles.test.ext.junit.android)
     implementation(libs.bundles.test.uiautomator.android)
 }

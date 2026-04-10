@@ -17,20 +17,14 @@ val String.formatPosterImage: String
 val String.formatBackdropImage: String
     get() = "$TMDB_IMAGE_BASE_URL/${BackdropSize.W1280.size}/$this"
 
+val String.formatMovieColumnPosterImage: String
+    get() = "$TMDB_IMAGE_BASE_URL/${PosterSize.W500.size}/$this"
+
+val String.formatMovieRowBackdropImage: String
+    get() = "$TMDB_IMAGE_BASE_URL/${BackdropSize.W780.size}/$this"
+
 val String.formatProfileImage: String
     get() = "$TMDB_IMAGE_BASE_URL/${ProfileSize.W185.size}/$this"
-
-@Suppress("unused")
-val String.original: String
-    get() {
-        return when {
-            this.isNotEmpty() -> {
-                val size: String = substring(indexOf("/p").plus(3), lastIndexOf("/"))
-                replace(size, BackdropSize.ORIGINAL.size)
-            }
-            else -> this
-        }
-    }
 
 val String.isNotOriginal: Boolean
     get() = !contains("original".toRegex())

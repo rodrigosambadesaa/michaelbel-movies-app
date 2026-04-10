@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 
-package org.michaelbel.movies.feed.ui
+package org.michaelbel.movies.ui.compose.page
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,7 +28,7 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
-fun SearchEmpty(
+fun FeedEmpty(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     LazyColumn(
@@ -43,7 +43,7 @@ fun SearchEmpty(
                 color = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
-                    imageVector = MoviesIcons.ManageSearch,
+                    imageVector = MoviesIcons.LocalMovies,
                     contentDescription = MoviesContentDescription.None,
                     modifier = Modifier.size(72.dp),
                     tint = MaterialTheme.colorScheme.onPrimary
@@ -52,7 +52,7 @@ fun SearchEmpty(
         }
         item {
             Text(
-                text = stringResource(MoviesStrings.search_results_empty),
+                text = stringResource(MoviesStrings.feed_error_empty),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -68,8 +68,8 @@ fun SearchEmpty(
 
 @Preview
 @Composable
-private fun SearchEmptyPreview() {
+private fun FeedEmptyPreview() {
     MoviesTheme {
-        SearchEmpty()
+        FeedEmpty()
     }
 }

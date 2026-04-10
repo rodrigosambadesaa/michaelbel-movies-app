@@ -19,8 +19,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.ui)
             api(projects.core.interactor)
+            api(projects.core.ui)
         }
     }
 

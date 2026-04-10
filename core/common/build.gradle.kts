@@ -29,6 +29,7 @@ kotlin {
             api(libs.bundles.kotlinx.datetime.common)
             api(libs.bundles.jetbrains.androidx.lifecycle.common)
             api(libs.bundles.jetbrains.compose.material3.common)
+            api(libs.bundles.paging.common)
             api(libs.bundles.koin.common)
             api(libs.bundles.napier.common)
         }
@@ -43,7 +44,6 @@ kotlin {
             api(libs.bundles.koin.android)
             implementation(libs.bundles.appcompat.android)
             implementation(libs.bundles.browser.android)
-            implementation(libs.bundles.paging.android)
         }
         jvmMain.dependencies {
             api(libs.bundles.kotlinx.coroutines.desktop)

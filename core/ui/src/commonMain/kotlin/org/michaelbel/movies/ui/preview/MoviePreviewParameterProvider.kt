@@ -28,6 +28,7 @@ class MoviePreviewParameterProvider: CollectionPreviewParameterProvider<MoviePoj
             voteAverage = 7.5F,
             containerColor = null,
             onContainerColor = null
-        )
+        ),
+        MoviePojo.Empty
     )
 )

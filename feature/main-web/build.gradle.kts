@@ -18,7 +18,7 @@ kotlin {
             implementation(projects.feature.detailsWeb)
             implementation(projects.feature.feedWeb)
             implementation(projects.feature.settingsWeb)
-            implementation(libs.koin.compose)
+            implementation(libs.bundles.koin.common)
             implementation(libs.bundles.jetbrains.compose.runtime.common)
         }
     }

@@ -26,6 +26,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.core.network)
+                api(libs.bundles.room.paging.common)
                 implementation(libs.bundles.datastore.common)
                 implementation(libs.bundles.room.common)
                 implementation(libs.bundles.sqlite.common)

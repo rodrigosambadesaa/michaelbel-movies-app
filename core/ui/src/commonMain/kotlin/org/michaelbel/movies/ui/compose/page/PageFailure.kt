@@ -2,16 +2,14 @@
 
 package org.michaelbel.movies.ui.compose.page
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -27,60 +25,73 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.compose.RotatingCookie12SidedBox
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.isWideFoldableMode
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.MoviesTheme
 
 @Composable
 fun PageFailure(
-    modifier: Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     isButtonVisible: Boolean = false,
+    onClick: () -> Unit = {},
     onButtonClick: () -> Unit = {}
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickableWithoutRipple(onClick),
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        RotatingCookie12SidedBox(
-            modifier = Modifier.size(164.dp),
-            color = MaterialTheme.colorScheme.error
-        ) {
-            Icon(
-                imageVector = MoviesIcons.Info,
-                contentDescription = MoviesContentDescription.None,
-                modifier = Modifier.size(72.dp),
-                tint = MaterialTheme.colorScheme.onPrimary
+        item {
+            RotatingCookie12SidedBox(
+                modifier = Modifier.size(164.dp),
+                color = MaterialTheme.colorScheme.error
+            ) {
+                Icon(
+                    imageVector = MoviesIcons.Info,
+                    contentDescription = MoviesContentDescription.None,
+                    modifier = Modifier.size(72.dp),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+        item {
+            Text(
+                text = stringResource(MoviesStrings.error_loading),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    textAlign = TextAlign.Center
+                )
             )
         }
-
-        Text(
-            text = stringResource(MoviesStrings.error_loading),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(start = 16.dp, top = 16.dp, end = 16.dp),
-            style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Center)
-        )
-
         if (isButtonVisible) {
-            Button(
-                onClick = onButtonClick,
-                shapes = ButtonDefaults.shapes(),
-                modifier = Modifier
-                    .then(if (isWideFoldableMode) Modifier.wrapContentWidth() else Modifier.fillMaxWidth())
-                    .padding(start = 16.dp, top = 16.dp, end = 16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceTint
-                ),
-                contentPadding = PaddingValues(horizontal = 24.dp)
-            ) {
-                Text(
-                    text = stringResource(MoviesStrings.error_check_internet_connectivity),
-                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
-                )
+            item {
+                Button(
+                    onClick = onButtonClick,
+                    shapes = ButtonDefaults.shapes(),
+                    modifier = Modifier
+                        .then(if (isNavigationRail) Modifier.wrapContentWidth() else Modifier.fillMaxWidth())
+                        .padding(horizontal = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceTint
+                    ),
+                    contentPadding = PaddingValues(horizontal = 24.dp)
+                ) {
+                    Text(
+                        text = stringResource(MoviesStrings.error_check_internet_connectivity),
+                        style = LocalTextStyle.current.copy(
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
             }
         }
     }
@@ -91,11 +102,7 @@ fun PageFailure(
 private fun PageFailurePreview() {
     MoviesTheme {
         PageFailure(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primaryContainer),
-            isButtonVisible = true,
-            onButtonClick = {}
+            isButtonVisible = true
         )
     }
 }

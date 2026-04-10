@@ -15,6 +15,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,23 +24,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -82,7 +76,6 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -130,8 +123,6 @@ fun FeedSearchBar(
     searchLoadingContent: @Composable (modifier: Modifier) -> Unit,
     searchContent: @Composable (
         modifier: Modifier,
-        lazyListState: LazyListState,
-        lazyGridState: LazyGridState,
         lazyStaggeredGridState: LazyStaggeredGridState
     ) -> Unit,
     modifier: Modifier = Modifier
@@ -142,20 +133,13 @@ fun FeedSearchBar(
         dividerColor = if (isSearchResultsVisible) Color.Transparent else MaterialTheme.colorScheme.onPrimaryContainer
     )
     val searchFocusRequester = remember { FocusRequester() }
-    val searchResultsLazyListState = rememberLazyListState()
-    val searchResultsLazyGridState = rememberLazyGridState()
     val searchResultsLazyStaggeredGridState = rememberLazyStaggeredGridState()
     val focusManager = LocalFocusManager.current
-    val layoutDirection = LocalLayoutDirection.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val textFieldState = rememberTextFieldState(initialText = query)
     val requestFocusAfterClose = remember { mutableStateOf(false) }
     val expandedHistoryMovieId = remember { mutableStateOf<MovieId?>(null) }
-    val safeDrawingHorizontalPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()
-    val safeDrawingStartPadding = safeDrawingHorizontalPadding.calculateStartPadding(layoutDirection)
-    val safeDrawingEndPadding = safeDrawingHorizontalPadding.calculateEndPadding(layoutDirection)
     val searchInputTextStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
-    val account = state.accountPojo
     val searchHistoryMovies = state.searchHistoryMovies
     val suggestions = state.suggestions
     val searchTrailingAction = when {
@@ -303,7 +287,7 @@ fun FeedSearchBar(
 
                         if (state.isFeedAuthIconFeatureEnabled && !active && !isSearchResultsVisible) {
                             when {
-                                account.isEmpty -> {
+                                state.accountPojo.isEmpty -> {
                                     TooltipBox(
                                         positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
                                             positioning = TooltipAnchorPosition.Below
@@ -336,8 +320,8 @@ fun FeedSearchBar(
                                         modifier = Modifier.pointerHoverIcon(PointerIcon.Hand)
                                     ) {
                                         AccountAvatar(
-                                            account = account,
-                                            fontSize = if (account.letters.length == 1) 16.sp else 13.sp,
+                                            account = state.accountPojo,
+                                            fontSize = if (state.accountPojo.letters.length == 1) 16.sp else 13.sp,
                                             modifier = Modifier.size(IconButtonDefaults.largeIconSize)
                                         )
                                     }
@@ -356,9 +340,7 @@ fun FeedSearchBar(
         colors = searchBarColors
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = safeDrawingStartPadding, end = safeDrawingEndPadding)
+            modifier = Modifier.fillMaxSize()
         ) {
             when {
                 isSearchResultsVisible -> {
@@ -372,17 +354,10 @@ fun FeedSearchBar(
                         }
                         isSearchFailure -> {
                             if (isSearchEmptyFailure) {
-                                SearchEmpty(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(searchContainerColor)
-                                )
+                                SearchEmpty()
                             } else {
                                 PageFailure(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(searchContainerColor)
-                                        .clickable { onSearchRetryClick() },
+                                    onClick = onSearchRetryClick,
                                     isButtonVisible = false,
                                     onButtonClick = {}
                                 )
@@ -393,8 +368,6 @@ fun FeedSearchBar(
                                 Modifier
                                     .fillMaxSize()
                                     .background(searchContainerColor),
-                                searchResultsLazyListState,
-                                searchResultsLazyGridState,
                                 searchResultsLazyStaggeredGridState
                             )
                         }
@@ -402,21 +375,21 @@ fun FeedSearchBar(
                 }
                 searchHistoryMovies.isNotEmpty() -> {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .imePadding(),
-                        contentPadding = PaddingValues(bottom = 136.dp)
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
                     ) {
                         item {
                             ListItem(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 8.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                                 headlineContent = {
                                     Text(
                                         text = stringResource(MoviesStrings.search_recent),
-                                        style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Start)
+                                        modifier = Modifier.padding(start = 8.dp),
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            textAlign = TextAlign.Start
+                                        )
                                     )
                                 },
                                 trailingContent = {
@@ -427,7 +400,9 @@ fun FeedSearchBar(
                                     ) {
                                         Text(
                                             text = stringResource(MoviesStrings.search_clear),
-                                            style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                                            style = LocalTextStyle.current.copy(
+                                                textAlign = TextAlign.Center
+                                            )
                                         )
                                     }
                                 }
@@ -542,64 +517,63 @@ fun FeedSearchBar(
                     }
                 }
                 suggestions.isNotEmpty() -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .imePadding(),
-                        contentAlignment = Alignment.Center
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
                     ) {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            itemsIndexed(
-                                items = suggestions
-                            ) { index, suggestion ->
-                                val itemShape = when {
-                                    suggestions.size == 1 -> middleLargeIncreasedListItemShape
-                                    index == 0 -> topListItemShape
-                                    index == suggestions.lastIndex -> bottomListItemShape
-                                    else -> middleExtraSmallListItemShape
-                                }
-
-                                Column(
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                ) {
-                                    ListItem(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clip(itemShape)
-                                            .clickable {
-                                                onInputText(suggestion.title)
-                                                clearInputFocus()
-                                            },
-                                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                                        headlineContent = {
-                                            Text(
-                                                text = suggestion.title,
-                                                maxLines = 1,
-                                                textAlign = TextAlign.Center,
-                                                overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
-                                        }
-                                    )
-
-                                    if (index != suggestions.lastIndex) {
-                                        Spacer(
-                                            modifier = Modifier.height(2.dp)
+                        item {
+                            ListItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ListItemDefaults.colors(
+                                    containerColor = Color.Transparent
+                                ),
+                                headlineContent = {
+                                    Text(
+                                        text = stringResource(MoviesStrings.search_recommendations),
+                                        modifier = Modifier.padding(start = 8.dp),
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            textAlign = TextAlign.Start
                                         )
-                                    }
+                                    )
                                 }
+                            )
+                        }
+                        itemsIndexed(
+                            items = suggestions
+                        ) { index, suggestion ->
+                            val itemShape = when {
+                                suggestions.size == 1 -> middleLargeIncreasedListItemShape
+                                index == 0 -> topListItemShape
+                                index == suggestions.lastIndex -> bottomListItemShape
+                                else -> middleExtraSmallListItemShape
                             }
+                            ListItem(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .fillMaxWidth()
+                                    .clip(itemShape)
+                                    .clickable {
+                                        onInputText(suggestion.title)
+                                        clearInputFocus()
+                                    },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                ),
+                                headlineContent = {
+                                    Text(
+                                        text = suggestion.title,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            )
                         }
                     }
                 }
                 else -> {
-                    SearchEmpty(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .imePadding()
-                    )
+                    SearchEmpty()
                 }
             }
         }

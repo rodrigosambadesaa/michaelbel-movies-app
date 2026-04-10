@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
@@ -21,14 +23,11 @@ plugins {
     alias(libs.plugins.palantir.git)
 }
 
-detekt {
-    config.setFrom("$projectDir/.github/detekt.yml")
-}
-
 subprojects {
     apply(plugin = "io.gitlab.arturbosch.detekt")
-    configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
-        config.setFrom("${rootProject.projectDir}/.github/detekt.yml")
+    extensions.configure<DetektExtension> {
+        config.setFrom(rootProject.file(".github/detekt.yml"))
+        buildUponDefaultConfig = true
     }
     dependencies {
         val catalog = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")

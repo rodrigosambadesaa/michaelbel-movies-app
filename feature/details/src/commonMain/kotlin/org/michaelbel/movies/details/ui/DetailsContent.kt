@@ -42,7 +42,7 @@ import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
 import org.michaelbel.movies.ui.placeholder.material3.fade
 import org.michaelbel.movies.ui.placeholder.placeholder
 import org.michaelbel.movies.ui.preview.MovieDbPreviewParameterProvider
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun DetailsContent(
@@ -138,7 +138,7 @@ fun DetailsContent(
 private fun DetailsContentPreview(
     @PreviewParameter(MovieDbPreviewParameterProvider::class) movie: MoviePojo
 ) {
-    MoviesTheme {
+    AppTheme {
         DetailsContent(
             movie = movie,
             onNavigateToGallery = {}

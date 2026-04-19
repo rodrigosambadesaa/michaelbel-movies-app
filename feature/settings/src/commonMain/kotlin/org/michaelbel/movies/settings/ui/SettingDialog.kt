@@ -3,13 +3,11 @@
 package org.michaelbel.movies.settings.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -38,10 +36,10 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.AppearancePreviewParameterProvider
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 import org.michaelbel.movies.ui.theme.bottomListItemShape
-import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
 import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
 import org.michaelbel.movies.ui.theme.topListItemShape
 
 @Composable
@@ -62,7 +60,9 @@ fun <T: SealedString> SettingsDialog(
             ) {
                 Text(
                     text = stringResource(MoviesStrings.settings_action_cancel),
-                    style = MaterialTheme.typography.titleMediumEmphasized.copy(textAlign = TextAlign.Center)
+                    style = MaterialTheme.typography.titleMediumEmphasized.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
         },
@@ -80,12 +80,11 @@ fun <T: SealedString> SettingsDialog(
             )
         },
         text = {
-            val scrollState = rememberScrollState()
-
-            Column(
-                modifier = Modifier.verticalScroll(scrollState)
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                items.forEachIndexed { index, item ->
+                itemsIndexed(items) { index, item ->
                     val itemShape = when {
                         items.size == 1 -> middleLargeIncreasedListItemShape
                         index == 0 -> topListItemShape
@@ -101,7 +100,6 @@ fun <T: SealedString> SettingsDialog(
                                 onItemSelect(item)
                                 onDismissRequest()
                             },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
                         headlineContent = {
                             Text(
                                 text = item.stringText,
@@ -114,17 +112,16 @@ fun <T: SealedString> SettingsDialog(
                                 onClick = null,
                                 colors = RadioButtonDefaults.colors(
                                     selectedColor = MaterialTheme.colorScheme.primary,
-                                    unselectedColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .6F)
+                                    unselectedColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                        alpha = .6F
+                                    )
                                 )
                             )
-                        }
-                    )
-
-                    if (index != items.lastIndex) {
-                        Spacer(
-                            modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.surface
                         )
-                    }
+                    )
                 }
             }
         },
@@ -140,7 +137,7 @@ fun <T: SealedString> SettingsDialog(
 private fun SettingDialogPreview(
     @PreviewParameter(AppearancePreviewParameterProvider::class) appLanguage: AppLanguage
 ) {
-    MoviesTheme {
+    AppTheme {
         SettingsDialog(
             icon = MoviesIcons.Language,
             title = stringResource(MoviesStrings.settings_language),

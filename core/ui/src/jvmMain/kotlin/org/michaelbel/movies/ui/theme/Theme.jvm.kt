@@ -17,7 +17,7 @@ import org.michaelbel.movies.ui.color.TonalPalettes.Companion.toTonalPalettes
 import org.michaelbel.movies.ui.theme.model.ComposeTheme
 
 @Composable
-actual fun MoviesTheme(
+actual fun AppTheme(
     themeData: ThemeData,
     theme: AppTheme,
     enableEdgeToEdge: (Any, Any) -> Unit,

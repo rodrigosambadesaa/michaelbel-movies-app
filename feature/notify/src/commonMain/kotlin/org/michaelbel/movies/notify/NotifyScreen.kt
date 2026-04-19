@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 
 package org.michaelbel.movies.notify
 
@@ -54,7 +57,7 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun NotifyScreen(
@@ -190,7 +193,7 @@ private fun NotifyScreenContent(
 @Preview
 @Composable
 private fun NotifyScreenContentPreview() {
-    MoviesTheme {
+    AppTheme {
         NotifyScreenContent(
             state = NotifyModel(isNotificationsFeatureEnabled = true),
             dispatch = {}

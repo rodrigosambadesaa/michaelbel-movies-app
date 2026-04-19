@@ -18,7 +18,9 @@ class BiometricInteractorImpl(
     override val isBiometricAvailable: Flow<Boolean>
         get() {
             val biometricManager = BiometricManager.from(context)
-            val authenticators = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+            val authenticators = biometricManager.canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            )
             return flowOf(authenticators == BiometricManager.BIOMETRIC_SUCCESS)
         }
 

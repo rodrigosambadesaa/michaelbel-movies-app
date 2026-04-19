@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
+@file:OptIn(
+    ExperimentalCoroutinesApi::class,
+    ExperimentalTime::class
+)
 
 package org.michaelbel.movies.repository.impl
 

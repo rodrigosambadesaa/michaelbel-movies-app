@@ -4,8 +4,6 @@ package org.michaelbel.movies.feed
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -42,16 +39,16 @@ import org.michaelbel.movies.feed.model.FeedModel
 import org.michaelbel.movies.feed.ui.FeedSearchBar
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.ObserveAsEvents
-import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.compose.PlatformBackHandler
 import org.michaelbel.movies.ui.compose.page.FeedEmpty
 import org.michaelbel.movies.ui.compose.page.PageContent
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
+import org.michaelbel.movies.ui.compose.plus
 import org.michaelbel.movies.ui.isFailure
-import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.isLoading
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.refreshThrowable
 
 @Composable
@@ -249,35 +246,27 @@ private fun FeedScreenContent(
         },
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) { innerPadding ->
-        val layoutDirection = LocalLayoutDirection.current
         val isGridLayout = state.feedView is FeedView.FeedGrid || (state.feedView is FeedView.FeedList && isNavigationRail)
-        val feedContentPadding = PaddingValues(
-            start = innerPadding.calculateStartPadding(layoutDirection),
-            top = innerPadding.calculateTopPadding() + if (isGridLayout) 8.dp else 4.dp,
-            end = innerPadding.calculateEndPadding(layoutDirection),
-            bottom = innerPadding.calculateBottomPadding() + contentBottomPadding
-        )
 
         when {
             pagingItems.isLoading -> {
                 PageLoading(
                     feedView = state.feedView,
-                    contentPadding = feedContentPadding
+                    contentPadding = innerPadding + PaddingValues(
+                        top = if (isGridLayout) 8.dp else 4.dp,
+                        bottom = contentBottomPadding
+                    )
                 )
             }
             pagingItems.isFailure -> {
                 if (pagingItems.refreshThrowable is PageEmptyException) {
                     FeedEmpty(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .fillMaxSize()
+                        contentPadding = innerPadding
                     )
                 } else {
                     PageFailure(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .fillMaxSize()
-                            .clickableWithoutRipple(pagingItems::retry)
+                        contentPadding = innerPadding,
+                        onClick = pagingItems::retry
                     )
                 }
             }
@@ -286,8 +275,13 @@ private fun FeedScreenContent(
                     feedView = state.feedView,
                     lazyStaggeredGridState = feedLazyStaggeredGridState,
                     pagingItems = pagingItems,
-                    onMovieClick = { pagingKey, movieId -> dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId)) },
-                    contentPadding = feedContentPadding,
+                    onMovieClick = { pagingKey, movieId ->
+                        dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId))
+                    },
+                    contentPadding = innerPadding + PaddingValues(
+                        top = if (isGridLayout) 8.dp else 4.dp,
+                        bottom = contentBottomPadding
+                    ),
                     modifier = Modifier
                 )
             }

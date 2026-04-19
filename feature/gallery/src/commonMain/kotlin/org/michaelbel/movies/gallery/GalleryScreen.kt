@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 
 package org.michaelbel.movies.gallery
 
@@ -89,7 +92,7 @@ import org.michaelbel.movies.ui.modifierDisplayCutoutWindowInsets
 import org.michaelbel.movies.ui.navigateToImageUri
 import org.michaelbel.movies.ui.navigation.GalleryDestination
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 import org.michaelbel.movies.work.WorkInfoState
 
 @Composable
@@ -350,7 +353,7 @@ private fun GalleryScreenContent(
 @Preview
 @Composable
 private fun GalleryScreenContentPreview() {
-    MoviesTheme {
+    AppTheme {
         GalleryScreenContent(
             state = GalleryModel(),
             dispatch = {},

@@ -25,7 +25,7 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.compose.RotatingCookie12SidedBox
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun SearchEmpty(
@@ -69,7 +69,7 @@ fun SearchEmpty(
 @Preview
 @Composable
 private fun SearchEmptyPreview() {
-    MoviesTheme {
+    AppTheme {
         SearchEmpty()
     }
 }

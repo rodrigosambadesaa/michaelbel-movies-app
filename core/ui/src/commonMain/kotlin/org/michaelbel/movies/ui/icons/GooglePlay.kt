@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 /**
  * Convert SVG to Compose using https://composables.com/svgtocompose
@@ -74,7 +74,7 @@ private var _googlePlay: ImageVector? = null
 @Preview
 @Composable
 private fun GooglePlayIconPreview() {
-	MoviesTheme {
+	AppTheme {
 		Icon(
 			imageVector = MoviesIcons.GooglePlay,
 			contentDescription = null,

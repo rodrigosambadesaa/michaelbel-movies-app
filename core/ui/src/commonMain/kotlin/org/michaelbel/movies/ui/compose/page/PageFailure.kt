@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,10 +26,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.compose.RotatingCookie12SidedBox
+import org.michaelbel.movies.ui.compose.plus
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun PageFailure(
@@ -43,7 +43,7 @@ fun PageFailure(
         modifier = Modifier
             .fillMaxSize()
             .clickableWithoutRipple(onClick),
-        contentPadding = contentPadding,
+        contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -63,9 +63,7 @@ fun PageFailure(
         item {
             Text(
                 text = stringResource(MoviesStrings.error_loading),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     textAlign = TextAlign.Center
@@ -77,9 +75,7 @@ fun PageFailure(
                 Button(
                     onClick = onButtonClick,
                     shapes = ButtonDefaults.shapes(),
-                    modifier = Modifier
-                        .then(if (isNavigationRail) Modifier.wrapContentWidth() else Modifier.fillMaxWidth())
-                        .padding(horizontal = 16.dp),
+                    modifier = Modifier.then(if (isNavigationRail) Modifier.wrapContentWidth() else Modifier.fillMaxWidth()),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceTint
                     ),
@@ -100,7 +96,7 @@ fun PageFailure(
 @Preview
 @Composable
 private fun PageFailurePreview() {
-    MoviesTheme {
+    AppTheme {
         PageFailure(
             isButtonVisible = true
         )

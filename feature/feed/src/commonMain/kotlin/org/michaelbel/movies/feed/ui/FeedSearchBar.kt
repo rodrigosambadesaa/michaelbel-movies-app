@@ -1,4 +1,9 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalComposeUiApi::class)
+@file:OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalComposeUiApi::class
+)
 
 package org.michaelbel.movies.feed.ui
 
@@ -91,6 +96,7 @@ import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Query
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.icons.MoviesIcons
@@ -285,7 +291,7 @@ fun FeedSearchBar(
                             }
                         }
 
-                        if (state.isFeedAuthIconFeatureEnabled && !active && !isSearchResultsVisible) {
+                        if (state.isFeedAuthIconFeatureEnabled && !active && !isSearchResultsVisible && !isNavigationRail) {
                             when {
                                 state.accountPojo.isEmpty -> {
                                     TooltipBox(
@@ -381,13 +387,11 @@ fun FeedSearchBar(
                         item {
                             ListItem(
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                                 headlineContent = {
                                     Text(
                                         text = stringResource(MoviesStrings.search_recent),
                                         modifier = Modifier.padding(start = 8.dp),
                                         style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             textAlign = TextAlign.Start
                                         )
                                     )
@@ -405,7 +409,11 @@ fun FeedSearchBar(
                                             )
                                         )
                                     }
-                                }
+                                },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = Color.Transparent,
+                                    headlineColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                )
                             )
                         }
                         itemsIndexed(
@@ -519,25 +527,25 @@ fun FeedSearchBar(
                 suggestions.isNotEmpty() -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(2.dp),
-                        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
+                        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues(),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         item {
                             ListItem(
                                 modifier = Modifier.fillMaxWidth(),
-                                colors = ListItemDefaults.colors(
-                                    containerColor = Color.Transparent
-                                ),
                                 headlineContent = {
                                     Text(
                                         text = stringResource(MoviesStrings.search_recommendations),
                                         modifier = Modifier.padding(start = 8.dp),
                                         style = MaterialTheme.typography.bodyMedium.copy(
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             textAlign = TextAlign.Start
                                         )
                                     )
-                                }
+                                },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = Color.Transparent,
+                                    headlineColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
                             )
                         }
                         itemsIndexed(
@@ -558,16 +566,16 @@ fun FeedSearchBar(
                                         onInputText(suggestion.title)
                                         clearInputFocus()
                                     },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                                ),
                                 headlineContent = {
                                     Text(
                                         text = suggestion.title,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
-                                }
+                                },
+                                colors = ListItemDefaults.colors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                )
                             )
                         }
                     }

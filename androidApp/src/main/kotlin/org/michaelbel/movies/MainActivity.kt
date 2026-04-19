@@ -24,7 +24,7 @@ import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_URI
 import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SEARCH
 import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SETTINGS
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 class MainActivity: FragmentActivity() {
 
@@ -57,7 +57,7 @@ class MainActivity: FragmentActivity() {
         setContent {
             val state by viewModel.stateFlow.collectAsStateCommon()
 
-            MoviesTheme(
+            AppTheme(
                 themeData = state.themeData,
                 enableEdgeToEdge = { statusBarStyle, navigationBarStyle ->
                     enableEdgeToEdge(statusBarStyle as SystemBarStyle, navigationBarStyle as SystemBarStyle)

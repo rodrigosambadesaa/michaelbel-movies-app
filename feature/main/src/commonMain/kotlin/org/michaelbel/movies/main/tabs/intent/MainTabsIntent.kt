@@ -8,6 +8,8 @@ sealed interface MainTabsIntent: Intent {
     data object FeedClick: MainTabsIntent
     data object FaveClick: MainTabsIntent
     data object SettingsClick: MainTabsIntent
+    data object AuthClick: MainTabsIntent
+    data object AccountClick: MainTabsIntent
     data class HandleRedirect(val requestToken: String?, val approved: Boolean?): MainTabsIntent
     data class AuthorizeAccount(val requestToken: String): MainTabsIntent
 }

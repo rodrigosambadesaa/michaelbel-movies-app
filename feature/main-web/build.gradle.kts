@@ -14,11 +14,16 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.core.common)
             implementation(projects.core.interactorWeb)
+            implementation(projects.core.uiWeb)
             implementation(projects.feature.detailsWeb)
             implementation(projects.feature.feedWeb)
             implementation(projects.feature.settingsWeb)
             implementation(libs.bundles.koin.common)
+            implementation(libs.bundles.jetbrains.compose.foundation.common)
+            implementation(libs.bundles.jetbrains.compose.material.icons.common)
+            implementation(libs.bundles.jetbrains.compose.material3.common)
             implementation(libs.bundles.jetbrains.compose.runtime.common)
         }
     }

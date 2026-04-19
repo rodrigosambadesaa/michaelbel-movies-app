@@ -27,7 +27,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
 
 @Composable
@@ -48,7 +48,7 @@ fun AboutDialog(
         resizable = false,
         icon = painterResource(MoviesIcons.LauncherRed)
     ) {
-        MoviesTheme(
+        AppTheme(
             themeData = themeData,
             theme = theme,
             enableEdgeToEdge = { _,_ -> }
@@ -57,7 +57,7 @@ fun AboutDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -88,7 +88,10 @@ fun AboutDialog(
 
                 Text(
                     text = "Movies",
-                    style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontWeight = FontWeight.Bold
+                    )
                 )
 
                 Spacer(
@@ -97,7 +100,9 @@ fun AboutDialog(
 
                 Text(
                     text = "Version $versionName ($versionCode)",
-                    style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
             }
         }

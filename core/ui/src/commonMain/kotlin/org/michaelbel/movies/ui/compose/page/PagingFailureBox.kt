@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun PagingFailureBox(
@@ -41,7 +41,7 @@ fun PagingFailureBox(
 @Preview
 @Composable
 private fun PagingFailureBoxPreview() {
-    MoviesTheme {
+    AppTheme {
         PagingFailureBox(
             onClick = {},
             modifier = Modifier

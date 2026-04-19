@@ -13,7 +13,9 @@ actual fun tmdbAuthRedirectUrl(): String = defaultTmdbAuthRedirectUrl
 
 @Composable
 actual fun navigateToUrl(url: String): () -> Unit {
-    val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+    val resultContract = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {}
     val toolbarColor = MaterialTheme.colorScheme.primary.toArgb()
     val colorSchemeParams = CustomTabColorSchemeParams.Builder()
         .setToolbarColor(toolbarColor)

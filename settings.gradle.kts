@@ -63,6 +63,7 @@ include(
     ":core:repository",
     ":core:repository-web",
     ":core:ui",
+    ":core:ui-web",
     ":core:widget",
     ":core:work",
 

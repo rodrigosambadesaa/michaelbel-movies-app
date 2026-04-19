@@ -38,17 +38,30 @@ kotlin {
 compose.desktop {
     application {
         mainClass = "org.michaelbel.movies.MainWindowKt"
+        javaHome = System.getenv("JAVA_HOME")
+            ?: "/Users/mihailbelyj/Library/Java/JavaVirtualMachines/corretto-17.0.15/Contents/Home"
         jvmArgs += listOf(
             "-Dapple.awt.application.name=Movies",
             "-Xdock:name=Movies",
             "-Dmovies.version=$desktopVersionName",
-            "-Dmovies.build=$gitCommitsCount"
+            "-Dmovies.build=$gitCommitsCount",
+            "--add-opens=jdk.unsupported/sun.misc=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.lang.reflect=ALL-UNNAMED",
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED"
         )
+
+        buildTypes.release.proguard {
+            isEnabled.set(false)
+        }
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Movies"
             packageVersion = desktopVersionName
+
+            modules("jdk.unsupported", "jdk.unsupported.desktop")
 
             val iconsRoot = project.file("desktop-icons")
             macOS {

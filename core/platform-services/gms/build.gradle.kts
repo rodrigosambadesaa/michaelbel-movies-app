@@ -9,6 +9,8 @@ kotlin {
         compileSdk = libs.versions.compile.sdk.get().toInt()
         minSdk = libs.versions.min.sdk.get().toInt()
         androidResources.enable = true
+
+        withHostTest {}
     }
 
     sourceSets {

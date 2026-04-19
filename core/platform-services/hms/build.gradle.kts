@@ -8,6 +8,8 @@ kotlin {
         namespace = "org.michaelbel.movies.platform.hms"
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()
+
+        withHostTest {}
     }
 
     sourceSets {

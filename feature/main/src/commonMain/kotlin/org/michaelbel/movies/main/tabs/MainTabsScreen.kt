@@ -1,55 +1,45 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3AdaptiveApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3AdaptiveApi::class
+)
 
 package org.michaelbel.movies.main.tabs
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.HorizontalFloatingToolbar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
-import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
-import androidx.compose.material3.TooltipAnchorPosition
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.WideNavigationRailDefaults
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldLayout
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldValue
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -62,6 +52,7 @@ import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -81,9 +72,13 @@ import org.michaelbel.movies.main.tabs.event.MainTabsEvent
 import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.main.tabs.intent.MainTabsIntent
 import org.michaelbel.movies.main.tabs.model.MainTabsModel
+import org.michaelbel.movies.main.tabs.ui.MainTabsBottomBar
+import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.settings.SettingsScreen
 import org.michaelbel.movies.ui.ObserveAsEvents
+import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.collectAsStateCommon
+import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.fadePredictiveTransitionSpec
 import org.michaelbel.movies.ui.fadeTransitionSpec
 import org.michaelbel.movies.ui.icons.MoviesIcons
@@ -253,59 +248,92 @@ private fun MainTabsScreenContent(
 
             when {
                 isWideNavigationRailCollapsed -> {
-                    NavigationSuiteScaffold(
-                        navigationItems = {
-                            NavigationRailItem(
-                                selected = currentDestination == feedDestination,
-                                onClick = { dispatch(MainTabsIntent.FeedClick) },
-                                icon = {
-                                    Icon(
-                                        imageVector = MoviesIcons.GridView,
-                                        contentDescription = stringResource(MoviesStrings.main_nav_feed)
+                    NavigationSuiteScaffoldLayout(
+                        navigationSuite = {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .width(80.dp)
+                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                                    .padding(bottom = 16.dp)
+                            ) {
+                                Column(
+                                    modifier = modifierDisplayCutoutWindowInsets
+                                        .weight(1F)
+                                        .fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    NavigationRailItem(
+                                        selected = currentDestination == feedDestination,
+                                        onClick = { dispatch(MainTabsIntent.FeedClick) },
+                                        icon = {
+                                            Icon(
+                                                imageVector = MoviesIcons.GridView,
+                                                contentDescription = stringResource(MoviesStrings.main_nav_feed)
+                                            )
+                                        },
+                                        colors = navigationRailItemColors
                                     )
-                                },
-                                modifier = modifierDisplayCutoutWindowInsets,
-                                colors = navigationRailItemColors
-                            )
 
-                            if (state.isFaveFeatureEnabled) {
+                                    if (state.isFaveFeatureEnabled) {
+                                        NavigationRailItem(
+                                            selected = currentDestination == FaveDestination,
+                                            onClick = { dispatch(MainTabsIntent.FaveClick) },
+                                            icon = {
+                                                Icon(
+                                                    imageVector = MoviesIcons.Favorite,
+                                                    contentDescription = stringResource(MoviesStrings.main_nav_fave)
+                                                )
+                                            },
+                                            colors = navigationRailItemColors
+                                        )
+                                    }
+
+                                    NavigationRailItem(
+                                        selected = currentDestination == SettingsDestination,
+                                        onClick = { dispatch(MainTabsIntent.SettingsClick) },
+                                        icon = {
+                                            Icon(
+                                                imageVector = MoviesIcons.Settings,
+                                                contentDescription = stringResource(MoviesStrings.main_nav_settings)
+                                            )
+                                        },
+                                        colors = navigationRailItemColors
+                                    )
+                                }
+
                                 NavigationRailItem(
-                                    selected = currentDestination == FaveDestination,
-                                    onClick = { dispatch(MainTabsIntent.FaveClick) },
-                                    icon = {
-                                        Icon(
-                                            imageVector = MoviesIcons.Favorite,
-                                            contentDescription = stringResource(MoviesStrings.main_nav_fave)
+                                    selected = false,
+                                    onClick = {
+                                        dispatch(
+                                            if (state.isAuthorized) MainTabsIntent.AccountClick
+                                            else MainTabsIntent.AuthClick
                                         )
                                     },
-                                    modifier = modifierDisplayCutoutWindowInsets,
+                                    icon = {
+                                        when {
+                                            state.isAuthorized -> {
+                                                AccountAvatar(
+                                                    account = state.accountPojo,
+                                                    fontSize = if (state.accountPojo.letters.length == 1) 16.sp else 13.sp,
+                                                    modifier = Modifier.size(IconButtonDefaults.largeIconSize)
+                                                )
+                                            }
+                                            else -> {
+                                                Icon(
+                                                    imageVector = MoviesIcons.AccountCircle,
+                                                    contentDescription = stringResource(MoviesContentDescription.AccountIcon)
+                                                )
+                                            }
+                                        }
+                                    },
                                     colors = navigationRailItemColors
                                 )
                             }
-
-                            NavigationRailItem(
-                                selected = currentDestination == SettingsDestination,
-                                onClick = { dispatch(MainTabsIntent.SettingsClick) },
-                                icon = {
-                                    Icon(
-                                        imageVector = MoviesIcons.Settings,
-                                        contentDescription = stringResource(MoviesStrings.main_nav_settings)
-                                    )
-                                },
-                                modifier = modifierDisplayCutoutWindowInsets,
-                                colors = navigationRailItemColors
-                            )
                         },
-                        modifier = Modifier.fillMaxSize(),
-                        navigationSuiteType = navigationSuiteType,
-                        navigationSuiteColors = NavigationSuiteDefaults.colors(
-                            wideNavigationRailColors = WideNavigationRailDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer
-                            ),
-                            navigationRailContainerColor = MaterialTheme.colorScheme.primaryContainer
-                        ),
-                        state = navigationSuiteScaffoldState,
-                        navigationItemVerticalArrangement = Arrangement.Center
+                        navigationSuiteType = NavigationSuiteType.WideNavigationRailCollapsed,
+                        state = navigationSuiteScaffoldState
                     ) {
                         navDisplay(Modifier.fillMaxSize())
                     }
@@ -313,136 +341,155 @@ private fun MainTabsScreenContent(
                 isWideNavigationRailExpanded -> {
                     NavigationSuiteScaffoldLayout(
                         navigationSuite = {
-                            Surface(
+                            Column(
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .width(192.dp),
-                                color = MaterialTheme.colorScheme.primaryContainer
+                                    .width(192.dp)
+                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                             ) {
+                                Spacer(
+                                    modifier = Modifier.weight(1F)
+                                )
+
                                 Column(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(horizontal = 12.dp),
-                                    verticalArrangement = Arrangement.spacedBy(
-                                        space = 8.dp,
-                                        alignment = Alignment.CenterVertically
-                                    )
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Surface(
-                                        onClick = { dispatch(MainTabsIntent.FeedClick) },
+                                    Row(
                                         modifier = modifierDisplayCutoutWindowInsets
                                             .fillMaxWidth()
-                                            .height(56.dp),
-                                        shape = RoundedCornerShape(16.dp),
-                                        color = when {
-                                            currentDestination == feedDestination -> toggleButtonColors.checkedContainerColor
-                                            else -> Color.Transparent
-                                        },
-                                        contentColor = when {
-                                            currentDestination == feedDestination -> toggleButtonColors.checkedContentColor
-                                            else -> toggleButtonColors.contentColor
-                                        }
+                                            .height(56.dp)
+                                            .clip(RoundedCornerShape(16.dp))
+                                            .background(if (currentDestination == feedDestination) toggleButtonColors.checkedContainerColor else Color.Transparent)
+                                            .clickable { dispatch(MainTabsIntent.FeedClick) }
+                                            .padding(horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(ToggleButtonDefaults.IconSpacing),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .padding(horizontal = 16.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                imageVector = MoviesIcons.GridView,
-                                                contentDescription = stringResource(MoviesStrings.main_nav_feed),
-                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                            )
+                                        Icon(
+                                            imageVector = MoviesIcons.GridView,
+                                            contentDescription = stringResource(MoviesStrings.main_nav_feed),
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                            tint = if (currentDestination == feedDestination) navigationRailItemColors.selectedIconColor else navigationRailItemColors.unselectedIconColor
+                                        )
 
-                                            Text(
-                                                text = stringResource(MoviesStrings.main_nav_feed),
-                                                style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
-                                                maxLines = 1,
-                                                softWrap = false,
-                                                overflow = TextOverflow.Clip,
-                                                modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
+                                        Text(
+                                            text = stringResource(MoviesStrings.main_nav_feed),
+                                            maxLines = 1,
+                                            softWrap = false,
+                                            overflow = TextOverflow.Clip,
+                                            style = MaterialTheme.typography.titleSmallEmphasized.copy(
+                                                color = if (currentDestination == feedDestination) navigationRailItemColors.selectedTextColor else navigationRailItemColors.unselectedTextColor,
+                                                letterSpacing = .4.sp
                                             )
-                                        }
+                                        )
                                     }
 
                                     if (state.isFaveFeatureEnabled) {
-                                        Surface(
-                                            onClick = { dispatch(MainTabsIntent.FaveClick) },
+                                        Row(
                                             modifier = modifierDisplayCutoutWindowInsets
                                                 .fillMaxWidth()
-                                                .height(56.dp),
-                                            shape = RoundedCornerShape(16.dp),
-                                            color = when {
-                                                currentDestination == FaveDestination -> toggleButtonColors.checkedContainerColor
-                                                else -> Color.Transparent
-                                            },
-                                            contentColor = when {
-                                                currentDestination == FaveDestination -> toggleButtonColors.checkedContentColor
-                                                else -> toggleButtonColors.contentColor
-                                            }
-                                        ) {
-                                            Row(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .padding(horizontal = 16.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Icon(
-                                                    imageVector = MoviesIcons.Favorite,
-                                                    contentDescription = stringResource(MoviesStrings.main_nav_fave),
-                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                                )
-
-                                                Text(
-                                                    text = stringResource(MoviesStrings.main_nav_fave),
-                                                    style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
-                                                    maxLines = 1,
-                                                    softWrap = false,
-                                                    overflow = TextOverflow.Clip,
-                                                    modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
-                                                )
-                                            }
-                                        }
-                                    }
-
-                                    Surface(
-                                        onClick = { dispatch(MainTabsIntent.SettingsClick) },
-                                        modifier = modifierDisplayCutoutWindowInsets
-                                            .fillMaxWidth()
-                                            .height(56.dp),
-                                        shape = RoundedCornerShape(16.dp),
-                                        color = when {
-                                            currentDestination == SettingsDestination -> toggleButtonColors.checkedContainerColor
-                                            else -> Color.Transparent
-                                        },
-                                        contentColor = when {
-                                            currentDestination == SettingsDestination -> toggleButtonColors.checkedContentColor
-                                            else -> toggleButtonColors.contentColor
-                                        }
-                                    ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxSize()
+                                                .height(56.dp)
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .background(if (currentDestination == FaveDestination) toggleButtonColors.checkedContainerColor else Color.Transparent)
+                                                .clickable { dispatch(MainTabsIntent.FaveClick) }
                                                 .padding(horizontal = 16.dp),
+                                            horizontalArrangement = Arrangement.spacedBy(ToggleButtonDefaults.IconSpacing),
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Icon(
-                                                imageVector = MoviesIcons.Settings,
-                                                contentDescription = stringResource(MoviesStrings.main_nav_settings),
-                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                                imageVector = MoviesIcons.Favorite,
+                                                contentDescription = stringResource(MoviesStrings.main_nav_fave),
+                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                tint = if (currentDestination == FaveDestination) navigationRailItemColors.selectedIconColor else navigationRailItemColors.unselectedIconColor
                                             )
 
                                             Text(
-                                                text = stringResource(MoviesStrings.main_nav_settings),
-                                                style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
+                                                text = stringResource(MoviesStrings.main_nav_fave),
                                                 maxLines = 1,
                                                 softWrap = false,
                                                 overflow = TextOverflow.Clip,
-                                                modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
+                                                style = MaterialTheme.typography.titleSmallEmphasized.copy(
+                                                    color = if (currentDestination == FaveDestination) navigationRailItemColors.selectedTextColor else navigationRailItemColors.unselectedTextColor,
+                                                    letterSpacing = .4.sp
+                                                )
                                             )
                                         }
                                     }
+
+                                    Row(
+                                        modifier = modifierDisplayCutoutWindowInsets
+                                            .fillMaxWidth()
+                                            .height(56.dp)
+                                            .clip(RoundedCornerShape(16.dp))
+                                            .background(if (currentDestination == SettingsDestination) toggleButtonColors.checkedContainerColor else Color.Transparent)
+                                            .clickable { dispatch(MainTabsIntent.SettingsClick) }
+                                            .padding(horizontal = 16.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(ToggleButtonDefaults.IconSpacing),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = MoviesIcons.Settings,
+                                            contentDescription = stringResource(MoviesStrings.main_nav_settings),
+                                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                            tint = if (currentDestination == SettingsDestination) navigationRailItemColors.selectedIconColor else navigationRailItemColors.unselectedIconColor
+                                        )
+
+                                        Text(
+                                            text = stringResource(MoviesStrings.main_nav_settings),
+                                            maxLines = 1,
+                                            softWrap = false,
+                                            overflow = TextOverflow.Clip,
+                                            style = MaterialTheme.typography.titleSmallEmphasized.copy(
+                                                color = if (currentDestination == SettingsDestination) navigationRailItemColors.selectedTextColor else navigationRailItemColors.unselectedTextColor,
+                                                letterSpacing = .4.sp
+                                            )
+                                        )
+                                    }
+                                }
+
+                                Spacer(
+                                    modifier = Modifier.weight(1F)
+                                )
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(56.dp)
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .clickable { dispatch(if (state.isAuthorized) MainTabsIntent.AccountClick else MainTabsIntent.AuthClick) }
+                                        .padding(horizontal = 16.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(ToggleButtonDefaults.IconSpacing),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    when {
+                                        state.isAuthorized -> {
+                                            AccountAvatar(
+                                                account = state.accountPojo,
+                                                fontSize = if (state.accountPojo.letters.length == 1) 16.sp else 13.sp,
+                                                modifier = Modifier.size(IconButtonDefaults.largeIconSize)
+                                            )
+                                        }
+                                        else -> {
+                                            Icon(
+                                                imageVector = MoviesIcons.AccountCircle,
+                                                contentDescription = stringResource(MoviesContentDescription.AccountIcon),
+                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                tint = navigationRailItemColors.unselectedIconColor
+                                            )
+                                        }
+                                    }
+
+                                    Text(
+                                        text = stringResource(if (state.isAuthorized) MoviesStrings.account_title else MoviesStrings.login),
+                                        maxLines = 1,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Clip,
+                                        style = MaterialTheme.typography.titleSmallEmphasized.copy(
+                                            color = navigationRailItemColors.unselectedTextColor,
+                                            letterSpacing = .4.sp
+                                        )
+                                    )
                                 }
                             }
                         },
@@ -461,247 +508,5 @@ private fun MainTabsScreenContent(
             shouldShowNavigation -> navigationSuiteScaffoldState.show()
             else -> navigationSuiteScaffoldState.hide()
         }
-    }
-}
-
-@Composable
-private fun MainTabsBottomBar(
-    state: MainTabsModel,
-    currentDestination: AppRoute?,
-    feedDestination: FeedDestination,
-    dispatch: (MainTabsIntent) -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                start = 16.dp,
-                top = 8.dp,
-                end = 16.dp,
-                bottom = if (isNavigationRail) 16.dp else 0.dp
-            )
-            .navigationBarsPadding(),
-        contentAlignment = Alignment.Center
-    ) {
-        HorizontalFloatingToolbar(
-            expanded = true
-        ) {
-            Row(
-                modifier = Modifier.animateContentSize(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                TooltipBox(
-                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                        positioning = TooltipAnchorPosition.Above
-                    ),
-                    tooltip = {
-                        PlainTooltip {
-                            Text(
-                                text = stringResource(MoviesStrings.main_nav_feed)
-                            )
-                        }
-                    },
-                    state = rememberTooltipState(),
-                    enableUserInput = currentDestination != feedDestination && !isNavigationRail
-                ) {
-                    ToggleButton(
-                        checked = currentDestination == feedDestination,
-                        onCheckedChange = { dispatch(MainTabsIntent.FeedClick) },
-                        shapes = ToggleButtonDefaults.shapes(CircleShape, CircleShape, CircleShape),
-                        modifier = Modifier.height(56.dp)
-                    ) {
-                        Icon(
-                            imageVector = MoviesIcons.GridView,
-                            contentDescription = stringResource(MoviesStrings.main_nav_feed),
-                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                        )
-
-                        if (currentDestination == feedDestination || isNavigationRail) {
-                            Text(
-                                text = stringResource(MoviesStrings.main_nav_feed),
-                                style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
-                                maxLines = 1,
-                                softWrap = false,
-                                overflow = TextOverflow.Clip,
-                                modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
-                            )
-                        }
-                    }
-                }
-
-                if (state.isFaveFeatureEnabled) {
-                    TooltipBox(
-                        positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                            positioning = TooltipAnchorPosition.Above
-                        ),
-                        tooltip = {
-                            PlainTooltip {
-                                Text(
-                                    text = stringResource(MoviesStrings.main_nav_fave)
-                                )
-                            }
-                        },
-                        state = rememberTooltipState(),
-                        enableUserInput = currentDestination != FaveDestination && !isNavigationRail
-                    ) {
-                        ToggleButton(
-                            checked = currentDestination == FaveDestination,
-                            onCheckedChange = { dispatch(MainTabsIntent.FaveClick) },
-                            shapes = ToggleButtonDefaults.shapes(CircleShape, CircleShape, CircleShape),
-                            modifier = Modifier.height(56.dp)
-                        ) {
-                            Icon(
-                                imageVector = MoviesIcons.Favorite,
-                                contentDescription = stringResource(MoviesStrings.main_nav_fave),
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                            )
-
-                            if (currentDestination == FaveDestination || isNavigationRail) {
-                                Text(
-                                    text = stringResource(MoviesStrings.main_nav_fave),
-                                    style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
-                                    maxLines = 1,
-                                    softWrap = false,
-                                    overflow = TextOverflow.Clip,
-                                    modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
-                                )
-                            }
-                        }
-                    }
-                }
-
-                TooltipBox(
-                    positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
-                        positioning = TooltipAnchorPosition.Above
-                    ),
-                    tooltip = {
-                        PlainTooltip {
-                            Text(
-                                text = stringResource(MoviesStrings.main_nav_settings)
-                            )
-                        }
-                    },
-                    state = rememberTooltipState(),
-                    enableUserInput = currentDestination != SettingsDestination && !isNavigationRail
-                ) {
-                    ToggleButton(
-                        checked = currentDestination == SettingsDestination,
-                        onCheckedChange = { dispatch(MainTabsIntent.SettingsClick) },
-                        shapes = ToggleButtonDefaults.shapes(CircleShape, CircleShape, CircleShape),
-                        modifier = Modifier.height(56.dp)
-                    ) {
-                        Icon(
-                            imageVector = MoviesIcons.Settings,
-                            contentDescription = stringResource(MoviesStrings.main_nav_settings),
-                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                        )
-
-                        if (currentDestination == SettingsDestination || isNavigationRail) {
-                            Text(
-                                text = stringResource(MoviesStrings.main_nav_settings),
-                                style = MaterialTheme.typography.titleSmallEmphasized.copy(letterSpacing = .4.sp),
-                                maxLines = 1,
-                                softWrap = false,
-                                overflow = TextOverflow.Clip,
-                                modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun MainTabsNavigationRail(
-    state: MainTabsModel,
-    currentDestination: AppRoute?,
-    feedDestination: FeedDestination,
-    dispatch: (MainTabsIntent) -> Unit
-) {
-    val toggleButtonColors = ToggleButtonDefaults.toggleButtonColors()
-    val navigationRailItemColors = NavigationRailItemDefaults.colors(
-        selectedIconColor = toggleButtonColors.checkedContentColor,
-        selectedTextColor = toggleButtonColors.checkedContentColor,
-        indicatorColor = toggleButtonColors.checkedContainerColor,
-        unselectedIconColor = toggleButtonColors.contentColor,
-        unselectedTextColor = toggleButtonColors.contentColor,
-        disabledIconColor = toggleButtonColors.disabledContentColor,
-        disabledTextColor = toggleButtonColors.disabledContentColor
-    )
-
-    NavigationRail(
-        modifier = Modifier
-            .fillMaxHeight(),
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        windowInsets = WindowInsets(0, 0, 0, 0)
-    ) {
-        Spacer(
-            modifier = Modifier.weight(1F)
-        )
-
-        NavigationRailItem(
-            selected = currentDestination == feedDestination,
-            onClick = { dispatch(MainTabsIntent.FeedClick) },
-            icon = {
-                Icon(
-                    imageVector = MoviesIcons.GridView,
-                    contentDescription = stringResource(MoviesStrings.main_nav_feed)
-                )
-            },
-            modifier = modifierDisplayCutoutWindowInsets,
-            label = {
-                Text(
-                    text = stringResource(MoviesStrings.main_nav_feed)
-                )
-            },
-            alwaysShowLabel = true,
-            colors = navigationRailItemColors
-        )
-
-        if (state.isFaveFeatureEnabled) {
-            NavigationRailItem(
-                selected = currentDestination == FaveDestination,
-                onClick = { dispatch(MainTabsIntent.FaveClick) },
-                icon = {
-                    Icon(
-                        imageVector = MoviesIcons.Favorite,
-                        contentDescription = stringResource(MoviesStrings.main_nav_fave)
-                    )
-                },
-                modifier = modifierDisplayCutoutWindowInsets,
-                label = {
-                    Text(
-                        text = stringResource(MoviesStrings.main_nav_fave)
-                    )
-                },
-                alwaysShowLabel = true,
-                colors = navigationRailItemColors
-            )
-        }
-
-        NavigationRailItem(
-            selected = currentDestination == SettingsDestination,
-            onClick = { dispatch(MainTabsIntent.SettingsClick) },
-            icon = {
-                Icon(
-                    imageVector = MoviesIcons.Settings,
-                    contentDescription = stringResource(MoviesStrings.main_nav_settings)
-                )
-            },
-            modifier = modifierDisplayCutoutWindowInsets,
-            label = {
-                Text(
-                    text = stringResource(MoviesStrings.main_nav_settings)
-                )
-            },
-            alwaysShowLabel = true,
-            colors = navigationRailItemColors
-        )
-
-        Spacer(
-            modifier = Modifier.weight(1F)
-        )
     }
 }

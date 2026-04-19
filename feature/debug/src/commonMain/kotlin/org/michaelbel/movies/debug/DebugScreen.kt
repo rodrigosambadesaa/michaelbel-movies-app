@@ -3,14 +3,14 @@
 package org.michaelbel.movies.debug
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledIconButton
@@ -65,147 +65,154 @@ fun DebugScreen(
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .navigationBarsPadding()
+                .navigationBarsPadding(),
+            contentPadding = PaddingValues(
+                start = 16.dp,
+                end = 16.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 8.dp, bottom = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.debug_title),
-                    style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer),
-                    modifier = Modifier.weight(1F)
-                )
-
-                FilledIconButton(
-                    onClick = { viewModel.dispatch(DebugIntent.DismissRequest) },
-                    shapes = IconButtonDefaults.shapes(
-                        shape = IconButtonDefaults.smallRoundShape,
-                        pressedShape = IconButtonDefaults.smallPressedShape
-                    ),
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .08F),
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                ) {
-                    Icon(
-                        imageVector = MoviesIcons.Close,
-                        contentDescription = stringResource(MoviesContentDescription.CloseIcon),
-                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            }
-
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .clip(topListItemShape)
-                    .clickable(onClick = navigateToAppSettings),
-                headlineContent = {
-                    Text(
-                        text = stringResource(Res.string.debug_app_settings),
-                        style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer)
-                    )
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = MoviesIcons.SettingsCinematic,
-                        contentDescription = null,
-                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                },
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-            )
-
-            Spacer(
-                modifier = Modifier.height(2.dp)
-            )
-
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .clip(middleExtraSmallListItemShape)
-                    .clickable(onClick = navigateToDeveloperSettings),
-                headlineContent = {
-                    Text(
-                        text = stringResource(Res.string.debug_developer_settings),
-                        style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer)
-                    )
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = MoviesIcons.SettingsAccountBox,
-                        contentDescription = null,
-                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                },
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-            )
-
-            Spacer(
-                modifier = Modifier.height(2.dp)
-            )
-
-            ListItem(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .clip(if (state.isFirebaseTokenFeatureEnabled) middleExtraSmallListItemShape else topListItemShape)
-                    .clickable(onClick = { viewModel.dispatch(DebugIntent.ResetNotificationExpireTime) }),
-                headlineContent = {
-                    Text(
-                        text = stringResource(Res.string.debug_notification_dialog_expire_reset),
-                        style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer)
-                    )
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = MoviesIcons.Notifications,
-                        contentDescription = null,
-                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                },
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
-            )
-
-            if (state.isFirebaseTokenFeatureEnabled) {
-                Spacer(
-                    modifier = Modifier.height(2.dp)
-                )
-
-                ListItem(
+            item {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .clip(bottomListItemShape)
-                        .clickable(onClick = { copyToClipboard(state.firebaseToken) }),
+                        .padding(bottom = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.debug_title),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        modifier = Modifier.weight(1F)
+                    )
+
+                    FilledIconButton(
+                        onClick = { viewModel.dispatch(DebugIntent.DismissRequest) },
+                        shapes = IconButtonDefaults.shapes(
+                            shape = IconButtonDefaults.smallRoundShape,
+                            pressedShape = IconButtonDefaults.smallPressedShape
+                        ),
+                        colors = IconButtonDefaults.filledIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                alpha = .08F
+                            ),
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Icon(
+                            imageVector = MoviesIcons.Close,
+                            contentDescription = stringResource(MoviesContentDescription.CloseIcon),
+                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+            }
+            item {
+                ListItem(
+                    modifier = Modifier
+                        .clip(topListItemShape)
+                        .clickable(onClick = navigateToAppSettings),
                     headlineContent = {
                         Text(
-                            text = stringResource(Res.string.debug_firebase_token_copy),
-                            style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onPrimaryContainer)
+                            text = stringResource(Res.string.debug_app_settings),
+                            style = MaterialTheme.typography.titleLarge
                         )
                     },
                     leadingContent = {
                         Icon(
-                            imageVector = MoviesIcons.Token,
+                            imageVector = MoviesIcons.SettingsCinematic,
                             contentDescription = null,
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
                             tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     },
-                    colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                        headlineColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
+            }
+            item {
+                ListItem(
+                    modifier = Modifier
+                        .clip(middleExtraSmallListItemShape)
+                        .clickable(onClick = navigateToDeveloperSettings),
+                    headlineContent = {
+                        Text(
+                            text = stringResource(Res.string.debug_developer_settings),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = MoviesIcons.SettingsAccountBox,
+                            contentDescription = null,
+                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                        headlineColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                )
+            }
+            item {
+                ListItem(
+                    modifier = Modifier
+                        .clip(if (state.isFirebaseTokenFeatureEnabled) middleExtraSmallListItemShape else topListItemShape)
+                        .clickable(onClick = { viewModel.dispatch(DebugIntent.ResetNotificationExpireTime) }),
+                    headlineContent = {
+                        Text(
+                            text = stringResource(Res.string.debug_notification_dialog_expire_reset),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    },
+                    leadingContent = {
+                        Icon(
+                            imageVector = MoviesIcons.Notifications,
+                            contentDescription = null,
+                            modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.inversePrimary,
+                        headlineColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                )
+            }
+            if (state.isFirebaseTokenFeatureEnabled) {
+                item {
+                    ListItem(
+                        modifier = Modifier
+                            .clip(bottomListItemShape)
+                            .clickable(onClick = { copyToClipboard(state.firebaseToken) }),
+                        headlineContent = {
+                            Text(
+                                text = stringResource(Res.string.debug_firebase_token_copy),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.Token,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary,
+                            headlineColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    )
+                }
             }
         }
     }

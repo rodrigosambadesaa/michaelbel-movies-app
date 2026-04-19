@@ -31,7 +31,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.preview.AccountPreviewParameterProvider
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun AccountAvatar(
@@ -62,7 +62,10 @@ fun AccountAvatar(
             ) {
                 Text(
                     text = account.letters.uppercase(),
-                    style = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = fontSize)
+                    style = LocalTextStyle.current.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontSize = fontSize
+                    )
                 )
             }
         }
@@ -74,7 +77,7 @@ fun AccountAvatar(
 private fun AccountAvatarPreview(
     @PreviewParameter(AccountPreviewParameterProvider::class) account: AccountPojo
 ) {
-    MoviesTheme {
+    AppTheme {
         Box(
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         ) {

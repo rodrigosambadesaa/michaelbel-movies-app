@@ -9,10 +9,9 @@ import android.os.Build
 
 private val Context.packageInfo: PackageInfo
     get() {
-        return if (Build.VERSION.SDK_INT >= 33) {
-            packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0L))
-        } else {
-            packageManager.getPackageInfo(packageName, 0)
+        return when {
+            Build.VERSION.SDK_INT >= 33 -> packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0L))
+            else -> packageManager.getPackageInfo(packageName, 0)
         }
     }
 

@@ -31,7 +31,7 @@ import org.michaelbel.movies.main.MainViewModel
 import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.collectAsStateCommon
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 import java.awt.Desktop
 import java.awt.Dimension
 import java.awt.EventQueue
@@ -101,7 +101,7 @@ private fun App() {
         }
 
         withViewModelStoreOwner {
-            MoviesTheme(
+            AppTheme(
                 themeData = ThemeData(
                     appTheme = state.themeData.appTheme,
                     dynamicColors = false,

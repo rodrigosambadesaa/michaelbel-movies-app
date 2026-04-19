@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 
 package org.michaelbel.movies.widget.configure
 
@@ -30,10 +33,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
-import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.displayCutoutWindowInsets
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.theme.AppTheme
 import org.michaelbel.movies.widget.R
 
 @Composable
@@ -45,7 +48,7 @@ fun AppWidgetConfigureActivityContent(
     val themeData by viewModel.themeData.collectAsStateCommon()
     val topAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    MoviesTheme(
+    AppTheme(
         themeData = themeData,
         enableEdgeToEdge = enableEdgeToEdge
     ) {

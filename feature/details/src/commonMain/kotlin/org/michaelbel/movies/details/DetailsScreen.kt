@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 
 package org.michaelbel.movies.details
 
@@ -59,7 +62,7 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.shareText
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun DetailsScreen(
@@ -274,7 +277,7 @@ private fun DetailsScreenContent(
 private fun DetailsScreenContentPreview(
     @PreviewParameter(DetailsModelPreviewParameterProvider::class) state: DetailsModel
 ) {
-    MoviesTheme {
+    AppTheme {
         DetailsScreenContent(
             state = state,
             dispatch = {},

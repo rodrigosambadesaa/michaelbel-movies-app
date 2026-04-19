@@ -15,6 +15,7 @@ import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.main.tabs.intent.MainTabsIntent
 import org.michaelbel.movies.main.tabs.model.MainTabsModel
 import org.michaelbel.movies.persistence.database.ktx.isNotEmpty
+import org.michaelbel.movies.ui.navigation.AccountDestination
 import org.michaelbel.movies.ui.navigation.AuthDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.ui.pending.PendingAction
@@ -53,7 +54,7 @@ class MainTabsViewModel(
                                 else -> Unit
                             }
                         }
-                        reduce { it.copy(isAuthorized = isAuthorized) }
+                        reduce { it.copy(isAuthorized = isAuthorized, accountPojo = accountPojo) }
                     }
                 }
             }
@@ -99,13 +100,19 @@ class MainTabsViewModel(
                 }
             }
             is MainTabsIntent.SettingsClick -> launch { MainTabsEventManager.push(MainEvent.OpenSettings) }
+            is MainTabsIntent.AuthClick -> launch { MainNavigator.forward(AuthDestination) }
+            is MainTabsIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
         }
     }
 
     override fun catch(throwable: Throwable) {
         when (throwable) {
-            is CreateSessionException -> launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
-            is AccountDetailsException -> launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+            is CreateSessionException -> {
+                launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+            }
+            is AccountDetailsException -> {
+                launch { push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_failure)) }
+            }
             else -> super.catch(throwable)
         }
     }

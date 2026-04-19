@@ -29,7 +29,7 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.IconAliasPreviewParameterProvider
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
 
 @Composable
@@ -99,7 +99,7 @@ fun RowScope.SettingAppIcon(
 private fun SettingAppIconPreview(
     @PreviewParameter(IconAliasPreviewParameterProvider::class) iconAlias: IconAlias
 ) {
-    MoviesTheme {
+    AppTheme {
         Row {
             SettingAppIcon(
                 iconAlias = iconAlias,

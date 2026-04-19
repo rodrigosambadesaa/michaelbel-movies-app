@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package org.michaelbel.movies.account
 
@@ -52,7 +55,7 @@ import org.michaelbel.movies.ui.icons.Adult
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationBar
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun AccountScreen(
@@ -233,7 +236,7 @@ private fun AccountScreenContent(
 @Preview
 @Composable
 private fun AccountScreenContentPreview() {
-    MoviesTheme {
+    AppTheme {
         AccountScreenContent(
             state = AccountModel(
                 accountPojo = AccountPojo(
@@ -254,7 +257,7 @@ private fun AccountScreenContentPreview() {
 @Preview
 @Composable
 private fun AccountScreenContentPreview2() {
-    MoviesTheme {
+    AppTheme {
         AccountScreenContent(
             state = AccountModel(
                 accountPojo = AccountPojo(

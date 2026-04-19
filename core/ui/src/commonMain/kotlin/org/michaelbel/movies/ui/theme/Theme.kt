@@ -5,7 +5,7 @@ import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.theme.AppTheme
 
 @Composable
-expect fun MoviesTheme(
+expect fun AppTheme(
     themeData: ThemeData = ThemeData.Default,
     theme: AppTheme = themeData.appTheme,
     enableEdgeToEdge: (Any, Any) -> Unit = { _,_ -> },

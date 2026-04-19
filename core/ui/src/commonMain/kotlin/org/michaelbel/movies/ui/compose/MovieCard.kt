@@ -32,7 +32,7 @@ import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
 import org.michaelbel.movies.ui.placeholder.material3.fade
 import org.michaelbel.movies.ui.placeholder.placeholder
 import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun MovieCard(
@@ -98,7 +98,7 @@ fun MovieCard(
 private fun MovieCardRowPreview(
     @PreviewParameter(MoviePreviewParameterProvider::class) movie: MoviePojo
 ) {
-    MoviesTheme {
+    AppTheme {
         MovieCard(
             movie = movie,
             style = MovieCardStyle.Row
@@ -111,7 +111,7 @@ private fun MovieCardRowPreview(
 private fun MovieCardColumnPreview(
     @PreviewParameter(MoviePreviewParameterProvider::class) movie: MoviePojo
 ) {
-    MoviesTheme {
+    AppTheme {
         MovieCard(
             movie = movie,
             style = MovieCardStyle.Column

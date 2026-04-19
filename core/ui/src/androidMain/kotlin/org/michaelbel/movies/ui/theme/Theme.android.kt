@@ -27,7 +27,7 @@ import org.michaelbel.movies.ui.theme.model.ComposeTheme
 import kotlin.math.min
 
 @Composable
-actual fun MoviesTheme(
+actual fun AppTheme(
     themeData: ThemeData,
     theme: AppTheme,
     enableEdgeToEdge: (statusBarStyle: Any, navigationBarStyle: Any) -> Unit,

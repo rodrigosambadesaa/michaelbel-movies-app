@@ -18,7 +18,7 @@ import org.michaelbel.movies.main.MainScreen
 import org.michaelbel.movies.main.MainViewModel
 import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.ui.collectAsStateCommon
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun IosMainContent() {
@@ -40,7 +40,7 @@ fun IosMainContent() {
         }
 
         withViewModelStoreOwner {
-            MoviesTheme(
+            AppTheme(
                 themeData = ThemeData(
                     appTheme = state.themeData.appTheme,
                     dynamicColors = false,

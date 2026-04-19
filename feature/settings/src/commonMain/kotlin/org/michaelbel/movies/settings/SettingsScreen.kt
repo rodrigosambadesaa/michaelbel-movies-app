@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class
+)
 
 package org.michaelbel.movies.settings
 
@@ -277,9 +280,12 @@ private fun SettingsScreenContent(
             modifier = Modifier.fillMaxSize(),
             state = lazyListState,
             contentPadding = PaddingValues(
+                start = 16.dp,
                 top = innerPadding.calculateTopPadding().plus(16.dp),
+                end = 16.dp,
                 bottom = innerPadding.calculateBottomPadding().plus(navigationBarPadding)
-            )
+            ),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             if (state.isLanguageFeatureEnabled) {
                 item {
@@ -298,10 +304,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(topListItemShape)
                             .clickable(onClick = { languageDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_language),
@@ -320,12 +324,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -346,10 +348,11 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(if (state.isLanguageFeatureEnabled) middleExtraSmallListItemShape else topListItemShape)
                             .clickable(onClick = { themeDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        ),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_theme),
@@ -371,11 +374,6 @@ private fun SettingsScreenContent(
                         }
                     )
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isGenderFeatureEnabled) {
                 item {
@@ -394,10 +392,11 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { genderDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        ),
                         headlineContent = {
                             Text(
                                 text = SettingsGenderText,
@@ -419,11 +418,6 @@ private fun SettingsScreenContent(
                         }
                     )
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isMovieListFeatureEnabled) {
                 item {
@@ -442,10 +436,11 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { movieListDialog = true }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        ),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_movie_list),
@@ -467,20 +462,16 @@ private fun SettingsScreenContent(
                         }
                     )
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isFeedViewFeatureEnabled) {
                 item {
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        ),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_appearance),
@@ -489,10 +480,10 @@ private fun SettingsScreenContent(
                         },
                         supportingContent = {
                             Row(
-                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(top = 4.dp)
+                                    .padding(top = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
                             ) {
                                 ToggleButton(
                                     checked = state.feedView == FeedView.FeedList,
@@ -550,18 +541,12 @@ private fun SettingsScreenContent(
                         }
                     )
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isDynamicColorsFeatureEnabled) {
                 item {
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(
                                 onClick = {
@@ -572,7 +557,9 @@ private fun SettingsScreenContent(
                                     }
                                 }
                             ),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        ),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_dynamic_colors),
@@ -609,18 +596,12 @@ private fun SettingsScreenContent(
                         }
                     )
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isPaletteColorsFeatureEnabled) {
                 item {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .background(MaterialTheme.colorScheme.inversePrimary)
                     ) {
@@ -636,7 +617,6 @@ private fun SettingsScreenContent(
                                         }
                                     }
                                 ),
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                             headlineContent = {
                                 Text(
                                     text = stringResource(MoviesStrings.settings_palette_colors),
@@ -670,7 +650,10 @@ private fun SettingsScreenContent(
                                         }
                                     } else null
                                 )
-                            }
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.inversePrimary
+                            ),
                         )
 
                         AnimatedVisibility(
@@ -689,18 +672,12 @@ private fun SettingsScreenContent(
                         }
                     }
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isAppIconFeatureEnabled) {
                 item {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .background(MaterialTheme.colorScheme.inversePrimary)
                     ) {
@@ -724,7 +701,9 @@ private fun SettingsScreenContent(
                                     modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                 )
                             },
-                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary)
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.inversePrimary
+                            )
                         )
 
                         SettingsAppIconsBox(
@@ -738,21 +717,14 @@ private fun SettingsScreenContent(
                         )
                     }
                 }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
-                    )
-                }
             }
             if (state.isAppOpenByDefaultFeatureEnabled) {
                 item {
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = onNavigateToAppOpenByDefaultSettings),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_open_by_default),
@@ -771,12 +743,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -785,10 +755,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestPostNotificationsPermission) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_post_notifications),
@@ -822,12 +790,10 @@ private fun SettingsScreenContent(
                                     }
                                 } else null
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -836,7 +802,6 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(
                                 onClick = {
@@ -846,7 +811,6 @@ private fun SettingsScreenContent(
                                     }
                                 }
                             ),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_do_not_disturb),
@@ -886,12 +850,10 @@ private fun SettingsScreenContent(
                                     }
                                 } else null
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -900,10 +862,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestIgnoreBatteryOptimizations) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_battery_optimization),
@@ -937,12 +897,10 @@ private fun SettingsScreenContent(
                                     }
                                 } else null
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -951,10 +909,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = rememberAndPinAppWidgetProvider()),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_app_widget),
@@ -973,12 +929,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -987,10 +941,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestTileService) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_tile),
@@ -1009,12 +961,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1023,10 +973,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.SetBiometricEnabled(!state.isBiometricEnabled)) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_lock_app),
@@ -1060,12 +1008,10 @@ private fun SettingsScreenContent(
                                     }
                                 } else null
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1074,10 +1020,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.SetScreenshotBlockEnabled(!state.isScreenshotBlockEnabled)) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_screenshots),
@@ -1111,12 +1055,10 @@ private fun SettingsScreenContent(
                                     }
                                 } else null
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1125,10 +1067,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable { dispatch(SettingsIntent.RequestEyeDropper) },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_eye_dropper),
@@ -1147,12 +1087,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1161,10 +1099,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(middleExtraSmallListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestGithub) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_github),
@@ -1183,12 +1119,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1197,10 +1131,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) middleExtraSmallListItemShape else bottomListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.RequestTelegram) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_telegram),
@@ -1219,14 +1151,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-            }
-            if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled || state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1235,10 +1163,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) middleExtraSmallListItemShape else bottomListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.ReviewClick) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_review),
@@ -1257,12 +1183,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1271,10 +1195,8 @@ private fun SettingsScreenContent(
                     ListItem(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
                             .clip(bottomListItemShape)
                             .clickable(onClick = { dispatch(SettingsIntent.UpdateClick) }),
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.inversePrimary),
                         headlineContent = {
                             Text(
                                 text = stringResource(MoviesStrings.settings_update),
@@ -1293,12 +1215,10 @@ private fun SettingsScreenContent(
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
-                        }
-                    )
-                }
-                item {
-                    Spacer(
-                        modifier = Modifier.height(2.dp)
+                        },
+                        colors = ListItemDefaults.colors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary
+                        )
                     )
                 }
             }
@@ -1306,9 +1226,9 @@ private fun SettingsScreenContent(
                 item {
                     Row(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 4.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
@@ -1320,27 +1240,34 @@ private fun SettingsScreenContent(
 
                         Text(
                             text = stringResource(MoviesStrings.settings_app_version_name, state.versionName),
-                            modifier = Modifier.padding(start = 4.dp),
-                            style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                            modifier = Modifier.padding(start = 2.dp),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
                         )
 
                         Text(
                             text = stringResource(MoviesStrings.settings_app_version_code, state.versionCode),
-                            modifier = Modifier.padding(start = 2.dp),
-                            style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.primary)
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         )
 
                         Text(
                             text = state.appVersionData.flavor,
                             modifier = Modifier.padding(start = 2.dp),
-                            style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
                         )
 
                         if (isDebug) {
                             Text(
                                 text = stringResource(MoviesStrings.settings_app_debug),
                                 modifier = Modifier.padding(start = 2.dp),
-                                style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
                             )
                         }
                     }

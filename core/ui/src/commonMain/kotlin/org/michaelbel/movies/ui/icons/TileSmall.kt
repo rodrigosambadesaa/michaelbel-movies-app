@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 val MoviesIcons.TileSmall: ImageVector
     get() {
@@ -48,7 +48,7 @@ private var _tileSmall: ImageVector? = null
 @Preview
 @Composable
 private fun TileSmallIconPreview() {
-    MoviesTheme {
+    AppTheme {
         Icon(
             imageVector = MoviesIcons.TileSmall,
             contentDescription = null,

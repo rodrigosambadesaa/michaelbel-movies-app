@@ -1,4 +1,8 @@
-@file:OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalLayoutApi::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package org.michaelbel.movies.auth
 
@@ -101,7 +105,7 @@ import org.michaelbel.movies.ui.compose.PasswordVisibilityIcon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationBar
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun AuthScreen(
@@ -440,7 +444,7 @@ private fun AuthScreenContent(
 private fun AuthScreenContentPreview(
     @PreviewParameter(AuthModelPreviewParameterProvider::class) state: AuthModel
 ) {
-    MoviesTheme {
+    AppTheme {
         AuthScreenContent(
             state = state,
             dispatch = {}

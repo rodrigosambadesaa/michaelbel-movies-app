@@ -1,0 +1,7 @@
+package org.michaelbel.movies.common.dispatchers
+
+import kotlinx.coroutines.CoroutineDispatcher
+
+expect val ioDispatcher: CoroutineDispatcher
+
+expect val uiDispatcher: CoroutineDispatcher

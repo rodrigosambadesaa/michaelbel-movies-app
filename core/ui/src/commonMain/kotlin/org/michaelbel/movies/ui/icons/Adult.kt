@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.MoviesTheme
+import org.michaelbel.movies.ui.theme.AppTheme
 
 val MoviesIcons.Adult: ImageVector
     get() {
@@ -97,7 +97,7 @@ private var _adult: ImageVector? = null
 @Preview
 @Composable
 private fun AdultIconPreview() {
-    MoviesTheme {
+    AppTheme {
         Icon(
             imageVector = MoviesIcons.Adult,
             contentDescription = null,

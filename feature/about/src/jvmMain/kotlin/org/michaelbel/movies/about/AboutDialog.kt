@@ -28,7 +28,7 @@ import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.theme.AppTheme
-import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedShape
 
 @Composable
 fun AboutDialog(
@@ -61,7 +61,7 @@ fun AboutDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                val listItemShape = middleLargeIncreasedListItemShape
+                val listItemShape = middleLargeIncreasedShape
 
                 Surface(
                     shape = listItemShape,

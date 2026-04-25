@@ -2,7 +2,6 @@
 
 package org.michaelbel.movies.settings.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -13,21 +12,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.interactor.entity.AppLanguage
@@ -37,10 +34,6 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.AppearancePreviewParameterProvider
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.AppTheme
-import org.michaelbel.movies.ui.theme.bottomListItemShape
-import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
-import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
-import org.michaelbel.movies.ui.theme.topListItemShape
 
 @Composable
 fun <T: SealedString> SettingsDialog(
@@ -82,30 +75,18 @@ fun <T: SealedString> SettingsDialog(
         text = {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
             ) {
                 itemsIndexed(items) { index, item ->
-                    val itemShape = when {
-                        items.size == 1 -> middleLargeIncreasedListItemShape
-                        index == 0 -> topListItemShape
-                        index == items.lastIndex -> bottomListItemShape
-                        else -> middleExtraSmallListItemShape
-                    }
-
-                    ListItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(itemShape)
-                            .clickable {
-                                onItemSelect(item)
-                                onDismissRequest()
-                            },
-                        headlineContent = {
-                            Text(
-                                text = item.stringText,
-                                style = MaterialTheme.typography.titleMediumEmphasized
-                            )
+                    SegmentedListItem(
+                        onClick = {
+                            onItemSelect(item)
+                            onDismissRequest()
                         },
+                        shapes = ListItemDefaults.segmentedShapes(
+                            index = index,
+                            count = items.size
+                        ),
                         leadingContent = {
                             RadioButton(
                                 selected = currentItem == item,
@@ -118,10 +99,16 @@ fun <T: SealedString> SettingsDialog(
                                 )
                             )
                         },
-                        colors = ListItemDefaults.colors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                        colors = ListItemDefaults.segmentedColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
                         )
-                    )
+                    ) {
+                        Text(
+                            text = item.stringText,
+                            style = MaterialTheme.typography.titleMediumEmphasized
+                        )
+                    }
                 }
             }
         },

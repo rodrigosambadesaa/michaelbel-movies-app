@@ -55,6 +55,8 @@ actual val modifierDisplayCutoutWindowInsets: Modifier
 actual val SettingsGenderText: String
     @Composable get() = stringResource(MoviesStrings.settings_gender)
 
+actual val SettingsListItemCount: Int = 6
+
 @Composable
 actual fun rememberSpeechRecognitionLauncher(onInputText: (String) -> Unit): () -> Unit = {}
 
@@ -107,7 +109,3 @@ actual fun <T> StateFlow<T>.collectAsStateCommon(
     minActiveState: Lifecycle.State,
     context: CoroutineContext
 ): State<T> = collectAsState()
-
-actual fun Modifier.onSecondaryClick(
-    onClick: () -> Unit
-): Modifier = this

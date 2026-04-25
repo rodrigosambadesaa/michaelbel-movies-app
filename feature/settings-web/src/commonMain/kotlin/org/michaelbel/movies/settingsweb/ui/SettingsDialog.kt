@@ -2,7 +2,6 @@
 
 package org.michaelbel.movies.settingsweb.ui
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -13,19 +12,17 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.settingsweb.ktx.stringText
 
@@ -69,29 +66,18 @@ fun <T: SealedString> SettingsDialog(
         text = {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
             ) {
                 itemsIndexed(items) { index, item ->
-                    ListItem(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(
-                                settingsListItemShape(
-                                    isFirst = index == 0,
-                                    isLast = index == items.lastIndex
-                                )
-                            )
-                            .clickable {
-                                onItemSelect(item)
-                                onDismissRequest()
-                            },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface),
-                        headlineContent = {
-                            Text(
-                                text = item.stringText,
-                                style = MaterialTheme.typography.titleMediumEmphasized
-                            )
+                    SegmentedListItem(
+                        onClick = {
+                            onItemSelect(item)
+                            onDismissRequest()
                         },
+                        shapes = ListItemDefaults.segmentedShapes(
+                            index = index,
+                            count = items.size
+                        ),
                         leadingContent = {
                             RadioButton(
                                 selected = currentItem == item,
@@ -103,8 +89,17 @@ fun <T: SealedString> SettingsDialog(
                                     )
                                 )
                             )
-                        }
-                    )
+                        },
+                        colors = ListItemDefaults.segmentedColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        )
+                    ) {
+                        Text(
+                            text = item.stringText,
+                            style = MaterialTheme.typography.titleMediumEmphasized
+                        )
+                    }
                 }
             }
         },

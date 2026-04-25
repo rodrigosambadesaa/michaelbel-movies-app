@@ -30,7 +30,7 @@ import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.IconAliasPreviewParameterProvider
 import org.michaelbel.movies.ui.theme.AppTheme
-import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedShape
 
 @Composable
 fun RowScope.SettingAppIcon(
@@ -51,7 +51,7 @@ fun RowScope.SettingAppIcon(
     Box(
         modifier = modifier
             .requiredSize(80.dp)
-            .clip(middleLargeIncreasedListItemShape)
+            .clip(middleLargeIncreasedShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable { onClick(iconAlias) }
     ) {

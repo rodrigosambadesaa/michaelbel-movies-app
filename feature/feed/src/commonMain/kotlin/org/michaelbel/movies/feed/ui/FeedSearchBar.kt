@@ -1,5 +1,4 @@
 @file:OptIn(
-    ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class,
     ExperimentalComposeUiApi::class
@@ -15,23 +14,17 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.minus
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -58,6 +51,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TooltipAnchorPosition
@@ -72,7 +66,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -96,17 +89,13 @@ import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Query
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
-import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.onSecondaryClick
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.rememberSpeechRecognitionLauncher
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.bottomListItemShape
-import org.michaelbel.movies.ui.theme.middleExtraSmallListItemShape
-import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
-import org.michaelbel.movies.ui.theme.topListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedShape
 
 @Composable
 fun FeedSearchBar(
@@ -136,7 +125,10 @@ fun FeedSearchBar(
     val searchContainerColor = MaterialTheme.colorScheme.inversePrimary
     val searchBarColors = SearchBarDefaults.colors(
         containerColor = searchContainerColor,
-        dividerColor = if (isSearchResultsVisible) Color.Transparent else MaterialTheme.colorScheme.onPrimaryContainer
+        dividerColor = when {
+            isSearchResultsVisible -> Color.Transparent
+            else -> MaterialTheme.colorScheme.onPrimaryContainer
+        }
     )
     val searchFocusRequester = remember { FocusRequester() }
     val searchResultsLazyStaggeredGridState = rememberLazyStaggeredGridState()
@@ -359,14 +351,15 @@ fun FeedSearchBar(
                             )
                         }
                         isSearchFailure -> {
-                            if (isSearchEmptyFailure) {
-                                SearchEmpty()
-                            } else {
-                                PageFailure(
-                                    onClick = onSearchRetryClick,
-                                    isButtonVisible = false,
-                                    onButtonClick = {}
-                                )
+                            when {
+                                isSearchEmptyFailure -> SearchEmpty()
+                                else -> {
+                                    PageFailure(
+                                        onClick = onSearchRetryClick,
+                                        isButtonVisible = false,
+                                        onButtonClick = {}
+                                    )
+                                }
                             }
                         }
                         else -> {
@@ -382,11 +375,11 @@ fun FeedSearchBar(
                 searchHistoryMovies.isNotEmpty() -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
                         contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
                     ) {
                         item {
                             ListItem(
-                                modifier = Modifier.fillMaxWidth(),
                                 headlineContent = {
                                     Text(
                                         text = stringResource(MoviesStrings.search_recent),
@@ -420,105 +413,95 @@ fun FeedSearchBar(
                             items = searchHistoryMovies,
                             key = { index, movie -> movie.movieId }
                         ) { index, movie ->
-                            val itemShape = when {
-                                searchHistoryMovies.size == 1 -> middleLargeIncreasedListItemShape
-                                index == 0 -> topListItemShape
-                                index == searchHistoryMovies.lastIndex -> bottomListItemShape
-                                else -> middleExtraSmallListItemShape
-                            }
+                            val itemShapes = ListItemDefaults.segmentedShapes(
+                                index = index,
+                                count = searchHistoryMovies.size
+                            )
 
-                            Column {
-                                SwipeToDismiss(
-                                    item = movie,
-                                    onDelete = { dispatch(FeedIntent.RemoveMovieFromHistoryClick(it.movieId)) },
-                                    modifier = Modifier.padding(horizontal = 16.dp),
-                                    shape = itemShape
-                                ) { historyMovie, _ ->
-                                    Box {
-                                        ListItem(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .clip(itemShape)
-                                                .combinedClickable(
-                                                    onClick = {
-                                                        expandedHistoryMovieId.value = null
-                                                        onInputText(historyMovie.title)
-                                                        clearInputFocus()
-                                                    },
-                                                    onLongClick = { expandedHistoryMovieId.value = historyMovie.movieId }
-                                                )
-                                                .onSecondaryClick { expandedHistoryMovieId.value = historyMovie.movieId },
-                                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-                                            headlineContent = {
-                                                Text(
-                                                    text = historyMovie.title,
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis
-                                                )
-                                            },
-                                            leadingContent = {
-                                                Icon(
-                                                    imageVector = MoviesIcons.History,
-                                                    contentDescription = null,
-                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                                )
-                                            },
-                                            trailingContent = {
-                                                IconButton(
-                                                    modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
-                                                    onClick = {
-                                                        expandedHistoryMovieId.value = null
-                                                        dispatch(FeedIntent.RemoveMovieFromHistoryClick(historyMovie.movieId))
-                                                    }
-                                                ) {
-                                                    Icon(
-                                                        imageVector = MoviesIcons.Close,
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                                    )
-                                                }
-                                            }
-                                        )
-
-                                        DropdownMenu(
-                                            expanded = expandedHistoryMovieId.value == historyMovie.movieId,
-                                            onDismissRequest = { expandedHistoryMovieId.value = null },
-                                            modifier = Modifier.widthIn(min = 180.dp),
-                                            shape = middleLargeIncreasedListItemShape,
-                                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                                            tonalElevation = 2.dp,
-                                            shadowElevation = 4.dp
-                                        ) {
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        text = stringResource(MoviesStrings.search_remove),
-                                                        color = MaterialTheme.colorScheme.onErrorContainer
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Icon(
-                                                        imageVector = MoviesIcons.Delete,
-                                                        contentDescription = null,
-                                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                                        tint = MaterialTheme.colorScheme.onErrorContainer
-                                                    )
-                                                },
-                                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                            SwipeToDismiss(
+                                item = movie,
+                                onDelete = { dispatch(FeedIntent.RemoveMovieFromHistoryClick(it.movieId)) },
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                shape = itemShapes.shape
+                            ) { historyMovie, _ ->
+                                Box {
+                                    SegmentedListItem(
+                                        onClick = {
+                                            expandedHistoryMovieId.value = null
+                                            onInputText(historyMovie.title)
+                                            clearInputFocus()
+                                        },
+                                        shapes = itemShapes,
+                                        leadingContent = {
+                                            Icon(
+                                                imageVector = MoviesIcons.History,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                            )
+                                        },
+                                        trailingContent = {
+                                            IconButton(
+                                                modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
                                                 onClick = {
                                                     expandedHistoryMovieId.value = null
                                                     dispatch(FeedIntent.RemoveMovieFromHistoryClick(historyMovie.movieId))
                                                 }
-                                            )
-                                        }
+                                            ) {
+                                                Icon(
+                                                    imageVector = MoviesIcons.Close,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                            }
+                                        },
+                                        onLongClick = { expandedHistoryMovieId.value = historyMovie.movieId },
+                                        colors = ListItemDefaults.segmentedColors(
+                                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            trailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                        ),
+                                        contentPadding = ListItemDefaults.ContentPadding - PaddingValues(end = 8.dp)
+                                    ) {
+                                        Text(
+                                            text = historyMovie.title,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
                                     }
-                                }
 
-                                if (index != searchHistoryMovies.lastIndex) {
-                                    Spacer(
-                                        modifier = Modifier.height(2.dp)
-                                    )
+                                    DropdownMenu(
+                                        expanded = expandedHistoryMovieId.value == historyMovie.movieId,
+                                        onDismissRequest = { expandedHistoryMovieId.value = null },
+                                        modifier = Modifier.widthIn(min = 180.dp),
+                                        shape = middleLargeIncreasedShape,
+                                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                                        tonalElevation = 2.dp,
+                                        shadowElevation = 4.dp
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = {
+                                                Text(
+                                                    text = stringResource(MoviesStrings.search_remove),
+                                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                                )
+                                            },
+                                            onClick = {
+                                                expandedHistoryMovieId.value = null
+                                                dispatch(FeedIntent.RemoveMovieFromHistoryClick(historyMovie.movieId))
+                                            },
+                                            leadingIcon = {
+                                                Icon(
+                                                    imageVector = MoviesIcons.Delete,
+                                                    contentDescription = null,
+                                                    modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                                                    tint = MaterialTheme.colorScheme.onErrorContainer
+                                                )
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -527,12 +510,11 @@ fun FeedSearchBar(
                 suggestions.isNotEmpty() -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues(),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
+                        contentPadding = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom).asPaddingValues()
                     ) {
                         item {
                             ListItem(
-                                modifier = Modifier.fillMaxWidth(),
                                 headlineContent = {
                                     Text(
                                         text = stringResource(MoviesStrings.search_suggestions),
@@ -551,38 +533,31 @@ fun FeedSearchBar(
                         itemsIndexed(
                             items = suggestions
                         ) { index, suggestion ->
-                            val itemShape = when {
-                                suggestions.size == 1 -> middleLargeIncreasedListItemShape
-                                index == 0 -> topListItemShape
-                                index == suggestions.lastIndex -> bottomListItemShape
-                                else -> middleExtraSmallListItemShape
-                            }
-                            ListItem(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .fillMaxWidth()
-                                    .clip(itemShape)
-                                    .clickable {
-                                        onInputText(suggestion.title)
-                                        clearInputFocus()
-                                    },
-                                headlineContent = {
-                                    Text(
-                                        text = suggestion.title,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
+                            SegmentedListItem(
+                                onClick = {
+                                    onInputText(suggestion.title)
+                                    clearInputFocus()
                                 },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                                shapes = ListItemDefaults.segmentedShapes(
+                                    index = index,
+                                    count = suggestions.size
+                                ),
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                colors = ListItemDefaults.segmentedColors(
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
-                            )
+                            ) {
+                                Text(
+                                    text = suggestion.title,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
                         }
                     }
                 }
-                else -> {
-                    SearchEmpty()
-                }
+                else -> SearchEmpty()
             }
         }
     }

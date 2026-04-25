@@ -24,7 +24,7 @@ import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.theme.a1
 import org.michaelbel.movies.ui.theme.a2
 import org.michaelbel.movies.ui.theme.a3
-import org.michaelbel.movies.ui.theme.middleLargeIncreasedListItemShape
+import org.michaelbel.movies.ui.theme.middleLargeIncreasedShape
 
 @Composable
 fun RowScope.SettingPaletteColor(
@@ -45,7 +45,7 @@ fun RowScope.SettingPaletteColor(
     Box(
         modifier = modifier
             .requiredSize(80.dp)
-            .clip(middleLargeIncreasedListItemShape)
+            .clip(middleLargeIncreasedShape)
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
             .clickable(onClick = onClick)
     ) {

@@ -10,9 +10,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.isSecondaryPressed
-import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -67,6 +64,8 @@ actual val modifierDisplayCutoutWindowInsets: Modifier
 actual val SettingsGenderText: String
     @Composable get() = stringResource(MoviesStrings.settings_gender)
 
+actual val SettingsListItemCount: Int = 6
+
 @Composable
 actual fun rememberSpeechRecognitionLauncher(onInputText: (String) -> Unit): () -> Unit = {}
 
@@ -119,11 +118,3 @@ actual fun <T> StateFlow<T>.collectAsStateCommon(
     minActiveState: Lifecycle.State,
     context: CoroutineContext
 ): State<T> = collectAsState()
-
-actual fun Modifier.onSecondaryClick(
-    onClick: () -> Unit
-): Modifier = onPointerEvent(PointerEventType.Press) { event ->
-    if (event.buttons.isSecondaryPressed) {
-        onClick()
-    }
-}

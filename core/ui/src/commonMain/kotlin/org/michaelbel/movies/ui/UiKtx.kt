@@ -26,6 +26,8 @@ expect val modifierDisplayCutoutWindowInsets: Modifier
 
 expect val SettingsGenderText: String
 
+expect val SettingsListItemCount: Int
+
 expect fun statusBarStyle(detectDarkMode: Boolean): Any
 
 @Composable
@@ -63,5 +65,3 @@ expect fun <T> StateFlow<T>.collectAsStateCommon(
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     context: CoroutineContext = EmptyCoroutineContext
 ): State<T>
-
-expect fun Modifier.onSecondaryClick(onClick: () -> Unit): Modifier

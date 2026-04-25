@@ -59,7 +59,7 @@ import movies.core.ui.generated.resources.retry
 import movies.core.ui.generated.resources.search_clear
 import movies.core.ui.generated.resources.search_history_empty
 import movies.core.ui.generated.resources.search_recent
-import movies.core.ui.generated.resources.search_recommendations
+import movies.core.ui.generated.resources.search_suggestions
 import movies.core.ui.generated.resources.search_remove
 import movies.core.ui.generated.resources.search_results_empty
 import movies.core.ui.generated.resources.search_title
@@ -216,7 +216,7 @@ object MoviesStrings {
     val search_recent = Res.string.search_recent
     val search_clear = Res.string.search_clear
     val search_remove = Res.string.search_remove
-    val search_recommendations = Res.string.search_recommendations
+    val search_suggestions = Res.string.search_suggestions
 
 
     val settings_title = Res.string.settings_title

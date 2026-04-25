@@ -535,7 +535,7 @@ fun FeedSearchBar(
                                 modifier = Modifier.fillMaxWidth(),
                                 headlineContent = {
                                     Text(
-                                        text = stringResource(MoviesStrings.search_recommendations),
+                                        text = stringResource(MoviesStrings.search_suggestions),
                                         modifier = Modifier.padding(start = 8.dp),
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             textAlign = TextAlign.Start

@@ -115,7 +115,7 @@ private fun MainScreenContent(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
-        sceneStrategy = dialogSceneStrategy,
+        sceneStrategies = listOf(dialogSceneStrategy),
         transitionSpec = fadeTransitionSpec(),
         popTransitionSpec = fadeTransitionSpec(),
         predictivePopTransitionSpec = fadePredictiveTransitionSpec(),

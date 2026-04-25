@@ -106,7 +106,7 @@ jobs:
         run: ./gradlew androidApp:bundleGmsRelease
 
       - name: upload artifacts to outputs
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           path: |
             androidApp/build/outputs/apk/gms/debug
@@ -298,7 +298,7 @@ jobs:
         run: ./gradlew :desktopApp:packageDmg
 
       - name: "upload artifacts to outputs"
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: app-mac-silicon
           path: desktopApp/build/compose/binaries/main/dmg

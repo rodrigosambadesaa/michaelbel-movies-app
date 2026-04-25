@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.dsl.koinConfiguration
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.detailsweb.DetailsWebScreen
 import org.michaelbel.movies.interactor.Interactor
@@ -26,7 +27,7 @@ import org.michaelbel.movies.ui.theme.AppTheme
 @Composable
 fun MainScreen() {
     KoinApplication(
-        application = {
+        configuration = koinConfiguration {
             modules(interactorKoinModule)
         }
     ) {

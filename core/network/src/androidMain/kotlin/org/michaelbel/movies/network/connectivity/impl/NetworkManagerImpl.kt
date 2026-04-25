@@ -14,7 +14,7 @@ class NetworkManagerImpl(
     private val connectivityManager: ConnectivityManager
 ): NetworkManager {
     override val status: Flow<NetworkStatus> = callbackFlow {
-        val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        val networkCallback = object: ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 trySend(NetworkStatus.Available)
             }

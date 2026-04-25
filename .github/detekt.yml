@@ -28,6 +28,10 @@ exceptions:
   TooGenericExceptionThrown:
     active: false
 
+empty-blocks:
+  EmptyFunctionBlock:
+    active: false
+
 style:
   DestructuringDeclarationWithTooManyEntries:
     active: false
@@ -40,6 +44,6 @@ style:
   ThrowsCount:
     active: false
   UnusedPrivateMember:
-    allowedNames: '.*Preview'
+    allowedNames: '.*Preview$'
   UnusedPrivateProperty:
     allowedNames: '_|ignored|expected|serialVersionUID'

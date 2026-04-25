@@ -8,10 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.debugInspectorInfo
-import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -58,9 +55,6 @@ private val <T: Any> LazyPagingItems<T>.refreshState: LoadState
 
 private val <T: Any> LazyPagingItems<T>.appendState: LoadState
     get() = loadState.mediator?.append ?: loadState.append
-
-private val windowWidth: Dp
-    @Composable get() = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
 
 @Composable
 fun OnResume(

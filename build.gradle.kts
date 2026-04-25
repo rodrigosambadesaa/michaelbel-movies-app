@@ -28,6 +28,11 @@ subprojects {
     extensions.configure<DetektExtension> {
         config.setFrom(rootProject.file(".github/detekt.yml"))
         buildUponDefaultConfig = true
+        source.setFrom(
+            project.files("src").asFileTree.matching {
+                include("**/*.kt")
+            }
+        )
     }
     dependencies {
         val catalog = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")

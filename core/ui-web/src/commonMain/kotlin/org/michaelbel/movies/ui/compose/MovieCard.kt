@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -27,11 +28,14 @@ fun MovieCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    val cardColor = MaterialTheme.colorScheme.inversePrimary
+    val imagePainter = ColorPainter(cardColor)
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.large)
-            .background(MaterialTheme.colorScheme.inversePrimary)
+            .background(cardColor)
             .clickable(onClick = onClick)
     ) {
         AsyncImage(
@@ -40,12 +44,15 @@ fun MovieCard(
                 .crossfade(true)
                 .build(),
             contentDescription = null,
+            placeholder = imagePainter,
+            error = imagePainter,
+            fallback = imagePainter,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16F / 9F)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .aspectRatio(16F / 9F),
             contentScale = ContentScale.Crop
         )
+
         Text(
             text = title,
             modifier = Modifier

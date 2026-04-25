@@ -5,11 +5,11 @@ import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.cinterop.ExperimentalForeignApi
 import org.michaelbel.movies.persistence.database.db.AppDatabase
-import platform.Foundation.NSFileManager
 import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
 import platform.Foundation.NSHomeDirectory
-import platform.Foundation.NSUserDomainMask
 import platform.Foundation.NSURL
+import platform.Foundation.NSUserDomainMask
 
 @OptIn(ExperimentalForeignApi::class)
 fun createDocumentsDriver(): SQLiteDriver {
@@ -27,7 +27,7 @@ fun documentDatabasePath(): String {
 private class DocumentsSQLiteDriver(
     private val directory: String,
     private val delegate: SQLiteDriver
-) : SQLiteDriver {
+): SQLiteDriver {
 
     init {
         ensureDirectoryExists(directory)

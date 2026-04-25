@@ -256,7 +256,7 @@ private fun AccountScreenContentPreview() {
 
 @Preview
 @Composable
-private fun AccountScreenContentPreview2() {
+private fun AccountScreenContent2Preview() {
     AppTheme {
         AccountScreenContent(
             state = AccountModel(

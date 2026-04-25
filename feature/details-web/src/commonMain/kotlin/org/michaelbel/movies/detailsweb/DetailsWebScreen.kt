@@ -6,29 +6,29 @@
 package org.michaelbel.movies.detailsweb
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -36,8 +36,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
@@ -47,12 +51,10 @@ import org.koin.compose.koinInject
 import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.network.config.formatBackdropImage
+import org.michaelbel.movies.network.config.formatPosterImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
-import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
-import org.michaelbel.movies.ui.placeholder.material3.fade
-import org.michaelbel.movies.ui.placeholder.placeholder
 
 @Composable
 fun DetailsWebScreen(
@@ -79,58 +81,31 @@ fun DetailsWebScreen(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            LargeTopAppBar(
-                title = {
-                    Text(
-                        text = state.toolbarTitle
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBackClick
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = detailsBackText,
-                            modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    scrolledContainerColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            )
-        },
-        containerColor = MaterialTheme.colorScheme.primaryContainer
-    ) { innerPadding ->
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
         when (val currentState = state) {
             DetailsWebState.Loading -> {
                 DetailsContent(
                     movie = MoviePojo.Empty,
                     placeholder = true,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                    onBackClick = onBackClick,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             is DetailsWebState.Ready -> {
                 DetailsContent(
                     movie = currentState.movie,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                    onBackClick = onBackClick,
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             is DetailsWebState.Error -> {
                 ErrorContent(
                     message = currentState.message,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
@@ -141,67 +116,114 @@ fun DetailsWebScreen(
 private fun DetailsContent(
     movie: MoviePojo,
     modifier: Modifier = Modifier,
-    placeholder: Boolean = false
+    placeholder: Boolean = false,
+    onBackClick: () -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    BoxWithConstraints(
+        modifier = modifier
     ) {
-        item {
-            ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.inversePrimary
-                )
-            ) {
-                val imageRequest: ImageRequest? = if (placeholder) {
-                    null
-                } else {
-                    ImageRequest.Builder(LocalPlatformContext.current)
-                        .data(movie.backdropPath.formatBackdropImage)
-                        .crossfade(true)
-                        .build()
-                }
-                AsyncImage(
-                    model = imageRequest,
-                    contentDescription = movie.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.inversePrimary)
-                        .placeholder(
-                            visible = placeholder,
-                            color = MaterialTheme.colorScheme.inversePrimary,
-                            shape = MaterialTheme.shapes.medium,
-                            highlight = PlaceholderHighlight.fade()
-                        ),
-                    contentScale = ContentScale.Crop
-                )
-            }
+        val isHorizontal = maxWidth >= maxHeight
+        val imageData = when {
+            placeholder -> null
+            isHorizontal && movie.backdropPath.isNotBlank() -> movie.backdropPath.formatBackdropImage
+            !isHorizontal && movie.posterPath.isNotBlank() -> movie.posterPath.formatPosterImage
+            movie.backdropPath.isNotBlank() -> movie.backdropPath.formatBackdropImage
+            movie.posterPath.isNotBlank() -> movie.posterPath.formatPosterImage
+            else -> null
         }
+        val imageRequest: ImageRequest? = imageData?.let { data ->
+            ImageRequest.Builder(LocalPlatformContext.current)
+                .data(data)
+                .crossfade(true)
+                .build()
+        }
+        val imagePainter = ColorPainter(MaterialTheme.colorScheme.primaryContainer)
 
-        item {
-            SelectionContainer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .placeholder(
-                        visible = placeholder,
-                        color = MaterialTheme.colorScheme.inversePrimary,
-                        shape = MaterialTheme.shapes.large,
-                        highlight = PlaceholderHighlight.fade()
+        AsyncImage(
+            model = imageRequest,
+            contentDescription = movie.title,
+            placeholder = imagePainter,
+            error = imagePainter,
+            fallback = imagePainter,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.34F))
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.62F),
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.76F)
+                        )
                     )
+                )
+        )
+
+        LargeFlexibleTopAppBar(
+            title = {
+                Text(
+                    text = movie.title.ifBlank { statePlaceholderTitle },
+                    modifier = Modifier.padding(start = 16.dp),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.displaySmall.copy(
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                )
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = onBackClick
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                        contentDescription = null,
+                        modifier = Modifier.size(IconButtonDefaults.smallIconSize),
+                        tint = Color.White
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent,
+                scrolledContainerColor = Color.Transparent,
+                navigationIconContentColor = Color.White,
+                titleContentColor = Color.White
+            ),
+            windowInsets = WindowInsets(0, 0, 0, 0)
+        )
+
+        SelectionContainer(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .widthIn(max = 860.dp)
+                .fillMaxWidth()
+                .padding(
+                    start = 32.dp,
+                    top = 172.dp,
+                    end = 32.dp,
+                    bottom = 40.dp
+                )
+                .verticalScroll(rememberScrollState())
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = movie.overview.ifBlank { detailsOverviewEmptyText },
-                    modifier = Modifier.padding(8.dp),
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15F
+                    text = movie.overview.ifBlank { "Overview is not available." },
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        color = Color.White,
+                        lineHeight = MaterialTheme.typography.headlineSmall.lineHeight * 1.15F
                     )
                 )
             }
@@ -234,17 +256,12 @@ private fun ErrorContent(
 
 private fun Exception.toUserMessage(): String {
     return when (this) {
-        is ApiKeyNotNullException -> detailsApiKeyErrorText
+        is ApiKeyNotNullException -> "TMDB API key is missing. Set TMDB_API_KEY before starting the web app."
         else -> message ?: this::class.simpleName.orEmpty()
     }
 }
 
-private val DetailsWebState.toolbarTitle: String
-    get() = when (this) {
-        DetailsWebState.Loading -> detailsTitleText
-        is DetailsWebState.Ready -> movie.title
-        is DetailsWebState.Error -> detailsTitleText
-    }
+private const val statePlaceholderTitle = "Details"
 
 private sealed interface DetailsWebState {
     data object Loading: DetailsWebState
@@ -255,8 +272,3 @@ private sealed interface DetailsWebState {
         val message: String
     ): DetailsWebState
 }
-
-private const val detailsTitleText = "Details"
-private const val detailsBackText = "Back"
-private const val detailsOverviewEmptyText = "Overview is not available."
-private const val detailsApiKeyErrorText = "TMDB API key is missing. Set TMDB_API_KEY before starting the web app."

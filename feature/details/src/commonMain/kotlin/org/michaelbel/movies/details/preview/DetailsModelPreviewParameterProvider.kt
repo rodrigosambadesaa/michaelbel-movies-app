@@ -40,7 +40,7 @@ class DetailsModelPreviewParameterProvider: CollectionPreviewParameterProvider<D
             isDetailsShareFeatureEnabled = true
         ),
         DetailsModel(
-            detailsState = ScreenState.Failure(Throwable())
+            detailsState = ScreenState.Failure(Throwable(""))
         )
     )
 )

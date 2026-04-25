@@ -75,14 +75,10 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: decode keystore file
-        id: decode_keystore_file
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'keystore_release.jks'
-          encodedString: ${{ secrets.KEYSTORE_FILE }}
-
-      - name: set decoded file location as environment
-        run: echo "KEYSTORE_FILE=${{ steps.decode_keystore_file.outputs.filePath }}" >> $GITHUB_ENV
+        run: |
+          KEYSTORE_PATH="${RUNNER_TEMP}/keystore_release.jks"
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > "$KEYSTORE_PATH"
+          echo "KEYSTORE_FILE=$KEYSTORE_PATH" >> $GITHUB_ENV
 
       - name: assemble android gms debug artifact
         run: ./gradlew androidApp:assembleGmsDebug

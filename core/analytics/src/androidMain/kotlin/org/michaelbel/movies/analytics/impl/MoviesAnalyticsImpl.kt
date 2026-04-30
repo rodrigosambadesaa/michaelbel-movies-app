@@ -1,7 +1,6 @@
 package org.michaelbel.movies.analytics.impl
 
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.analytics.constants.MoviesParams
 import org.michaelbel.movies.analytics.model.BaseEvent
@@ -16,15 +15,15 @@ class MoviesAnalyticsImpl(
         arguments.forEach { (key, value) ->
             args.putString(key, value)
         }
-        val bundle = bundleOf(
-            analyticsService.screenName to route,
-            MoviesParams.PARAM_ARGUMENTS to args
-        )
+        val bundle = Bundle().apply {
+            putString(analyticsService.screenName, route)
+            putBundle(MoviesParams.PARAM_ARGUMENTS, args)
+        }
         analyticsService.logEvent(analyticsService.screenView, bundle)
     }
 
     override fun logEvent(event: BaseEvent) {
-        val bundle = bundleOf()
+        val bundle = Bundle()
         event.params.forEach { (key, value) ->
             bundle.putString(key, value)
         }

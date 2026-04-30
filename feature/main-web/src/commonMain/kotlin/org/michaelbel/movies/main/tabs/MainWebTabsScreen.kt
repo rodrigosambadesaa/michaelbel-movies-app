@@ -39,8 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.michaelbel.movies.feed.FeedScreen
 import org.michaelbel.movies.main.MainWebDestination
-import org.michaelbel.movies.main.mainWebFeedText
-import org.michaelbel.movies.main.mainWebSettingsText
 import org.michaelbel.movies.main.mainWebWindowWidth
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
@@ -107,12 +105,12 @@ fun MainWebTabsScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.GridView,
-                                        contentDescription = mainWebFeedText,
+                                        contentDescription = null,
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                     )
 
                                     Text(
-                                        text = mainWebFeedText,
+                                        text = "Feed",
                                         modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing),
                                         maxLines = 1,
                                         softWrap = false,
@@ -147,12 +145,12 @@ fun MainWebTabsScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Settings,
-                                        contentDescription = mainWebSettingsText,
+                                        contentDescription = null,
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                     )
 
                                     Text(
-                                        text = mainWebSettingsText,
+                                        text = "Settings",
                                         modifier = Modifier.padding(start = ToggleButtonDefaults.IconSpacing),
                                         maxLines = 1,
                                         softWrap = false,
@@ -184,7 +182,7 @@ fun MainWebTabsScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.GridView,
-                                contentDescription = mainWebFeedText
+                                contentDescription = null
                             )
                         },
                         colors = navigationRailItemColors
@@ -196,7 +194,7 @@ fun MainWebTabsScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.Settings,
-                                contentDescription = mainWebSettingsText
+                                contentDescription = null
                             )
                         },
                         colors = navigationRailItemColors
@@ -234,12 +232,12 @@ fun MainWebTabsScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.GridView,
-                                contentDescription = mainWebFeedText
+                                contentDescription = null
                             )
                         },
                         label = {
                             Text(
-                                text = mainWebFeedText
+                                text = "Feed"
                             )
                         }
                     )
@@ -249,12 +247,12 @@ fun MainWebTabsScreen(
                         icon = {
                             Icon(
                                 imageVector = Icons.Outlined.Settings,
-                                contentDescription = mainWebSettingsText
+                                contentDescription = null
                             )
                         },
                         label = {
                             Text(
-                                text = mainWebSettingsText
+                                text = "Settings"
                             )
                         }
                     )

@@ -83,6 +83,3 @@ sealed interface MainWebDestination {
 
 val mainWebWindowWidth: Dp
     @Composable get() = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
-
-const val mainWebFeedText = "Feed"
-const val mainWebSettingsText = "Settings"

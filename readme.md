@@ -150,8 +150,8 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Product Flavors](https://d.android.com/build/build-variants#product-flavors)
 - [x] [Using buildSrc Directory](https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#sec:build_sources)
 - [x] MinSDK 26
-- [x] TargetSDK 36
-- [x] CompileSDK 36
+- [x] TargetSDK 37
+- [x] CompileSDK 37
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
 - [x] Amoled Theme
 - [x] SecureTextField

@@ -1,5 +1,6 @@
 package org.michaelbel.movies.ui
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.StatusBarManager
 import android.content.ComponentName
@@ -44,6 +45,7 @@ import org.michaelbel.movies.ui.tile.MoviesTileService
 import kotlin.coroutines.CoroutineContext
 
 actual val isDebug: Boolean
+    @SuppressLint("PrivateApi")
     get() = runCatching {
         val activityThreadClass = Class.forName("android.app.ActivityThread")
         val application = activityThreadClass

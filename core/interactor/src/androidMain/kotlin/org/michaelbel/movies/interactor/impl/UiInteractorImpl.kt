@@ -1,6 +1,7 @@
 package org.michaelbel.movies.interactor.impl
 
 import android.Manifest
+import android.annotation.SuppressLint
 import java.util.Locale
 import android.app.Activity
 import android.content.ClipData
@@ -139,6 +140,7 @@ class UiInteractorImpl(
             return powerManager?.isIgnoringBatteryOptimizations(context.packageName) == true
         }
 
+    @SuppressLint("BatteryLife")
     @Composable
     override fun requestIgnoreBatteryOptimizations(): () -> Unit {
         val context = LocalContext.current

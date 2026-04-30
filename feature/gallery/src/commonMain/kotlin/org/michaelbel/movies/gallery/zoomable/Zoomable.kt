@@ -215,7 +215,7 @@ fun Modifier.zoomable(
 }
 
 suspend fun ZoomState.toggleScale(
-    targetScale: Float,
+    targetScale: Float = 2.5F,
     position: Offset,
     animationSpec: AnimationSpec<Float> = spring(),
 ) {

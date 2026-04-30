@@ -1,6 +1,7 @@
 package org.michaelbel.movies.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.GrammaticalInflectionManager
 import android.content.Context
@@ -94,6 +95,7 @@ fun rememberNavigateToAppSettings(): () -> Unit {
     return remember { { appSettingsContract.launch(intent) } }
 }
 
+@SuppressLint("InlinedApi")
 @Composable
 fun rememberNavigateToAppOpenByDefaultSettings(): () -> Unit {
     val context = LocalContext.current

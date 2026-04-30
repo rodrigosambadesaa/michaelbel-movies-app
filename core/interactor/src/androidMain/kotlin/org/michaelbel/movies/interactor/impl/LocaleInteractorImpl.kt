@@ -55,7 +55,7 @@ class LocaleInteractorImpl(
                     localeManager?.applicationLocales = LocaleList.forLanguageTags(languageCode)
                 }
                 else -> {
-                    val locale = Locale(languageCode)
+                    @Suppress("DEPRECATION") val locale = Locale(languageCode)
                     Locale.setDefault(locale)
                     val configuration = context.resources.configuration
                     configuration.setLocale(locale)

@@ -19,6 +19,10 @@
         <item name="android:navigationBarColor">@color/background</item>
     </style>
 
-    <style name="Theme.Movies.Starting" parent="Theme.Base.Starting.V21"/>
+    <style name="Theme.Base.Starting.V23" parent="Theme.Base.Starting.V21">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Movies.Starting" parent="Theme.Base.Starting.V23"/>
 
 </resources>

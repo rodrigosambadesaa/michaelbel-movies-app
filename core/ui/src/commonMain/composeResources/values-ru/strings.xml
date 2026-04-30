@@ -91,7 +91,7 @@
     <string name="settings_battery_optimization_ignored">Для Movies оптимизация отключена</string>
     <string name="settings_review">Оцени приложение</string>
     <string name="settings_review_description">Используя In-App Review API</string>
-    <string name="settings_reset_confirmation">Вы уверены что хотите сбросить настройки приложения?</string>
+    <string name="settings_reset_confirmation">Вы уверены, что хотите сбросить настройки приложения?</string>
     <string name="settings_action_reset">Сбросить</string>
     <string name="settings_post_notifications_should_request">Уведомления отключены. Активируйте их в настройках приложения</string>
     <string name="settings_action_go">Перейти</string>

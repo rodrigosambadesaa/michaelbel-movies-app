@@ -48,7 +48,7 @@ fun MovieCard(
     }
     val aspectRatio = when (style) {
         MovieCardStyle.Row -> 16F / 9F
-        MovieCardStyle.Column -> 2F / 3F
+        MovieCardStyle.Column -> 3F / 4F
     }
 
     Column(

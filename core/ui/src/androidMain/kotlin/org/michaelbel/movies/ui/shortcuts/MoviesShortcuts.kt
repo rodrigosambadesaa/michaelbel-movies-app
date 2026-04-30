@@ -31,5 +31,6 @@ fun Context.installShortcuts() {
         .setIcon(IconCompat.createWithResource(this, R.drawable.ic_shortcut_settings_48))
         .setIntent(Intent(Intent.ACTION_VIEW, INTENT_ACTION_SETTINGS.toUri()))
         .build()
-    ShortcutManagerCompat.setDynamicShortcuts(this, listOf(searchShortcut, settingsShortcut))
+    ShortcutManagerCompat.pushDynamicShortcut(this, searchShortcut)
+    ShortcutManagerCompat.pushDynamicShortcut(this, settingsShortcut)
 }

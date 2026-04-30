@@ -45,7 +45,7 @@ sealed interface GrammaticalGender: SealedString {
                 is Neutral -> Neutral().value
                 is Feminine -> Feminine().value
                 is Masculine -> Masculine().value
-                else -> throw Exception()
+                else -> error("")
             }
         }
     }

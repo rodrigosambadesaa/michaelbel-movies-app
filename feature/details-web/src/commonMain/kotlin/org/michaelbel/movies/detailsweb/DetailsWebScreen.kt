@@ -261,8 +261,6 @@ private fun Exception.toUserMessage(): String {
     }
 }
 
-private const val statePlaceholderTitle = "Details"
-
 private sealed interface DetailsWebState {
     data object Loading: DetailsWebState
     data class Ready(

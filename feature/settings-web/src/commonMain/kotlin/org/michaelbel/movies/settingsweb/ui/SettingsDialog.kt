@@ -43,7 +43,7 @@ fun <T: SealedString> SettingsDialog(
                 shapes = ButtonDefaults.shapes()
             ) {
                 Text(
-                    text = settingsActionCancelText,
+                    text = "Cancel",
                     style = MaterialTheme.typography.titleMediumEmphasized.copy(
                         textAlign = TextAlign.Center
                     )
@@ -107,5 +107,3 @@ fun <T: SealedString> SettingsDialog(
         containerColor = MaterialTheme.colorScheme.surface
     )
 }
-
-private const val settingsActionCancelText = "Cancel"

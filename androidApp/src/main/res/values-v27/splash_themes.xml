@@ -15,7 +15,7 @@
 
 <resources>
 
-    <style name="Theme.Base.Starting.V27" parent="Theme.Base.Starting.V23">
+    <style name="Theme.Base.Starting.V27" parent="Theme.Base.Starting.V21">
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarDividerColor">@android:color/transparent</item>
     </style>

@@ -3,8 +3,7 @@
 <!--
     Day Theme
 
-    Android 5 (API level 21)
-    Android 5.1 (API level 22)
+    Android 8 (API level 26)
 -->
 
 <resources>
@@ -17,6 +16,7 @@
         <item name="postSplashScreenTheme">@style/Theme.Movies</item>
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.Movies.Starting" parent="Theme.Base.Starting.V21"/>

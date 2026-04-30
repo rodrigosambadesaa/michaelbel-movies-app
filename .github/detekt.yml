@@ -7,6 +7,8 @@ naming:
     functionPattern: '[A-Za-z][a-zA-Z0-9]*'
   MatchingDeclarationName:
     active: false
+  MemberNameEqualsClassName:
+    active: false
   PackageNaming:
     packagePattern: '[a-z_]+(\.[a-z_][A-Za-z0-9_]*)*'
 
@@ -35,6 +37,8 @@ empty-blocks:
     active: false
 
 style:
+  LoopWithTooManyJumpStatements:
+    active: false
   DestructuringDeclarationWithTooManyEntries:
     active: false
   MagicNumber:
@@ -48,4 +52,5 @@ style:
   UnusedPrivateMember:
     allowedNames: '.*Preview$'
   UnusedPrivateProperty:
+    active: false
     allowedNames: '_|ignored|expected|serialVersionUID'

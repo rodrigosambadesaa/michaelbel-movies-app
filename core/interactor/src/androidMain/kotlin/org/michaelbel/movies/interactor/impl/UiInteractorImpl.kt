@@ -1,6 +1,7 @@
 package org.michaelbel.movies.interactor.impl
 
 import android.Manifest
+import java.util.Locale
 import android.app.Activity
 import android.content.ClipData
 import android.content.Context
@@ -225,7 +226,7 @@ class UiInteractorImpl(
         val resultContract = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data?.hasExtra("android.intent.extra.COLOR") == true) {
                 val color = result.data?.getIntExtra("android.intent.extra.COLOR", Color.BLACK).orEmpty()
-                val hex = String.format("#%06X", 0xFFFFFF and color)
+                val hex = String.format(Locale.US, "#%06X", 0xFFFFFF and color)
                 Toast.makeText(context, hex, Toast.LENGTH_SHORT).show()
             }
         }

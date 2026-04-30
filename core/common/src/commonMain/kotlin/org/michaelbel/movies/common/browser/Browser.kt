@@ -2,6 +2,7 @@ package org.michaelbel.movies.common.browser
 
 import androidx.compose.runtime.Composable
 
+@Suppress("TopLevelPropertyNaming")
 const val defaultTmdbAuthRedirectUrl = "movies://redirect_url"
 
 expect fun tmdbAuthRedirectUrl(): String

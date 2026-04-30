@@ -296,6 +296,7 @@ object MoviesStrings {
     val settings_screenshots = Res.string.settings_screenshots
     val settings_screenshots_description = Res.string.settings_screenshots_description
 
+    @Suppress("FunctionNaming")
     @Composable
     fun settings_app_version_name(vararg formatArgs: Any): String {
         return stringResource(Res.string.settings_app_version_name, formatArgs)

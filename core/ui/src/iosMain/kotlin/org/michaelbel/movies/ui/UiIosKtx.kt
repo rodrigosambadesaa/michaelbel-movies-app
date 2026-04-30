@@ -29,7 +29,7 @@ private fun iosSafeAreaWindowInsets(includeTopInset: Boolean): WindowInsets {
         val topInset = if (includeTopInset) (top * scale).roundToInt() else 0
         val rightInset = (right * scale).roundToInt()
 
-        return when (orientation) {
+        when (orientation) {
             UIDeviceOrientation.UIDeviceOrientationLandscapeLeft -> WindowInsets(leftInset, topInset, 0, 0)
             UIDeviceOrientation.UIDeviceOrientationLandscapeRight -> WindowInsets(0, topInset, rightInset, 0)
             else -> when {

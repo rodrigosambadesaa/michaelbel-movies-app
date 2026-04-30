@@ -58,7 +58,7 @@ object ColorUtils {
         return argbFromRgb(r, g, b)
     }
 
-    fun xyzFromArgb(argb: Int): DoubleArray? {
+    fun xyzFromArgb(argb: Int): DoubleArray {
         val r = linearized(redFromArgb(argb))
         val g = linearized(greenFromArgb(argb))
         val b = linearized(blueFromArgb(argb))
@@ -130,8 +130,7 @@ object ColorUtils {
 
     fun delinearized(rgbComponent: Double): Int {
         val normalized = rgbComponent / 100.0
-        var delinearized = 0.0
-        delinearized = if (normalized <= 0.0031308) {
+        val delinearized = if (normalized <= 0.0031308) {
             normalized * 12.92
         } else {
             1.055 * normalized.pow(1.0 / 2.4) - 0.055

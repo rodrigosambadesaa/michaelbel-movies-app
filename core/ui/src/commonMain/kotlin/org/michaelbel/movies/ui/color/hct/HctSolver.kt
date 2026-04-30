@@ -288,8 +288,7 @@ object HctSolver {
 
     fun trueDelinearized(rgbComponent: Double): Double {
         val normalized = rgbComponent / 100.0
-        var delinearized = 0.0
-        delinearized = if (normalized <= 0.0031308) {
+        val delinearized = if (normalized <= 0.0031308) {
             normalized * 12.92
         } else {
             1.055 * normalized.pow(1.0 / 2.4) - 0.055
@@ -561,6 +560,6 @@ object HctSolver {
     }
 
     fun solveToCam(hueDegrees: Double, chroma: Double, lstar: Double): Cam16 {
-        return Cam16.Companion.fromInt(solveToInt(hueDegrees, chroma, lstar))
+        return Cam16.fromInt(solveToInt(hueDegrees, chroma, lstar))
     }
 }

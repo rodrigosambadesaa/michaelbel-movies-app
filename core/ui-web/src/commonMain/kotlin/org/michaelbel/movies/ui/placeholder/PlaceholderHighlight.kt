@@ -1,6 +1,5 @@
 package org.michaelbel.movies.ui.placeholder
 
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.geometry.Offset

@@ -5,7 +5,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 import org.michaelbel.movies.persistence.database.ktx.imageDb
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 
-class ImagePersistence constructor(
+class ImagePersistence(
     private val moviesDatabase: MoviesDatabase
 ) {
 

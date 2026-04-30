@@ -6,7 +6,7 @@ import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
 
-class MovieNetworkService constructor(
+class MovieNetworkService(
     private val ktorMovieService: KtorMovieService
 ) {
 

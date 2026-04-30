@@ -8,7 +8,7 @@ import org.michaelbel.movies.network.model.SessionRequest
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.network.model.Username
 
-class AuthenticationNetworkService constructor(
+class AuthenticationNetworkService(
     private val ktorAuthenticationService: KtorAuthenticationService
 ) {
 

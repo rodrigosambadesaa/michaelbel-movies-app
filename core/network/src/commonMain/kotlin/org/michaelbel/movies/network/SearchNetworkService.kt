@@ -4,7 +4,7 @@ import org.michaelbel.movies.network.ktor.KtorSearchService
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
 
-class SearchNetworkService constructor(
+class SearchNetworkService(
     private val ktorSearchService: KtorSearchService
 ) {
 

@@ -7,7 +7,7 @@ import org.michaelbel.movies.network.model.Mark
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
 
-class AccountNetworkService constructor(
+class AccountNetworkService(
     private val ktorAccountService: KtorAccountService
 ) {
 

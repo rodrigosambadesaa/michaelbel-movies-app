@@ -22,6 +22,7 @@ expect val dialogUsePlatformDefaultWidth: Boolean
 
 expect val bottomSheetUsePlatformDefaultWidth: Boolean
 
+@Suppress("ModifierFactoryExtensionFunction")
 expect val modifierDisplayCutoutWindowInsets: Modifier
 
 expect val SettingsGenderText: String

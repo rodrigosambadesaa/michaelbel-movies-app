@@ -58,6 +58,7 @@ actual fun pageStaggeredGridCells(style: MovieCardStyle): StaggeredGridCells {
     )
 }
 
+@Suppress("ModifierFactoryExtensionFunction")
 actual val modifierDisplayCutoutWindowInsets: Modifier
     get() = Modifier
 

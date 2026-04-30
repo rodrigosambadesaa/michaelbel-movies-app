@@ -49,6 +49,7 @@ actual fun pageStaggeredGridCells(style: MovieCardStyle): StaggeredGridCells {
     return StaggeredGridCells.Fixed(2)
 }
 
+@Suppress("ModifierFactoryExtensionFunction")
 actual val modifierDisplayCutoutWindowInsets: Modifier
     get() = Modifier.windowInsetsPadding(displayCutoutWindowInsets)
 

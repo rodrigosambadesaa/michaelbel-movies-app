@@ -2,7 +2,6 @@ package org.michaelbel.movies.main
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
 import org.michaelbel.movies.common.mvi.MoviesViewModel
@@ -27,7 +26,6 @@ import org.michaelbel.movies.work.WorkManagerInteractor
 class MainViewModel(
     private val interactor: Interactor,
     private val biometricController: BiometricInteractor,
-    private val analytics: MoviesAnalytics,
     private val messagingService: MessagingService,
     private val workManagerInteractor: WorkManagerInteractor,
     private val debugNotificationInteractor: DebugNotificationInteractor,

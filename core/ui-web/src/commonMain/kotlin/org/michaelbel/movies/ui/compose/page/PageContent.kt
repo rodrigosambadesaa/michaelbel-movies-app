@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.network.config.formatBackdropImage
+import org.michaelbel.movies.network.config.formatPosterImage
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
@@ -39,9 +40,14 @@ fun PageContent(
             items = movies,
             key = { it.movieId }
         ) { movie ->
+            val imageUrl = when (feedView) {
+                is FeedView.FeedList -> movie.backdropPath.formatBackdropImage
+                is FeedView.FeedGrid -> movie.posterPath.formatPosterImage
+            }
             MovieCard(
-                imageUrl = movie.backdropPath.formatBackdropImage,
+                imageUrl = imageUrl,
                 title = movie.title,
+                feedView = feedView,
                 onClick = { onMovieClick(movie.movieList, movie.movieId) }
             )
         }

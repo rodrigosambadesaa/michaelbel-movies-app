@@ -19,17 +19,23 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import org.michaelbel.movies.common.appearance.FeedView
 
 @Composable
 fun MovieCard(
     imageUrl: String,
     title: String,
+    feedView: FeedView,
     maxLines: Int = 10,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
     val cardColor = MaterialTheme.colorScheme.inversePrimary
     val imagePainter = ColorPainter(cardColor)
+    val aspectRatio = when (feedView) {
+        is FeedView.FeedList -> 16F / 9F
+        is FeedView.FeedGrid -> 3F / 4F
+    }
 
     Column(
         modifier = modifier
@@ -49,7 +55,7 @@ fun MovieCard(
             fallback = imagePainter,
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(16F / 9F),
+                .aspectRatio(aspectRatio),
             contentScale = ContentScale.Crop
         )
 

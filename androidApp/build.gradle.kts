@@ -97,12 +97,8 @@ android {
         }
         debug {
             manifestPlaceholders += mapOf("appName" to "@string/app_name_dev")
-            isDebuggable = true
-            isMinifyEnabled = false
-            isShrinkResources = false
             signingConfig = signingConfigs.getByName("debug")
             applicationIdSuffix = MoviesBuildType.DEBUG.applicationIdSuffix
-            isDefault = true
         }
         create("benchmark") {
             initWith(getByName("release"))

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun <T> SwipeToDismiss(
@@ -70,7 +71,7 @@ fun <T> SwipeToDismiss(
     LaunchedEffect(removed) {
         if (removed) {
             hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-            delay(duration)
+            delay(duration.milliseconds)
             onDelete(item)
         }
     }

@@ -58,6 +58,7 @@ import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.ui.theme.AppTheme
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun NotifyScreen(
@@ -121,15 +122,15 @@ private fun NotifyScreenContent(
                 }
 
                 launch {
-                    delay(180)
+                    delay(180.milliseconds)
                     repeat(5) {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                        delay(360)
+                        delay(360.milliseconds)
                     }
                 }
             }
 
-            delay(2_000)
+            delay(2_000.milliseconds)
         }
     }
 

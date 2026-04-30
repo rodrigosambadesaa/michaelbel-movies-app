@@ -24,6 +24,7 @@ import org.michaelbel.movies.interactor.model.MoviesPush
 import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
 import java.util.concurrent.TimeUnit
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 
 class AppNotificationInteractorImpl(
@@ -35,7 +36,7 @@ class AppNotificationInteractorImpl(
         val expireTime = notificationInteractor.notificationExpireTime()
         val currentTime = Clock.System.now().toEpochMilliseconds()
         val isTimePasses = isTimePasses(ONE_DAY_MILLS, expireTime, currentTime)
-        delay(NOTIFICATIONS_PERMISSION_DELAY)
+        delay(NOTIFICATIONS_PERMISSION_DELAY.milliseconds)
         return !context.isPostNotificationsPermissionGranted && isTimePasses
     }
 

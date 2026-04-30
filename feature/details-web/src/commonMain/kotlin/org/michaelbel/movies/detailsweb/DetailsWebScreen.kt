@@ -6,7 +6,6 @@
 package org.michaelbel.movies.detailsweb
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -16,8 +15,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Card
@@ -172,7 +172,7 @@ private fun DetailsContent(
         LargeFlexibleTopAppBar(
             title = {
                 Text(
-                    text = movie.title.ifBlank { statePlaceholderTitle },
+                    text = movie.title,
                     modifier = Modifier.padding(start = 16.dp),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,

@@ -283,7 +283,8 @@ fun FeedSearchBar(
                             }
                         }
 
-                        if (state.isFeedAuthIconFeatureEnabled && !active && !isSearchResultsVisible && !isNavigationRail) {
+                        val showAuthIcon = state.isFeedAuthIconFeatureEnabled && !active && !isSearchResultsVisible && !isNavigationRail
+                        if (showAuthIcon) {
                             when {
                                 state.accountPojo.isEmpty -> {
                                     TooltipBox(

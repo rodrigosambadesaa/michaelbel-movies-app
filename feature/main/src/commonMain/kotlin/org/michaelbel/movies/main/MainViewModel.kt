@@ -14,7 +14,6 @@ import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.main.model.MainModel
 import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.platform.config.ConfigService
-import org.michaelbel.movies.platform.messaging.MessagingService
 import org.michaelbel.movies.platform.review.ReviewService
 import org.michaelbel.movies.platform.update.UpdateService
 import org.michaelbel.movies.ui.isDebug
@@ -26,7 +25,6 @@ import org.michaelbel.movies.work.WorkManagerInteractor
 class MainViewModel(
     private val interactor: Interactor,
     private val biometricController: BiometricInteractor,
-    private val messagingService: MessagingService,
     private val workManagerInteractor: WorkManagerInteractor,
     private val debugNotificationInteractor: DebugNotificationInteractor,
     private val configService: ConfigService,

@@ -13,21 +13,21 @@ class MoviesPreferences {
         return store.map { it[key.name] as? T }
     }
 
-    suspend fun <T> getValue(key: PreferenceKey<T>): T? {
+    fun <T> getValue(key: PreferenceKey<T>): T? {
         @Suppress("UNCHECKED_CAST")
         return store.value[key.name] as? T
     }
 
-    suspend fun <T> setValue(key: PreferenceKey<T>, value: T) {
-        store.value = store.value + (key.name to value)
+    fun <T> setValue(key: PreferenceKey<T>, value: T) {
+        store.value += (key.name to value)
     }
 
-    suspend fun <T> removeValue(key: PreferenceKey<T>) {
-        store.value = store.value - key.name
+    fun <T> removeValue(key: PreferenceKey<T>) {
+        store.value -= key.name
     }
 
-    suspend fun removeValues(vararg keys: PreferenceKey<*>) {
-        store.value = store.value - keys.map { it.name }.toSet()
+    fun removeValues(vararg keys: PreferenceKey<*>) {
+        store.value -= keys.map { it.name }.toSet()
     }
 
     sealed class PreferenceKey<T>(val name: String) {

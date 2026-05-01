@@ -1,11 +1,9 @@
 /.github/movies.jks
 /.github/keystore.properties
 .kotlin
-.kotlin-js-store
 .gradle
 .idea
+!.idea/icon.svg
 .claude
 build
-build-cache
-generated
 local.properties

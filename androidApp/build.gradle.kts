@@ -14,12 +14,12 @@ plugins {
     alias(libs.plugins.palantir.git)
 }
 if (isGmsBuild) {
-    apply(plugin = libs.plugins.google.services.get().pluginId)
-    apply(plugin = libs.plugins.google.firebase.crashlytics.get().pluginId)
-    apply(plugin = libs.plugins.google.firebase.appdistribution.get().pluginId)
+    pluginManager.apply(libs.plugins.google.services.get().pluginId)
+    pluginManager.apply(libs.plugins.google.firebase.crashlytics.get().pluginId)
+    pluginManager.apply(libs.plugins.google.firebase.appdistribution.get().pluginId)
 }
 if (isHmsBuild) {
-    apply(plugin = libs.plugins.huawei.services.get().pluginId)
+    pluginManager.apply(libs.plugins.huawei.services.get().pluginId)
 }
 
 private val gitCommitsCount by lazy {

@@ -1,5 +1,6 @@
-# Agent Guide
+# Repository Guidelines
 
+- Never commit unrelated files together – stage files selectively and make one focused commit per logical change with a clear, specific message
 - Use standard project conventions and follow existing documentation when making changes
 - Prefer `when` instead of `if / else if` chains when expressing branching logic in Kotlin
 - In Kotlin, when returning one of two branches, prefer `return when { ... }` over `return if (...) ... else ...`

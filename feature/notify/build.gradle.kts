@@ -19,7 +19,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.interactor)
+            implementation(projects.shared.interactor)
         }
     }
 

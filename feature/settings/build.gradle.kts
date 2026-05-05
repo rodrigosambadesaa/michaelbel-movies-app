@@ -19,10 +19,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.interactor)
-            api(projects.core.ui)
-            api(projects.core.platformServices.interactor)
-            api(projects.core.widget)
+            api(projects.shared.interactor)
+            api(projects.shared.ui)
+            api(projects.shared.platformServices.interactor)
+            api(projects.shared.widget)
         }
     }
 

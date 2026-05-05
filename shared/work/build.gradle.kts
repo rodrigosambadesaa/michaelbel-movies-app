@@ -1,8 +1,5 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.compose)
     alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
@@ -12,7 +9,7 @@ kotlin {
     iosSimulatorArm64()
 
     android {
-        namespace = "org.michaelbel.movies.gallery"
+        namespace = "org.michaelbel.movies.work"
         minSdk = libs.versions.min.sdk.get().toInt()
         compileSdk = libs.versions.compile.sdk.get().toInt()
         androidResources.enable = true
@@ -20,9 +17,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.shared.interactor)
-            api(projects.shared.ui)
-            api(projects.shared.work)
+            implementation(projects.shared.interactor)
+        }
+        androidMain.dependencies {
+            implementation(libs.bundles.work.android)
         }
     }
 

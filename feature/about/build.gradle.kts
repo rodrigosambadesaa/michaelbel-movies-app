@@ -9,7 +9,7 @@ kotlin {
 
     sourceSets {
         jvmMain.dependencies {
-            api(projects.core.ui)
+            api(projects.shared.ui)
         }
     }
 

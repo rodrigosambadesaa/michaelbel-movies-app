@@ -1,36 +1,31 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.compose)
     alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    jvm()
-    iosArm64()
-    iosSimulatorArm64()
-
     android {
-        namespace = "org.michaelbel.movies.debug"
-        minSdk = libs.versions.min.sdk.get().toInt()
+        namespace = "org.michaelbel.movies.platform.gms"
         compileSdk = libs.versions.compile.sdk.get().toInt()
+        minSdk = libs.versions.min.sdk.get().toInt()
         androidResources.enable = true
+
+        withHostTest {}
     }
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.shared.ui)
-            implementation(projects.shared.platformServices.interactor)
+            api(projects.shared.platformServices.interactor)
             implementation(projects.shared.interactor)
+        }
+        androidMain.dependencies {
+            api(libs.bundles.google.firebase.android)
+            api(libs.bundles.google.services.android)
+            api(libs.bundles.google.play.android)
         }
     }
 
     compilerOptions {
         jvmToolchain(libs.versions.jdk.get().toInt())
     }
-}
-
-compose.resources {
-    publicResClass = true
-    generateResClass = always
 }

@@ -27,7 +27,7 @@ kotlin {
 
     sourceSets {
         jvmMain.dependencies {
-            implementation(projects.core.platformServices.injectJvm)
+            implementation(projects.shared.platformServices.injectJvm)
             implementation(projects.feature.about)
             implementation(projects.feature.main)
             implementation(libs.slf4j.simple)

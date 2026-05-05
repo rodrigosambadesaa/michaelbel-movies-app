@@ -14,9 +14,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.common)
-            implementation(projects.core.interactorWeb)
-            implementation(projects.core.uiWeb)
+            implementation(projects.shared.common)
+            implementation(projects.shared.interactorWeb)
+            implementation(projects.shared.uiWeb)
             implementation(projects.feature.detailsWeb)
             implementation(projects.feature.feedWeb)
             implementation(projects.feature.settingsWeb)

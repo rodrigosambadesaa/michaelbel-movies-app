@@ -136,9 +136,9 @@ val hmsImplementation by configurations
 val fossImplementation by configurations
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    gmsImplementation(projects.core.platformServices.injectAndroid)
-    hmsImplementation(projects.core.platformServices.injectAndroid)
-    fossImplementation(projects.core.platformServices.injectAndroid)
+    gmsImplementation(projects.shared.platformServices.injectAndroid)
+    hmsImplementation(projects.shared.platformServices.injectAndroid)
+    fossImplementation(projects.shared.platformServices.injectAndroid)
     implementation(projects.feature.main)
     implementation(libs.bundles.kotlin.reflect.android)
     testImplementation(libs.bundles.junit.android)

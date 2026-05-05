@@ -56,9 +56,6 @@ val isWideNavigationRailExpanded: Boolean
 val isNavigationRail: Boolean
     @Composable get() = isWideNavigationRailCollapsed || isWideNavigationRailExpanded
 
-val navigationBarPadding: Dp
-    @Composable get() = if (isNavigationBar) 72.dp else 0.dp
-
 fun Modifier.clickableWithoutRipple(
     block: () -> Unit
 ): Modifier = composed(

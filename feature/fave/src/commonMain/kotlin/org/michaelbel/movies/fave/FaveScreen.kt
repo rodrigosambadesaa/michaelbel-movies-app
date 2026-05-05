@@ -3,13 +3,22 @@
 package org.michaelbel.movies.fave
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.plus
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.common.exceptions.PageEmptyException
@@ -21,7 +30,7 @@ import org.michaelbel.movies.ui.compose.page.PageFailure
 import org.michaelbel.movies.ui.compose.page.PageLoading
 import org.michaelbel.movies.ui.isFailure
 import org.michaelbel.movies.ui.isLoading
-import org.michaelbel.movies.ui.navigationBarPadding
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.refreshThrowable
 import org.michaelbel.movies.ui.rememberConnectivityClickHandler
 
@@ -34,15 +43,16 @@ fun FaveScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.primaryContainer
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Horizontal)
     ) { innerPadding ->
         when {
             pagingItems.isLoading -> {
                 PageLoading(
                     feedView = state.feedView,
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding().plus(navigationBarPadding)
+                    contentPadding = innerPadding + PaddingValues(
+                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                        bottom = if (isNavigationRail) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() else 16.dp
                     )
                 )
             }
@@ -50,18 +60,18 @@ fun FaveScreen(
                 when {
                     pagingItems.refreshThrowable is PageEmptyException -> {
                         FeedEmpty(
-                            contentPadding = PaddingValues(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding()
+                            contentPadding = innerPadding + PaddingValues(
+                                top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                                bottom = if (isNavigationRail) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() else 16.dp
                             )
                         )
                     }
                     else -> {
                         PageFailure(
                             onClick = pagingItems::retry,
-                            contentPadding = PaddingValues(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding()
+                            contentPadding = innerPadding + PaddingValues(
+                                top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                                bottom = if (isNavigationRail) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() else 16.dp
                             ),
                             isButtonVisible = state.isPageFailureButtonVisible,
                             onButtonClick = rememberConnectivityClickHandler()
@@ -76,9 +86,9 @@ fun FaveScreen(
                     onMovieClick = { pagingKey, movieId ->
                         viewModel.dispatch(FaveIntent.MovieDetailsClick(pagingKey, movieId))
                     },
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding().plus(navigationBarPadding)
+                    contentPadding = innerPadding + PaddingValues(
+                        top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
+                        bottom = if (isNavigationRail) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() else 16.dp
                     )
                 )
             }

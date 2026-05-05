@@ -16,9 +16,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.layout.size
@@ -36,6 +41,7 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -103,7 +109,7 @@ import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
 import org.michaelbel.movies.ui.icons.TileSmall
 import org.michaelbel.movies.ui.isDebug
-import org.michaelbel.movies.ui.navigationBarPadding
+import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.requestTileService
 import org.michaelbel.movies.ui.strings.MoviesStrings
 import org.michaelbel.movies.widget.ktx.rememberAndPinAppWidgetProvider
@@ -269,21 +275,24 @@ private fun SettingsScreenContent(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier.padding(bottom = 64.dp) // fixme
+                modifier = Modifier.padding(
+                    bottom = if (isNavigationRail) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() else 0.dp
+                )
             )
         },
-        containerColor = MaterialTheme.colorScheme.primaryContainer
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Horizontal)
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = lazyListState,
-            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
             contentPadding = innerPadding + PaddingValues(
                 start = 16.dp,
                 top = 16.dp,
                 end = 16.dp,
-                bottom = navigationBarPadding
-            )
+                bottom = if (isNavigationRail) WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() else 12.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
         ) {
             if (state.isLanguageFeatureEnabled) {
                 item {
@@ -713,7 +722,7 @@ private fun SettingsScreenContent(
                             .background(MaterialTheme.colorScheme.inversePrimary)
                     ) {
                         SegmentedListItem(
-                            onClick = {},
+                            onClick = { dispatch(SettingsIntent.ShowSnackbar("fdhjkfhsdjkf dfjdsfjkdshkjfhsdjkfhkds dfsdsf")) },
                             shapes = itemShapes,
                             leadingContent = {
                                 Icon(

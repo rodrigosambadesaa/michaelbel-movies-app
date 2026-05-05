@@ -4,7 +4,6 @@ import ktx.isGmsReleaseBuild
 import ktx.isHmsBuild
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.io.FileInputStream
-import java.nio.charset.StandardCharsets
 
 @Suppress("dsl_scope_violation")
 
@@ -23,17 +22,9 @@ if (isHmsBuild) {
 }
 
 private val gitCommitsCount by lazy {
-    try {
-        val isWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)
-        val processBuilder = when {
-            isWindows -> ProcessBuilder("cmd", "/c", "git", "rev-list", "--count", "HEAD")
-            else -> ProcessBuilder("git", "rev-list", "--count", "HEAD")
-        }
-        processBuilder.redirectErrorStream(true)
-        processBuilder.start().inputStream.bufferedReader(StandardCharsets.UTF_8).readLine().trim().toInt()
-    } catch (_: Exception) {
-        1
-    }
+    ProcessBuilder("git", "rev-list", "--count", "HEAD")
+        .redirectErrorStream(true)
+        .start().inputStream.bufferedReader().readLine().trim().toInt()
 }
 private val currentTime by lazy {
     System.currentTimeMillis()

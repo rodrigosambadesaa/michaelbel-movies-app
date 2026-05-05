@@ -58,24 +58,56 @@ jobs:
           AAB_PATH="$(ls androidApp/build/outputs/bundle/gmsRelease/*.aab | head -n 1)"
           ACCESS_TOKEN="$(gcloud auth print-access-token)"
 
-          EDIT_ID="$(
-            curl --fail-with-body -s -X POST \
+          google_play_request() {
+            local response_file="$1"
+            shift
+
+            local http_status
+            if ! http_status="$(curl -sS -w "%{http_code}" -o "$response_file" "$@")"; then
+              echo "Google Play API request failed before receiving a successful response." >&2
+              cat "$response_file" >&2
+              exit 1
+            fi
+
+            if [[ "$http_status" -lt 200 || "$http_status" -ge 300 ]]; then
+              echo "Google Play API request failed with HTTP ${http_status}" >&2
+              cat "$response_file" >&2
+              exit 1
+            fi
+          }
+
+          EDIT_RESPONSE="$(mktemp)"
+          google_play_request "$EDIT_RESPONSE" \
+            -X POST \
               -H "Authorization: Bearer ${ACCESS_TOKEN}" \
               -H "Content-Type: application/json" \
-              "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PACKAGE_NAME}/edits" \
-            | jq -r '.id'
-          )"
+              "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PACKAGE_NAME}/edits"
 
-          VERSION_CODE="$(
-            curl --fail-with-body -s -X POST \
+          EDIT_ID="$(jq -r '.id' "$EDIT_RESPONSE")"
+          if [[ -z "$EDIT_ID" || "$EDIT_ID" == "null" ]]; then
+            echo "Google Play API response does not contain edit id:" >&2
+            cat "$EDIT_RESPONSE" >&2
+            exit 1
+          fi
+
+          BUNDLE_RESPONSE="$(mktemp)"
+          google_play_request "$BUNDLE_RESPONSE" \
+            -X POST \
               -H "Authorization: Bearer ${ACCESS_TOKEN}" \
               -H "Content-Type: application/octet-stream" \
               --data-binary @"${AAB_PATH}" \
-              "https://androidpublisher.googleapis.com/upload/androidpublisher/v3/applications/${PACKAGE_NAME}/edits/${EDIT_ID}/bundles?uploadType=media" \
-            | jq -r '.versionCode'
-          )"
+              "https://androidpublisher.googleapis.com/upload/androidpublisher/v3/applications/${PACKAGE_NAME}/edits/${EDIT_ID}/bundles?uploadType=media"
 
-          curl --fail-with-body -s -X PUT \
+          VERSION_CODE="$(jq -r '.versionCode' "$BUNDLE_RESPONSE")"
+          if [[ -z "$VERSION_CODE" || "$VERSION_CODE" == "null" ]]; then
+            echo "Google Play API response does not contain versionCode:" >&2
+            cat "$BUNDLE_RESPONSE" >&2
+            exit 1
+          fi
+
+          TRACK_RESPONSE="$(mktemp)"
+          google_play_request "$TRACK_RESPONSE" \
+            -X PUT \
             -H "Authorization: Bearer ${ACCESS_TOKEN}" \
             -H "Content-Type: application/json" \
             -d "{
@@ -88,6 +120,8 @@ jobs:
             }" \
             "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PACKAGE_NAME}/edits/${EDIT_ID}/tracks/${TRACK}"
 
-          curl --fail-with-body -s -X POST \
+          COMMIT_RESPONSE="$(mktemp)"
+          google_play_request "$COMMIT_RESPONSE" \
+            -X POST \
             -H "Authorization: Bearer ${ACCESS_TOKEN}" \
             "https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PACKAGE_NAME}/edits/${EDIT_ID}:commit"

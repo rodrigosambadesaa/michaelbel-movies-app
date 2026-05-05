@@ -60,7 +60,4 @@ interface MovieDao {
 
     @Query("SELECT (SELECT COUNT(*) FROM movies WHERE movieList = :pagingKey) == 0")
     suspend fun isEmpty(pagingKey: PagingKey): Boolean
-
-    @Query("UPDATE movies SET containerColor = :containerColor, onContainerColor = :onContainerColor WHERE movieId = :movieId")
-    suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int)
 }

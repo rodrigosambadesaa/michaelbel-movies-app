@@ -21,7 +21,5 @@ data class MovieDb(
     val backdropPath: String,
     val releaseDate: String,
     val title: String,
-    val voteAverage: Float,
-    val containerColor: Int?,
-    val onContainerColor: Int?
+    val voteAverage: Float
 )

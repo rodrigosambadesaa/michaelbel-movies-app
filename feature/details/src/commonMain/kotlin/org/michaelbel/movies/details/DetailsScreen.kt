@@ -6,9 +6,6 @@
 package org.michaelbel.movies.details
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +25,7 @@ import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberTooltipState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -39,21 +37,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.details.intent.DetailsIntent
 import org.michaelbel.movies.details.ktx.movie
 import org.michaelbel.movies.details.ktx.movieUrl
-import org.michaelbel.movies.details.ktx.onPrimaryContainer
-import org.michaelbel.movies.details.ktx.primaryContainer
 import org.michaelbel.movies.details.ktx.toolbarTitle
 import org.michaelbel.movies.details.model.DetailsModel
 import org.michaelbel.movies.details.preview.DetailsModelPreviewParameterProvider
 import org.michaelbel.movies.details.ui.DetailsContent
 import org.michaelbel.movies.details.ui.DetailsFailure
-import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
@@ -67,53 +60,23 @@ import org.michaelbel.movies.ui.theme.AppTheme
 @Composable
 fun DetailsScreen(
     destination: DetailsDestination,
-    viewModel: DetailsViewModel = koinViewModel { parametersOf(destination) },
-    uiInteractor: UiInteractor = koinInject()
+    viewModel: DetailsViewModel = koinViewModel { parametersOf(destination) }
 ) {
     val state by viewModel.stateFlow.collectAsStateCommon()
 
     DetailsScreenContent(
         state = state,
-        dispatch = viewModel::dispatch,
-        detailsPaletteEffect = { movie, placeholder, shouldGenerateColors, onGenerateColors ->
-            uiInteractor.DetailsPaletteEffect(
-                movie = movie,
-                placeholder = placeholder,
-                shouldGenerateColors = shouldGenerateColors,
-                onGenerateColors = onGenerateColors
-            )
-        }
+        dispatch = viewModel::dispatch
     )
 }
 
 @Composable
 private fun DetailsScreenContent(
     state: DetailsModel,
-    dispatch: (DetailsIntent) -> Unit,
-    detailsPaletteEffect: @Composable (MoviePojo, Boolean, Boolean, (Int, Int?, Int?) -> Unit) -> Unit
+    dispatch: (DetailsIntent) -> Unit
 ) {
-    val shouldGenerateColors = state.appTheme !is AppTheme.Amoled
     val topAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val isAmoledTheme = !shouldGenerateColors
-
-    val animateContainerColor = animateColorAsState(
-        targetValue = state.detailsState.primaryContainer(isAmoledTheme),
-        animationSpec = tween(
-            durationMillis = 200,
-            delayMillis = 0,
-            easing = LinearEasing
-        ),
-        label = "animateContainerColor"
-    )
-    val animateOnContainerColor = animateColorAsState(
-        targetValue = state.detailsState.onPrimaryContainer(isAmoledTheme),
-        animationSpec = tween(
-            durationMillis = 200,
-            delayMillis = 0,
-            easing = LinearEasing
-        ),
-        label = "animateOnContainerColor"
-    )
+    val onContainerColor = MaterialTheme.colorScheme.onPrimaryContainer
 
     Scaffold(
         modifier = Modifier
@@ -157,7 +120,7 @@ private fun DetailsScreenContent(
                                     imageVector = if (state.isAuthorized && state.isFavorite) MoviesIcons.Favorite else MoviesIcons.FavoriteBorder,
                                     contentDescription = stringResource(MoviesContentDescription.FavoriteIcon),
                                     modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                    colorFilter = ColorFilter.tint(animateOnContainerColor.value)
+                                    colorFilter = ColorFilter.tint(onContainerColor)
                                 )
                             }
                         }
@@ -192,7 +155,7 @@ private fun DetailsScreenContent(
                                         imageVector = MoviesIcons.Share,
                                         contentDescription = stringResource(MoviesContentDescription.ShareIcon),
                                         modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                                        colorFilter = ColorFilter.tint(animateOnContainerColor.value)
+                                        colorFilter = ColorFilter.tint(onContainerColor)
                                     )
                                 }
                             }
@@ -208,21 +171,13 @@ private fun DetailsScreenContent(
                             imageVector = MoviesIcons.ArrowBack,
                             contentDescription = stringResource(MoviesContentDescription.BackIcon),
                             modifier = Modifier.size(IconButtonDefaults.smallIconSize),
-                            colorFilter = ColorFilter.tint(animateOnContainerColor.value)
+                            colorFilter = ColorFilter.tint(onContainerColor)
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = animateContainerColor.value,
-                    scrolledContainerColor = animateContainerColor.value,
-                    titleContentColor = animateOnContainerColor.value,
-                    actionIconContentColor = animateOnContainerColor.value,
-                    navigationIconContentColor = animateOnContainerColor.value
-                ),
                 scrollBehavior = topAppBarScrollBehavior
             )
         },
-        containerColor = animateContainerColor.value
     ) { innerPadding ->
         when (val detailsState = state.detailsState) {
             is ScreenState.Loading -> {
@@ -243,21 +198,7 @@ private fun DetailsScreenContent(
                     ),
                     movie = detailsState.movie,
                     isDetailsGalleryFeatureEnabled = state.isDetailsGalleryFeatureEnabled,
-                    onContainerColor = animateOnContainerColor.value,
-                    onNavigateToGallery = { dispatch(DetailsIntent.GalleryClick) },
-                    shouldGenerateColors = shouldGenerateColors,
-                    onGenerateColors = { movieId, containerColor, onContainerColor ->
-                        dispatch(
-                            DetailsIntent.GenerateColors(
-                                movieId = movieId,
-                                containerColor = containerColor,
-                                onContainerColor = onContainerColor
-                            )
-                        )
-                    },
-                    detailsPaletteEffect = { movie, placeholder, shouldGenerateColorsValue, onGenerateColors ->
-                        detailsPaletteEffect(movie, placeholder, shouldGenerateColorsValue, onGenerateColors)
-                    }
+                    onNavigateToGallery = { dispatch(DetailsIntent.GalleryClick) }
                 )
             }
             is ScreenState.Failure -> {
@@ -280,8 +221,7 @@ private fun DetailsScreenContentPreview(
     AppTheme {
         DetailsScreenContent(
             state = state,
-            dispatch = {},
-            detailsPaletteEffect = { _, _, _, _ -> }
+            dispatch = {}
         )
     }
 }

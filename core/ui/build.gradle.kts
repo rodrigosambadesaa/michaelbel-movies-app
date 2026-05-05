@@ -38,8 +38,6 @@ kotlin {
         }
         androidMain.dependencies {
             api(libs.bundles.core.splashscreen.android)
-            api(libs.bundles.palette.android)
-            api(libs.bundles.coil.android)
             api(libs.bundles.compose.android)
             api(libs.bundles.google.material.android)
         }

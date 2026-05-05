@@ -89,12 +89,6 @@ class MovieInteractorImpl(
         return withContext(dispatchers.io) { movieRepository.updateFavorite(movieId, favorite) }
     }
 
-    override suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {
-        return withContext(dispatchers.io) {
-            movieRepository.updateMovieColors(movieId, containerColor, onContainerColor)
-        }
-    }
-
     override suspend fun fetchAndInsertSearchMovies(query: Query) {
         return withContext(dispatchers.io) {
             if (query.isEmpty()) throw PageEmptyException()

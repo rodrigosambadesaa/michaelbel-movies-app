@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.interactor.UiInteractor
-import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
 
 class UiInteractorImpl: UiInteractor {
@@ -78,14 +77,6 @@ class UiInteractorImpl: UiInteractor {
 
     @Composable
     override fun rememberEyeDropperHandler(): (() -> Unit) = {}
-
-    @Composable
-    override fun DetailsPaletteEffect(
-        movie: MoviePojo,
-        placeholder: Boolean,
-        shouldGenerateColors: Boolean,
-        onGenerateColors: (Int, Int?, Int?) -> Unit
-    ) {}
 
     override val enabledIcon: IconAlias = IconAlias.Red
 

@@ -16,9 +16,7 @@ val MoviePojo.movieDb: MovieDb
         backdropPath = backdropPath,
         releaseDate = releaseDate,
         title = title,
-        voteAverage = voteAverage,
-        containerColor = containerColor,
-        onContainerColor = onContainerColor
+        voteAverage = voteAverage
     )
 
 val MoviePojo.isEmpty: Boolean

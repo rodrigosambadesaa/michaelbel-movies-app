@@ -28,9 +28,7 @@ class DetailsModelPreviewParameterProvider: CollectionPreviewParameterProvider<D
                     backdropPath = "",
                     releaseDate = "2022-11-09",
                     title = "Black Panther: Wakanda Forever",
-                    voteAverage = 7.5F,
-                    containerColor = null,
-                    onContainerColor = null
+                    voteAverage = 7.5F
                 )
             ),
             isAuthorized = true,

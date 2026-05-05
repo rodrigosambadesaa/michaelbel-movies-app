@@ -15,7 +15,5 @@ val Movie.moviePojo: MoviePojo
         backdropPath = backdropPath.orEmpty(),
         releaseDate = releaseDate.orEmpty(),
         title = title.orEmpty(),
-        voteAverage = voteAverage,
-        containerColor = null,
-        onContainerColor = null
+        voteAverage = voteAverage
     )

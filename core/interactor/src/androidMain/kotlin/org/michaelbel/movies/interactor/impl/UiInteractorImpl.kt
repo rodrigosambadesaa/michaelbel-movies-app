@@ -17,26 +17,18 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
-import androidx.palette.graphics.Palette
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.google.android.material.color.DynamicColors
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.common.ktx.appNotificationSettingsIntent
 import org.michaelbel.movies.interactor.UiInteractor
-import org.michaelbel.movies.network.config.formatBackdropImage
-import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
@@ -233,38 +225,6 @@ class UiInteractorImpl(
             }
         }
         return remember(resultContract, intent) { { resultContract.launch(intent) } }
-    }
-
-    @Composable
-    override fun DetailsPaletteEffect(
-        movie: MoviePojo,
-        placeholder: Boolean,
-        shouldGenerateColors: Boolean,
-        onGenerateColors: (Int, Int?, Int?) -> Unit
-    ) {
-        if (!shouldGenerateColors || placeholder) return
-
-        val context = LocalContext.current
-        LaunchedEffect(movie.backdropPath.formatBackdropImage) {
-            val imageRequest = ImageLoader(context).execute(
-                ImageRequest.Builder(context)
-                    .data(movie.backdropPath.formatBackdropImage)
-                    .allowHardware(false)
-                    .build()
-            )
-            if (imageRequest is SuccessResult) {
-                val bitmap = imageRequest.drawable.toBitmap()
-                Palette.from(bitmap).generate { palette ->
-                    if (palette != null) {
-                        onGenerateColors(
-                            movie.movieId,
-                            palette.vibrantSwatch?.rgb,
-                            palette.vibrantSwatch?.bodyTextColor
-                        )
-                    }
-                }
-            }
-        }
     }
 
     override val enabledIcon: IconAlias

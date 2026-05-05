@@ -16,9 +16,7 @@ data class MoviePojo(
     val backdropPath: String,
     val releaseDate: String,
     val title: String,
-    val voteAverage: Float,
-    val containerColor: Int?,
-    val onContainerColor: Int?
+    val voteAverage: Float
 ) {
     companion object {
         const val MOVIES_LOCAL_LIST = "movies_local"
@@ -36,9 +34,7 @@ data class MoviePojo(
             backdropPath = "",
             releaseDate = "",
             title = "",
-            voteAverage = 0F,
-            containerColor = null,
-            onContainerColor = null
+            voteAverage = 0F
         )
     }
 }

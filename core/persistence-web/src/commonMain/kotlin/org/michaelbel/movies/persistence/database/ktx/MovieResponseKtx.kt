@@ -25,8 +25,6 @@ fun MovieResponse.moviePojo(
         backdropPath = backdropPath.orEmpty(),
         releaseDate = releaseDate,
         title = title,
-        voteAverage = voteAverage,
-        containerColor = null,
-        onContainerColor = null
+        voteAverage = voteAverage
     )
 }

@@ -40,7 +40,7 @@ class RepositoryWebStore {
     }
 
     fun updateImages(movieId: MovieId, images: List<ImagePojo>) {
-        imagesState.value = imagesState.value + (movieId to images.sortedBy(ImagePojo::position))
+        imagesState.value += (movieId to images.sortedBy(ImagePojo::position))
     }
 
     fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
@@ -101,12 +101,12 @@ class RepositoryWebStore {
     }
 
     fun removeMovies(pagingKey: PagingKey) {
-        moviesState.value = moviesState.value - pagingKey
+        moviesState.value -= pagingKey
     }
 
     fun removeMovie(pagingKey: PagingKey, movieId: MovieId) {
         val updatedMovies = moviesState.value[pagingKey].orEmpty().filterNot { movie -> movie.movieId == movieId }
-        moviesState.value = moviesState.value + (pagingKey to updatedMovies)
+        moviesState.value += (pagingKey to updatedMovies)
     }
 
     fun upsertMovies(movies: List<MoviePojo>) {
@@ -131,30 +131,16 @@ class RepositoryWebStore {
         moviesState.value = updatedState
     }
 
-    fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {
-        moviesState.value = moviesState.value.mapValues { (_, movies) ->
-            movies.map { movie ->
-                when (movie.movieId == movieId) {
-                    true -> movie.copy(
-                        containerColor = containerColor,
-                        onContainerColor = onContainerColor
-                    )
-                    false -> movie
-                }
-            }
-        }
-    }
-
     fun pagingKey(pagingKey: PagingKey): PagingKeyPojo? {
         return pagingKeysState.value[pagingKey]
     }
 
     fun updatePagingKey(pagingKeyPojo: PagingKeyPojo) {
-        pagingKeysState.value = pagingKeysState.value + (pagingKeyPojo.pagingKey to pagingKeyPojo)
+        pagingKeysState.value += (pagingKeyPojo.pagingKey to pagingKeyPojo)
     }
 
     fun removePagingKey(pagingKey: PagingKey) {
-        pagingKeysState.value = pagingKeysState.value - pagingKey
+        pagingKeysState.value -= pagingKey
     }
 
     fun suggestionsFlow(): Flow<List<SuggestionPojo>> {

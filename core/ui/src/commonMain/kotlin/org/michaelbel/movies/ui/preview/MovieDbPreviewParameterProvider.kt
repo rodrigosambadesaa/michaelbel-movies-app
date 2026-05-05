@@ -21,9 +21,7 @@ class MovieDbPreviewParameterProvider: CollectionPreviewParameterProvider<MovieP
             backdropPath = "",
             releaseDate = "2022-11-09",
             title = "Black Panther: Wakanda Forever",
-            voteAverage = 7.5F,
-            containerColor = null,
-            onContainerColor = null
+            voteAverage = 7.5F
         )
     )
 )

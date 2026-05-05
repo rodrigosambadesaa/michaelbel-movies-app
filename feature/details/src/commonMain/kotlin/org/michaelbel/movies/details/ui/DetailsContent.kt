@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -50,14 +49,8 @@ fun DetailsContent(
     onNavigateToGallery: () -> Unit = {},
     isDetailsGalleryFeatureEnabled: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(),
-    onContainerColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    placeholder: Boolean = false,
-    shouldGenerateColors: Boolean = true,
-    onGenerateColors: (Int, Int?, Int?) -> Unit = { _, _, _ -> },
-    detailsPaletteEffect: @Composable (MoviePojo, Boolean, Boolean, (Int, Int?, Int?) -> Unit) -> Unit = { _, _, _, _ -> }
+    placeholder: Boolean = false
 ) {
-    detailsPaletteEffect(movie, placeholder, shouldGenerateColors, onGenerateColors)
-
     val platformContext = LocalPlatformContext.current
     var isNoImageVisible by remember { mutableStateOf(false) }
 
@@ -124,7 +117,7 @@ fun DetailsContent(
                     text = movie.overview,
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        color = onContainerColor,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15F
                     )
                 )

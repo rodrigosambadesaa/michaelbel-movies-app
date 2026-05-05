@@ -65,7 +65,4 @@ class MoviePersistence(
         return moviesDatabase.movieDao.isEmpty(pagingKey)
     }
 
-    suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {
-        moviesDatabase.movieDao.updateMovieColors(movieId, containerColor, onContainerColor)
-    }
 }

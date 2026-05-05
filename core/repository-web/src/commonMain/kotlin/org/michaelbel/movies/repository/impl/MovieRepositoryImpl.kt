@@ -150,8 +150,4 @@ class MovieRepositoryImpl(
             }
         }
     }
-
-    override suspend fun updateMovieColors(movieId: MovieId, containerColor: Int, onContainerColor: Int) {
-        repositoryWebStore.updateMovieColors(movieId, containerColor, onContainerColor)
-    }
 }

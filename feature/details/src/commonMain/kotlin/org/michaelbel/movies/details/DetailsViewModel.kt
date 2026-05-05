@@ -28,7 +28,6 @@ class DetailsViewModel(
 ): MoviesViewModel<DetailsModel, DetailsIntent, Event>(DetailsModel()) {
 
     init {
-        dispatch(DetailsIntent.CollectAppTheme)
         dispatch(DetailsIntent.CollectNetworkStatus)
         dispatch(DetailsIntent.CollectFeatureFlags)
         dispatch(DetailsIntent.CollectAccount)
@@ -39,13 +38,6 @@ class DetailsViewModel(
 
     override fun dispatch(intent: DetailsIntent) {
         when (intent) {
-            is DetailsIntent.CollectAppTheme -> {
-                launch {
-                    interactor.currentTheme.collectLatest { appTheme ->
-                        reduce { it.copy(appTheme = appTheme) }
-                    }
-                }
-            }
             is DetailsIntent.CollectNetworkStatus -> {
                 launch {
                     networkManager.status.collectLatest { networkStatus ->
@@ -103,17 +95,6 @@ class DetailsViewModel(
                         launchedJob.invokeOnCompletion { reduce { it.copy(favoriteJob = null) } }
                     }
                     reduce { it.copy(favoriteJob = job) }
-                }
-            }
-            is DetailsIntent.GenerateColors -> {
-                launch {
-                    if (intent.containerColor != null && intent.onContainerColor != null) {
-                        interactor.updateMovieColors(destination.movieId, intent.containerColor, intent.onContainerColor)
-                        if (destination.movieList != null) {
-                            val moviePojo = interactor.movie(destination.movieList.orEmpty(), destination.movieId)
-                            reduce { it.copy(detailsState = ScreenState.Content(moviePojo)) }
-                        }
-                    }
                 }
             }
         }

@@ -2,7 +2,6 @@ package org.michaelbel.movies.interactor
 
 import androidx.compose.runtime.Composable
 import org.michaelbel.movies.common.SealedString
-import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.appicon.IconAlias
 
 interface UiInteractor {
@@ -104,14 +103,6 @@ interface UiInteractor {
 
     @Composable
     fun rememberEyeDropperHandler(): (() -> Unit)
-
-    @Composable
-    fun DetailsPaletteEffect(
-        movie: MoviePojo,
-        placeholder: Boolean,
-        shouldGenerateColors: Boolean,
-        onGenerateColors: (Int, Int?, Int?) -> Unit
-    )
 
     val enabledIcon: IconAlias
 

@@ -31,7 +31,7 @@ fun MainTabsBottomBar(
     val toggleButtonColors = ToggleButtonDefaults.toggleButtonColors()
     val navigationBarItemColors = NavigationBarItemDefaults.colors(
         selectedIconColor = toggleButtonColors.checkedContentColor,
-        selectedTextColor = toggleButtonColors.checkedContentColor,
+        selectedTextColor = toggleButtonColors.checkedContainerColor,
         indicatorColor = toggleButtonColors.checkedContainerColor,
         unselectedIconColor = toggleButtonColors.contentColor,
         unselectedTextColor = toggleButtonColors.contentColor,

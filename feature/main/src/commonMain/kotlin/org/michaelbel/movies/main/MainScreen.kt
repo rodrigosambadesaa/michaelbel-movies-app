@@ -120,10 +120,26 @@ private fun MainScreenContent(
         popTransitionSpec = fadeTransitionSpec(),
         predictivePopTransitionSpec = fadePredictiveTransitionSpec(),
         entryProvider = entryProvider {
-            entry<AuthDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))) { AuthScreen() }
-            entry<AccountDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))) { AccountScreen() }
-            entry<NotifyDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))) { NotifyScreen() }
-            entry<DebugDestination>(metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))) { DebugScreen() }
+            entry<AuthDestination>(
+                metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))
+            ) {
+                AuthScreen()
+            }
+            entry<AccountDestination>(
+                metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = dialogUsePlatformDefaultWidth))
+            ) {
+                AccountScreen()
+            }
+            entry<NotifyDestination>(
+                metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))
+            ) {
+                NotifyScreen()
+            }
+            entry<DebugDestination>(
+                metadata = DialogSceneStrategy.dialog(dialogProperties = DialogProperties(usePlatformDefaultWidth = bottomSheetUsePlatformDefaultWidth))
+            ) {
+                DebugScreen()
+            }
             entry<MainDestination> {
                 MainTabsScreen(
                     feedDestination = FeedDestination(

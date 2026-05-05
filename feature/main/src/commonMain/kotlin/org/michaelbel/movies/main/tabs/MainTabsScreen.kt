@@ -9,15 +9,14 @@ package org.michaelbel.movies.main.tabs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,8 +28,6 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -110,13 +107,19 @@ fun MainTabsScreen(
         mutableStateListOf(feedDestination)
     }
 
-    MainTabsScreenContent(
-        state = state,
-        dispatch = viewModel::dispatch,
-        backStack = backStack,
-        feedDestination = feedDestination,
-        snackbarHostState = snackbarHostState
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        MainTabsScreenContent(
+            state = state,
+            dispatch = viewModel::dispatch,
+            backStack = backStack,
+            feedDestination = feedDestination
+        )
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+    }
 
     LaunchedEffect(
         feedDestination.mainDestination.requestToken,
@@ -166,8 +169,7 @@ private fun MainTabsScreenContent(
     state: MainTabsModel,
     dispatch: (MainTabsIntent) -> Unit,
     backStack: MutableList<AppRoute>,
-    feedDestination: FeedDestination,
-    snackbarHostState: SnackbarHostState
+    feedDestination: FeedDestination
 ) {
     val openSearch = feedDestination.mainDestination.openSearch
     var isFeedSearchActive by rememberSaveable { mutableStateOf(openSearch) }
@@ -212,10 +214,9 @@ private fun MainTabsScreenContent(
     }
 
     when {
-        isNavigationBar ->
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = {
+        isNavigationBar -> {
+            NavigationSuiteScaffoldLayout(
+                navigationSuite = {
                     if (shouldShowNavigation) {
                         MainTabsBottomBar(
                             state = state,
@@ -225,15 +226,12 @@ private fun MainTabsScreenContent(
                         )
                     }
                 },
-                snackbarHost = {
-                    SnackbarHost(
-                        hostState = snackbarHostState
-                    )
-                },
-                contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Horizontal)
-            ) { innerPadding ->
+                navigationSuiteType = NavigationSuiteType.NavigationBar,
+                state = navigationSuiteScaffoldState
+            ) {
                 navDisplay(Modifier.fillMaxSize())
             }
+        }
         isNavigationRail -> {
             val toggleButtonColors = ToggleButtonDefaults.toggleButtonColors()
             val navigationRailItemColors = NavigationRailItemDefaults.colors(

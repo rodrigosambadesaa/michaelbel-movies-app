@@ -82,6 +82,7 @@ private fun DetailsScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -175,6 +176,10 @@ private fun DetailsScreenContent(
                         )
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    scrolledContainerColor = MaterialTheme.colorScheme.inversePrimary
+                ),
                 scrollBehavior = topAppBarScrollBehavior
             )
         },

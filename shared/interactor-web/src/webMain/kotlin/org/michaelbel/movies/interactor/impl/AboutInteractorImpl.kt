@@ -4,7 +4,7 @@ import org.michaelbel.movies.interactor.AboutInteractor
 
 class AboutInteractorImpl: AboutInteractor {
 
-    override val versionName: String = "3.0.0"
+    override val versionName: String = "3.1.0"
 
     override val versionCode: Long = 2334L
 }

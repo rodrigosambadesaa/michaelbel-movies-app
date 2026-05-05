@@ -39,7 +39,7 @@ import java.awt.EventQueue
 fun main() {
     System.setProperty("apple.awt.application.name", "Movies")
     if (System.getProperty("movies.version") == null) {
-        System.setProperty("movies.version", "3.0.0")
+        System.setProperty("movies.version", "3.1.0")
     }
     if (System.getProperty("movies.build") == null) {
         System.setProperty("movies.build", "1")

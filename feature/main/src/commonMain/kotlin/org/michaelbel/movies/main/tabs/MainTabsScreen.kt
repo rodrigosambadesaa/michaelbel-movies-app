@@ -244,10 +244,10 @@ private fun MainTabsScreenContent(
                 disabledTextColor = toggleButtonColors.disabledContentColor
             )
 
-            when {
-                isWideNavigationRailCollapsed -> {
-                    NavigationSuiteScaffoldLayout(
-                        navigationSuite = {
+            NavigationSuiteScaffoldLayout(
+                navigationSuite = {
+                    when {
+                        isWideNavigationRailCollapsed -> {
                             Column(
                                 modifier = Modifier
                                     .fillMaxHeight()
@@ -329,16 +329,8 @@ private fun MainTabsScreenContent(
                                     colors = navigationRailItemColors
                                 )
                             }
-                        },
-                        navigationSuiteType = NavigationSuiteType.WideNavigationRailCollapsed,
-                        state = navigationSuiteScaffoldState
-                    ) {
-                        navDisplay(Modifier.fillMaxSize())
-                    }
-                }
-                isWideNavigationRailExpanded -> {
-                    NavigationSuiteScaffoldLayout(
-                        navigationSuite = {
+                        }
+                        isWideNavigationRailExpanded -> {
                             Column(
                                 modifier = Modifier
                                     .fillMaxHeight()
@@ -490,13 +482,13 @@ private fun MainTabsScreenContent(
                                     )
                                 }
                             }
-                        },
-                        navigationSuiteType = navigationSuiteType,
-                        state = navigationSuiteScaffoldState
-                    ) {
-                        navDisplay(Modifier.fillMaxSize())
+                        }
                     }
-                }
+                },
+                navigationSuiteType = navigationSuiteType,
+                state = navigationSuiteScaffoldState
+            ) {
+                navDisplay(Modifier.fillMaxSize())
             }
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.ElevatedCard
@@ -56,14 +57,13 @@ fun DetailsContent(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = contentPadding,
+        contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
             ElevatedCard(
                 shape = MaterialTheme.shapes.largeIncreased,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.largeIncreased)
                     .clickable(
@@ -104,7 +104,6 @@ fun DetailsContent(
         item {
             SelectionContainer(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
                     .fillMaxWidth()
                     .placeholder(
                         visible = placeholder,
@@ -126,7 +125,7 @@ fun DetailsContent(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun DetailsContentPreview(
     @PreviewParameter(MovieDbPreviewParameterProvider::class) movie: MoviePojo
@@ -134,7 +133,8 @@ private fun DetailsContentPreview(
     AppTheme {
         DetailsContent(
             movie = movie,
-            onNavigateToGallery = {}
+            onNavigateToGallery = {},
+            contentPadding = PaddingValues(top = 16.dp)
         )
     }
 }

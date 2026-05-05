@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -92,7 +93,6 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.collectAsStateCommon
-import org.michaelbel.movies.ui.compose.plus
 import org.michaelbel.movies.ui.icons.Cat
 import org.michaelbel.movies.ui.icons.DropperEye
 import org.michaelbel.movies.ui.icons.Github

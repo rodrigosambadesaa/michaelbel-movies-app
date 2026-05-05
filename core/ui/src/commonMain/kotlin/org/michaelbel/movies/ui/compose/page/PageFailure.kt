@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +27,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.compose.RotatingCookie12SidedBox
-import org.michaelbel.movies.ui.compose.plus
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationRail
 import org.michaelbel.movies.ui.strings.MoviesStrings
@@ -93,7 +93,7 @@ fun PageFailure(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PageFailurePreview() {
     AppTheme {

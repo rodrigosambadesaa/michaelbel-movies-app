@@ -2,6 +2,7 @@ package org.michaelbel.movies.ui.compose.page
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -18,7 +19,6 @@ import androidx.paging.compose.itemKey
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.ui.compose.MovieCard
-import org.michaelbel.movies.ui.compose.plus
 import org.michaelbel.movies.ui.entity.MovieCardStyle
 import org.michaelbel.movies.ui.isPagingFailure
 import org.michaelbel.movies.ui.isPagingLoading

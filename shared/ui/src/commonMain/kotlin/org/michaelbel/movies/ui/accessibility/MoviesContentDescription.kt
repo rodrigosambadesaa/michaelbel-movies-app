@@ -1,24 +1,24 @@
 package org.michaelbel.movies.ui.accessibility
 
-import movies.core.ui.generated.resources.Res
-import movies.core.ui.generated.resources.content_description_account_avatar_image
-import movies.core.ui.generated.resources.content_description_account_icon
-import movies.core.ui.generated.resources.content_description_adult_icon
-import movies.core.ui.generated.resources.content_description_app_icon
-import movies.core.ui.generated.resources.content_description_appearance_icon
-import movies.core.ui.generated.resources.content_description_back_icon
-import movies.core.ui.generated.resources.content_description_close_icon
-import movies.core.ui.generated.resources.content_description_download_icon
-import movies.core.ui.generated.resources.content_description_favorite_icon
-import movies.core.ui.generated.resources.content_description_movie_details_image
-import movies.core.ui.generated.resources.content_description_password_icon
-import movies.core.ui.generated.resources.content_description_password_off_icon
-import movies.core.ui.generated.resources.content_description_reset_settings_icon
-import movies.core.ui.generated.resources.content_description_search_icon
-import movies.core.ui.generated.resources.content_description_settings_icon
-import movies.core.ui.generated.resources.content_description_share_icon
-import movies.core.ui.generated.resources.content_description_user_location_icon
-import movies.core.ui.generated.resources.content_description_voice_icon
+import movies.shared.ui.generated.resources.Res
+import movies.shared.ui.generated.resources.content_description_account_avatar_image
+import movies.shared.ui.generated.resources.content_description_account_icon
+import movies.shared.ui.generated.resources.content_description_adult_icon
+import movies.shared.ui.generated.resources.content_description_app_icon
+import movies.shared.ui.generated.resources.content_description_appearance_icon
+import movies.shared.ui.generated.resources.content_description_back_icon
+import movies.shared.ui.generated.resources.content_description_close_icon
+import movies.shared.ui.generated.resources.content_description_download_icon
+import movies.shared.ui.generated.resources.content_description_favorite_icon
+import movies.shared.ui.generated.resources.content_description_movie_details_image
+import movies.shared.ui.generated.resources.content_description_password_icon
+import movies.shared.ui.generated.resources.content_description_password_off_icon
+import movies.shared.ui.generated.resources.content_description_reset_settings_icon
+import movies.shared.ui.generated.resources.content_description_search_icon
+import movies.shared.ui.generated.resources.content_description_settings_icon
+import movies.shared.ui.generated.resources.content_description_share_icon
+import movies.shared.ui.generated.resources.content_description_user_location_icon
+import movies.shared.ui.generated.resources.content_description_voice_icon
 
 object MoviesContentDescription {
     val AccountIcon = Res.string.content_description_account_icon

@@ -37,9 +37,9 @@ import androidx.compose.material.icons.rounded.ViewAgenda
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.Widgets
-import movies.core.ui.generated.resources.Res
-import movies.core.ui.generated.resources.ic_launcher_icon_red
-import movies.core.ui.generated.resources.ic_tmdb
+import movies.shared.ui.generated.resources.Res
+import movies.shared.ui.generated.resources.ic_launcher_icon_red
+import movies.shared.ui.generated.resources.ic_tmdb
 
 object MoviesIcons {
     val TmdbLogo = Res.drawable.ic_tmdb

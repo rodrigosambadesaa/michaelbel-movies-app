@@ -56,7 +56,7 @@ jobs:
           PACKAGE_NAME="org.michaelbel.moviemade"
           TRACK="production"
           AAB_PATH="$(ls androidApp/build/outputs/bundle/gmsRelease/*.aab | head -n 1)"
-          ACCESS_TOKEN="$(gcloud auth print-access-token)"
+          ACCESS_TOKEN="$(gcloud auth print-access-token --scopes=https://www.googleapis.com/auth/androidpublisher)"
 
           google_play_request() {
             local response_file="$1"

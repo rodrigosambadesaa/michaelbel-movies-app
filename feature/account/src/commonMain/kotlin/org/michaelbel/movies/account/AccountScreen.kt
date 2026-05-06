@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.stringResource
@@ -54,8 +55,8 @@ import org.michaelbel.movies.ui.compose.AccountAvatar
 import org.michaelbel.movies.ui.icons.Adult
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationBar
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun AccountScreen(
@@ -248,15 +249,14 @@ private fun AccountScreenContent(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun AccountScreenContentPreview(
     @PreviewParameter(AccountModelPreviewParameterProvider::class) state: AccountModel
 ) {
-    AppTheme {
-        AccountScreenContent(
-            state = state,
-            dispatch = {}
-        )
-    }
+    AccountScreenContent(
+        state = state,
+        dispatch = {}
+    )
 }

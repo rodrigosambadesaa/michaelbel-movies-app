@@ -187,7 +187,6 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Github Releases](https://github.com/michaelbel/movies/releases)
 - [x] [Lint](https://d.android.com/studio/write/lint)
 - [x] [Detekt](https://github.com/detekt/detekt)
-- [x] [Spotless](https://github.com/diffplug/spotless)
 - [x] [Distribute App via Telegram Bot](https://github.com/appleboy/telegram-action)
 - [x] [Non-Transitive R classes](https://d.android.com/studio/build/optimize-your-build#use-non-transitive-r-classes)
 - [x] [SplashScreen API](https://d.android.com/develop/ui/views/launch/splash-screen)

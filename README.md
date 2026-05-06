@@ -145,7 +145,7 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [MVVM](https://d.android.com/topic/architecture)
 - [x] [KTS Gradle Files](https://d.android.com/studio/build/migrate-to-kts)
 - [x] [KSP](https://d.android.com/studio/build/migrate-to-ksp)
-- [x] [Gradle Version Catalog](https://d.android.com/build/migrate-to-catalogs)
+- [x] [Version Catalog](https://d.android.com/build/migrate-to-catalogs)
 - [x] [Build Variants](https://d.android.com/build/build-variants)
 - [x] [Product Flavors](https://d.android.com/build/build-variants#product-flavors)
 - [x] [Using buildSrc Directory](https://docs.gradle.org/current/userguide/organizing_gradle_projects.html#sec:build_sources)

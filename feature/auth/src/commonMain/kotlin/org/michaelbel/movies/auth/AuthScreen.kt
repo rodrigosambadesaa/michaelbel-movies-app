@@ -75,6 +75,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.painterResource
@@ -104,8 +105,8 @@ import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.compose.PasswordVisibilityIcon
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationBar
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun AuthScreen(
@@ -193,7 +194,9 @@ private fun AuthScreenContent(
                     text = stringResource(MoviesStrings.auth_title),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
             },
             modifier = Modifier.fillMaxWidth(),
@@ -217,7 +220,9 @@ private fun AuthScreenContent(
                     )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(Color.Transparent)
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent
+            )
         )
 
         Icon(
@@ -317,7 +322,9 @@ private fun AuthScreenContent(
             ) {
                 Text(
                     text = stringResource(MoviesStrings.auth_sign_up),
-                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                    style = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
 
@@ -332,7 +339,9 @@ private fun AuthScreenContent(
                 ) {
                     Text(
                         text = stringResource(MoviesStrings.auth_reset_password),
-                        style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                        style = LocalTextStyle.current.copy(
+                            textAlign = TextAlign.Center
+                        )
                     )
                 }
             }
@@ -356,7 +365,9 @@ private fun AuthScreenContent(
             } else {
                 Text(
                     text = stringResource(MoviesStrings.auth_sign_in),
-                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                    style = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
         }
@@ -379,7 +390,9 @@ private fun AuthScreenContent(
             } else {
                 Text(
                     text = stringResource(MoviesStrings.auth_login),
-                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                    style = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
         }
@@ -411,7 +424,9 @@ private fun AuthScreenContent(
                 ) {
                     Text(
                         text = stringResource(MoviesStrings.auth_terms_of_use),
-                        style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center)
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center
+                        )
                     )
                 }
 
@@ -431,7 +446,9 @@ private fun AuthScreenContent(
                 ) {
                     Text(
                         text = stringResource(MoviesStrings.auth_privacy_policy),
-                        style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center)
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center
+                        )
                     )
                 }
             }
@@ -439,15 +456,14 @@ private fun AuthScreenContent(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun AuthScreenContentPreview(
     @PreviewParameter(AuthModelPreviewParameterProvider::class) state: AuthModel
 ) {
-    AppTheme {
-        AuthScreenContent(
-            state = state,
-            dispatch = {}
-        )
-    }
+    AuthScreenContent(
+        state = state,
+        dispatch = {}
+    )
 }

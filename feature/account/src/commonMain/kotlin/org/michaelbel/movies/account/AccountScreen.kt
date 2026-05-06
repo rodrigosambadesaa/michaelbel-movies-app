@@ -93,7 +93,9 @@ private fun AccountScreenContent(
                 Text(
                     text = stringResource(MoviesStrings.account_title),
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
             },
             modifier = Modifier.fillMaxWidth(),
@@ -226,18 +228,21 @@ private fun AccountScreenContent(
             ),
             contentPadding = PaddingValues(horizontal = 24.dp)
         ) {
-            if (state.isLogoutJobActive) {
-                LoadingIndicator(
-                    modifier = Modifier.size(40.dp),
-                    color = buttonContentColor
-                )
-            } else {
-                Text(
-                    text = stringResource(MoviesStrings.account_logout),
-                    style = LocalTextStyle.current.copy(
-                        textAlign = TextAlign.Center
+            when {
+                state.isLogoutJobActive -> {
+                    LoadingIndicator(
+                        modifier = Modifier.size(40.dp),
+                        color = buttonContentColor
                     )
-                )
+                }
+                else -> {
+                    Text(
+                        text = stringResource(MoviesStrings.account_logout),
+                        style = LocalTextStyle.current.copy(
+                            textAlign = TextAlign.Center
+                        )
+                    )
+                }
             }
         }
     }

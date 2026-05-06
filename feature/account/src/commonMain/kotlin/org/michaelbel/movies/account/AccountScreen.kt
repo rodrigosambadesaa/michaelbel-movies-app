@@ -117,7 +117,9 @@ private fun AccountScreenContent(
                     )
                 }
             },
-            colors = TopAppBarDefaults.topAppBarColors(Color.Transparent)
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = Color.Transparent
+            )
         )
 
         Row(
@@ -163,7 +165,9 @@ private fun AccountScreenContent(
                         text = state.accountPojo.name,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
                     )
                 }
 
@@ -172,7 +176,9 @@ private fun AccountScreenContent(
                         text = state.accountPojo.username,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = MaterialTheme.typography.bodyMedium.copy(MaterialTheme.colorScheme.secondary)
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.secondary
+                        )
                     )
                 }
             }
@@ -198,7 +204,9 @@ private fun AccountScreenContent(
                     modifier = Modifier.padding(start = 4.dp),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodySmall.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
             }
         }
@@ -226,7 +234,9 @@ private fun AccountScreenContent(
             } else {
                 Text(
                     text = stringResource(MoviesStrings.account_logout),
-                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                    style = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
         }

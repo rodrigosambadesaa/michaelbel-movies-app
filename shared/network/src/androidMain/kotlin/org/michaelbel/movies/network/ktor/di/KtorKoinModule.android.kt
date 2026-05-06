@@ -1,7 +1,6 @@
 package org.michaelbel.movies.network.ktor.di
 
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-import io.github.rotbolt.flakerokhttpcore.FlakerInterceptor
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpTimeout
@@ -16,7 +15,6 @@ import org.koin.dsl.module
 import org.michaelbel.movies.network.chuckerKoinModule
 import org.michaelbel.movies.network.config.TMDB_API_ENDPOINT
 import org.michaelbel.movies.network.config.tmdbApiKey
-import org.michaelbel.movies.network.flakerKoinModule
 import org.michaelbel.movies.network.httpLoggingInterceptorKoinModule
 
 private const val REQUEST_TIMEOUT_MILLIS = 10_000L
@@ -27,7 +25,6 @@ private const val CONNECT_TIMEOUT_MILLIS = 10_000L
 actual val ktorKoinModule = module {
     includes(
         chuckerKoinModule,
-        flakerKoinModule,
         httpLoggingInterceptorKoinModule
     )
     single<HttpClient> {
@@ -51,7 +48,6 @@ actual val ktorKoinModule = module {
                 clientCacheSize = HTTP_CACHE_SIZE_BYTES
                 config {
                     addInterceptor(get<ChuckerInterceptor>())
-                    addInterceptor(get<FlakerInterceptor>())
                     addInterceptor(get<HttpLoggingInterceptor>())
                 }
             }

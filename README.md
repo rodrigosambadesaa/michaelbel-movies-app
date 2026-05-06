@@ -179,7 +179,6 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] [Browser](https://d.android.com/jetpack/androidx/releases/browser)
 - [x] [OkHttp](https://github.com/square/okhttp)
 - [x] [Chucker](https://github.com/ChuckerTeam/chucker)
-- [x] [Flaker](https://github.com/rotbolt/flaker)
 - [x] [Timber](https://github.com/JakeWharton/timber)
 - [x] [App Shortcuts](https://d.android.com/develop/ui/views/launch/shortcuts)
 - [x] [Github Releases](https://github.com/michaelbel/movies/releases)

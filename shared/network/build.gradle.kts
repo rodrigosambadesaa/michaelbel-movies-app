@@ -42,7 +42,6 @@ kotlin {
             implementation(libs.bundles.startup.android)
             implementation(libs.bundles.okhttp.logging.interceptor.android)
             implementation(libs.bundles.chucker.library.no.op.android)
-            implementation(libs.bundles.flaker.noop.android)
         }
         jvmMain.dependencies {
             implementation(libs.bundles.ktor.jvm)

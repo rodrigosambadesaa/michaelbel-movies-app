@@ -39,14 +39,14 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.Job
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.account.intent.AccountIntent
 import org.michaelbel.movies.account.model.AccountModel
-import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
+import org.michaelbel.movies.account.preview.AccountModelPreviewParameterProvider
 import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.collectAsStateCommon
@@ -245,42 +245,12 @@ private fun AccountScreenContent(
 
 @Preview
 @Composable
-private fun AccountScreenContentPreview() {
+private fun AccountScreenContentPreview(
+    @PreviewParameter(AccountModelPreviewParameterProvider::class) state: AccountModel
+) {
     AppTheme {
         AccountScreenContent(
-            state = AccountModel(
-                accountPojo = AccountPojo(
-                    accountId = 0,
-                    avatarUrl = "",
-                    language = "",
-                    country = "Finland",
-                    name = "Michael Bely",
-                    adult = true,
-                    username = "michaelbel"
-                ),
-            ),
-            dispatch = {}
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun AccountScreenContent2Preview() {
-    AppTheme {
-        AccountScreenContent(
-            state = AccountModel(
-                accountPojo = AccountPojo(
-                    accountId = 0,
-                    avatarUrl = "",
-                    language = "",
-                    country = "Finland",
-                    name = "Michael Bely",
-                    adult = true,
-                    username = "michaelbel"
-                ),
-                logoutJob = Job()
-            ),
+            state = state,
             dispatch = {}
         )
     }

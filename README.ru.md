@@ -164,7 +164,6 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] [Material You Dynamic Colors](https://d.android.com/develop/ui/views/theming/dynamic-colors)
 - [x] [Material3 Expressive](https://m3.material.io/blog/building-with-m3-expressive)
 - [x] [Themed App Icon](https://d.android.com/develop/ui/views/launch/icon_design_adaptive)
-- [x] [Palette Colors API](https://d.android.com/develop/ui/views/graphics/palette-colors)
 - [x] EyeDropper
 - [x] [Accompanist](https://github.com/google/accompanist)
 - [x] [Compose PreviewParameterProvider](https://d.android.com/jetpack/compose/tooling#previewparameter)

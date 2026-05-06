@@ -257,9 +257,6 @@ graph TD;
     persistence-->repository
 ```
 
-## Роадмап
-[Movies App Roadmap](https://github.com/users/michaelbel/projects/1/views/1)
-
 
 ## Вклад
 [![](https://img.shields.io/github/issues-pr-closed-raw/michaelbel/movies?style=for-the-badge&logo=github&labelColor=3F464F&color=green)](https://github.com/michaelbel/movies/pulls)

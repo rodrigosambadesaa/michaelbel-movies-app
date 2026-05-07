@@ -22,10 +22,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
@@ -72,7 +73,7 @@ private fun HorizontalPagerIndicator(
     modifier: Modifier = Modifier,
     pageIndexMapping: (Int) -> Int = { it },
     activeColor: Color = LocalContentColor.current,
-    inactiveColor: Color = activeColor.copy(alpha = 0.38f),
+    inactiveColor: Color = activeColor.copy(alpha = .38F),
     indicatorWidth: Dp = 8.dp,
     indicatorHeight: Dp = indicatorWidth,
     spacing: Dp = indicatorWidth,
@@ -124,20 +125,15 @@ private fun HorizontalPagerIndicator(
     }
 }
 
-@Preview
+@PreviewWrapper(ThemeWrapper::class)
+@Preview(showBackground = true)
 @Composable
 private fun HorizontalPagerIndicatorPreview() {
     val pagerState = rememberPagerState(initialPage = 1) { 5 }
 
-    AppTheme {
-        Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
-        ) {
-            HorizontalPagerIndicator(
-                pagerState = pagerState,
-                activeColor = MaterialTheme.colorScheme.primary,
-                inactiveColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
-            )
-        }
-    }
+    HorizontalPagerIndicator(
+        pagerState = pagerState,
+        activeColor = MaterialTheme.colorScheme.primary,
+        inactiveColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
+    )
 }

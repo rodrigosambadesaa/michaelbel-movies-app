@@ -12,8 +12,9 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 val MoviesIcons.SettingsReset: ImageVector
     get() {
@@ -45,15 +46,14 @@ val MoviesIcons.SettingsReset: ImageVector
 
 private var _settingsReset: ImageVector? = null
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun SettingsResetIconPreview() {
-    AppTheme {
-        Icon(
-            imageVector = MoviesIcons.SettingsReset,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = Color.White
-        )
-    }
+    Icon(
+        imageVector = MoviesIcons.SettingsReset,
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+        tint = Color.White
+    )
 }

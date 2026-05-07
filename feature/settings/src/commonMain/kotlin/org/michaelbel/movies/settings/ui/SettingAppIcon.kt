@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -29,7 +30,7 @@ import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.IconAliasPreviewParameterProvider
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import org.michaelbel.movies.ui.theme.middleLargeIncreasedShape
 
 @Composable
@@ -94,18 +95,17 @@ fun RowScope.SettingAppIcon(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun SettingAppIconPreview(
     @PreviewParameter(IconAliasPreviewParameterProvider::class) iconAlias: IconAlias
 ) {
-    AppTheme {
-        Row {
-            SettingAppIcon(
-                iconAlias = iconAlias,
-                isEnabled = true,
-                onClick = {}
-            )
-        }
+    Row {
+        SettingAppIcon(
+            iconAlias = iconAlias,
+            isEnabled = true,
+            onClick = {}
+        )
     }
 }

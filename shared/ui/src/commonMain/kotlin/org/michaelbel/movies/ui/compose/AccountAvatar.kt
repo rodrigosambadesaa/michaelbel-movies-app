@@ -2,7 +2,6 @@
 
 package org.michaelbel.movies.ui.compose
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -19,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,7 +31,7 @@ import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.ktx.letters
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.preview.AccountPreviewParameterProvider
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 @Composable
 fun AccountAvatar(
@@ -72,20 +72,15 @@ fun AccountAvatar(
     }
 }
 
-@Preview
+@PreviewWrapper(ThemeWrapper::class)
+@Preview(showBackground = true)
 @Composable
 private fun AccountAvatarPreview(
     @PreviewParameter(AccountPreviewParameterProvider::class) account: AccountPojo
 ) {
-    AppTheme {
-        Box(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
-        ) {
-            AccountAvatar(
-                account = account,
-                fontSize = if (account.letters.length == 1) 16.sp else 13.sp,
-                modifier = Modifier.size(32.dp),
-            )
-        }
-    }
+    AccountAvatar(
+        account = account,
+        fontSize = if (account.letters.length == 1) 16.sp else 13.sp,
+        modifier = Modifier.size(32.dp),
+    )
 }

@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
@@ -42,7 +43,7 @@ import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
 import org.michaelbel.movies.ui.placeholder.material3.fade
 import org.michaelbel.movies.ui.placeholder.placeholder
 import org.michaelbel.movies.ui.preview.MovieDbPreviewParameterProvider
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 @Composable
 fun DetailsContent(
@@ -125,16 +126,15 @@ fun DetailsContent(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview(showBackground = true)
 @Composable
 private fun DetailsContentPreview(
     @PreviewParameter(MovieDbPreviewParameterProvider::class) movie: MoviePojo
 ) {
-    AppTheme {
-        DetailsContent(
-            movie = movie,
-            onNavigateToGallery = {},
-            contentPadding = PaddingValues(top = 16.dp)
-        )
-    }
+    DetailsContent(
+        movie = movie,
+        onNavigateToGallery = {},
+        contentPadding = PaddingValues(top = 16.dp)
+    )
 }

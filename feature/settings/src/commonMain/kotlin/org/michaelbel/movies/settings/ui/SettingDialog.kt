@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.common.SealedString
 import org.michaelbel.movies.interactor.entity.AppLanguage
@@ -32,8 +33,8 @@ import org.michaelbel.movies.settings.ktx.stringText
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.preview.AppearancePreviewParameterProvider
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun <T: SealedString> SettingsDialog(
@@ -119,19 +120,18 @@ fun <T: SealedString> SettingsDialog(
     )
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun SettingDialogPreview(
     @PreviewParameter(AppearancePreviewParameterProvider::class) appLanguage: AppLanguage
 ) {
-    AppTheme {
-        SettingsDialog(
-            icon = MoviesIcons.Language,
-            title = stringResource(MoviesStrings.settings_language),
-            items = AppLanguage.VALUES,
-            currentItem = appLanguage,
-            onItemSelect = {},
-            onDismissRequest = {}
-        )
-    }
+    SettingsDialog(
+        icon = MoviesIcons.Language,
+        title = stringResource(MoviesStrings.settings_language),
+        items = AppLanguage.VALUES,
+        currentItem = appLanguage,
+        onItemSelect = {},
+        onDismissRequest = {}
+    )
 }

@@ -2,19 +2,18 @@
 
 package org.michaelbel.movies.ui.compose.page
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 @Composable
 fun PagingLoadingBox(
@@ -30,13 +29,9 @@ fun PagingLoadingBox(
     }
 }
 
-@Preview
+@PreviewWrapper(ThemeWrapper::class)
+@Preview(showBackground = true)
 @Composable
 private fun PagingLoadingBoxPreview() {
-    AppTheme {
-        PagingLoadingBox(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        )
-    }
+    PagingLoadingBox()
 }

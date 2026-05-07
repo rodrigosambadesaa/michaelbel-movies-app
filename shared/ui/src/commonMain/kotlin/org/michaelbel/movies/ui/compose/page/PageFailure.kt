@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
@@ -29,8 +30,8 @@ import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.compose.RotatingCookie12SidedBox
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.isNavigationRail
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.AppTheme
 
 @Composable
 fun PageFailure(
@@ -93,12 +94,11 @@ fun PageFailure(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview(showBackground = true)
 @Composable
 private fun PageFailurePreview() {
-    AppTheme {
-        PageFailure(
-            isButtonVisible = true
-        )
-    }
+    PageFailure(
+        isButtonVisible = true
+    )
 }

@@ -12,8 +12,9 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 /**
  * Convert SVG to Compose using https://composables.com/svgtocompose
@@ -103,15 +104,14 @@ val MoviesIcons.ThemeLightDark: ImageVector
 
 private var _themeLightDark: ImageVector? = null
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun ThemeLightDarkIconPreview() {
-	AppTheme {
-		Icon(
-			imageVector = MoviesIcons.ThemeLightDark,
-			contentDescription = null,
-			modifier = Modifier.size(24.dp),
-			tint = Color.White
-		)
-	}
+	Icon(
+		imageVector = MoviesIcons.ThemeLightDark,
+		contentDescription = null,
+		modifier = Modifier.size(24.dp),
+		tint = Color.White
+	)
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -56,8 +57,8 @@ import org.michaelbel.movies.ui.ObserveAsEvents
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 import org.michaelbel.movies.ui.strings.MoviesStrings
-import org.michaelbel.movies.ui.theme.AppTheme
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
@@ -191,13 +192,12 @@ private fun NotifyScreenContent(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun NotifyScreenContentPreview() {
-    AppTheme {
-        NotifyScreenContent(
-            state = NotifyModel(isNotificationsFeatureEnabled = true),
-            dispatch = {}
-        )
-    }
+    NotifyScreenContent(
+        state = NotifyModel(isNotificationsFeatureEnabled = true),
+        dispatch = {}
+    )
 }

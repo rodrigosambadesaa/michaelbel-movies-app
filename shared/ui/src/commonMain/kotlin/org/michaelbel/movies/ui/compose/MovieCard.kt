@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
@@ -32,7 +33,7 @@ import org.michaelbel.movies.ui.placeholder.PlaceholderHighlight
 import org.michaelbel.movies.ui.placeholder.material3.fade
 import org.michaelbel.movies.ui.placeholder.placeholder
 import org.michaelbel.movies.ui.preview.MoviePreviewParameterProvider
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 @Composable
 fun MovieCard(
@@ -93,28 +94,26 @@ fun MovieCard(
     }
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun MovieCardRowPreview(
     @PreviewParameter(MoviePreviewParameterProvider::class) movie: MoviePojo
 ) {
-    AppTheme {
-        MovieCard(
-            movie = movie,
-            style = MovieCardStyle.Row
-        )
-    }
+    MovieCard(
+        movie = movie,
+        style = MovieCardStyle.Row
+    )
 }
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun MovieCardColumnPreview(
     @PreviewParameter(MoviePreviewParameterProvider::class) movie: MoviePojo
 ) {
-    AppTheme {
-        MovieCard(
-            movie = movie,
-            style = MovieCardStyle.Column
-        )
-    }
+    MovieCard(
+        movie = movie,
+        style = MovieCardStyle.Column
+    )
 }

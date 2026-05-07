@@ -10,8 +10,9 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
 import androidx.compose.ui.unit.dp
-import org.michaelbel.movies.ui.theme.AppTheme
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
 
 val MoviesIcons.Telegram: ImageVector
     get() {
@@ -58,15 +59,14 @@ val MoviesIcons.Telegram: ImageVector
 
 private var _telegram: ImageVector? = null
 
+@PreviewWrapper(ThemeWrapper::class)
 @Preview
 @Composable
 private fun TelegramIconPreview() {
-    AppTheme {
-        Icon(
-            imageVector = MoviesIcons.Telegram,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = Color.White
-        )
-    }
+    Icon(
+        imageVector = MoviesIcons.Telegram,
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+        tint = Color.White
+    )
 }

@@ -107,7 +107,7 @@ object ColorUtils {
     }
 
     fun lstarFromArgb(argb: Int): Double {
-        val y = xyzFromArgb(argb)!![1]
+        val y = xyzFromArgb(argb)[1]
         return 116.0 * labF(y / 100.0) - 16.0
     }
 

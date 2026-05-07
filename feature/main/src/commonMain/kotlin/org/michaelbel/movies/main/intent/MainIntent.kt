@@ -13,11 +13,8 @@ sealed interface MainIntent: Intent {
     data object FetchFirebaseMessagingToken: MainIntent
     data object PrepopulateDatabase: MainIntent
     data object UpdateAccountDetails: MainIntent
-    data object ShowDebugNotification: MainIntent
     data object ShortcutSearchClick: MainIntent
     data object ShortcutSettingsClick: MainIntent
-    data object NavigateToDebug: MainIntent
-    data object ConsumeDebugNavigation: MainIntent
     data class RequestReview(val activity: Any): MainIntent
     data class RequestUpdate(val activity: Any): MainIntent
     data class Authenticate(val activity: Any): MainIntent

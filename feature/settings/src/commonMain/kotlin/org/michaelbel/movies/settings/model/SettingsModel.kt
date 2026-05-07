@@ -33,6 +33,7 @@ data class SettingsModel(
     val isUpdateAppFeatureEnabled: Boolean = false,
     val isAboutFeatureEnabled: Boolean = false,
     val isSettingsResetFeatureEnabled: Boolean = false,
+    val isDebugDialogFeatureEnabled: Boolean = false,
     val themeData: ThemeData = ThemeData.Default,
     val feedView: FeedView = FeedView.FeedList,
     val movieList: MovieList = MovieList.NowPlaying(),

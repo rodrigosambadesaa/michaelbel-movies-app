@@ -19,6 +19,7 @@ import org.michaelbel.movies.settings.event.SettingsEvent
 import org.michaelbel.movies.settings.intent.SettingsIntent
 import org.michaelbel.movies.settings.model.SettingsModel
 import org.michaelbel.movies.ui.appicon.IconAlias
+import org.michaelbel.movies.ui.navigation.DebugDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class SettingsViewModel(
@@ -130,6 +131,7 @@ class SettingsViewModel(
                         isUpdateAppFeatureEnabled = uiInteractor.isUpdateAppFeatureEnabled,
                         isAboutFeatureEnabled = uiInteractor.isAboutFeatureEnabled,
                         isSettingsResetFeatureEnabled = uiInteractor.isSettingsResetFeatureEnabled,
+                        isDebugDialogFeatureEnabled = uiInteractor.isDebugDialogFeatureEnabled,
                     )
                 }
             }
@@ -148,6 +150,7 @@ class SettingsViewModel(
             is SettingsIntent.RequestTileService -> launch { push(SettingsEvent.RequestTileService) }
             is SettingsIntent.RequestGithub -> launch { push(SettingsEvent.RequestGithub) }
             is SettingsIntent.RequestTelegram -> launch { push(SettingsEvent.RequestTelegram) }
+            is SettingsIntent.OpenDebugDialog -> launch { MainNavigator.forward(DebugDestination) }
             is SettingsIntent.BackClick -> launch { MainNavigator.back() }
             is SettingsIntent.ReviewClick -> launch { MainNavigator.requestReview() }
             is SettingsIntent.UpdateClick -> launch { MainNavigator.requestUpdate() }

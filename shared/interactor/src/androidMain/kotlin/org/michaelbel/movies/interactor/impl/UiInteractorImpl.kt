@@ -32,6 +32,7 @@ import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.appicon.enabledIcon
+import org.michaelbel.movies.ui.isDebug
 import org.michaelbel.movies.ui.appicon.setIcon
 import org.michaelbel.movies.ui.currentGrammaticalGender
 import org.michaelbel.movies.ui.rememberNavigateToAppOpenByDefaultSettings
@@ -97,6 +98,9 @@ class UiInteractorImpl(
     override val isAboutFeatureEnabled: Boolean = true
 
     override val isSettingsResetFeatureEnabled: Boolean = true
+
+    override val isDebugDialogFeatureEnabled: Boolean
+        get() = isDebug
 
     override val isFeedAuthIconFeatureEnabled: Boolean = true
 

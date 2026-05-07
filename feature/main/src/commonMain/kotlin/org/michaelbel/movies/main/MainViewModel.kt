@@ -7,7 +7,6 @@ import org.michaelbel.movies.common.biometric.BiometricListener
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
-import org.michaelbel.movies.interactor.DebugNotificationInteractor
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.main.event.MainEvent
 import org.michaelbel.movies.main.intent.MainIntent
@@ -16,7 +15,6 @@ import org.michaelbel.movies.main.tabs.event.MainTabsEventManager
 import org.michaelbel.movies.platform.config.ConfigService
 import org.michaelbel.movies.platform.review.ReviewService
 import org.michaelbel.movies.platform.update.UpdateService
-import org.michaelbel.movies.ui.isDebug
 import org.michaelbel.movies.ui.navigation.DetailsDestination
 import org.michaelbel.movies.ui.navigation.MainDestination
 import org.michaelbel.movies.ui.navigation.MainNavigator
@@ -26,7 +24,6 @@ class MainViewModel(
     private val interactor: Interactor,
     private val biometricController: BiometricInteractor,
     private val workManagerInteractor: WorkManagerInteractor,
-    private val debugNotificationInteractor: DebugNotificationInteractor,
     private val configService: ConfigService,
     private val reviewService: ReviewService,
     private val updateService: UpdateService,
@@ -40,7 +37,6 @@ class MainViewModel(
         dispatch(MainIntent.FetchFirebaseMessagingToken)
         dispatch(MainIntent.PrepopulateDatabase)
         dispatch(MainIntent.UpdateAccountDetails)
-        dispatch(MainIntent.ShowDebugNotification)
     }
 
     override fun dispatch(intent: MainIntent) {
@@ -82,11 +78,6 @@ class MainViewModel(
             }
             is MainIntent.PrepopulateDatabase -> workManagerInteractor.prepopulateDatabase()
             is MainIntent.UpdateAccountDetails -> workManagerInteractor.updateAccountDetails()
-            is MainIntent.ShowDebugNotification -> {
-                if (isDebug) {
-                    debugNotificationInteractor.showDebugNotification()
-                }
-            }
             is MainIntent.Authenticate -> {
                 val biometricListener = object: BiometricListener {
                     override fun onSuccess() {
@@ -119,8 +110,6 @@ class MainViewModel(
                     dispatch(MainIntent.OpenSettings)
                 }
             }
-            is MainIntent.NavigateToDebug -> reduce { it.copy(openDebugSheet = true) }
-            is MainIntent.ConsumeDebugNavigation -> reduce { it.copy(openDebugSheet = false) }
         }
     }
 }

@@ -19,8 +19,6 @@ import org.michaelbel.movies.ui.resolveNotificationPreferencesIntent
 import org.michaelbel.movies.ui.setScreenshotBlockEnabled
 import org.michaelbel.movies.ui.supportRegisterScreenCaptureCallback
 import org.michaelbel.movies.ui.supportUnregisterScreenCaptureCallback
-import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_EXTRA
-import org.michaelbel.movies.ui.navigation.DEBUG_DEEP_LINK_URI
 import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SEARCH
 import org.michaelbel.movies.ui.navigation.INTENT_ACTION_SETTINGS
 import org.michaelbel.movies.ui.shortcuts.installShortcuts
@@ -102,14 +100,7 @@ class MainActivity: FragmentActivity() {
             uri?.scheme == "movies" && uri.host == "redirect_url" -> handleRedirectUrl(uri)
             uri?.scheme == "movies" && uri.host == "details" -> handleDetailsDeepLink(uri)
             tmdbMovieId != null -> viewModel.dispatch(MainIntent.NavigateToDetails(tmdbMovieId))
-            isDebugDeepLink(uri, intent) -> handleDebugDeepLink(intent)
         }
-    }
-
-    private fun isDebugDeepLink(uri: Uri?, intent: Intent?): Boolean {
-        return (uri?.scheme == "movies" && uri.host == "debug")
-            || uri?.toString() == DEBUG_DEEP_LINK_URI
-            || intent?.getBooleanExtra(DEBUG_DEEP_LINK_EXTRA, false) == true
     }
 
     private fun handleRedirectUrl(uri: Uri) {
@@ -131,13 +122,5 @@ class MainActivity: FragmentActivity() {
     private fun handleDetailsDeepLink(uri: Uri) {
         val movieId = uri.pathSegments.firstOrNull()?.toIntOrNull()
         movieId?.let { viewModel.dispatch(MainIntent.NavigateToDetails(it)) }
-    }
-
-    private fun handleDebugDeepLink(intent: Intent?) {
-        viewModel.dispatch(MainIntent.NavigateToDebug)
-        intent?.removeExtra(DEBUG_DEEP_LINK_EXTRA)
-        if (intent?.data?.scheme == "movies" && intent.data?.host == "debug") {
-            intent.data = null
-        }
     }
 }

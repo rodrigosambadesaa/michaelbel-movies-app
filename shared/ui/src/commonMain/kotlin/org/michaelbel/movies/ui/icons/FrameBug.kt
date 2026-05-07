@@ -1,0 +1,62 @@
+package org.michaelbel.movies.ui.icons
+
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.graphics.vector.group
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewWrapper
+import androidx.compose.ui.unit.dp
+import org.michaelbel.movies.ui.preview.wrapper.ThemeWrapper
+
+val MoviesIcons.FrameBug: ImageVector
+    get() {
+        if (_frameBug != null) {
+            return _frameBug!!
+        }
+        _frameBug = ImageVector.Builder(
+            name = "FrameBug",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 960F,
+            viewportHeight = 960F
+        ).apply {
+            group(translationY = 960F) {
+                addPath(
+                    pathData = PathParser().parsePathString("M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120ZM40-720v-120q0-33 23.5-56.5T120-920h120v80H120v120H40ZM240-40H120q-33 0-56.5-23.5T40-120v-120h80v120h120v80Zm480 0v-80h120v-120h80v120q0 33-23.5 56.5T840-40H720Zm120-680v-120H720v-80h120q33 0 56.5 23.5T920-840v120h-80Z").toNodes(),
+                    fill = SolidColor(Color.Black),
+                    fillAlpha = 1F,
+                    stroke = null,
+                    strokeAlpha = 1F,
+                    strokeLineWidth = 1F,
+                    strokeLineCap = StrokeCap.Butt,
+                    strokeLineJoin = StrokeJoin.Miter,
+                    strokeLineMiter = 1F,
+                    pathFillType = PathFillType.NonZero
+                )
+            }
+        }.build()
+        return _frameBug!!
+    }
+
+private var _frameBug: ImageVector? = null
+
+@PreviewWrapper(ThemeWrapper::class)
+@Preview
+@Composable
+private fun FrameBugIconPreview() {
+    Icon(
+        imageVector = MoviesIcons.FrameBug,
+        contentDescription = null,
+        modifier = Modifier.size(24.dp),
+        tint = Color.White
+    )
+}

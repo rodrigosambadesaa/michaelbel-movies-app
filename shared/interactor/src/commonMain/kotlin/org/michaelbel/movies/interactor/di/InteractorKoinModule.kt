@@ -36,7 +36,6 @@ val interactorKoinModule = module {
         localeInteractorKoinModule,
         aboutInteractorKoinModule,
         uiInteractorKoinModule,
-        debugNotificationInteractorKoinModule,
         appNotificationInteractorKoinModule
     )
     singleOf(::AccountInteractorImpl) { bind<AccountInteractor>() }
@@ -65,5 +64,4 @@ val interactorKoinModule = module {
 expect val localeInteractorKoinModule: Module
 expect val aboutInteractorKoinModule: Module
 expect val uiInteractorKoinModule: Module
-expect val debugNotificationInteractorKoinModule: Module
 expect val appNotificationInteractorKoinModule: Module

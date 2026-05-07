@@ -103,6 +103,7 @@ import org.michaelbel.movies.ui.icons.DropperEye
 import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
 import org.michaelbel.movies.ui.icons.MoviesIcons
+import org.michaelbel.movies.ui.icons.FrameBug
 import org.michaelbel.movies.ui.icons.SettingsReset
 import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
@@ -262,6 +263,21 @@ private fun SettingsScreenContent(
                                     modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                                 )
                             }
+                        }
+                    }
+                    if (state.isDebugDialogFeatureEnabled) {
+                        IconButton(
+                            onClick = { dispatch(SettingsIntent.OpenDebugDialog) },
+                            modifier = Modifier
+                                .minimumInteractiveComponentSize()
+                                .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),
+                            shape = IconButtonDefaults.extraSmallSquareShape
+                        ) {
+                            Icon(
+                                imageVector = MoviesIcons.FrameBug,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
                         }
                     }
                 },

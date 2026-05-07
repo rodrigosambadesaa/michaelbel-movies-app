@@ -6,8 +6,6 @@ import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 
 const val INTENT_ACTION_SEARCH = "movies_shortcut://search"
 const val INTENT_ACTION_SETTINGS = "movies_shortcut://settings"
-const val DEBUG_DEEP_LINK_URI = "movies://debug"
-const val DEBUG_DEEP_LINK_EXTRA = "debug_deep_link_extra"
 
 @Serializable
 sealed interface AppRoute

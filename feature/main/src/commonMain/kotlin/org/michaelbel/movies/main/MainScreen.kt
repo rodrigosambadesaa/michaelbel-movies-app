@@ -22,7 +22,6 @@ import org.michaelbel.movies.debug.DebugScreen
 import org.michaelbel.movies.details.DetailsScreen
 import org.michaelbel.movies.gallery.GalleryScreen
 import org.michaelbel.movies.main.event.MainEvent
-import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.main.tabs.MainTabsScreen
 import org.michaelbel.movies.notify.NotifyScreen
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
@@ -61,15 +60,6 @@ fun MainScreen(
 
     LaunchedEffect(state.isScreenshotBlockEnabled) {
         onScreenshotBlockEnabledChanged(state.isScreenshotBlockEnabled)
-    }
-
-    LaunchedEffect(state.openDebugSheet) {
-        if (state.openDebugSheet) {
-            if (backStack.lastOrNull() != DebugDestination) {
-                backStack.add(DebugDestination)
-            }
-            viewModel.dispatch(MainIntent.ConsumeDebugNavigation)
-        }
     }
 
     MainScreenContent(

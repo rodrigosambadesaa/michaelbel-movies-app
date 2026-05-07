@@ -210,6 +210,7 @@ private fun SettingsScreenContent(
         }
         else -> emptyMap()
     }
+    val updateNotAvailableMessage = stringResource(MoviesStrings.settings_update_not_available)
     Scaffold(
         modifier = Modifier
             .fillMaxWidth()
@@ -321,7 +322,7 @@ private fun SettingsScreenContent(
             state.isGithubFeatureEnabled,
             state.isTelegramFeatureEnabled,
             state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled,
-            state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable
+            state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled
         )
         val aboutCount = aboutVisible.count { it }
 
@@ -1369,10 +1370,16 @@ private fun SettingsScreenContent(
                     }
                 }
             }
-            if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable) {
+            if (state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled) {
                 item {
                     SegmentedListItem(
-                        onClick = { dispatch(SettingsIntent.UpdateClick) },
+                        onClick = {
+                            if (state.isUpdateAvailable) {
+                                dispatch(SettingsIntent.UpdateClick)
+                            } else {
+                                dispatch(SettingsIntent.ShowSnackbar(updateNotAvailableMessage))
+                            }
+                        },
                         shapes = ListItemDefaults.segmentedShapes(
                             index = aboutVisible.take(3).count { it },
                             count = aboutCount

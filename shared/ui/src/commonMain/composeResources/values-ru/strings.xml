@@ -139,6 +139,7 @@
     <string name="settings_biometric_not_added">Биометрия отключена</string>
     <string name="settings_update">Обнови приложение</string>
     <string name="settings_update_description">Используя In-App Update API</string>
+    <string name="settings_update_not_available">Обновлений нет</string>
     <string name="settings_palette_colors">Палитра цветов</string>
     <string name="settings_palette_colors_description">Применить цвета из пилитры</string>
     <string name="settings_eye_dropper">Пипетка</string>

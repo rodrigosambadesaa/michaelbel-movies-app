@@ -138,6 +138,7 @@ import movies.shared.ui.generated.resources.settings_tile_error_already_added
 import movies.shared.ui.generated.resources.settings_title
 import movies.shared.ui.generated.resources.settings_update
 import movies.shared.ui.generated.resources.settings_update_description
+import movies.shared.ui.generated.resources.settings_update_not_available
 import movies.shared.ui.generated.resources.share
 import movies.shared.ui.generated.resources.share_via
 import movies.shared.ui.generated.resources.shortcuts_search_title
@@ -287,6 +288,7 @@ object MoviesStrings {
     val settings_biometric_not_added = Res.string.settings_biometric_not_added
     val settings_update = Res.string.settings_update
     val settings_update_description = Res.string.settings_update_description
+    val settings_update_not_available = Res.string.settings_update_not_available
     val settings_palette_colors = Res.string.settings_palette_colors
     val settings_palette_colors_description = Res.string.settings_palette_colors_description
     val settings_eye_dropper = Res.string.settings_eye_dropper

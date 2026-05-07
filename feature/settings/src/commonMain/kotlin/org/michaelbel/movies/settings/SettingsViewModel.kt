@@ -135,7 +135,6 @@ class SettingsViewModel(
             }
             is SettingsIntent.CollectAppIcon -> reduce { it.copy(enabledIcon = uiInteractor.enabledIcon) }
             is SettingsIntent.FetchUpdateAvailable -> {
-                reduce { it.copy(isUpdateAvailable = true) }
                 updateService.setUpdateAvailableListener(object: UpdateListener {
                     override fun onAvailable(result: Boolean) {
                         reduce { it.copy(isUpdateAvailable = result) }

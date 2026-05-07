@@ -139,6 +139,7 @@
     <string name="settings_biometric_not_added">Biometric not added</string>
     <string name="settings_update">Update App</string>
     <string name="settings_update_description">Using In-App Update API</string>
+    <string name="settings_update_not_available">No updates available</string>
     <string name="settings_palette_colors">Palette Colors</string>
     <string name="settings_palette_colors_description">Apply colors from Palette</string>
     <string name="settings_eye_dropper">EyeDropper</string>

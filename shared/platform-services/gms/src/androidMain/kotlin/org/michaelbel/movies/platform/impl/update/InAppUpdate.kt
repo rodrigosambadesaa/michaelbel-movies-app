@@ -37,12 +37,11 @@ class InAppUpdate(
     }
 
     private fun onSuccessAppUpdate(appUpdateInfo: AppUpdateInfo) {
-        if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-            onUpdateAvailableListener(true)
-        }
+        onUpdateAvailableListener(appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE)
     }
 
     private fun onFailureAppUpdate(throwable: Throwable) {
         if (throwable is InstallException && throwable.errorCode == InstallErrorCode.ERROR_APP_NOT_OWNED) return
+        onUpdateAvailableListener(false)
     }
 }

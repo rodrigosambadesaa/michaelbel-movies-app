@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.dsl.koinConfiguration
 import org.michaelbel.movies.about.AboutDialog
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.browser.DesktopTmdbAuthCallbackServer
@@ -66,7 +67,7 @@ fun main() {
 @Composable
 private fun App() {
     KoinApplication(
-        application = {
+        configuration = koinConfiguration {
             modules(appKoinModule)
         }
     ) {

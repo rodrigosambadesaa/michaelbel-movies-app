@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import kotlinx.coroutines.flow.filterNotNull
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.dsl.koinConfiguration
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.di.appKoinModule
 import org.michaelbel.movies.main.MainScreen
@@ -23,7 +24,7 @@ import org.michaelbel.movies.ui.theme.AppTheme
 @Composable
 fun IosMainContent() {
     KoinApplication(
-        application = {
+        configuration = koinConfiguration {
             modules(appKoinModule)
         }
     ) {

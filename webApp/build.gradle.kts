@@ -38,7 +38,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.feature.mainWeb)
+            implementation(projects.featureWeb.main)
             implementation(libs.bundles.jetbrains.compose.components.common)
             implementation(libs.bundles.jetbrains.compose.foundation.common)
             implementation(libs.bundles.jetbrains.compose.runtime.common)

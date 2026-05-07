@@ -94,7 +94,6 @@ import org.michaelbel.movies.settings.ui.SettingsResetDialog
 import org.michaelbel.movies.ui.ObserveAsEvents
 import org.michaelbel.movies.ui.OnResume
 import org.michaelbel.movies.ui.SettingsGenderText
-import org.michaelbel.movies.ui.SettingsListItemCount
 import org.michaelbel.movies.ui.accessibility.MoviesContentDescription
 import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.clickableWithoutRipple
@@ -283,6 +282,49 @@ private fun SettingsScreenContent(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Horizontal)
     ) { innerPadding ->
+        val localizationVisible = listOf(
+            state.isLanguageFeatureEnabled,
+            state.isGenderFeatureEnabled
+        )
+        val localizationCount = localizationVisible.count { it }
+        val appearanceVisible = listOf(
+            state.isThemeFeatureEnabled,
+            state.isDynamicColorsFeatureEnabled,
+            state.isPaletteColorsFeatureEnabled,
+            state.isAppIconFeatureEnabled
+        )
+        val appearanceCount = appearanceVisible.count { it }
+        val feedVisible = listOf(
+            state.isMovieListFeatureEnabled,
+            state.isFeedViewFeatureEnabled
+        )
+        val feedCount = feedVisible.count { it }
+        val systemVisible = listOf(
+            state.isAppOpenByDefaultFeatureEnabled,
+            state.isNotificationsFeatureEnabled,
+            state.isDoNotDisturbFeatureEnabled,
+            state.isBatteryOptimizationFeatureEnabled
+        )
+        val systemCount = systemVisible.count { it }
+        val integrationsVisible = listOf(
+            state.isWidgetFeatureEnabled,
+            state.isTileFeatureEnabled
+        )
+        val integrationsCount = integrationsVisible.count { it }
+        val privacyVisible = listOf(
+            state.isBiometricFeatureEnabled && state.isBiometricAvailable,
+            state.isScreenshotFeatureEnabled
+        )
+        val privacyCount = privacyVisible.count { it }
+        val toolsCount = if (state.isEyeDropperFeatureEnabled) 1 else 0
+        val aboutVisible = listOf(
+            state.isGithubFeatureEnabled,
+            state.isTelegramFeatureEnabled,
+            state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled,
+            state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled && state.isUpdateAvailable
+        )
+        val aboutCount = aboutVisible.count { it }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = lazyListState,
@@ -312,7 +354,7 @@ private fun SettingsScreenContent(
                         onClick = { languageDialog = true },
                         shapes = ListItemDefaults.segmentedShapes(
                             index = 0,
-                            count = SettingsListItemCount
+                            count = localizationCount
                         ),
                         leadingContent = {
                             Icon(
@@ -342,57 +384,6 @@ private fun SettingsScreenContent(
                     }
                 }
             }
-            if (state.isThemeFeatureEnabled) {
-                item {
-                    var themeDialog by remember { mutableStateOf(false) }
-                    if (themeDialog) {
-                        SettingsDialog(
-                            icon = MoviesIcons.ThemeLightDark,
-                            title = stringResource(MoviesStrings.settings_theme),
-                            items = AppTheme.VALUES,
-                            currentItem = state.themeData.appTheme,
-                            onItemSelect = { dispatch(SettingsIntent.SelectTheme(it)) },
-                            onDismissRequest = { themeDialog = false }
-                        )
-                    }
-
-                    SegmentedListItem(
-                        onClick = { themeDialog = true },
-                        shapes = ListItemDefaults.segmentedShapes(
-                            index = when (SettingsListItemCount) {
-                                6 -> 0
-                                else -> 1
-                            },
-                            count = SettingsListItemCount
-                        ),
-                        leadingContent = {
-                            Icon(
-                                imageVector = MoviesIcons.ThemeLightDark,
-                                contentDescription = null,
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = state.themeData.appTheme.stringText,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        },
-                        colors = ListItemDefaults.segmentedColors(
-                            containerColor = MaterialTheme.colorScheme.inversePrimary,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            trailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(MoviesStrings.settings_theme),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
             if (state.isGenderFeatureEnabled) {
                 item {
                     var genderDialog by remember { mutableStateOf(false) }
@@ -410,8 +401,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { genderDialog = true },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 2,
-                            count = SettingsListItemCount
+                            index = localizationVisible.take(1).count { it },
+                            count = localizationCount
                         ),
                         leadingContent = {
                             Icon(
@@ -441,36 +432,43 @@ private fun SettingsScreenContent(
                     }
                 }
             }
-            if (state.isMovieListFeatureEnabled) {
+            if (localizationCount > 0 && appearanceCount > 0) {
                 item {
-                    var movieListDialog by remember { mutableStateOf(false) }
-                    if (movieListDialog) {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
+            if (state.isThemeFeatureEnabled) {
+                item {
+                    var themeDialog by remember { mutableStateOf(false) }
+                    if (themeDialog) {
                         SettingsDialog(
-                            icon = MoviesIcons.LocalMovies,
-                            title = stringResource(MoviesStrings.settings_movie_list),
-                            items = MovieList.VALUES,
-                            currentItem = state.movieList,
-                            onItemSelect = { dispatch(SettingsIntent.SelectMovieList(it)) },
-                            onDismissRequest = { movieListDialog = false }
+                            icon = MoviesIcons.ThemeLightDark,
+                            title = stringResource(MoviesStrings.settings_theme),
+                            items = AppTheme.VALUES,
+                            currentItem = state.themeData.appTheme,
+                            onItemSelect = { dispatch(SettingsIntent.SelectTheme(it)) },
+                            onDismissRequest = { themeDialog = false }
                         )
                     }
 
                     SegmentedListItem(
-                        onClick = { movieListDialog = true },
+                        onClick = { themeDialog = true },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 3,
-                            count = SettingsListItemCount
+                            index = 0,
+                            count = appearanceCount
                         ),
                         leadingContent = {
                             Icon(
-                                imageVector = MoviesIcons.LocalMovies,
+                                imageVector = MoviesIcons.ThemeLightDark,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )
                         },
                         supportingContent = {
                             Text(
-                                text = state.movieList.stringText,
+                                text = state.themeData.appTheme.stringText,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         },
@@ -483,90 +481,7 @@ private fun SettingsScreenContent(
                         )
                     ) {
                         Text(
-                            text = stringResource(MoviesStrings.settings_movie_list),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-            if (state.isFeedViewFeatureEnabled) {
-                item {
-                    SegmentedListItem(
-                        onClick = {},
-                        shapes = ListItemDefaults.segmentedShapes(
-                            index = 4,
-                            count = SettingsListItemCount
-                        ),
-                        leadingContent = {
-                            Icon(
-                                imageVector = MoviesIcons.GridView,
-                                contentDescription = null,
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                            )
-                        },
-                        supportingContent = {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 4.dp),
-                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
-                            ) {
-                                ToggleButton(
-                                    checked = state.feedView == FeedView.FeedList,
-                                    onCheckedChange = { dispatch(SettingsIntent.SelectFeedView(FeedView.FeedList)) },
-                                    modifier = Modifier
-                                        .weight(1F)
-                                        .height(40.dp),
-                                    shapes = ButtonGroupDefaults.connectedLeadingButtonShapes()
-                                ) {
-                                    Icon(
-                                        imageVector = MoviesIcons.ViewAgenda,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                    )
-
-                                    Spacer(
-                                        modifier = Modifier.size(ToggleButtonDefaults.IconSpacing)
-                                    )
-
-                                    Text(
-                                        text = stringResource(MoviesStrings.settings_appearance_list)
-                                    )
-                                }
-
-                                ToggleButton(
-                                    checked = state.feedView == FeedView.FeedGrid,
-                                    onCheckedChange = { dispatch(SettingsIntent.SelectFeedView(FeedView.FeedGrid)) },
-                                    modifier = Modifier
-                                        .weight(1F)
-                                        .height(40.dp),
-                                    shapes = ButtonGroupDefaults.connectedTrailingButtonShapes()
-                                ) {
-                                    Icon(
-                                        imageVector = MoviesIcons.Dashboard,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                                    )
-
-                                    Spacer(
-                                        modifier = Modifier.size(ToggleButtonDefaults.IconSpacing)
-                                    )
-
-                                    Text(
-                                        text = stringResource(MoviesStrings.settings_appearance_grid)
-                                    )
-                                }
-                            }
-                        },
-                        colors = ListItemDefaults.segmentedColors(
-                            containerColor = MaterialTheme.colorScheme.inversePrimary,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(MoviesStrings.settings_appearance),
+                            text = stringResource(MoviesStrings.settings_theme),
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
@@ -583,8 +498,8 @@ private fun SettingsScreenContent(
                             }
                         },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 5,
-                            count = SettingsListItemCount
+                            index = appearanceVisible.take(1).count { it },
+                            count = appearanceCount
                         ),
                         leadingContent = {
                             Icon(
@@ -632,8 +547,8 @@ private fun SettingsScreenContent(
             if (state.isPaletteColorsFeatureEnabled) {
                 item {
                     val itemShapes = ListItemDefaults.segmentedShapes(
-                        index = 6,
-                        count = SettingsListItemCount
+                        index = appearanceVisible.take(2).count { it },
+                        count = appearanceCount
                     )
                     Column(
                         modifier = Modifier
@@ -712,8 +627,8 @@ private fun SettingsScreenContent(
             if (state.isAppIconFeatureEnabled) {
                 item {
                     val itemShapes = ListItemDefaults.segmentedShapes(
-                        index = 7,
-                        count = SettingsListItemCount
+                        index = appearanceVisible.take(3).count { it },
+                        count = appearanceCount
                     )
                     Column(
                         modifier = Modifier
@@ -762,13 +677,158 @@ private fun SettingsScreenContent(
                     }
                 }
             }
+            if (localizationCount + appearanceCount > 0 && feedCount > 0) {
+                item {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
+            if (state.isMovieListFeatureEnabled) {
+                item {
+                    var movieListDialog by remember { mutableStateOf(false) }
+                    if (movieListDialog) {
+                        SettingsDialog(
+                            icon = MoviesIcons.LocalMovies,
+                            title = stringResource(MoviesStrings.settings_movie_list),
+                            items = MovieList.VALUES,
+                            currentItem = state.movieList,
+                            onItemSelect = { dispatch(SettingsIntent.SelectMovieList(it)) },
+                            onDismissRequest = { movieListDialog = false }
+                        )
+                    }
+
+                    SegmentedListItem(
+                        onClick = { movieListDialog = true },
+                        shapes = ListItemDefaults.segmentedShapes(
+                            index = 0,
+                            count = feedCount
+                        ),
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.LocalMovies,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = state.movieList.stringText,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        colors = ListItemDefaults.segmentedColors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            trailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(MoviesStrings.settings_movie_list),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            if (state.isFeedViewFeatureEnabled) {
+                item {
+                    SegmentedListItem(
+                        onClick = {},
+                        shapes = ListItemDefaults.segmentedShapes(
+                            index = feedVisible.take(1).count { it },
+                            count = feedCount
+                        ),
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.GridView,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        },
+                        supportingContent = {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+                            ) {
+                                ToggleButton(
+                                    checked = state.feedView == FeedView.FeedList,
+                                    onCheckedChange = { dispatch(SettingsIntent.SelectFeedView(FeedView.FeedList)) },
+                                    modifier = Modifier
+                                        .weight(1F)
+                                        .height(40.dp),
+                                    shapes = ButtonGroupDefaults.connectedLeadingButtonShapes()
+                                ) {
+                                    Icon(
+                                        imageVector = MoviesIcons.ViewAgenda,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                    )
+
+                                    Spacer(
+                                        modifier = Modifier.size(ToggleButtonDefaults.IconSpacing)
+                                    )
+
+                                    Text(
+                                        text = stringResource(MoviesStrings.settings_appearance_list)
+                                    )
+                                }
+
+                                ToggleButton(
+                                    checked = state.feedView == FeedView.FeedGrid,
+                                    onCheckedChange = { dispatch(SettingsIntent.SelectFeedView(FeedView.FeedGrid)) },
+                                    modifier = Modifier
+                                        .weight(1F)
+                                        .height(40.dp),
+                                    shapes = ButtonGroupDefaults.connectedTrailingButtonShapes()
+                                ) {
+                                    Icon(
+                                        imageVector = MoviesIcons.Dashboard,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                                    )
+
+                                    Spacer(
+                                        modifier = Modifier.size(ToggleButtonDefaults.IconSpacing)
+                                    )
+
+                                    Text(
+                                        text = stringResource(MoviesStrings.settings_appearance_grid)
+                                    )
+                                }
+                            }
+                        },
+                        colors = ListItemDefaults.segmentedColors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(MoviesStrings.settings_appearance),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
+            if (localizationCount + appearanceCount + feedCount > 0 && systemCount > 0) {
+                item {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
             if (state.isAppOpenByDefaultFeatureEnabled) {
                 item {
                     SegmentedListItem(
                         onClick = onNavigateToAppOpenByDefaultSettings,
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 8,
-                            count = SettingsListItemCount
+                            index = 0,
+                            count = systemCount
                         ),
                         leadingContent = {
                             Icon(
@@ -803,8 +863,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.RequestPostNotificationsPermission) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 9,
-                            count = SettingsListItemCount
+                            index = systemVisible.take(1).count { it },
+                            count = systemCount
                         ),
                         leadingContent = {
                             Icon(
@@ -859,8 +919,8 @@ private fun SettingsScreenContent(
                             }
                         },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 10,
-                            count = SettingsListItemCount
+                            index = systemVisible.take(2).count { it },
+                            count = systemCount
                         ),
                         leadingContent = {
                             Icon(
@@ -916,8 +976,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.RequestIgnoreBatteryOptimizations) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 11,
-                            count = SettingsListItemCount
+                            index = systemVisible.take(3).count { it },
+                            count = systemCount
                         ),
                         leadingContent = {
                             Icon(
@@ -962,13 +1022,20 @@ private fun SettingsScreenContent(
                     }
                 }
             }
+            if (localizationCount + appearanceCount + feedCount + systemCount > 0 && integrationsCount > 0) {
+                item {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
             if (state.isWidgetFeatureEnabled) {
                 item {
                     SegmentedListItem(
                         onClick = rememberAndPinAppWidgetProvider(),
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 12,
-                            count = SettingsListItemCount
+                            index = 0,
+                            count = integrationsCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1003,8 +1070,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.RequestTileService) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 13,
-                            count = SettingsListItemCount
+                            index = integrationsVisible.take(1).count { it },
+                            count = integrationsCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1034,13 +1101,20 @@ private fun SettingsScreenContent(
                     }
                 }
             }
+            if (localizationCount + appearanceCount + feedCount + systemCount + integrationsCount > 0 && privacyCount > 0) {
+                item {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
             if (state.isBiometricFeatureEnabled && state.isBiometricAvailable) {
                 item {
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.SetBiometricEnabled(!state.isBiometricEnabled)) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 14,
-                            count = SettingsListItemCount
+                            index = 0,
+                            count = privacyCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1090,8 +1164,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.SetScreenshotBlockEnabled(!state.isScreenshotBlockEnabled)) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 15,
-                            count = SettingsListItemCount
+                            index = privacyVisible.take(1).count { it },
+                            count = privacyCount
                         ),
                         modifier = Modifier.fillMaxWidth(),
                         leadingContent = {
@@ -1137,13 +1211,20 @@ private fun SettingsScreenContent(
                     }
                 }
             }
+            if (localizationCount + appearanceCount + feedCount + systemCount + integrationsCount + privacyCount > 0 && toolsCount > 0) {
+                item {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
             if (state.isEyeDropperFeatureEnabled) {
                 item {
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.RequestEyeDropper) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 16,
-                            count = SettingsListItemCount
+                            index = 0,
+                            count = toolsCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1173,13 +1254,20 @@ private fun SettingsScreenContent(
                     }
                 }
             }
+            if (localizationCount + appearanceCount + feedCount + systemCount + integrationsCount + privacyCount + toolsCount > 0 && (aboutCount > 0 || state.isAboutFeatureEnabled)) {
+                item {
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+                }
+            }
             if (state.isGithubFeatureEnabled) {
                 item {
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.RequestGithub) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 17,
-                            count = SettingsListItemCount
+                            index = 0,
+                            count = aboutCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1214,11 +1302,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.RequestTelegram) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = when (SettingsListItemCount) {
-                                6 -> 5
-                                else -> 18
-                            },
-                            count = SettingsListItemCount
+                            index = aboutVisible.take(1).count { it },
+                            count = aboutCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1253,8 +1338,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.ReviewClick) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 19,
-                            count = SettingsListItemCount
+                            index = aboutVisible.take(2).count { it },
+                            count = aboutCount
                         ),
                         leadingContent = {
                             Icon(
@@ -1289,8 +1374,8 @@ private fun SettingsScreenContent(
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.UpdateClick) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = 20,
-                            count = SettingsListItemCount
+                            index = aboutVisible.take(3).count { it },
+                            count = aboutCount
                         ),
                         leadingContent = {
                             Icon(

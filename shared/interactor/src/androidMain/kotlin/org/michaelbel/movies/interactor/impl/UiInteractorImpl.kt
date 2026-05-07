@@ -59,8 +59,7 @@ class UiInteractorImpl(
     override val isDynamicColorsFeatureEnabled: Boolean
         get() = DynamicColors.isDynamicColorAvailable()
 
-    override val defaultDynamicColorsEnabled: Boolean
-        @ChecksSdkIntAtLeast(31) get() = Build.VERSION.SDK_INT >= 31
+    override val defaultDynamicColorsEnabled: Boolean = false
 
     override val isPaletteColorsFeatureEnabled: Boolean = true
 

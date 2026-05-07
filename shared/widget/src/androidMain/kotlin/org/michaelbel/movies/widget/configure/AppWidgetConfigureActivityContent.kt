@@ -73,7 +73,9 @@ fun AppWidgetConfigureActivityContent(
             ) {
                 Text(
                     text = stringResource(R.string.appwidget_configure_soon),
-                    style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 )
             }
         }
@@ -91,7 +93,9 @@ private fun Toolbar(
             Text(
                 text = stringResource(R.string.appwidget_configure),
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleLarge.copy(MaterialTheme.colorScheme.onPrimaryContainer)
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             )
         },
         modifier = modifier,

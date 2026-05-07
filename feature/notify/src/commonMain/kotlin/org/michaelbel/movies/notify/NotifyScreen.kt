@@ -13,19 +13,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumExtendedFloatingActionButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
@@ -99,6 +102,14 @@ private fun NotifyScreenContent(
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val hapticFeedback = LocalHapticFeedback.current
     val bellRotation = remember { Animatable(0F) }
+    val buttonContainerColor = MaterialTheme.colorScheme.surfaceTint
+    val buttonContentColor = contentColorFor(buttonContainerColor).let { color ->
+        if (color == Color.Unspecified) MaterialTheme.colorScheme.onSurface else color
+    }
+    val buttonColors = ButtonDefaults.buttonColors(
+        containerColor = buttonContainerColor,
+        contentColor = buttonContentColor
+    )
 
     LaunchedEffect(Unit) {
         while (isActive) {
@@ -176,16 +187,20 @@ private fun NotifyScreenContent(
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onPrimaryContainer, textAlign = TextAlign.Center)
             )
 
-            MediumExtendedFloatingActionButton(
+            Button(
                 onClick = { dispatch(NotifyIntent.ActionClick) },
-                shape = FloatingActionButtonDefaults.mediumExtendedFabShape,
-                containerColor = MaterialTheme.colorScheme.surfaceTint,
-                elevation = FloatingActionButtonDefaults.loweredElevation(),
-                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp)
+                shapes = ButtonDefaults.shapes(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 32.dp),
+                colors = buttonColors,
+                contentPadding = PaddingValues(horizontal = 24.dp)
             ) {
                 Text(
                     text = stringResource(if (state.isNotificationsFeatureEnabled) MoviesStrings.notification_continue else MoviesStrings.notification_go_to_settings),
-                    style = LocalTextStyle.current.copy(textAlign = TextAlign.Center)
+                    style = LocalTextStyle.current.copy(
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
         }

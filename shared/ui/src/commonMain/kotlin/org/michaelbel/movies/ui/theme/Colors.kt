@@ -15,8 +15,6 @@ private val tmdbPrimary = Color(0xFF01D277)
 @Suppress("unused")
 private val tmdbSecondary = Color(0xFF081C24)
 
-private val amoledSurface = Color(0xFF141414)
-
 val paletteStyles = listOf(
     PaletteStyle.TonalSpot,
     PaletteStyle.Spritz,
@@ -123,18 +121,3 @@ val TonalPalettes.paletteDarkColorScheme: ColorScheme
         surfaceContainerHighest = 22.n1(this)
     )
 
-val AmoledColorScheme = darkColorScheme(
-    primary = Color.White,
-    onPrimary = Color.White,
-    primaryContainer = Color.Black,
-    onPrimaryContainer = Color.White,
-    inversePrimary = amoledSurface,
-    secondary = Color.White,
-    onSecondaryContainer = Color.White,
-    surfaceTint = amoledSurface,
-    onSurface = Color.White,
-    surfaceVariant = amoledSurface,
-    onSurfaceVariant = Color.White,
-    error = Color.White,
-    outline = Color.White
-)

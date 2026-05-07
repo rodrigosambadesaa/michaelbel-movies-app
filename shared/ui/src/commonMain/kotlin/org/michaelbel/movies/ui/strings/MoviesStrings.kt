@@ -68,7 +68,7 @@ import movies.shared.ui.generated.resources.settings_action_go
 import movies.shared.ui.generated.resources.settings_action_reset
 import movies.shared.ui.generated.resources.settings_app_debug
 import movies.shared.ui.generated.resources.settings_app_launcher_icon
-import movies.shared.ui.generated.resources.settings_app_launcher_icon_amoled
+import movies.shared.ui.generated.resources.settings_app_launcher_icon_black
 import movies.shared.ui.generated.resources.settings_app_launcher_icon_brown
 import movies.shared.ui.generated.resources.settings_app_launcher_icon_changed_to
 import movies.shared.ui.generated.resources.settings_app_launcher_icon_description
@@ -129,7 +129,6 @@ import movies.shared.ui.generated.resources.settings_screenshots_description
 import movies.shared.ui.generated.resources.settings_telegram
 import movies.shared.ui.generated.resources.settings_telegram_description
 import movies.shared.ui.generated.resources.settings_theme
-import movies.shared.ui.generated.resources.settings_theme_amoled
 import movies.shared.ui.generated.resources.settings_theme_dark
 import movies.shared.ui.generated.resources.settings_theme_light
 import movies.shared.ui.generated.resources.settings_theme_system
@@ -225,7 +224,6 @@ object MoviesStrings {
     val settings_theme_system = Res.string.settings_theme_system
     val settings_theme_light = Res.string.settings_theme_light
     val settings_theme_dark = Res.string.settings_theme_dark
-    val settings_theme_amoled = Res.string.settings_theme_amoled
     val settings_dynamic_colors = Res.string.settings_dynamic_colors
     val settings_dynamic_colors_description = Res.string.settings_dynamic_colors_description
     val settings_post_notifications = Res.string.settings_post_notifications
@@ -264,7 +262,7 @@ object MoviesStrings {
     val settings_app_launcher_icon_red = Res.string.settings_app_launcher_icon_red
     val settings_app_launcher_icon_purple = Res.string.settings_app_launcher_icon_purple
     val settings_app_launcher_icon_brown = Res.string.settings_app_launcher_icon_brown
-    val settings_app_launcher_icon_amoled = Res.string.settings_app_launcher_icon_amoled
+    val settings_app_launcher_icon_black = Res.string.settings_app_launcher_icon_black
     val settings_app_launcher_icon_changed_to = Res.string.settings_app_launcher_icon_changed_to
     val settings_app_version_name = Res.string.settings_app_version_name
     val settings_app_version_code = Res.string.settings_app_version_code

@@ -1,8 +1,8 @@
 package org.michaelbel.movies.ui.appicon
 
 import movies.shared.ui.generated.resources.Res
-import movies.shared.ui.generated.resources.ic_launcher_icon_amoled
 import movies.shared.ui.generated.resources.ic_launcher_icon_aqua
+import movies.shared.ui.generated.resources.ic_launcher_icon_black
 import movies.shared.ui.generated.resources.ic_launcher_icon_blue
 import movies.shared.ui.generated.resources.ic_launcher_icon_blue_grey
 import movies.shared.ui.generated.resources.ic_launcher_icon_brown
@@ -150,10 +150,10 @@ sealed class IconAlias(
         title = "BlueGrey"
     )
 
-    data object Amoled: IconAlias(
-        key = "AmoledIcon",
-        iconRes = Res.drawable.ic_launcher_icon_amoled,
-        title = "Amoled"
+    data object Black: IconAlias(
+        key = "BlackIcon",
+        iconRes = Res.drawable.ic_launcher_icon_black,
+        title = "Black"
     )
 
     companion object {
@@ -178,7 +178,7 @@ sealed class IconAlias(
             Sand,
             Grey,
             BlueGrey,
-            Amoled
+            Black
         )
     }
 }

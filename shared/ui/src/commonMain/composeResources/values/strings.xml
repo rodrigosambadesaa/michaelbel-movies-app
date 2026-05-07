@@ -76,7 +76,6 @@
     <string name="settings_theme_system">Follow System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
-    <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_dynamic_colors">Dynamic Colors</string>
     <string name="settings_dynamic_colors_description">Apply colors from Wallpaper</string>
     <string name="settings_post_notifications">Notifications</string>
@@ -115,7 +114,7 @@
     <string name="settings_app_launcher_icon_red">Red</string>
     <string name="settings_app_launcher_icon_purple">Purple</string>
     <string name="settings_app_launcher_icon_brown">Brown</string>
-    <string name="settings_app_launcher_icon_amoled">Amoled</string>
+    <string name="settings_app_launcher_icon_black">Black</string>
     <string name="settings_app_launcher_icon_changed_to">App icon changed to %1$s</string>
     <string name="settings_app_version_name">Movies v%1$s</string>
     <string name="settings_app_version_code">(%1$s)</string>

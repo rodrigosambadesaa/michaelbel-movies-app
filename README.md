@@ -153,7 +153,6 @@ Choose a run configuration for an appropriate target in Android Studio and run i
 - [x] TargetSDK 37
 - [x] CompileSDK 37
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
-- [x] Amoled Theme
 - [x] SecureTextField
 - [x] Font Scale Cap (max 1.15)
 - [x] [SwipeToDismiss](https://d.android.com/develop/ui/compose/touch-input/user-interactions/swipe-to-dismiss)

@@ -154,7 +154,6 @@ TMDB_API_KEY=your_own_tmdb_api_key
 - [x] TargetSDK 37
 - [x] CompileSDK 37
 - [x] [Dark Theme](https://d.android.com/develop/ui/views/theming/darktheme)
-- [x] Amoled Theme
 - [x] SecureTextField
 - [x] Ограничение fontScale до 1.15
 - [x] [SwipeToDismiss](https://d.android.com/develop/ui/compose/touch-input/user-interactions/swipe-to-dismiss)

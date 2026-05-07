@@ -465,11 +465,11 @@
         </activity-alias>
 
         <activity-alias
-            android:name="org.michaelbel.movies.AmoledIcon"
+            android:name="org.michaelbel.movies.BlackIcon"
             android:enabled="false"
             android:exported="true"
-            android:icon="@drawable/ic_launcher_amoled"
-            android:roundIcon="@drawable/ic_launcher_amoled"
+            android:icon="@drawable/ic_launcher_black"
+            android:roundIcon="@drawable/ic_launcher_black"
             android:targetActivity="org.michaelbel.movies.MainActivity">
 
             <intent-filter>

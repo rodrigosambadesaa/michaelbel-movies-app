@@ -76,7 +76,6 @@
     <string name="settings_theme_system">По умолчанию</string>
     <string name="settings_theme_light">Светлая</string>
     <string name="settings_theme_dark">Темная</string>
-    <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_dynamic_colors">Цвета обоев</string>
     <string name="settings_dynamic_colors_description">Извлечь цвета из обоев</string>
     <string name="settings_post_notifications">Уведомления</string>
@@ -115,7 +114,7 @@
     <string name="settings_app_launcher_icon_red">Красную</string>
     <string name="settings_app_launcher_icon_purple">Фиолетовую</string>
     <string name="settings_app_launcher_icon_brown">Коричневую</string>
-    <string name="settings_app_launcher_icon_amoled">Amoled</string>
+    <string name="settings_app_launcher_icon_black">Черную</string>
     <string name="settings_app_launcher_icon_changed_to">Иконка приложения изменена на %1$s</string>
     <string name="settings_app_version_name">Movies v%1$s</string>
     <string name="settings_app_version_code">(%1$s)</string>

@@ -10,7 +10,6 @@ val SealedString.stringText: String
         is AppTheme.NightNo -> "Light"
         is AppTheme.NightYes -> "Dark"
         is AppTheme.FollowSystem -> "Follow System"
-        is AppTheme.Amoled -> "Amoled"
         is FeedView.FeedList -> "List"
         is FeedView.FeedGrid -> "Grid"
         is MovieList.NowPlaying -> "Now Playing"

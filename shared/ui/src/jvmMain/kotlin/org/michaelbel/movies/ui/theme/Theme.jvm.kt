@@ -46,12 +46,6 @@ actual fun AppTheme(
                 detectDarkMode = darkTheme
             )
         }
-        AppTheme.Amoled -> {
-            ComposeTheme(
-                colorScheme = AmoledColorScheme,
-                detectDarkMode = true
-            )
-        }
     }
 
     enableEdgeToEdge(

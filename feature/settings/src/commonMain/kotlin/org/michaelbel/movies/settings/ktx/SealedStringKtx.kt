@@ -18,7 +18,6 @@ val SealedString.stringText: String
         is AppTheme.NightNo -> stringResource(MoviesStrings.settings_theme_light)
         is AppTheme.NightYes -> stringResource(MoviesStrings.settings_theme_dark)
         is AppTheme.FollowSystem -> stringResource(MoviesStrings.settings_theme_system)
-        is AppTheme.Amoled -> stringResource(MoviesStrings.settings_theme_amoled)
 
         is FeedView.FeedList -> stringResource(MoviesStrings.settings_appearance_list)
         is FeedView.FeedGrid -> stringResource(MoviesStrings.settings_appearance_grid)

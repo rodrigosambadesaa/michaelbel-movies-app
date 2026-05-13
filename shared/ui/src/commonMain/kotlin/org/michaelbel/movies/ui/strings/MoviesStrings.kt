@@ -128,6 +128,8 @@ import movies.shared.ui.generated.resources.settings_screenshots
 import movies.shared.ui.generated.resources.settings_screenshots_description
 import movies.shared.ui.generated.resources.settings_telegram
 import movies.shared.ui.generated.resources.settings_telegram_description
+import movies.shared.ui.generated.resources.settings_moviemade
+import movies.shared.ui.generated.resources.settings_moviemade_description
 import movies.shared.ui.generated.resources.settings_theme
 import movies.shared.ui.generated.resources.settings_theme_dark
 import movies.shared.ui.generated.resources.settings_theme_light
@@ -273,6 +275,8 @@ object MoviesStrings {
     val settings_github_description = Res.string.settings_github_description
     val settings_telegram = Res.string.settings_telegram
     val settings_telegram_description = Res.string.settings_telegram_description
+    val settings_moviemade = Res.string.settings_moviemade
+    val settings_moviemade_description = Res.string.settings_moviemade_description
     val settings_app_widget = Res.string.settings_app_widget
     val settings_app_widget_description = Res.string.settings_app_widget_description
     val settings_tile = Res.string.settings_tile

@@ -11,6 +11,7 @@ sealed interface SettingsEvent: Event {
     data object RequestEyeDropper: SettingsEvent
     data object RequestGithub: SettingsEvent
     data object RequestTelegram: SettingsEvent
+    data object RequestGooglePlay: SettingsEvent
     data object ScrollToTop: SettingsEvent
     data class ShowSnackbar(val message: String): SettingsEvent
     data class ShowPermissionSnackbar(val message: String, val actionLabel: String): SettingsEvent

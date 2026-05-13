@@ -29,6 +29,7 @@ data class SettingsModel(
     val isEyeDropperFeatureEnabled: Boolean = false,
     val isGithubFeatureEnabled: Boolean = false,
     val isTelegramFeatureEnabled: Boolean = false,
+    val isGooglePlayFeatureEnabled: Boolean = false,
     val isReviewAppFeatureEnabled: Boolean = false,
     val isUpdateAppFeatureEnabled: Boolean = false,
     val isAboutFeatureEnabled: Boolean = false,

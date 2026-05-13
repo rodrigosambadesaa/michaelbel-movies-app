@@ -75,6 +75,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.michaelbel.movies.common.MOVIES_GITHUB_URL
+import org.michaelbel.movies.common.MOVIES_GOOGLE_PLAY_URL
 import org.michaelbel.movies.common.MOVIES_TELEGRAM_URL
 import org.michaelbel.movies.common.appearance.FeedView
 import org.michaelbel.movies.common.browser.navigateToUrl
@@ -100,10 +101,10 @@ import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.Cat
 import org.michaelbel.movies.ui.icons.DropperEye
+import org.michaelbel.movies.ui.icons.FrameBug
 import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
 import org.michaelbel.movies.ui.icons.MoviesIcons
-import org.michaelbel.movies.ui.icons.FrameBug
 import org.michaelbel.movies.ui.icons.SettingsReset
 import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
@@ -127,6 +128,7 @@ fun SettingsScreen(
     val openBatteryOptimizationSettings = uiInteractor.navigateToBatteryOptimizationSettings()
     val navigateToGithubUrl = navigateToUrl(MOVIES_GITHUB_URL)
     val navigateToTelegramUrl = navigateToUrl(MOVIES_TELEGRAM_URL)
+    val navigateToMoviemadeUrl = navigateToUrl(MOVIES_GOOGLE_PLAY_URL)
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val lazyListState = rememberLazyListState()
@@ -158,6 +160,7 @@ fun SettingsScreen(
             is SettingsEvent.RequestTileService -> onRequestTileService()
             is SettingsEvent.RequestGithub -> navigateToGithubUrl()
             is SettingsEvent.RequestTelegram -> navigateToTelegramUrl()
+            is SettingsEvent.RequestGooglePlay -> navigateToMoviemadeUrl()
             is SettingsEvent.RequestEyeDropper -> requestEyeDropper()
             is SettingsEvent.ScrollToTop -> scope.launch { lazyListState.animateScrollToItem(0) }
             is SettingsEvent.ShowSnackbar -> {
@@ -337,6 +340,7 @@ private fun SettingsScreenContent(
         val aboutVisible = listOf(
             state.isGithubFeatureEnabled,
             state.isTelegramFeatureEnabled,
+            state.isGooglePlayFeatureEnabled,
             state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled,
             state.isUpdateAppFeatureEnabled && state.isUpdateFeatureEnabled
         )
@@ -1350,12 +1354,48 @@ private fun SettingsScreenContent(
                     }
                 }
             }
+            if (state.isGooglePlayFeatureEnabled) {
+                item {
+                    SegmentedListItem(
+                        onClick = { dispatch(SettingsIntent.RequestGooglePlay) },
+                        shapes = ListItemDefaults.segmentedShapes(
+                            index = aboutVisible.take(2).count { it },
+                            count = aboutCount
+                        ),
+                        leadingContent = {
+                            Icon(
+                                imageVector = MoviesIcons.GooglePlay,
+                                contentDescription = null,
+                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
+                            )
+                        },
+                        supportingContent = {
+                            Text(
+                                text = stringResource(MoviesStrings.settings_moviemade_description),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        },
+                        colors = ListItemDefaults.segmentedColors(
+                            containerColor = MaterialTheme.colorScheme.inversePrimary,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            trailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(MoviesStrings.settings_moviemade),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                }
+            }
             if (state.isReviewAppFeatureEnabled && state.isReviewFeatureEnabled) {
                 item {
                     SegmentedListItem(
                         onClick = { dispatch(SettingsIntent.ReviewClick) },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = aboutVisible.take(2).count { it },
+                            index = aboutVisible.take(3).count { it },
                             count = aboutCount
                         ),
                         leadingContent = {
@@ -1397,7 +1437,7 @@ private fun SettingsScreenContent(
                             }
                         },
                         shapes = ListItemDefaults.segmentedShapes(
-                            index = aboutVisible.take(3).count { it },
+                            index = aboutVisible.take(4).count { it },
                             count = aboutCount
                         ),
                         leadingContent = {

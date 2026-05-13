@@ -1,7 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import java.nio.charset.StandardCharsets
 
-private val desktopVersionName = "3.1.0"
+private val desktopVersionName = "3.3.0"
 private val gitCommitsCount by lazy {
     try {
         val isWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)

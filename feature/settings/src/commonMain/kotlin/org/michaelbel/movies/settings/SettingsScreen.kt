@@ -106,6 +106,7 @@ import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
 import org.michaelbel.movies.ui.icons.MoviesIcons
 import org.michaelbel.movies.ui.icons.SettingsReset
+import org.michaelbel.movies.ui.icons.StarShine
 import org.michaelbel.movies.ui.icons.Telegram
 import org.michaelbel.movies.ui.icons.ThemeLightDark
 import org.michaelbel.movies.ui.icons.TileSmall
@@ -1400,7 +1401,7 @@ private fun SettingsScreenContent(
                         ),
                         leadingContent = {
                             Icon(
-                                imageVector = MoviesIcons.GooglePlay,
+                                imageVector = MoviesIcons.StarShine,
                                 contentDescription = null,
                                 modifier = Modifier.size(IconButtonDefaults.smallIconSize)
                             )

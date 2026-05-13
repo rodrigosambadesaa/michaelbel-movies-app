@@ -132,9 +132,7 @@ private fun FeedScreenContent(
     }
 
     DisposableEffect(onSearchActiveChange) {
-        onDispose {
-            onSearchActiveChange(false)
-        }
+        onDispose { onSearchActiveChange(false) }
     }
 
     fun clearSearchState() {
@@ -201,10 +199,9 @@ private fun FeedScreenContent(
                     isAutoFocusEnabled = isSearchAutoFocusEnabled,
                     isSearchResultsVisible = searchQuery.isNotBlank(),
                     onActiveChange = {
-                        if (!it && (query.isNotBlank() || searchQuery.isNotBlank())) {
-                            clearSearchState()
-                        } else {
-                            isSearchActive = it
+                        when {
+                            !it && (query.isNotBlank() || searchQuery.isNotBlank()) -> clearSearchState()
+                            else -> isSearchActive = it
                         }
                         if (it) {
                             isSearchAutoFocusEnabled = true
@@ -264,7 +261,10 @@ private fun FeedScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 16.dp),
-                        style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.error,
+                            textAlign = TextAlign.Center
+                        )
                     )
                 }
             }
@@ -280,29 +280,20 @@ private fun FeedScreenContent(
             pagingItems.isLoading -> {
                 PageLoading(
                     feedView = state.feedView,
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
+                    contentPadding = innerPadding
                 )
             }
             pagingItems.isFailure -> {
                 when {
                     pagingItems.refreshThrowable is PageEmptyException -> {
                         FeedEmpty(
-                            contentPadding = PaddingValues(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding()
-                            )
+                            contentPadding = innerPadding
                         )
                     }
                     else -> {
                         PageFailure(
                             onClick = pagingItems::retry,
-                            contentPadding = PaddingValues(
-                                top = innerPadding.calculateTopPadding(),
-                                bottom = innerPadding.calculateBottomPadding()
-                            )
+                            contentPadding = innerPadding
                         )
                     }
                 }
@@ -315,10 +306,7 @@ private fun FeedScreenContent(
                     onMovieClick = { pagingKey, movieId ->
                         dispatch(FeedIntent.MovieDetailsClick(pagingKey, movieId))
                     },
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
+                    contentPadding = innerPadding
                 )
             }
         }

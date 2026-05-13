@@ -1371,7 +1371,7 @@ private fun SettingsScreenContent(
                         },
                         supportingContent = {
                             Text(
-                                text = stringResource(MoviesStrings.settings_moviemade_description),
+                                text = stringResource(MoviesStrings.settings_google_play_description),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         },
@@ -1384,7 +1384,7 @@ private fun SettingsScreenContent(
                         )
                     ) {
                         Text(
-                            text = stringResource(MoviesStrings.settings_moviemade),
+                            text = stringResource(MoviesStrings.settings_google_play),
                             style = MaterialTheme.typography.titleLarge
                         )
                     }

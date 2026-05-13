@@ -124,8 +124,8 @@
     <string name="settings_github_description">Посмотреть репозиторий</string>
     <string name="settings_telegram">Telegram</string>
     <string name="settings_telegram_description">Подписаться на канал</string>
-    <string name="settings_moviemade">Google Play</string>
-    <string name="settings_moviemade_description">Available in the Store</string>
+    <string name="settings_google_play">Google Play</string>
+    <string name="settings_google_play_description">Доступно в магазине приложений</string>
     <string name="settings_app_widget">Добавить виджет на главную</string>
     <string name="settings_app_widget_description">3x2 %1$s</string>
     <string name="settings_tile">Добавить плитку в шторку</string>

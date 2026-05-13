@@ -334,7 +334,7 @@ fun FeedSearchBar(
         },
         expanded = active,
         onExpandedChange = onActiveChange,
-        modifier = modifier,
+        modifier = modifier.padding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal).asPaddingValues()),
         shadowElevation = 2.dp,
         colors = searchBarColors
     ) {

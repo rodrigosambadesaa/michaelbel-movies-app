@@ -8,7 +8,6 @@ package org.michaelbel.movies.details
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,7 +35,6 @@ import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewWrapper
-import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -190,18 +188,12 @@ private fun DetailsScreenContent(
                 DetailsContent(
                     movie = MoviePojo.Empty,
                     placeholder = true,
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding().plus(16.dp),
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
+                    contentPadding = innerPadding
                 )
             }
             is ScreenState.Content<*> -> {
                 DetailsContent(
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding().plus(16.dp),
-                        bottom = innerPadding.calculateBottomPadding()
-                    ),
+                    contentPadding = innerPadding,
                     movie = detailsState.movie,
                     isDetailsGalleryFeatureEnabled = state.isDetailsGalleryFeatureEnabled,
                     onNavigateToGallery = { dispatch(DetailsIntent.GalleryClick) }
@@ -209,10 +201,7 @@ private fun DetailsScreenContent(
             }
             is ScreenState.Failure -> {
                 DetailsFailure(
-                    contentPadding = PaddingValues(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = innerPadding.calculateBottomPadding()
-                    )
+                    contentPadding = innerPadding
                 )
             }
         }

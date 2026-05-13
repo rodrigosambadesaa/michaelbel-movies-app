@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.plus
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -58,7 +57,7 @@ fun DetailsContent(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = contentPadding + PaddingValues(horizontal = 16.dp),
+        contentPadding = contentPadding + PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
@@ -115,10 +114,8 @@ fun DetailsContent(
             ) {
                 Text(
                     text = movie.overview,
-                    modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.15F
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 )
             }
@@ -133,8 +130,6 @@ private fun DetailsContentPreview(
     @PreviewParameter(MovieDbPreviewParameterProvider::class) movie: MoviePojo
 ) {
     DetailsContent(
-        movie = movie,
-        onNavigateToGallery = {},
-        contentPadding = PaddingValues(top = 16.dp)
+        movie = movie
     )
 }

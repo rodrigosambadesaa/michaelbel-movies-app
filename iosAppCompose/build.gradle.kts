@@ -1,6 +1,6 @@
 import java.nio.charset.StandardCharsets
 
-private val iosVersionName = "3.3.0"
+private val iosVersionName = "3.4.0"
 private val gitCommitsCount by lazy {
     try {
         val isWindows = System.getProperty("os.name").contains("Windows", ignoreCase = true)

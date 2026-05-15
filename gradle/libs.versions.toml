@@ -58,7 +58,7 @@ jetbrains-androidx-core-bundle = "1.0.1"
 jetbrains-androidx-savedstate = "1.4.0"
 jetbrains-androidx-navigation3 = "1.1.1"
 jetbrains-androidx-compose = "1.3.0-alpha07"
-detekt = "1.23.8"
+detekt = "2.0.0-alpha.3"
 detekt-rules = "1.3.0"
 coil = "2.7.0"
 coil3 = "3.4.0"
@@ -180,6 +180,8 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 
+detekt-gradle = { module = "dev.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+detekt-formatting = { module = "dev.detekt:detekt-formatting", version.ref = "detekt" }
 detekt-rules = { module = "io.github.michaelbel:detekt-rules", version.ref = "detekt-rules" }
 
 gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
@@ -449,6 +451,6 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 google-firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "google-firebase-appdistribution" }
 google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "google-firebase-crashlytics-plugin" }
 huawei-services = { id = "com.huawei.agconnect", version.ref = "huawei-services" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 palantir-git = { id = "com.palantir.git-version", version.ref = "palantir-git" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }

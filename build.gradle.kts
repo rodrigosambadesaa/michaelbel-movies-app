@@ -1,4 +1,4 @@
-import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import dev.detekt.gradle.extensions.DetektExtension
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -23,19 +23,15 @@ plugins {
     alias(libs.plugins.palantir.git)
 }
 
+val detektRulesLib = libs.detekt.rules
+
 subprojects {
-    apply(plugin = "io.gitlab.arturbosch.detekt")
+    pluginManager.apply("dev.detekt")
     extensions.configure<DetektExtension> {
         config.setFrom(rootProject.file(".github/detekt.yml"))
         buildUponDefaultConfig = true
-        source.setFrom(
-            project.files("src").asFileTree.matching {
-                include("**/*.kt")
-            }
-        )
     }
     dependencies {
-        val catalog = rootProject.extensions.getByType<VersionCatalogsExtension>().named("libs")
-        "detektPlugins"(catalog.findLibrary("detekt-rules").get())
+        "detektPlugins"(detektRulesLib)
     }
 }

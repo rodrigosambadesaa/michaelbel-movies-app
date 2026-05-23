@@ -1,9 +1,8 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -13,9 +12,22 @@ plugins {
 }
 
 private val tmdbApiKey: String by lazy {
-    gradleLocalProperties(rootDir, providers).getProperty("TMDB_API_KEY").orEmpty().ifEmpty {
-        System.getenv("TMDB_API_KEY").orEmpty()
-    }
+    providers.gradleProperty("TMDB_API_KEY")
+        .orElse(providers.environmentVariable("TMDB_API_KEY"))
+        .orElse(
+            providers.provider {
+                val localPropertiesFile = rootProject.layout.projectDirectory.file("local.properties").asFile
+                when {
+                    localPropertiesFile.exists() -> {
+                        Properties().apply {
+                            localPropertiesFile.inputStream().use(::load)
+                        }.getProperty("TMDB_API_KEY").orEmpty()
+                    }
+                    else -> ""
+                }
+            }
+        )
+        .get()
 }
 
 kotlin {

@@ -24,10 +24,19 @@ plugins {
 }
 
 val detektRulesLib = libs.detekt.rules
+val detektKmpSourceDirs = listOf(
+    "src/commonMain/kotlin",
+    "src/androidMain/kotlin",
+    "src/iosMain/kotlin",
+    "src/jvmMain/kotlin",
+    "src/jsMain/kotlin",
+    "src/wasmJsMain/kotlin",
+)
 
 subprojects {
     pluginManager.apply("dev.detekt")
     extensions.configure<DetektExtension> {
+        source.from(detektKmpSourceDirs)
         config.setFrom(rootProject.file(".github/detekt.yml"))
         buildUponDefaultConfig = true
     }

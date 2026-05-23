@@ -1,3 +1,4 @@
+.DS_Store
 /.github/movies.jks
 /.github/keystore.properties
 .kotlin

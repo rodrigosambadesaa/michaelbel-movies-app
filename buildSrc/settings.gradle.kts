@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
+rootProject.name = "movies-build-src"
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

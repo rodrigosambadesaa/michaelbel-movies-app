@@ -75,6 +75,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: decode keystore file
+        if: github.event_name != 'pull_request'
         run: |
           KEYSTORE_PATH="${RUNNER_TEMP}/keystore_release.jks"
           echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > "$KEYSTORE_PATH"
@@ -132,6 +133,7 @@ jobs:
           echo "GMS_RELEASE_AAB_PATH=$(find androidApp/build/outputs/bundle/gmsRelease -name '*.aab' -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -d' ' -f2)" >> $GITHUB_ENV
 
       - name: telegram notify gms debug
+        if: github.event_name != 'pull_request'
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -150,6 +152,7 @@ jobs:
             -F parse_mode="Markdown"
 
       - name: telegram notify hms debug
+        if: github.event_name != 'pull_request'
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -168,6 +171,7 @@ jobs:
             -F parse_mode="Markdown"
 
       - name: telegram notify foss debug
+        if: github.event_name != 'pull_request'
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

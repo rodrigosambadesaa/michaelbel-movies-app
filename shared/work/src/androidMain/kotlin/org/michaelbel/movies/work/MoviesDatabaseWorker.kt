@@ -9,7 +9,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
@@ -18,7 +18,7 @@ import org.michaelbel.movies.persistence.database.ktx.moviePojo
 class MoviesDatabaseWorker(
     context: Context,
     workerParams: WorkerParameters,
-    private val dispatchers: MoviesDispatchers,
+    private val dispatchers: SharedDispatchers,
     private val moviePersistence: MoviePersistence
 ): CoroutineWorker(context, workerParams) {
 

@@ -10,7 +10,7 @@ import org.michaelbel.movies.analytics.event.SelectMovieListEvent
 import org.michaelbel.movies.analytics.event.SelectThemeEvent
 import org.michaelbel.movies.common.ThemeData
 import org.michaelbel.movies.common.appearance.FeedView
-import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.theme.AppTheme
 import org.michaelbel.movies.interactor.SettingsInteractor
@@ -18,7 +18,7 @@ import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.repository.SettingsRepository
 
 class SettingsInteractorImpl(
-    private val dispatchers: MoviesDispatchers,
+    private val dispatchers: SharedDispatchers,
     private val settingsRepository: SettingsRepository,
     private val uiInteractor: UiInteractor,
     private val analytics: MoviesAnalytics

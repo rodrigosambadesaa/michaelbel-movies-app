@@ -2,7 +2,7 @@ package org.michaelbel.movies.common.dispatchers
 
 import kotlinx.coroutines.CoroutineDispatcher
 
-interface MoviesDispatchers {
+interface SharedDispatchers {
     val default: CoroutineDispatcher
     val io: CoroutineDispatcher
     val main: CoroutineDispatcher

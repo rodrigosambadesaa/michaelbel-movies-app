@@ -1,7 +1,7 @@
 package org.michaelbel.movies.interactor.impl
 
 import kotlinx.coroutines.withContext
-import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.interactor.AuthenticationInteractor
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
@@ -10,7 +10,7 @@ import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.repository.AuthenticationRepository
 
 class AuthenticationInteractorImpl(
-    private val dispatchers: MoviesDispatchers,
+    private val dispatchers: SharedDispatchers,
     private val authenticationRepository: AuthenticationRepository
 ): AuthenticationInteractor {
 

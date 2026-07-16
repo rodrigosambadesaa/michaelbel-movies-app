@@ -5,12 +5,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import org.michaelbel.movies.analytics.MoviesAnalytics
 import org.michaelbel.movies.analytics.event.SelectLanguageEvent
-import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.entity.AppLanguage
 
 class LocaleInteractorImpl(
-    private val dispatchers: MoviesDispatchers,
+    private val dispatchers: SharedDispatchers,
     private val analytics: MoviesAnalytics
 ): LocaleInteractor {
 

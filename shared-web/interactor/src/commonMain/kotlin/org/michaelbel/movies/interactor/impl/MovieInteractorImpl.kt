@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.interactor.LocaleInteractor
@@ -26,7 +26,7 @@ import org.michaelbel.movies.repository.PagingKeyRepository
 import org.michaelbel.movies.repository.SearchRepository
 
 class MovieInteractorImpl(
-    private val dispatchers: MoviesDispatchers,
+    private val dispatchers: SharedDispatchers,
     private val localeInteractor: LocaleInteractor,
     private val movieRepository: MovieRepository,
     private val searchRepository: SearchRepository,

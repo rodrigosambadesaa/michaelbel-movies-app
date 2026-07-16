@@ -2,11 +2,11 @@ package org.michaelbel.movies.common.dispatchers.impl
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import org.michaelbel.movies.common.dispatchers.MoviesDispatchers
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.common.dispatchers.ioDispatcher
 import org.michaelbel.movies.common.dispatchers.uiDispatcher
 
-class MoviesDispatchersImpl: MoviesDispatchers {
+class SharedDispatchersImpl: SharedDispatchers {
 
     override val default: CoroutineDispatcher
         get() = Dispatchers.Default

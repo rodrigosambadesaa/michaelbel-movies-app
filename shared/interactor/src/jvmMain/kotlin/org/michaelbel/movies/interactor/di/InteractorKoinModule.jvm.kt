@@ -5,6 +5,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.michaelbel.movies.analytics.di.moviesAnalyticsKoinModule
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
+import org.michaelbel.movies.domain.usecase.di.useCaseKoinModule
 import org.michaelbel.movies.interactor.AboutInteractor
 import org.michaelbel.movies.interactor.AppNotificationInteractor
 import org.michaelbel.movies.interactor.LocaleInteractor
@@ -33,5 +34,8 @@ actual val uiInteractorKoinModule = module {
 }
 
 actual val appNotificationInteractorKoinModule = module {
+    includes(
+        useCaseKoinModule
+    )
     singleOf(::AppNotificationInteractorImpl) { bind<AppNotificationInteractor>() }
 }

@@ -18,8 +18,8 @@ import org.michaelbel.movies.common.ktx.isPostNotificationsPermissionGranted
 import org.michaelbel.movies.common.ktx.isTimePasses
 import org.michaelbel.movies.common.ktx.notificationManager
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
+import org.michaelbel.movies.domain.usecase.UpdateNotificationExpireTimeUseCase
 import org.michaelbel.movies.interactor.AppNotificationInteractor
-import org.michaelbel.movies.interactor.NotificationInteractor
 import org.michaelbel.movies.interactor.R
 import org.michaelbel.movies.interactor.model.MoviesPush
 import org.michaelbel.movies.ui.icons.MoviesAndroidIcons
@@ -30,8 +30,8 @@ import kotlin.time.ExperimentalTime
 
 class AppNotificationInteractorImpl(
     private val context: Context,
-    private val notificationInteractor: NotificationInteractor,
-    private val notificationExpireTimeUseCase: NotificationExpireTimeUseCase
+    private val notificationExpireTimeUseCase: NotificationExpireTimeUseCase,
+    private val updateNotificationExpireTimeUseCase: UpdateNotificationExpireTimeUseCase
 ): AppNotificationInteractor {
 
     override suspend fun notificationsPermissionRequired(): Boolean {
@@ -43,7 +43,7 @@ class AppNotificationInteractorImpl(
     }
 
     override suspend fun updateNotificationExpireTime() {
-        notificationInteractor.updateNotificationExpireTime()
+        updateNotificationExpireTimeUseCase(Unit).getOrThrow()
     }
 
     override fun send(push: MoviesPush) {

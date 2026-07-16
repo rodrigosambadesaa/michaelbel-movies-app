@@ -1,17 +1,18 @@
 @file:OptIn(ExperimentalTime::class)
 
-package org.michaelbel.movies.repository.impl
+package org.michaelbel.movies.domain.usecase
 
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
-import org.michaelbel.movies.repository.NotificationRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-class NotificationRepositoryImpl(
-    private val preferences: MoviesPreferences
-): NotificationRepository {
+class UpdateNotificationExpireTimeUseCase(
+    private val preferences: MoviesPreferences,
+    dispatchers: SharedDispatchers
+): UseCase<Unit, Unit>(dispatchers.io) {
 
-    override suspend fun updateNotificationExpireTime() {
+    override suspend fun execute(params: Unit) {
         val currentTime = Clock.System.now().toEpochMilliseconds()
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceNotificationExpireTimeKey, currentTime)
     }

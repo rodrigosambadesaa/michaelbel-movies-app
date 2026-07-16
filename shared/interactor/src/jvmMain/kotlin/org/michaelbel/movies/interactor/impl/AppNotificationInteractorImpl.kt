@@ -1,11 +1,11 @@
 package org.michaelbel.movies.interactor.impl
 
+import org.michaelbel.movies.domain.usecase.UpdateNotificationExpireTimeUseCase
 import org.michaelbel.movies.interactor.AppNotificationInteractor
-import org.michaelbel.movies.interactor.NotificationInteractor
 import org.michaelbel.movies.interactor.model.MoviesPush
 
 class AppNotificationInteractorImpl(
-    private val notificationInteractor: NotificationInteractor
+    private val updateNotificationExpireTimeUseCase: UpdateNotificationExpireTimeUseCase
 ): AppNotificationInteractor {
 
     override suspend fun notificationsPermissionRequired(): Boolean {
@@ -13,7 +13,7 @@ class AppNotificationInteractorImpl(
     }
 
     override suspend fun updateNotificationExpireTime() {
-        notificationInteractor.updateNotificationExpireTime()
+        updateNotificationExpireTimeUseCase(Unit).getOrThrow()
     }
 
     override fun send(push: MoviesPush) {}

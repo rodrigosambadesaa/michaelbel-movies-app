@@ -21,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.log.log
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
@@ -41,7 +42,8 @@ class FeedViewModel(
     private val uiInteractor: UiInteractor,
     private val interactor: Interactor,
     private val appNotificationInteractor: AppNotificationInteractor,
-    private val networkManager: NetworkManager
+    private val networkManager: NetworkManager,
+    private val suggestionPojosFlowUseCase: SuggestionPojosFlowUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -117,7 +119,7 @@ class FeedViewModel(
             }
             is FeedIntent.CollectSuggestions -> {
                 launch {
-                    interactor.suggestions().collectLatest { suggestions ->
+                    suggestionPojosFlowUseCase(Unit).collectLatest { suggestions ->
                         reduce { it.copy(suggestions = suggestions) }
                     }
                 }

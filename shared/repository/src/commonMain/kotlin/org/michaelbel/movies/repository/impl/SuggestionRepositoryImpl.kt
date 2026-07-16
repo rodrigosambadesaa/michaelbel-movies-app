@@ -1,6 +1,5 @@
 package org.michaelbel.movies.repository.impl
 
-import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.network.MovieNetworkService
 import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.persistence.database.MoviePersistence
@@ -13,10 +12,6 @@ class SuggestionRepositoryImpl(
     private val moviePersistence: MoviePersistence,
     private val suggestionPersistence: SuggestionPersistence
 ): SuggestionRepository {
-
-    override fun suggestions(): Flow<List<SuggestionPojo>> {
-        return suggestionPersistence.suggestionsFlow()
-    }
 
     override suspend fun updateSuggestions(language: String) {
         suggestionPersistence.removeAll()

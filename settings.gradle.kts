@@ -55,6 +55,7 @@ include(
 
     ":shared:analytics",
     ":shared:common",
+    ":shared:domain",
     ":shared:interactor",
     ":shared-web:interactor",
     ":shared:network",

@@ -1,16 +1,11 @@
 package org.michaelbel.movies.persistence.database
 
-import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.persistence.database.entity.pojo.SuggestionPojo
 import org.michaelbel.movies.persistence.database.ktx.suggestionDb
 
 class SuggestionPersistence(
     private val moviesDatabase: MoviesDatabase
 ) {
-
-    fun suggestionsFlow(): Flow<List<SuggestionPojo>> {
-        return moviesDatabase.suggestionDao.selectFlow()
-    }
 
     suspend fun insert(suggestions: List<SuggestionPojo>) {
         moviesDatabase.suggestionDao.upsert(suggestions.map(SuggestionPojo::suggestionDb))

@@ -100,10 +100,6 @@ class MovieInteractorImpl(
         return withContext(dispatchers.io) { movieRepository.movie(pagingKey, movieId) }
     }
 
-    override suspend fun movieDetails(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
-        return withContext(dispatchers.io) { movieRepository.movieDetails(pagingKey, localeInteractor.language, movieId) }
-    }
-
     override suspend fun removeMovies(pagingKey: PagingKey) {
         return withContext(dispatchers.io) { movieRepository.removeMovies(pagingKey) }
     }

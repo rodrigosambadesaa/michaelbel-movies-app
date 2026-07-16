@@ -19,8 +19,6 @@ interface MovieInteractor {
 
     suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo
 
-    suspend fun movieDetails(pagingKey: PagingKey, movieId: MovieId): MoviePojo
-
     suspend fun moviesWidget(): List<MovieDbMini>
 
     suspend fun removeMovies(pagingKey: PagingKey)

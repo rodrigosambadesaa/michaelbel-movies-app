@@ -13,6 +13,7 @@ import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase
 import org.michaelbel.movies.domain.usecase.DeleteSessionUseCase
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.ImagesUseCase
+import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
@@ -45,6 +46,7 @@ val useCaseKoinModule = module {
     singleOf(::SuggestionPojosFlowUseCase)
     singleOf(::ImagesFlowUseCase)
     singleOf(::ImagesUseCase)
+    singleOf(::MovieDetailsUseCase)
     singleOf(::MovieFlowUseCase)
     singleOf(::MoviesFlowUseCase)
     singleOf(::AccountPojoFlowUseCase)

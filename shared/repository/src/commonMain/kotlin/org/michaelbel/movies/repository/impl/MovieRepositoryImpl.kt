@@ -4,7 +4,6 @@ package org.michaelbel.movies.repository.impl
 
 import androidx.paging.PagingSource
 import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
-import org.michaelbel.movies.common.exceptions.MovieDetailsException
 import org.michaelbel.movies.common.exceptions.MoviesUpcomingException
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.network.AccountNetworkService
@@ -55,14 +54,6 @@ class MovieRepositoryImpl(
 
     override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
         return moviePersistence.movieById(pagingKey, movieId).orEmpty
-    }
-
-    override suspend fun movieDetails(pagingKey: PagingKey, language: String, movieId: MovieId): MoviePojo {
-        return try {
-            moviePersistence.movieById(pagingKey, movieId) ?: movieNetworkService.movie(movieId, language).moviePojo
-        } catch (_: Exception) {
-            throw MovieDetailsException()
-        }
     }
 
     override suspend fun moviesWidget(language: String): List<MovieDbMini> {

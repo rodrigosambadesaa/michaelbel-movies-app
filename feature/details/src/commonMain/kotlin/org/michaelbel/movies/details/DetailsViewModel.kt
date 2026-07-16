@@ -2,12 +2,13 @@ package org.michaelbel.movies.details
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.michaelbel.movies.common.exceptions.MovieDetailsException
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.details.intent.DetailsIntent
 import org.michaelbel.movies.details.model.DetailsModel
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
+import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase
+import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase.MovieDetailsException
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
@@ -28,7 +29,8 @@ class DetailsViewModel(
     private val uiInteractor: UiInteractor,
     private val networkManager: NetworkManager,
     private val movieFlowUseCase: MovieFlowUseCase,
-    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
+    private val movieDetailsUseCase: MovieDetailsUseCase
 ): MoviesViewModel<DetailsModel, DetailsIntent, Event>(DetailsModel()) {
 
     init {
@@ -85,7 +87,12 @@ class DetailsViewModel(
             }
             is DetailsIntent.LoadMovie -> {
                 launch {
-                    val movie = interactor.movieDetails(destination.movieList.orEmpty(), destination.movieId)
+                    val params = MovieDetailsUseCase.Params(
+                        pagingKey = destination.movieList.orEmpty(),
+                        language = interactor.language,
+                        movieId = destination.movieId
+                    )
+                    val movie = movieDetailsUseCase(params).getOrThrow()
                     reduce { it.copy(detailsState = ScreenState.Content(movie)) }
                 }
             }
@@ -108,7 +115,9 @@ class DetailsViewModel(
 
     override fun catch(throwable: Throwable) {
         when (throwable) {
-            is MovieDetailsException -> reduce { it.copy(detailsState = ScreenState.Failure(throwable)) }
+            is MovieDetailsException -> {
+                reduce { it.copy(detailsState = ScreenState.Failure(throwable)) }
+            }
             else -> super.catch(throwable)
         }
     }

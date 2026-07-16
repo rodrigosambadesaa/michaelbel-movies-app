@@ -17,8 +17,6 @@ interface MovieRepository {
 
     suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo
 
-    suspend fun movieDetails(pagingKey: PagingKey, language: String, movieId: MovieId): MoviePojo
-
     suspend fun moviesWidget(language: String): List<MovieDbMini>
 
     suspend fun removeMovies(pagingKey: PagingKey)

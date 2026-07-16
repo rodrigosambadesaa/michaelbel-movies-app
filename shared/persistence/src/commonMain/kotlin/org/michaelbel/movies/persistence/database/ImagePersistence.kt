@@ -1,17 +1,11 @@
 package org.michaelbel.movies.persistence.database
 
-import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 import org.michaelbel.movies.persistence.database.ktx.imageDb
-import org.michaelbel.movies.persistence.database.typealiases.MovieId
 
 class ImagePersistence(
     private val moviesDatabase: MoviesDatabase
 ) {
-
-    fun imagesFlow(movieId: MovieId): Flow<List<ImagePojo>> {
-        return moviesDatabase.imageDao.selectFlow(movieId)
-    }
 
     suspend fun upsert(images: List<ImagePojo>) {
         moviesDatabase.imageDao.upsert(images.map(ImagePojo::imageDb))

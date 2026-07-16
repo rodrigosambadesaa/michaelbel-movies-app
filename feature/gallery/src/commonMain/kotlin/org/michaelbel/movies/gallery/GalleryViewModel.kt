@@ -3,6 +3,7 @@ package org.michaelbel.movies.gallery
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.gallery.event.GalleryEvent
 import org.michaelbel.movies.gallery.intent.GalleryIntent
 import org.michaelbel.movies.gallery.model.GalleryModel
@@ -15,7 +16,8 @@ import org.michaelbel.movies.work.WorkManagerInteractor
 class GalleryViewModel(
     private val destination: GalleryDestination,
     private val interactor: Interactor,
-    private val workManagerInteractor: WorkManagerInteractor
+    private val workManagerInteractor: WorkManagerInteractor,
+    private val imagesFlowUseCase: ImagesFlowUseCase
 ): MoviesViewModel<GalleryModel, GalleryIntent, GalleryEvent>(GalleryModel()) {
 
     init {
@@ -27,7 +29,7 @@ class GalleryViewModel(
         when (intent) {
             is GalleryIntent.CollectMovieImages -> {
                 launch {
-                    interactor.imagesFlow(destination.movieId).collectLatest { movieImages ->
+                    imagesFlowUseCase(destination.movieId).collectLatest { movieImages ->
                         reduce { it.copy(movieImages = movieImages) }
                     }
                 }

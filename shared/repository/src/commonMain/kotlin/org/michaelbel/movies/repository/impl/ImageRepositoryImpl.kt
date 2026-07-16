@@ -1,9 +1,7 @@
 package org.michaelbel.movies.repository.impl
 
-import kotlinx.coroutines.flow.Flow
 import org.michaelbel.movies.network.MovieNetworkService
 import org.michaelbel.movies.persistence.database.ImagePersistence
-import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 import org.michaelbel.movies.persistence.database.entity.pojo.ImageType
 import org.michaelbel.movies.persistence.database.ktx.imagePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
@@ -13,10 +11,6 @@ class ImageRepositoryImpl(
     private val movieNetworkService: MovieNetworkService,
     private val imagePersistence: ImagePersistence
 ): ImageRepository {
-
-    override fun imagesFlow(movieId: MovieId): Flow<List<ImagePojo>> {
-        return imagePersistence.imagesFlow(movieId)
-    }
 
     override suspend fun images(movieId: MovieId) {
         val imageResponse = movieNetworkService.images(movieId)

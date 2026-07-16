@@ -20,6 +20,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(projects.shared.domain)
             api(projects.shared.interactor)
             api(projects.shared.ui)
             api(projects.shared.work)

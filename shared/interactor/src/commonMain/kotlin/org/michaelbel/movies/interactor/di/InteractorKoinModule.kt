@@ -6,13 +6,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.michaelbel.movies.analytics.di.moviesAnalyticsKoinModule
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
-import org.michaelbel.movies.interactor.AuthenticationInteractor
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.MovieInteractor
 import org.michaelbel.movies.interactor.SearchInteractor
 import org.michaelbel.movies.interactor.SettingsInteractor
-import org.michaelbel.movies.interactor.impl.AuthenticationInteractorImpl
 import org.michaelbel.movies.interactor.impl.MovieInteractorImpl
 import org.michaelbel.movies.interactor.impl.SearchInteractorImpl
 import org.michaelbel.movies.interactor.impl.SettingsInteractorImpl
@@ -30,13 +28,11 @@ val interactorKoinModule = module {
         uiInteractorKoinModule,
         appNotificationInteractorKoinModule
     )
-    singleOf(::AuthenticationInteractorImpl) { bind<AuthenticationInteractor>() }
     singleOf(::MovieInteractorImpl) { bind<MovieInteractor>() }
     singleOf(::SearchInteractorImpl) { bind<SearchInteractor>() }
     singleOf(::SettingsInteractorImpl) { bind<SettingsInteractor>() }
     single<Interactor> {
         Interactor(
-            get<AuthenticationInteractor>(),
             get<MovieInteractor>(),
             get<SearchInteractor>(),
             get<SettingsInteractor>(),

@@ -87,7 +87,7 @@ import org.michaelbel.movies.auth.model.AuthModel
 import org.michaelbel.movies.auth.preview.AuthModelPreviewParameterProvider
 import org.michaelbel.movies.common.browser.navigateToUrl
 import org.michaelbel.movies.common.browser.tmdbAuthRedirectUrl
-import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
+import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase.CreateSessionWithLoginException
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
 import org.michaelbel.movies.interactor.ktx.isNotEmpty

@@ -3,7 +3,6 @@ package org.michaelbel.movies.auth
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.auth.intent.AuthIntent
 import org.michaelbel.movies.auth.model.AuthModel
-import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
@@ -12,15 +11,16 @@ import org.michaelbel.movies.domain.usecase.CreateRequestTokenUseCase
 import org.michaelbel.movies.domain.usecase.CreateRequestTokenUseCase.CreateRequestTokenException
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase.CreateSessionException
-import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase
+import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase.CreateSessionWithLoginException
 import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.ui.pending.PendingActionStore
 
 class AuthViewModel(
-    private val interactor: Interactor,
     private val accountDetailsUseCase: AccountDetailsUseCase,
     private val createSessionUseCase: CreateSessionUseCase,
-    private val createRequestTokenUseCase: CreateRequestTokenUseCase
+    private val createRequestTokenUseCase: CreateRequestTokenUseCase,
+    private val createSessionWithLoginUseCase: CreateSessionWithLoginUseCase
 ): MoviesViewModel<AuthModel, AuthIntent, Event>(AuthModel()) {
 
     override fun dispatch(intent: AuthIntent) {
@@ -47,7 +47,12 @@ class AuthViewModel(
                 reduce { it.copy(error = null) }
                 val job = launch {
                     val token = createRequestTokenUseCase(false).getOrThrow()
-                    val sessionToken = interactor.createSessionWithLogin(intent.username, intent.password, token.requestToken)
+                    val params = CreateSessionWithLoginUseCase.Params(
+                        username = intent.username.value,
+                        password = intent.password.value,
+                        requestToken = token.requestToken
+                    )
+                    val sessionToken = createSessionWithLoginUseCase(params).getOrThrow()
                     createSessionUseCase(sessionToken.requestToken).getOrThrow()
                     accountDetailsUseCase(Unit).getOrThrow()
                     MainNavigator.back()

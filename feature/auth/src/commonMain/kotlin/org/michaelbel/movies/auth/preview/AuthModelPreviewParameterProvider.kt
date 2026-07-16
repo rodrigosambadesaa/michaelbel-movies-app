@@ -2,7 +2,7 @@ package org.michaelbel.movies.auth.preview
 
 import kotlinx.coroutines.Job
 import org.michaelbel.movies.auth.model.AuthModel
-import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
+import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase.CreateSessionWithLoginException
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
 import org.michaelbel.movies.ui.preview.base.CollectionPreviewParameterProvider
@@ -13,7 +13,7 @@ class AuthModelPreviewParameterProvider: CollectionPreviewParameterProvider<Auth
         AuthModel(
             username = Username("michaelbel"),
             password = Password("password123"),
-            error = CreateSessionWithLoginException()
+            error = CreateSessionWithLoginException("")
         ),
         AuthModel(
             username = Username("michaelbel"),

@@ -10,10 +10,6 @@ class NotificationInteractorImpl(
     private val notificationRepository: NotificationRepository
 ): NotificationInteractor {
 
-    override suspend fun notificationExpireTime(): Long {
-        return withContext(dispatchers.io) { notificationRepository.notificationExpireTime() }
-    }
-
     override suspend fun updateNotificationExpireTime() {
         withContext(dispatchers.io) { notificationRepository.updateNotificationExpireTime() }
     }

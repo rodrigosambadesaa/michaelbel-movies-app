@@ -17,6 +17,7 @@ import kotlinx.coroutines.delay
 import org.michaelbel.movies.common.ktx.isPostNotificationsPermissionGranted
 import org.michaelbel.movies.common.ktx.isTimePasses
 import org.michaelbel.movies.common.ktx.notificationManager
+import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
 import org.michaelbel.movies.interactor.AppNotificationInteractor
 import org.michaelbel.movies.interactor.NotificationInteractor
 import org.michaelbel.movies.interactor.R
@@ -29,11 +30,12 @@ import kotlin.time.ExperimentalTime
 
 class AppNotificationInteractorImpl(
     private val context: Context,
-    private val notificationInteractor: NotificationInteractor
+    private val notificationInteractor: NotificationInteractor,
+    private val notificationExpireTimeUseCase: NotificationExpireTimeUseCase
 ): AppNotificationInteractor {
 
     override suspend fun notificationsPermissionRequired(): Boolean {
-        val expireTime = notificationInteractor.notificationExpireTime()
+        val expireTime = notificationExpireTimeUseCase(Unit).getOrThrow()
         val currentTime = Clock.System.now().toEpochMilliseconds()
         val isTimePasses = isTimePasses(ONE_DAY_MILLS, expireTime, currentTime)
         delay(NOTIFICATIONS_PERMISSION_DELAY.milliseconds)

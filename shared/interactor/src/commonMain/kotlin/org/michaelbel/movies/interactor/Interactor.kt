@@ -1,7 +1,6 @@
 package org.michaelbel.movies.interactor
 
 class Interactor(
-    accountInteractor: AccountInteractor,
     authenticationInteractor: AuthenticationInteractor,
     imageInteractor: ImageInteractor,
     movieInteractor: MovieInteractor,
@@ -10,8 +9,7 @@ class Interactor(
     settingsInteractor: SettingsInteractor,
     suggestionInteractor: SuggestionInteractor,
     localeInteractor: LocaleInteractor
-): AccountInteractor by accountInteractor,
-    AuthenticationInteractor by authenticationInteractor,
+): AuthenticationInteractor by authenticationInteractor,
     ImageInteractor by imageInteractor,
     MovieInteractor by movieInteractor,
     NotificationInteractor by notificationInteractor,

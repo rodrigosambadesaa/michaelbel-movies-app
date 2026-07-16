@@ -2,9 +2,10 @@ package org.michaelbel.movies.main.tabs
 
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
+import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase.AccountDetailsException
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
@@ -26,7 +27,8 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 class MainTabsViewModel(
     private val interactor: Interactor,
     private val uiInteractor: UiInteractor,
-    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
+    private val accountDetailsUseCase: AccountDetailsUseCase
 ): MoviesViewModel<MainTabsModel, MainTabsIntent, MainTabsEvent>(MainTabsModel()) {
 
     init {
@@ -75,10 +77,8 @@ class MainTabsViewModel(
             }
             is MainTabsIntent.AuthorizeAccount -> {
                 launch {
-                    interactor.run {
-                        createSession(intent.requestToken)
-                        accountDetails()
-                    }
+                    interactor.createSession(intent.requestToken)
+                    accountDetailsUseCase(Unit).getOrThrow()
                     push(MainTabsEvent.ShowSnackbar(MoviesStrings.feed_auth_success))
                     MainNavigator.back()
                 }

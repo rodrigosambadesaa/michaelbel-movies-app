@@ -6,7 +6,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.michaelbel.movies.analytics.di.moviesAnalyticsKoinModule
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
-import org.michaelbel.movies.interactor.AccountInteractor
 import org.michaelbel.movies.interactor.AuthenticationInteractor
 import org.michaelbel.movies.interactor.ImageInteractor
 import org.michaelbel.movies.interactor.Interactor
@@ -16,7 +15,6 @@ import org.michaelbel.movies.interactor.NotificationInteractor
 import org.michaelbel.movies.interactor.SearchInteractor
 import org.michaelbel.movies.interactor.SettingsInteractor
 import org.michaelbel.movies.interactor.SuggestionInteractor
-import org.michaelbel.movies.interactor.impl.AccountInteractorImpl
 import org.michaelbel.movies.interactor.impl.AuthenticationInteractorImpl
 import org.michaelbel.movies.interactor.impl.ImageInteractorImpl
 import org.michaelbel.movies.interactor.impl.MovieInteractorImpl
@@ -38,7 +36,6 @@ val interactorKoinModule = module {
         uiInteractorKoinModule,
         appNotificationInteractorKoinModule
     )
-    singleOf(::AccountInteractorImpl) { bind<AccountInteractor>() }
     singleOf(::AuthenticationInteractorImpl) { bind<AuthenticationInteractor>() }
     singleOf(::ImageInteractorImpl) { bind<ImageInteractor>() }
     singleOf(::MovieInteractorImpl) { bind<MovieInteractor>() }
@@ -48,7 +45,6 @@ val interactorKoinModule = module {
     singleOf(::SuggestionInteractorImpl) { bind<SuggestionInteractor>() }
     single<Interactor> {
         Interactor(
-            get<AccountInteractor>(),
             get<AuthenticationInteractor>(),
             get<ImageInteractor>(),
             get<MovieInteractor>(),

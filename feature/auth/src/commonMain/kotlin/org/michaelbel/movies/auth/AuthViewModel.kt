@@ -3,18 +3,20 @@ package org.michaelbel.movies.auth
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.auth.intent.AuthIntent
 import org.michaelbel.movies.auth.model.AuthModel
-import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
+import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase.AccountDetailsException
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.ui.pending.PendingActionStore
 
 class AuthViewModel(
-    private val interactor: Interactor
+    private val interactor: Interactor,
+    private val accountDetailsUseCase: AccountDetailsUseCase
 ): MoviesViewModel<AuthModel, AuthIntent, Event>(AuthModel()) {
 
     override fun dispatch(intent: AuthIntent) {
@@ -42,10 +44,8 @@ class AuthViewModel(
                 val job = launch {
                     val token = interactor.createRequestToken(loginViaTmdb = false)
                     val sessionToken = interactor.createSessionWithLogin(intent.username, intent.password, token.requestToken)
-                    interactor.run {
-                        createSession(sessionToken.requestToken)
-                        accountDetails()
-                    }
+                    interactor.createSession(sessionToken.requestToken)
+                    accountDetailsUseCase(Unit).getOrThrow()
                     MainNavigator.back()
                 }
                 reduce { it.copy(signInJob = job) }

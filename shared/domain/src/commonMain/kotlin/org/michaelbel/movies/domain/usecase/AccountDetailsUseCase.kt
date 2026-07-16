@@ -1,23 +1,23 @@
 @file:OptIn(ExperimentalTime::class)
 
-package org.michaelbel.movies.repository.impl
+package org.michaelbel.movies.domain.usecase
 
-import org.michaelbel.movies.common.exceptions.AccountDetailsException
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.network.AccountNetworkService
 import org.michaelbel.movies.persistence.database.AccountPersistence
 import org.michaelbel.movies.persistence.database.ktx.accountPojo
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
-import org.michaelbel.movies.repository.AccountRepository
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-class AccountRepositoryImpl(
+class AccountDetailsUseCase(
     private val accountNetworkService: AccountNetworkService,
     private val accountPersistence: AccountPersistence,
-    private val preferences: MoviesPreferences
-): AccountRepository {
+    private val preferences: MoviesPreferences,
+    dispatchers: SharedDispatchers
+): UseCase<Unit, Unit>(dispatchers.io) {
 
-    override suspend fun accountDetails() {
+    override suspend fun execute(params: Unit) {
         try {
             val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
             val account = accountNetworkService.accountDetails(sessionId)
@@ -26,6 +26,10 @@ class AccountRepositoryImpl(
                 setValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey, Clock.System.now().toEpochMilliseconds())
             }
             accountPersistence.upsert(account.accountPojo)
-        } catch (_: Exception) { throw AccountDetailsException() }
+        } catch (exception: Exception) { throw AccountDetailsException(exception.message.orEmpty()) }
     }
+
+    data class AccountDetailsException(
+        override val message: String
+    ): Exception(message)
 }

@@ -6,7 +6,6 @@ import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.network.AccountNetworkService
 import org.michaelbel.movies.persistence.database.AccountPersistence
 import org.michaelbel.movies.persistence.database.ktx.accountPojo
-import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AccountRepository
 import kotlin.time.Clock
@@ -17,10 +16,6 @@ class AccountRepositoryImpl(
     private val accountPersistence: AccountPersistence,
     private val preferences: MoviesPreferences
 ): AccountRepository {
-
-    override suspend fun accountExpireTime(): Long {
-        return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey).orEmpty()
-    }
 
     override suspend fun accountDetails() {
         try {

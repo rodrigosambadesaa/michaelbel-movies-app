@@ -6,6 +6,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import org.michaelbel.movies.common.ktx.isTimePasses
+import org.michaelbel.movies.domain.usecase.AccountExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.AccountIdUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
@@ -18,14 +19,15 @@ class AccountUpdateWorker(
     context: Context,
     workerParams: WorkerParameters,
     private val interactor: Interactor,
-    private val accountIdUseCase: AccountIdUseCase
+    private val accountIdUseCase: AccountIdUseCase,
+    private val accountExpireTimeUseCase: AccountExpireTimeUseCase
 ): CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
             val accountId = accountIdUseCase(Unit).getOrThrow()
             if (isTmdbApiKeyEmpty || accountId.isEmpty) return Result.success()
-            val accountExpireTime = interactor.accountExpireTime()
+            val accountExpireTime = accountExpireTimeUseCase(Unit).getOrThrow()
             val currentTime = Clock.System.now().toEpochMilliseconds()
             if (isTimePasses(ONE_DAY_MILLS, accountExpireTime, currentTime)) {
                 interactor.accountDetails()

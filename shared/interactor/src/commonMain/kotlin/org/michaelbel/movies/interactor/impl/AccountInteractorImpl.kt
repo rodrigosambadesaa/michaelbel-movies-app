@@ -10,10 +10,6 @@ class AccountInteractorImpl(
     private val accountRepository: AccountRepository
 ): AccountInteractor {
 
-    override suspend fun accountExpireTime(): Long {
-        return withContext(dispatchers.io) { accountRepository.accountExpireTime() }
-    }
-
     override suspend fun accountDetails() {
         return withContext(dispatchers.io) { accountRepository.accountDetails() }
     }

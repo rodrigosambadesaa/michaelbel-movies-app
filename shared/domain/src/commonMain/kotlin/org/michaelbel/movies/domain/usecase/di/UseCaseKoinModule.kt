@@ -7,6 +7,7 @@ import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
 import org.michaelbel.movies.domain.usecase.AccountExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.AccountIdUseCase
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
+import org.michaelbel.movies.domain.usecase.CreateRequestTokenUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase
 import org.michaelbel.movies.domain.usecase.DeleteSessionUseCase
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
@@ -49,6 +50,7 @@ val useCaseKoinModule = module {
     singleOf(::AccountIdUseCase)
     singleOf(::AccountExpireTimeUseCase)
     singleOf(::AccountDetailsUseCase)
+    singleOf(::CreateRequestTokenUseCase)
     singleOf(::CreateSessionUseCase)
     singleOf(::DeleteSessionUseCase)
     singleOf(::NotificationExpireTimeUseCase)

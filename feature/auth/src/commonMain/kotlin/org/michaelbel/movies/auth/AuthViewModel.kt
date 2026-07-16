@@ -3,12 +3,13 @@ package org.michaelbel.movies.auth
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.auth.intent.AuthIntent
 import org.michaelbel.movies.auth.model.AuthModel
-import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
 import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase.AccountDetailsException
+import org.michaelbel.movies.domain.usecase.CreateRequestTokenUseCase
+import org.michaelbel.movies.domain.usecase.CreateRequestTokenUseCase.CreateRequestTokenException
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase.CreateSessionException
 import org.michaelbel.movies.interactor.Interactor
@@ -18,7 +19,8 @@ import org.michaelbel.movies.ui.pending.PendingActionStore
 class AuthViewModel(
     private val interactor: Interactor,
     private val accountDetailsUseCase: AccountDetailsUseCase,
-    private val createSessionUseCase: CreateSessionUseCase
+    private val createSessionUseCase: CreateSessionUseCase,
+    private val createRequestTokenUseCase: CreateRequestTokenUseCase
 ): MoviesViewModel<AuthModel, AuthIntent, Event>(AuthModel()) {
 
     override fun dispatch(intent: AuthIntent) {
@@ -30,7 +32,7 @@ class AuthViewModel(
             is AuthIntent.LoginClick -> {
                 val job = launch {
                     reduce { it.copy(error = null) }
-                    val requestToken = interactor.createRequestToken(loginViaTmdb = true).requestToken
+                    val requestToken = createRequestTokenUseCase(true).getOrThrow().requestToken
                     reduce { it.copy(requestToken = requestToken) }
                 }
                 reduce { it.copy(loginJob = job) }
@@ -44,7 +46,7 @@ class AuthViewModel(
             is AuthIntent.SignInClick -> {
                 reduce { it.copy(error = null) }
                 val job = launch {
-                    val token = interactor.createRequestToken(loginViaTmdb = false)
+                    val token = createRequestTokenUseCase(false).getOrThrow()
                     val sessionToken = interactor.createSessionWithLogin(intent.username, intent.password, token.requestToken)
                     createSessionUseCase(sessionToken.requestToken).getOrThrow()
                     accountDetailsUseCase(Unit).getOrThrow()

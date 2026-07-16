@@ -13,12 +13,6 @@ class AuthenticationInteractorImpl(
     private val authenticationRepository: AuthenticationRepository
 ): AuthenticationInteractor {
 
-    override suspend fun createRequestToken(
-        loginViaTmdb: Boolean
-    ): Token {
-        return withContext(dispatchers.io) { authenticationRepository.createRequestToken(loginViaTmdb) }
-    }
-
     override suspend fun createSessionWithLogin(
         username: Username,
         password: Password,

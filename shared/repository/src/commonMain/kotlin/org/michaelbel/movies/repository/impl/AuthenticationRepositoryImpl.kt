@@ -1,6 +1,5 @@
 package org.michaelbel.movies.repository.impl
 
-import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.network.AuthenticationNetworkService
 import org.michaelbel.movies.network.model.Token
@@ -10,14 +9,6 @@ import org.michaelbel.movies.repository.AuthenticationRepository
 class AuthenticationRepositoryImpl(
     private val authenticationNetworkService: AuthenticationNetworkService
 ): AuthenticationRepository {
-
-    override suspend fun createRequestToken(loginViaTmdb: Boolean): Token {
-        return try {
-            val token = authenticationNetworkService.createRequestToken()
-            if (!token.success) throw CreateRequestTokenException(loginViaTmdb)
-            token
-        } catch (_: Exception) { throw CreateRequestTokenException(loginViaTmdb) }
-    }
 
     override suspend fun createSessionWithLogin(username: String, password: String, requestToken: String): Token {
         return try {

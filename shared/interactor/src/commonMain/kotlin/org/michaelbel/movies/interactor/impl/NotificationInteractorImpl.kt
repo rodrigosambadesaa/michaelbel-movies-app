@@ -13,8 +13,4 @@ class NotificationInteractorImpl(
     override suspend fun updateNotificationExpireTime() {
         withContext(dispatchers.io) { notificationRepository.updateNotificationExpireTime() }
     }
-
-    override suspend fun resetNotificationExpireTime() {
-        withContext(dispatchers.io) { notificationRepository.resetNotificationExpireTime() }
-    }
 }

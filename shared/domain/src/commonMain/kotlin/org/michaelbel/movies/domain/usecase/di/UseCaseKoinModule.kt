@@ -11,6 +11,7 @@ import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
+import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.network.di.networkKoinModule
 import org.michaelbel.movies.persistence.database.MoviesDatabase
@@ -43,4 +44,5 @@ val useCaseKoinModule = module {
     singleOf(::AccountExpireTimeUseCase)
     singleOf(::AccountDetailsUseCase)
     singleOf(::NotificationExpireTimeUseCase)
+    singleOf(::ResetNotificationExpireTimeUseCase)
 }

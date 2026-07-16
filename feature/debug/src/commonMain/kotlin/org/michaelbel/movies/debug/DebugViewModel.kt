@@ -6,6 +6,7 @@ import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.debug.intent.DebugIntent
 import org.michaelbel.movies.debug.model.DebugModel
+import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.platform.Flavor
 import org.michaelbel.movies.platform.app.AppService
@@ -15,7 +16,8 @@ import org.michaelbel.movies.ui.navigation.MainNavigator
 class DebugViewModel(
     private val interactor: Interactor,
     private val appService: AppService,
-    private val messagingService: MessagingService
+    private val messagingService: MessagingService,
+    private val resetNotificationExpireTimeUseCase: ResetNotificationExpireTimeUseCase
 ): MoviesViewModel<DebugModel, DebugIntent, Event>(DebugModel()) {
 
     init {
@@ -28,8 +30,8 @@ class DebugViewModel(
             is DebugIntent.DismissRequest -> launch { MainNavigator.back() }
             is DebugIntent.CollectThemeData -> {
                 launch {
-                    interactor.themeData.collectLatest { themeData ->
-                        reduce { it.copy(themeData = themeData) }
+                    interactor.themeData.collectLatest { data ->
+                        reduce { it.copy(themeData = data) }
                     }
                 }
             }
@@ -46,7 +48,9 @@ class DebugViewModel(
                     reduce { it.copy(firebaseToken = firebaseToken) }
                 }
             }
-            is DebugIntent.ResetNotificationExpireTime -> launch { interactor.resetNotificationExpireTime() }
+            is DebugIntent.ResetNotificationExpireTime -> {
+                launch { resetNotificationExpireTimeUseCase(Unit).getOrThrow() }
+            }
         }
     }
 }

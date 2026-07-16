@@ -8,6 +8,7 @@ import org.michaelbel.movies.domain.usecase.AccountExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.AccountIdUseCase
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
+import org.michaelbel.movies.domain.usecase.ImagesUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
@@ -39,6 +40,7 @@ val useCaseKoinModule = module {
     single<AccountDao> { get<MoviesDatabase>().accountDao }
     singleOf(::SuggestionPojosFlowUseCase)
     singleOf(::ImagesFlowUseCase)
+    singleOf(::ImagesUseCase)
     singleOf(::MovieFlowUseCase)
     singleOf(::MoviesFlowUseCase)
     singleOf(::AccountPojoFlowUseCase)

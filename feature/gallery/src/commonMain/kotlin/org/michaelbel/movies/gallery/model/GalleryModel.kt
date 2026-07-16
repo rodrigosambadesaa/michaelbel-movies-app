@@ -4,5 +4,5 @@ import org.michaelbel.movies.common.mvi.model.Model
 import org.michaelbel.movies.persistence.database.entity.pojo.ImagePojo
 
 data class GalleryModel(
-    val movieImages: List<ImagePojo> = emptyList()
+    val imagePojos: List<ImagePojo> = emptyList()
 ): Model

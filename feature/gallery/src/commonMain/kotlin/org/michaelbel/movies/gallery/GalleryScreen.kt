@@ -160,7 +160,7 @@ private fun GalleryScreenContent(
     val hapticFeedback = LocalHapticFeedback.current
     val platformContext = LocalPlatformContext.current
     val scope = rememberCoroutineScope()
-    val imageCount = state.movieImages.size
+    val imageCount = state.imagePojos.size
     val pagerPageCount = if (imageCount > 1) INFINITE_PAGER_PAGE_COUNT else imageCount
     val pagerState = rememberPagerState(pageCount = { pagerPageCount })
     var currentPage by remember { mutableIntStateOf(0) }
@@ -202,7 +202,7 @@ private fun GalleryScreenContent(
         contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { _ ->
         when {
-            state.movieImages.isEmpty() -> {
+            state.imagePojos.isEmpty() -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -227,7 +227,7 @@ private fun GalleryScreenContent(
                         pageSpacing = 8.dp,
                         flingBehavior = PagerDefaults.flingBehavior(state = pagerState)
                     ) { page ->
-                        val imageDb = state.movieImages[pageToImageIndex(page, imageCount)]
+                        val imageDb = state.imagePojos[pageToImageIndex(page, imageCount)]
                         var imageDiskCacheKey: String? by remember { mutableStateOf(null) }
                         var image by remember { mutableStateOf("") }
                         image = imageDb.original
@@ -283,7 +283,7 @@ private fun GalleryScreenContent(
                     TopAppBar(
                         title = {
                             Text(
-                                text = stringResource(MoviesStrings.gallery_image_of, currentPage.plus(1), state.movieImages.size),
+                                text = stringResource(MoviesStrings.gallery_image_of, currentPage.plus(1), state.imagePojos.size),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 style = MaterialTheme.typography.titleLarge.copy(
@@ -325,7 +325,7 @@ private fun GalleryScreenContent(
                                 state = rememberTooltipState()
                             ) {
                                 IconButton(
-                                    onClick = { dispatch(GalleryIntent.DownloadClick(state.movieImages[currentPage])) },
+                                    onClick = { dispatch(GalleryIntent.DownloadClick(state.imagePojos[currentPage])) },
                                     modifier = Modifier
                                         .minimumInteractiveComponentSize()
                                         .size(IconButtonDefaults.smallContainerSize(IconButtonDefaults.IconButtonWidthOption.Uniform)),

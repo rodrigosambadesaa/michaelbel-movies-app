@@ -1,18 +1,21 @@
-package org.michaelbel.movies.repository.impl
+@file:Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 
+package org.michaelbel.movies.domain.usecase
+
+import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.network.MovieNetworkService
 import org.michaelbel.movies.persistence.database.ImagePersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.ImageType
 import org.michaelbel.movies.persistence.database.ktx.imagePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
-import org.michaelbel.movies.repository.ImageRepository
 
-class ImageRepositoryImpl(
+class ImagesUseCase(
     private val movieNetworkService: MovieNetworkService,
-    private val imagePersistence: ImagePersistence
-): ImageRepository {
+    private val imagePersistence: ImagePersistence,
+    dispatchers: SharedDispatchers
+): UseCase<MovieId, Unit>(dispatchers.io) {
 
-    override suspend fun images(movieId: MovieId) {
+    override suspend fun execute(movieId: MovieId) {
         val imageResponse = movieNetworkService.images(movieId)
         val posters = imageResponse.posters.mapIndexed { index, image ->
             image.imagePojo(

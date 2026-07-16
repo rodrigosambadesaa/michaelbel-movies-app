@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
+import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.persistence.database.MoviesDatabase
 import org.michaelbel.movies.persistence.database.dao.ImageDao
@@ -23,4 +24,5 @@ val useCaseKoinModule = module {
     singleOf(::SuggestionPojosFlowUseCase)
     singleOf(::ImagesFlowUseCase)
     singleOf(::MovieFlowUseCase)
+    singleOf(::MoviesFlowUseCase)
 }

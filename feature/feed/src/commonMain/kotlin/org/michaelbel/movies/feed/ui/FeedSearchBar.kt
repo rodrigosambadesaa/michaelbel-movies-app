@@ -138,8 +138,8 @@ fun FeedSearchBar(
     val requestFocusAfterClose = remember { mutableStateOf(false) }
     val expandedHistoryMovieId = remember { mutableStateOf<MovieId?>(null) }
     val searchInputTextStyle = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp)
-    val searchHistoryMovies = state.searchHistoryMovies
-    val suggestions = state.suggestions
+    val searchHistoryMovies = state.searchHistoryMoviePojos
+    val suggestions = state.suggestionPojos
     val searchTrailingAction = when {
         textFieldState.text.isNotEmpty() -> SearchTrailingAction.Clear
         state.isFeedVoiceInputFeatureEnabled && active -> SearchTrailingAction.Voice

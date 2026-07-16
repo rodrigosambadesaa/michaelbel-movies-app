@@ -24,7 +24,6 @@ import org.michaelbel.movies.persistence.database.MoviesDatabase
 import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
-import org.michaelbel.movies.persistence.database.typealiases.Limit
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 import org.michaelbel.movies.persistence.database.typealiases.Query
@@ -91,10 +90,6 @@ class MovieInteractorImpl(
             ),
             pagingSourceFactory = { movieRepository.moviesPagingSource(searchQuery) }
         ).flow
-    }
-
-    override fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {
-        return movieRepository.moviesFlow(pagingKey, limit)
     }
 
     override suspend fun moviesWidget(): List<MovieDbMini> {

@@ -21,6 +21,7 @@ import kotlinx.coroutines.runBlocking
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.log.log
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.intent.FeedIntent
@@ -43,7 +44,8 @@ class FeedViewModel(
     private val interactor: Interactor,
     private val appNotificationInteractor: AppNotificationInteractor,
     private val networkManager: NetworkManager,
-    private val suggestionPojosFlowUseCase: SuggestionPojosFlowUseCase
+    private val suggestionPojosFlowUseCase: SuggestionPojosFlowUseCase,
+    private val moviesFlowUseCase: MoviesFlowUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -108,7 +110,9 @@ class FeedViewModel(
                     }
                 }
             }
-            is FeedIntent.CollectPageFailureButtonVisible -> reduce { it.copy(isPageFailureButtonVisible = uiInteractor.isPageFailureButtonVisible) }
+            is FeedIntent.CollectPageFailureButtonVisible -> {
+                reduce { it.copy(isPageFailureButtonVisible = uiInteractor.isPageFailureButtonVisible) }
+            }
             is FeedIntent.CollectFeatureFlags -> {
                 reduce {
                     it.copy(
@@ -119,15 +123,16 @@ class FeedViewModel(
             }
             is FeedIntent.CollectSuggestions -> {
                 launch {
-                    suggestionPojosFlowUseCase(Unit).collectLatest { suggestions ->
-                        reduce { it.copy(suggestions = suggestions) }
+                    suggestionPojosFlowUseCase(Unit).collectLatest { pojos ->
+                        reduce { it.copy(suggestionPojos = pojos) }
                     }
                 }
             }
             is FeedIntent.CollectSearchHistoryMovies -> {
                 launch {
-                    interactor.moviesFlow(MoviePojo.MOVIES_SEARCH_HISTORY, Int.MAX_VALUE).collectLatest { searchHistoryMovies ->
-                        reduce { it.copy(searchHistoryMovies = searchHistoryMovies) }
+                    val params = MoviesFlowUseCase.Params(MoviePojo.MOVIES_SEARCH_HISTORY, Int.MAX_VALUE)
+                    moviesFlowUseCase(params).collectLatest { pojos ->
+                        reduce { it.copy(searchHistoryMoviePojos = pojos) }
                     }
                 }
             }
@@ -145,8 +150,12 @@ class FeedViewModel(
                 launch { MainNavigator.forward(AuthDestination) }
             }
             is FeedIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
-            is FeedIntent.ClearSearchHistoryClick -> launch { interactor.removeMovies(MoviePojo.MOVIES_SEARCH_HISTORY) }
-            is FeedIntent.RemoveMovieFromHistoryClick -> launch { interactor.removeMovie(MoviePojo.MOVIES_SEARCH_HISTORY, intent.movieId) }
+            is FeedIntent.ClearSearchHistoryClick -> {
+                launch { interactor.removeMovies(MoviePojo.MOVIES_SEARCH_HISTORY) }
+            }
+            is FeedIntent.RemoveMovieFromHistoryClick -> {
+                launch { interactor.removeMovie(MoviePojo.MOVIES_SEARCH_HISTORY, intent.movieId) }
+            }
             is FeedIntent.SaveMovieToSearchHistoryClick -> {
                 launch {
                     val movie = interactor.movie(searchQuery.value, intent.movieId)
@@ -156,7 +165,9 @@ class FeedViewModel(
             is FeedIntent.EnterSearchQuery -> { _searchQuery.value = intent.query }
             is FeedIntent.ScrollToTop -> launch { push(FeedEvent.ScrollToTop) }
             is FeedIntent.ShowSnackbar -> launch { push(FeedEvent.ShowSnackbar(intent.message, intent.isLong)) }
-            is FeedIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
+            is FeedIntent.MovieDetailsClick -> {
+                launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
+            }
         }
     }
 
@@ -174,10 +185,7 @@ class FeedViewModel(
                     } catch (throwable: Throwable) {
                         when (throwable) {
                             is CancellationException -> throw throwable
-                            else -> {
-                                log(throwable)
-                                reduce { it.copy(isSearchLoading = false, searchFailure = throwable) }
-                            }
+                            else -> reduce { it.copy(isSearchLoading = false, searchFailure = throwable) }
                         }
                     }
                 }

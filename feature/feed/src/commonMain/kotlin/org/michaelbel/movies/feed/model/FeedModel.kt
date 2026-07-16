@@ -18,6 +18,6 @@ data class FeedModel(
     val isFeedVoiceInputFeatureEnabled: Boolean = false,
     val isSearchLoading: Boolean = false,
     val searchFailure: Throwable? = null,
-    val suggestions: List<SuggestionPojo> = emptyList(),
-    val searchHistoryMovies: List<MoviePojo> = emptyList()
+    val suggestionPojos: List<SuggestionPojo> = emptyList(),
+    val searchHistoryMoviePojos: List<MoviePojo> = emptyList()
 ): Model

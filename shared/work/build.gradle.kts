@@ -17,6 +17,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.shared.domain)
             implementation(projects.shared.interactor)
         }
         androidMain.dependencies {

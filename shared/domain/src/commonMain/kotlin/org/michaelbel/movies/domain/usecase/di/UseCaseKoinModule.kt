@@ -3,6 +3,7 @@ package org.michaelbel.movies.domain.usecase.di
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
+import org.michaelbel.movies.domain.usecase.AccountIdUseCase
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
@@ -31,4 +32,5 @@ val useCaseKoinModule = module {
     singleOf(::MovieFlowUseCase)
     singleOf(::MoviesFlowUseCase)
     singleOf(::AccountPojoFlowUseCase)
+    singleOf(::AccountIdUseCase)
 }

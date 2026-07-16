@@ -18,10 +18,6 @@ class AccountRepositoryImpl(
     private val preferences: MoviesPreferences
 ): AccountRepository {
 
-    override suspend fun accountId(): Int {
-        return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
-    }
-
     override suspend fun accountExpireTime(): Long {
         return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountExpireTimeKey).orEmpty()
     }

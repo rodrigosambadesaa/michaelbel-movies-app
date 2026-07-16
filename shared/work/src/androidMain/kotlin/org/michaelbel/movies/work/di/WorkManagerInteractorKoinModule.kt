@@ -7,6 +7,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
+import org.michaelbel.movies.domain.usecase.di.useCaseKoinModule
 import org.michaelbel.movies.interactor.di.interactorKoinModule
 import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
 import org.michaelbel.movies.work.AccountUpdateWorker
@@ -17,6 +18,7 @@ import org.michaelbel.movies.work.impl.WorkManagerInteractorImpl
 
 actual val workManagerInteractorKoinModule = module {
     includes(
+        useCaseKoinModule,
         interactorKoinModule,
         dispatchersKoinModule,
         persistenceKoinModule

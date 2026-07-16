@@ -13,13 +13,11 @@ import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.MovieInteractor
 import org.michaelbel.movies.interactor.SearchInteractor
 import org.michaelbel.movies.interactor.SettingsInteractor
-import org.michaelbel.movies.interactor.SuggestionInteractor
 import org.michaelbel.movies.interactor.impl.AuthenticationInteractorImpl
 import org.michaelbel.movies.interactor.impl.ImageInteractorImpl
 import org.michaelbel.movies.interactor.impl.MovieInteractorImpl
 import org.michaelbel.movies.interactor.impl.SearchInteractorImpl
 import org.michaelbel.movies.interactor.impl.SettingsInteractorImpl
-import org.michaelbel.movies.interactor.impl.SuggestionInteractorImpl
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
 import org.michaelbel.movies.repository.di.repositoryKoinModule
 
@@ -39,7 +37,6 @@ val interactorKoinModule = module {
     singleOf(::MovieInteractorImpl) { bind<MovieInteractor>() }
     singleOf(::SearchInteractorImpl) { bind<SearchInteractor>() }
     singleOf(::SettingsInteractorImpl) { bind<SettingsInteractor>() }
-    singleOf(::SuggestionInteractorImpl) { bind<SuggestionInteractor>() }
     single<Interactor> {
         Interactor(
             get<AuthenticationInteractor>(),
@@ -47,7 +44,6 @@ val interactorKoinModule = module {
             get<MovieInteractor>(),
             get<SearchInteractor>(),
             get<SettingsInteractor>(),
-            get<SuggestionInteractor>(),
             get<LocaleInteractor>()
         )
     }

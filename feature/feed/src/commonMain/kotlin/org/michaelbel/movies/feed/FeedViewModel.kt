@@ -24,6 +24,7 @@ import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
+import org.michaelbel.movies.domain.usecase.UpdateSuggestionsUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.intent.FeedIntent
 import org.michaelbel.movies.feed.model.FeedModel
@@ -47,7 +48,8 @@ class FeedViewModel(
     private val networkManager: NetworkManager,
     private val suggestionPojosFlowUseCase: SuggestionPojosFlowUseCase,
     private val moviesFlowUseCase: MoviesFlowUseCase,
-    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
+    private val updateSuggestionsUseCase: UpdateSuggestionsUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -138,7 +140,9 @@ class FeedViewModel(
                     }
                 }
             }
-            is FeedIntent.LoadSuggestions -> launch { interactor.updateSuggestions() }
+            is FeedIntent.LoadSuggestions -> {
+                launch { updateSuggestionsUseCase(interactor.language).getOrThrow() }
+            }
             is FeedIntent.SubscribeNotificationsPermissionRequired -> {
                 launch {
                     if (appNotificationInteractor.notificationsPermissionRequired()) {
@@ -166,7 +170,9 @@ class FeedViewModel(
             }
             is FeedIntent.EnterSearchQuery -> { _searchQuery.value = intent.query }
             is FeedIntent.ScrollToTop -> launch { push(FeedEvent.ScrollToTop) }
-            is FeedIntent.ShowSnackbar -> launch { push(FeedEvent.ShowSnackbar(intent.message, intent.isLong)) }
+            is FeedIntent.ShowSnackbar -> {
+                launch { push(FeedEvent.ShowSnackbar(intent.message, intent.isLong)) }
+            }
             is FeedIntent.MovieDetailsClick -> {
                 launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
             }

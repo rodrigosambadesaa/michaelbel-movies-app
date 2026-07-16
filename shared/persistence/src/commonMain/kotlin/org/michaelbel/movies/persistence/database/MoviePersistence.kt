@@ -17,10 +17,6 @@ class MoviePersistence(
         return moviesDatabase.movieDao.pagingSource(pagingKey)
     }
 
-    fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
-        return moviesDatabase.movieDao.movieFlow(pagingKey, movieId)
-    }
-
     fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {
         return moviesDatabase.movieDao.moviesFlow(pagingKey, limit)
     }

@@ -93,10 +93,6 @@ class MovieInteractorImpl(
         ).flow
     }
 
-    override fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
-        return movieRepository.movieFlow(pagingKey, movieId)
-    }
-
     override fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {
         return movieRepository.moviesFlow(pagingKey, limit)
     }

@@ -41,10 +41,6 @@ class MovieRepositoryImpl(
         return moviePersistence.pagingSource(pagingKey)
     }
 
-    override fun movieFlow(pagingKey: PagingKey, movieId: MovieId): Flow<MoviePojo?> {
-        return moviePersistence.movieFlow(pagingKey, movieId)
-    }
-
     override fun moviesFlow(pagingKey: PagingKey, limit: Limit): Flow<List<MoviePojo>> {
         return moviePersistence.moviesFlow(pagingKey, limit)
     }

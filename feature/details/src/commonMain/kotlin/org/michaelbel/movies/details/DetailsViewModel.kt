@@ -7,6 +7,7 @@ import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.details.intent.DetailsIntent
 import org.michaelbel.movies.details.model.DetailsModel
+import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
@@ -24,7 +25,8 @@ class DetailsViewModel(
     private val destination: DetailsDestination,
     private val interactor: Interactor,
     private val uiInteractor: UiInteractor,
-    private val networkManager: NetworkManager
+    private val networkManager: NetworkManager,
+    private val movieFlowUseCase: MovieFlowUseCase
 ): MoviesViewModel<DetailsModel, DetailsIntent, Event>(DetailsModel()) {
 
     init {
@@ -63,14 +65,16 @@ class DetailsViewModel(
             }
             is DetailsIntent.CollectFavorite -> {
                 launch {
-                    interactor.movieFlow(Movie.FAVORITE, destination.movieId).collectLatest { favoriteMovie ->
+                    val params = MovieFlowUseCase.Params(Movie.FAVORITE, destination.movieId)
+                    movieFlowUseCase(params).collectLatest { favoriteMovie ->
                         reduce { it.copy(isFavorite = favoriteMovie != null) }
                     }
                 }
             }
             is DetailsIntent.CollectMovieDb -> {
                 launch {
-                    interactor.movieFlow(destination.movieList.orEmpty(), destination.movieId).collectLatest { movieDb ->
+                    val params = MovieFlowUseCase.Params(destination.movieList.orEmpty(), destination.movieId)
+                    movieFlowUseCase(params).collectLatest { movieDb ->
                         if (movieDb != null) {
                             reduce { it.copy(detailsState = ScreenState.Content(movieDb)) }
                         }

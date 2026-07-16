@@ -5,7 +5,6 @@ import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.interactor.AuthenticationInteractor
 import org.michaelbel.movies.interactor.entity.Password
 import org.michaelbel.movies.interactor.entity.Username
-import org.michaelbel.movies.network.model.Session
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.repository.AuthenticationRepository
 
@@ -28,11 +27,5 @@ class AuthenticationInteractorImpl(
         return withContext(dispatchers.io) {
             authenticationRepository.createSessionWithLogin(username.value, password.value, requestToken)
         }
-    }
-
-    override suspend fun createSession(
-        token: String
-    ): Session {
-        return withContext(dispatchers.io) { authenticationRepository.createSession(token) }
     }
 }

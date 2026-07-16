@@ -3,9 +3,9 @@ package org.michaelbel.movies.auth.ktx
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.stringResource
 import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
-import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase.AccountDetailsException
+import org.michaelbel.movies.domain.usecase.CreateSessionUseCase.CreateSessionException
 import org.michaelbel.movies.ui.strings.MoviesStrings
 
 val Throwable?.text: String

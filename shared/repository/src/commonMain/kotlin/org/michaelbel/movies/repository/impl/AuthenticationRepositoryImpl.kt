@@ -1,19 +1,14 @@
 package org.michaelbel.movies.repository.impl
 
 import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
-import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.network.AuthenticationNetworkService
-import org.michaelbel.movies.network.model.RequestToken
-import org.michaelbel.movies.network.model.Session
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.network.model.Username
-import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
-    private val authenticationNetworkService: AuthenticationNetworkService,
-    private val preferences: MoviesPreferences
+    private val authenticationNetworkService: AuthenticationNetworkService
 ): AuthenticationRepository {
 
     override suspend fun createRequestToken(loginViaTmdb: Boolean): Token {
@@ -36,14 +31,5 @@ class AuthenticationRepositoryImpl(
             if (!token.success) throw CreateSessionWithLoginException()
             token
         } catch (_: Exception) { throw CreateSessionWithLoginException() }
-    }
-
-    override suspend fun createSession(token: String): Session {
-        return try {
-            val session = authenticationNetworkService.createSession(RequestToken(token))
-            if (!session.success) throw CreateSessionException()
-            preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey, session.sessionId)
-            session
-        } catch (_: Exception) { throw CreateSessionException() }
     }
 }

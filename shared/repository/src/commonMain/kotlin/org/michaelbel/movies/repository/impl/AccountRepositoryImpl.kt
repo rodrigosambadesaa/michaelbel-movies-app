@@ -1,18 +1,10 @@
-@file:OptIn(
-    ExperimentalCoroutinesApi::class,
-    ExperimentalTime::class
-)
+@file:OptIn(ExperimentalTime::class)
 
 package org.michaelbel.movies.repository.impl
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.network.AccountNetworkService
 import org.michaelbel.movies.persistence.database.AccountPersistence
-import org.michaelbel.movies.persistence.database.entity.pojo.AccountPojo
 import org.michaelbel.movies.persistence.database.ktx.accountPojo
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
@@ -25,10 +17,6 @@ class AccountRepositoryImpl(
     private val accountPersistence: AccountPersistence,
     private val preferences: MoviesPreferences
 ): AccountRepository {
-
-    override val accountPojoFlow: Flow<AccountPojo> = preferences.getValueFlow(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
-        .map { accountId -> accountId.orEmpty() }
-        .flatMapLatest(accountPersistence::accountByIdFlow)
 
     override suspend fun accountId(): Int {
         return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()

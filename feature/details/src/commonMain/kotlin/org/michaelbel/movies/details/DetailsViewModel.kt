@@ -7,6 +7,7 @@ import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.details.intent.DetailsIntent
 import org.michaelbel.movies.details.model.DetailsModel
+import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
@@ -26,7 +27,8 @@ class DetailsViewModel(
     private val interactor: Interactor,
     private val uiInteractor: UiInteractor,
     private val networkManager: NetworkManager,
-    private val movieFlowUseCase: MovieFlowUseCase
+    private val movieFlowUseCase: MovieFlowUseCase,
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
 ): MoviesViewModel<DetailsModel, DetailsIntent, Event>(DetailsModel()) {
 
     init {
@@ -58,7 +60,7 @@ class DetailsViewModel(
             }
             is DetailsIntent.CollectAccount -> {
                 launch {
-                    interactor.accountPojoFlow.collectLatest { accountPojo ->
+                    accountPojoFlowUseCase(Unit).collectLatest { accountPojo ->
                         reduce { it.copy(isAuthorized = accountPojo.isNotEmpty) }
                     }
                 }

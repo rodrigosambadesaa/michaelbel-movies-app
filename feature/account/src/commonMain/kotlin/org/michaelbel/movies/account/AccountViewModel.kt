@@ -7,11 +7,13 @@ import org.michaelbel.movies.account.model.AccountModel
 import org.michaelbel.movies.common.exceptions.DeleteSessionException
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AccountViewModel(
-    private val interactor: Interactor
+    private val interactor: Interactor,
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
 ): MoviesViewModel<AccountModel, AccountIntent, Event>(AccountModel()) {
 
     init {
@@ -22,8 +24,8 @@ class AccountViewModel(
         when (intent) {
             is AccountIntent.CollectAccountPojo -> {
                 launch {
-                    interactor.accountPojoFlow.collectLatest { accountPojo ->
-                        reduce { it.copy(accountPojo = accountPojo) }
+                    accountPojoFlowUseCase(Unit).collectLatest { pojo ->
+                        reduce { it.copy(accountPojo = pojo) }
                     }
                 }
             }

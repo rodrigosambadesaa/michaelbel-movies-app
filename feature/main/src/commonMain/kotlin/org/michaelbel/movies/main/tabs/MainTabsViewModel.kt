@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.exceptions.AccountDetailsException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.interactor.Interactor
@@ -24,7 +25,8 @@ import org.michaelbel.movies.ui.strings.MoviesStrings
 
 class MainTabsViewModel(
     private val interactor: Interactor,
-    private val uiInteractor: UiInteractor
+    private val uiInteractor: UiInteractor,
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
 ): MoviesViewModel<MainTabsModel, MainTabsIntent, MainTabsEvent>(MainTabsModel()) {
 
     init {
@@ -39,8 +41,8 @@ class MainTabsViewModel(
             }
             is MainTabsIntent.CollectAuthorizedState -> {
                 launch {
-                    interactor.accountPojoFlow.collectLatest { accountPojo ->
-                        val isAuthorized = accountPojo.isNotEmpty
+                    accountPojoFlowUseCase(Unit).collectLatest { pojo ->
+                        val isAuthorized = pojo.isNotEmpty
                         if (isAuthorized && !stateFlow.value.isAuthorized) {
                             when (val pendingAuthAction = PendingActionStore.action) {
                                 PendingAction.OpenFave -> {
@@ -54,7 +56,7 @@ class MainTabsViewModel(
                                 else -> Unit
                             }
                         }
-                        reduce { it.copy(isAuthorized = isAuthorized, accountPojo = accountPojo) }
+                        reduce { it.copy(isAuthorized = isAuthorized, accountPojo = pojo) }
                     }
                 }
             }

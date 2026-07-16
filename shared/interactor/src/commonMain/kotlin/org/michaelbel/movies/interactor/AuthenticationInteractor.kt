@@ -12,6 +12,4 @@ interface AuthenticationInteractor {
     suspend fun createSessionWithLogin(username: Username, password: Password, requestToken: String): Token
 
     suspend fun createSession(token: String): Session
-
-    suspend fun deleteSession()
 }

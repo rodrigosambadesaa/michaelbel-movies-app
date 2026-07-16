@@ -10,6 +10,4 @@ interface AuthenticationRepository {
     suspend fun createSessionWithLogin(username: String, password: String, requestToken: String): Token
 
     suspend fun createSession(token: String): Session
-
-    suspend fun deleteSession()
 }

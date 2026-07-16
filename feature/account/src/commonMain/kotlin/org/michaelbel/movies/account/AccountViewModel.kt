@@ -4,16 +4,16 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.account.intent.AccountIntent
 import org.michaelbel.movies.account.model.AccountModel
-import org.michaelbel.movies.common.exceptions.DeleteSessionException
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
-import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.domain.usecase.DeleteSessionUseCase
+import org.michaelbel.movies.domain.usecase.DeleteSessionUseCase.DeleteSessionException
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class AccountViewModel(
-    private val interactor: Interactor,
-    private val accountPojoFlowUseCase: AccountPojoFlowUseCase
+    private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
+    private val deleteSessionUseCase: DeleteSessionUseCase
 ): MoviesViewModel<AccountModel, AccountIntent, Event>(AccountModel()) {
 
     init {
@@ -32,7 +32,7 @@ class AccountViewModel(
             is AccountIntent.BackClick -> launch { MainNavigator.back() }
             is AccountIntent.LogoutClick -> {
                 val job = launch {
-                    interactor.deleteSession()
+                    deleteSessionUseCase(Unit).getOrThrow()
                     MainNavigator.back()
                 }
                 reduce { it.copy(logoutJob = job) }

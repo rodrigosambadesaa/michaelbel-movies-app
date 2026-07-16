@@ -35,8 +35,4 @@ class AuthenticationInteractorImpl(
     ): Session {
         return withContext(dispatchers.io) { authenticationRepository.createSession(token) }
     }
-
-    override suspend fun deleteSession() {
-        return withContext(dispatchers.io) { authenticationRepository.deleteSession() }
-    }
 }

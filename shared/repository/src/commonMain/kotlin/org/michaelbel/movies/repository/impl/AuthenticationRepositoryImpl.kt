@@ -3,21 +3,16 @@ package org.michaelbel.movies.repository.impl
 import org.michaelbel.movies.common.exceptions.CreateRequestTokenException
 import org.michaelbel.movies.common.exceptions.CreateSessionException
 import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
-import org.michaelbel.movies.common.exceptions.DeleteSessionException
 import org.michaelbel.movies.network.AuthenticationNetworkService
 import org.michaelbel.movies.network.model.RequestToken
 import org.michaelbel.movies.network.model.Session
-import org.michaelbel.movies.network.model.SessionRequest
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.network.model.Username
-import org.michaelbel.movies.persistence.database.AccountPersistence
-import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import org.michaelbel.movies.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
     private val authenticationNetworkService: AuthenticationNetworkService,
-    private val accountPersistence: AccountPersistence,
     private val preferences: MoviesPreferences
 ): AuthenticationRepository {
 
@@ -50,19 +45,5 @@ class AuthenticationRepositoryImpl(
             preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey, session.sessionId)
             session
         } catch (_: Exception) { throw CreateSessionException() }
-    }
-
-    override suspend fun deleteSession() {
-        try {
-            val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()
-            val deletedSession = authenticationNetworkService.deleteSession(SessionRequest(sessionId))
-            if (!deletedSession.success) throw DeleteSessionException()
-            val accountId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey).orEmpty()
-            accountPersistence.removeById(accountId)
-            preferences.run {
-                removeValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey)
-                removeValue(MoviesPreferences.PreferenceKey.PreferenceAccountKey)
-            }
-        } catch (_: Exception) { throw DeleteSessionException() }
     }
 }

@@ -3,7 +3,6 @@ package org.michaelbel.movies.repository
 import androidx.paging.PagingSource
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
-import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.Page
@@ -16,8 +15,6 @@ interface MovieRepository {
     suspend fun moviesResult(pagingKey: PagingKey, language: String, page: Page): Result<MovieResponse>
 
     suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo
-
-    suspend fun moviesWidget(language: String): List<MovieDbMini>
 
     suspend fun removeMovies(pagingKey: PagingKey)
 

@@ -10,6 +10,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
 import org.michaelbel.movies.widget.MoviesGlanceWidget
@@ -20,7 +21,8 @@ import java.time.Duration
 class MoviesGlanceWidgetWorker(
     workerParams: WorkerParameters,
     private val context: Context,
-    private val interactor: Interactor
+    private val interactor: Interactor,
+    private val moviesWidgetUseCase: MoviesWidgetUseCase
 ): CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -28,7 +30,7 @@ class MoviesGlanceWidgetWorker(
         val glanceIds = glanceAppWidgetManager.getGlanceIds(MoviesGlanceWidget::class.java)
         return try {
             setWidgetState(glanceIds, MoviesWidgetState.Loading)
-            val movies = interactor.moviesWidget().map(MovieDbMini::mapToMovieData)
+            val movies = moviesWidgetUseCase(interactor.language).getOrThrow().map(MovieDbMini::mapToMovieData)
             if (movies.isNotEmpty()) {
                 setWidgetState(glanceIds, MoviesWidgetState.Content(movies))
                 Result.success()

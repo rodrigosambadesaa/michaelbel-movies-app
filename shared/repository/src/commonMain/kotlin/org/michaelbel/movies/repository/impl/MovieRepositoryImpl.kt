@@ -4,8 +4,6 @@ package org.michaelbel.movies.repository.impl
 
 import androidx.paging.PagingSource
 import org.michaelbel.movies.common.exceptions.ApiKeyNotNullException
-import org.michaelbel.movies.common.exceptions.MoviesUpcomingException
-import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.network.AccountNetworkService
 import org.michaelbel.movies.network.MovieNetworkService
 import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
@@ -15,7 +13,6 @@ import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
 import org.michaelbel.movies.persistence.database.MoviePersistence
-import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.ktx.orEmpty
@@ -54,29 +51,6 @@ class MovieRepositoryImpl(
 
     override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
         return moviePersistence.movieById(pagingKey, movieId).orEmpty
-    }
-
-    override suspend fun moviesWidget(language: String): List<MovieDbMini> {
-        return try {
-            val movieResult = movieNetworkService.movies(
-                list = MovieList.Upcoming().name,
-                language = language,
-                page = 1
-            )
-            val moviesDb = movieResult.results.mapIndexed { index, movieResponse ->
-                movieResponse.moviePojo(
-                    movieList = MoviePojo.MOVIES_WIDGET,
-                    position = index.plus(1)
-                )
-            }
-            moviePersistence.removeMovies(MoviePojo.MOVIES_WIDGET)
-            moviePersistence.upsert(moviesDb)
-            moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE)
-        } catch (_: Exception) {
-            moviePersistence.moviesMini(MoviePojo.MOVIES_WIDGET, MovieResponse.DEFAULT_PAGE_SIZE).ifEmpty {
-                throw MoviesUpcomingException()
-            }
-        }
     }
 
     override suspend fun removeMovies(pagingKey: PagingKey) {

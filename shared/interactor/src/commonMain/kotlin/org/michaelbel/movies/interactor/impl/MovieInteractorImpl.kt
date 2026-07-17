@@ -21,7 +21,6 @@ import org.michaelbel.movies.network.ktx.nextPage
 import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.persistence.database.MoviesDatabase
-import org.michaelbel.movies.persistence.database.entity.mini.MovieDbMini
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
@@ -90,10 +89,6 @@ class MovieInteractorImpl(
             ),
             pagingSourceFactory = { movieRepository.moviesPagingSource(searchQuery) }
         ).flow
-    }
-
-    override suspend fun moviesWidget(): List<MovieDbMini> {
-        return withContext(dispatchers.io) { movieRepository.moviesWidget(localeInteractor.language) }
     }
 
     override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {

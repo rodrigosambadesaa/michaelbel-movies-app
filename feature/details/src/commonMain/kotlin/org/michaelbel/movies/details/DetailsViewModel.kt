@@ -10,6 +10,7 @@ import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase
 import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase.MovieDetailsException
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
+import org.michaelbel.movies.domain.usecase.UpdateFavoriteUseCase
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.network.config.ScreenState
@@ -30,7 +31,8 @@ class DetailsViewModel(
     private val networkManager: NetworkManager,
     private val movieFlowUseCase: MovieFlowUseCase,
     private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
-    private val movieDetailsUseCase: MovieDetailsUseCase
+    private val movieDetailsUseCase: MovieDetailsUseCase,
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase
 ): MoviesViewModel<DetailsModel, DetailsIntent, Event>(DetailsModel()) {
 
     init {
@@ -97,14 +99,20 @@ class DetailsViewModel(
                 }
             }
             is DetailsIntent.BackClick -> launch { MainNavigator.back() }
-            is DetailsIntent.GalleryClick -> launch { MainNavigator.forward(GalleryDestination(destination.movieId)) }
+            is DetailsIntent.GalleryClick -> {
+                launch { MainNavigator.forward(GalleryDestination(destination.movieId)) }
+            }
             is DetailsIntent.FavoriteClick -> when {
                 !stateFlow.value.isAuthorized -> {
                     PendingActionStore.set(PendingAction.AddFavorite(destination.movieId))
                     launch { MainNavigator.forward(AuthDestination) }
                 }
                 !stateFlow.value.isFavoriteJobActive -> {
-                    val job = launch { interactor.updateFavorite(destination.movieId, favorite = !stateFlow.value.isFavorite) }.also { launchedJob ->
+                    val params = UpdateFavoriteUseCase.Params(
+                        movieId = destination.movieId,
+                        favorite = !stateFlow.value.isFavorite
+                    )
+                    val job = launch { updateFavoriteUseCase(params).getOrThrow() }.also { launchedJob ->
                         launchedJob.invokeOnCompletion { reduce { it.copy(favoriteJob = null) } }
                     }
                     reduce { it.copy(favoriteJob = job) }

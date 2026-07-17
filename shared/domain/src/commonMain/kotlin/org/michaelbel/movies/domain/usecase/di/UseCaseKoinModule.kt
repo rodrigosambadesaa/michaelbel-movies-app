@@ -21,6 +21,7 @@ import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
+import org.michaelbel.movies.domain.usecase.UpdateFavoriteUseCase
 import org.michaelbel.movies.domain.usecase.UpdateNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.UpdateSuggestionsUseCase
 import org.michaelbel.movies.network.di.networkKoinModule
@@ -63,6 +64,7 @@ val useCaseKoinModule = module {
     singleOf(::FetchAndInsertSearchMoviesUseCase)
     singleOf(::NotificationExpireTimeUseCase)
     singleOf(::ResetNotificationExpireTimeUseCase)
+    singleOf(::UpdateFavoriteUseCase)
     singleOf(::UpdateNotificationExpireTimeUseCase)
     singleOf(::UpdateSuggestionsUseCase)
 }

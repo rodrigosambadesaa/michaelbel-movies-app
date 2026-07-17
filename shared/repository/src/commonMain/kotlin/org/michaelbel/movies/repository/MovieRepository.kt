@@ -23,6 +23,4 @@ interface MovieRepository {
     suspend fun insertMovies(pagingKey: PagingKey, page: Page, movies: List<MovieResponse>)
 
     suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo)
-
-    suspend fun updateFavorite(movieId: MovieId, favorite: Boolean)
 }

@@ -104,10 +104,6 @@ class MovieInteractorImpl(
         return withContext(dispatchers.io) { movieRepository.insertMovie(pagingKey, movie) }
     }
 
-    override suspend fun updateFavorite(movieId: MovieId, favorite: Boolean) {
-        return withContext(dispatchers.io) { movieRepository.updateFavorite(movieId, favorite) }
-    }
-
     override suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo> {
         return withContext(dispatchers.io) {
             val movieResult = movieRepository.moviesResult(pagingKey, localeInteractor.language, 1).results

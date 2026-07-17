@@ -24,7 +24,5 @@ interface MovieInteractor {
 
     suspend fun insertMovie(pagingKey: PagingKey, movie: MoviePojo)
 
-    suspend fun updateFavorite(movieId: MovieId, favorite: Boolean)
-
     suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo>
 }

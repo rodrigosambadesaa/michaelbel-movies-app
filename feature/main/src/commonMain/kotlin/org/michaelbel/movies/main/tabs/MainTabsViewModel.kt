@@ -8,6 +8,7 @@ import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase.AccountDetails
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase.CreateSessionException
+import org.michaelbel.movies.domain.usecase.UpdateFavoriteUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
 import org.michaelbel.movies.interactor.Interactor
@@ -30,7 +31,8 @@ class MainTabsViewModel(
     private val uiInteractor: UiInteractor,
     private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
     private val accountDetailsUseCase: AccountDetailsUseCase,
-    private val createSessionUseCase: CreateSessionUseCase
+    private val createSessionUseCase: CreateSessionUseCase,
+    private val updateFavoriteUseCase: UpdateFavoriteUseCase
 ): MoviesViewModel<MainTabsModel, MainTabsIntent, MainTabsEvent>(MainTabsModel()) {
 
     init {
@@ -55,7 +57,11 @@ class MainTabsViewModel(
                                 }
                                 is PendingAction.AddFavorite -> {
                                     PendingActionStore.clear()
-                                    interactor.updateFavorite(pendingAuthAction.movieId, favorite = true)
+                                    val params = UpdateFavoriteUseCase.Params(
+                                        movieId = pendingAuthAction.movieId,
+                                        favorite = true
+                                    )
+                                    updateFavoriteUseCase(params).getOrThrow()
                                 }
                                 else -> Unit
                             }

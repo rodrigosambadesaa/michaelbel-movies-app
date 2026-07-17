@@ -10,13 +10,17 @@ import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.SearchInteractor
 import org.michaelbel.movies.interactor.impl.SearchInteractorImpl
+import org.michaelbel.movies.network.di.networkKoinModule
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
-import org.michaelbel.movies.repository.di.repositoryKoinModule
+import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
+import org.michaelbel.movies.persistence.datastore.di.moviesPreferencesKoinModule
 
 val interactorKoinModule = module {
     includes(
         dispatchersKoinModule,
-        repositoryKoinModule,
+        networkKoinModule,
+        persistenceKoinModule,
+        moviesPreferencesKoinModule,
         moviesDatabaseKoinModule,
         moviesAnalyticsKoinModule,
         localeInteractorKoinModule,

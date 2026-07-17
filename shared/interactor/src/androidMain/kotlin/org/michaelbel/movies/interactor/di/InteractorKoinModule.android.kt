@@ -14,13 +14,17 @@ import org.michaelbel.movies.interactor.impl.AboutInteractorImpl
 import org.michaelbel.movies.interactor.impl.AppNotificationInteractorImpl
 import org.michaelbel.movies.interactor.impl.LocaleInteractorImpl
 import org.michaelbel.movies.interactor.impl.UiInteractorImpl
+import org.michaelbel.movies.network.di.networkKoinModule
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
-import org.michaelbel.movies.repository.di.repositoryKoinModule
+import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
+import org.michaelbel.movies.persistence.datastore.di.moviesPreferencesKoinModule
 
 actual val localeInteractorKoinModule = module {
     includes(
         dispatchersKoinModule,
-        repositoryKoinModule,
+        networkKoinModule,
+        persistenceKoinModule,
+        moviesPreferencesKoinModule,
         moviesDatabaseKoinModule,
         moviesAnalyticsKoinModule
     )

@@ -66,7 +66,6 @@ import org.michaelbel.movies.persistence.database.dao.SuggestionDao
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
 import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
 import org.michaelbel.movies.persistence.datastore.di.moviesPreferencesKoinModule
-import org.michaelbel.movies.repository.di.repositoryKoinModule
 
 val useCaseKoinModule = module {
     includes(
@@ -75,8 +74,7 @@ val useCaseKoinModule = module {
         moviesDatabaseKoinModule,
         moviesPreferencesKoinModule,
         persistenceKoinModule,
-        networkKoinModule,
-        repositoryKoinModule
+        networkKoinModule
     )
     single<SuggestionDao> { get<MoviesDatabase>().suggestionDao }
     single<ImageDao> { get<MoviesDatabase>().imageDao }

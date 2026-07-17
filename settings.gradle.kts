@@ -61,7 +61,6 @@ include(
     ":shared:network",
     ":shared:persistence",
     ":shared-web:persistence",
-    ":shared:repository",
     ":shared-web:repository",
     ":shared:ui",
     ":shared-web:ui",

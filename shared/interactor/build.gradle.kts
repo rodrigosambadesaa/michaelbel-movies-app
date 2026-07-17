@@ -21,7 +21,6 @@ kotlin {
         commonMain.dependencies {
             api(projects.shared.analytics)
             api(projects.shared.domain)
-            api(projects.shared.repository)
             api(projects.shared.ui)
         }
     }

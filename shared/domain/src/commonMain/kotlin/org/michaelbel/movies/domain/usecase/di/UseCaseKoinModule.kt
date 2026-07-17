@@ -22,6 +22,7 @@ import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.ImagesUseCase
 import org.michaelbel.movies.domain.usecase.InsertMovieUseCase
 import org.michaelbel.movies.domain.usecase.InsertMoviesUseCase
+import org.michaelbel.movies.domain.usecase.InsertPagingKeyUseCase
 import org.michaelbel.movies.domain.usecase.IsBiometricEnabledUseCase
 import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
@@ -31,8 +32,12 @@ import org.michaelbel.movies.domain.usecase.MoviesPagingDataUseCase
 import org.michaelbel.movies.domain.usecase.MoviesResultUseCase
 import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
+import org.michaelbel.movies.domain.usecase.PagingKeyPageUseCase
+import org.michaelbel.movies.domain.usecase.PagingKeyPrevPageUseCase
+import org.michaelbel.movies.domain.usecase.PagingKeyTotalPagesUseCase
 import org.michaelbel.movies.domain.usecase.RemoveMovieUseCase
 import org.michaelbel.movies.domain.usecase.RemoveMoviesUseCase
+import org.michaelbel.movies.domain.usecase.RemovePagingKeyUseCase
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
 import org.michaelbel.movies.domain.usecase.ScreenshotBlockEnabledFlowUseCase
@@ -101,12 +106,17 @@ val useCaseKoinModule = module {
     singleOf(::FetchAndInsertSearchMoviesUseCase)
     singleOf(::InsertMovieUseCase)
     singleOf(::InsertMoviesUseCase)
+    singleOf(::InsertPagingKeyUseCase)
     singleOf(::IsBiometricEnabledUseCase)
     singleOf(::MoviesPagingDataUseCase)
     singleOf(::MoviesResultUseCase)
     singleOf(::NotificationExpireTimeUseCase)
+    singleOf(::PagingKeyPageUseCase)
+    singleOf(::PagingKeyPrevPageUseCase)
+    singleOf(::PagingKeyTotalPagesUseCase)
     singleOf(::RemoveMovieUseCase)
     singleOf(::RemoveMoviesUseCase)
+    singleOf(::RemovePagingKeyUseCase)
     singleOf(::ResetNotificationExpireTimeUseCase)
     singleOf(::ResetSettingsUseCase)
     singleOf(::ScreenshotBlockEnabledFlowUseCase)

@@ -8,21 +8,26 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.domain.usecase.MoviesResultUseCase
+import org.michaelbel.movies.domain.usecase.PagingKeyPageUseCase
+import org.michaelbel.movies.domain.usecase.PagingKeyPrevPageUseCase
 import org.michaelbel.movies.network.ktx.isEmpty
 import org.michaelbel.movies.network.ktx.isPaginationReached
 import org.michaelbel.movies.network.ktx.nextPage
 import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.MoviesDatabase
+import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
+import org.michaelbel.movies.persistence.database.entity.pojo.PagingKeyPojo
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
-import org.michaelbel.movies.repository.PagingKeyRepository
 
 class FeedMoviesRemoteMediator(
     private val language: String,
-    private val pagingKeyRepository: PagingKeyRepository,
+    private val pagingKeyPageUseCase: PagingKeyPageUseCase,
+    private val pagingKeyPrevPageUseCase: PagingKeyPrevPageUseCase,
     private val moviesResultUseCase: MoviesResultUseCase,
     private val moviePersistence: MoviePersistence,
+    private val pagingKeyPersistence: PagingKeyPersistence,
     private val moviesDatabase: MoviesDatabase,
     private val pagingKey: PagingKey
 ): RemoteMediator<Int, MoviePojo>() {
@@ -34,8 +39,8 @@ class FeedMoviesRemoteMediator(
         return try {
             val loadKey = when (loadType) {
                 LoadType.REFRESH -> 1
-                LoadType.PREPEND -> pagingKeyRepository.prevPage(pagingKey)
-                LoadType.APPEND -> pagingKeyRepository.page(pagingKey)
+                LoadType.PREPEND -> pagingKeyPrevPageUseCase(pagingKey).getOrThrow()
+                LoadType.APPEND -> pagingKeyPageUseCase(pagingKey).getOrThrow()
             } ?: return MediatorResult.Success(endOfPaginationReached = true)
 
             val params = MoviesResultUseCase.Params(pagingKey, language, loadKey)
@@ -43,7 +48,7 @@ class FeedMoviesRemoteMediator(
 
             moviesDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    pagingKeyRepository.removePagingKey(pagingKey)
+                    pagingKeyPersistence.removePagingKey(pagingKey)
                     moviePersistence.removeMovies(pagingKey)
                 }
 
@@ -51,7 +56,13 @@ class FeedMoviesRemoteMediator(
                     throw PageEmptyException()
                 }
 
-                pagingKeyRepository.insertPagingKey(pagingKey, moviesResult.nextPage, moviesResult.totalPages)
+                pagingKeyPersistence.upsertPagingKey(
+                    PagingKeyPojo(
+                        pagingKey = pagingKey,
+                        page = moviesResult.nextPage,
+                        totalPages = moviesResult.totalPages
+                    )
+                )
 
                 val maxPosition = moviePersistence.maxPosition(pagingKey)
                 val moviesDb = moviesResult.results.mapIndexed { index, movieResponse ->

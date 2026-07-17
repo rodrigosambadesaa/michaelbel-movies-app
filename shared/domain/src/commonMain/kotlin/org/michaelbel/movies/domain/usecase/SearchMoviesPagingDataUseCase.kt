@@ -12,18 +12,19 @@ import org.michaelbel.movies.domain.usecase.remote.SearchMoviesRemoteMediator
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.MoviesDatabase
+import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.Query
-import org.michaelbel.movies.repository.PagingKeyRepository
-import org.michaelbel.movies.domain.usecase.SearchMoviesPagingDataUseCase.Params
 
 class SearchMoviesPagingDataUseCase(
     private val moviePersistence: MoviePersistence,
-    private val pagingKeyRepository: PagingKeyRepository,
+    private val pagingKeyPersistence: PagingKeyPersistence,
+    private val pagingKeyPageUseCase: PagingKeyPageUseCase,
+    private val pagingKeyPrevPageUseCase: PagingKeyPrevPageUseCase,
     private val searchMoviesResultUseCase: SearchMoviesResultUseCase,
     private val moviesDatabase: MoviesDatabase,
     dispatchers: SharedDispatchers
-): FlowUseCase<Params, PagingData<MoviePojo>>(dispatchers.io) {
+): FlowUseCase<SearchMoviesPagingDataUseCase.Params, PagingData<MoviePojo>>(dispatchers.io) {
 
     override fun execute(params: Params): Flow<PagingData<MoviePojo>> {
         return Pager(
@@ -33,8 +34,10 @@ class SearchMoviesPagingDataUseCase(
             ),
             remoteMediator = SearchMoviesRemoteMediator(
                 language = params.language,
-                pagingKeyRepository = pagingKeyRepository,
+                pagingKeyPageUseCase = pagingKeyPageUseCase,
+                pagingKeyPrevPageUseCase = pagingKeyPrevPageUseCase,
                 moviePersistence = moviePersistence,
+                pagingKeyPersistence = pagingKeyPersistence,
                 searchMoviesResultUseCase = searchMoviesResultUseCase,
                 moviesDatabase = moviesDatabase,
                 query = params.query

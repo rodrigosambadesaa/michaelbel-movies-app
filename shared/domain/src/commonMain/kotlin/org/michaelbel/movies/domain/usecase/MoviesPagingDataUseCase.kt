@@ -14,12 +14,14 @@ import org.michaelbel.movies.network.config.isTmdbApiKeyEmpty
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.MoviesDatabase
+import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
-import org.michaelbel.movies.repository.PagingKeyRepository
 
 class MoviesPagingDataUseCase(
     private val moviePersistence: MoviePersistence,
-    private val pagingKeyRepository: PagingKeyRepository,
+    private val pagingKeyPersistence: PagingKeyPersistence,
+    private val pagingKeyPageUseCase: PagingKeyPageUseCase,
+    private val pagingKeyPrevPageUseCase: PagingKeyPrevPageUseCase,
     private val moviesResultUseCase: MoviesResultUseCase,
     private val moviesDatabase: MoviesDatabase,
     dispatchers: SharedDispatchers
@@ -35,9 +37,11 @@ class MoviesPagingDataUseCase(
             ),
             remoteMediator = FeedMoviesRemoteMediator(
                 language = params.language,
-                pagingKeyRepository = pagingKeyRepository,
+                pagingKeyPageUseCase = pagingKeyPageUseCase,
+                pagingKeyPrevPageUseCase = pagingKeyPrevPageUseCase,
                 moviesResultUseCase = moviesResultUseCase,
                 moviePersistence = moviePersistence,
+                pagingKeyPersistence = pagingKeyPersistence,
                 moviesDatabase = moviesDatabase,
                 pagingKey = pagingKey
             ),

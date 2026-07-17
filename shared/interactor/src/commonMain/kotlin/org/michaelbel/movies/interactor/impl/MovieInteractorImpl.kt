@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.michaelbel.movies.common.dispatchers.SharedDispatchers
 import org.michaelbel.movies.common.list.MovieList
+import org.michaelbel.movies.domain.usecase.SearchMoviesResultUseCase
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.MovieInteractor
 import org.michaelbel.movies.interactor.ktx.nameOrLocalList
@@ -25,13 +26,12 @@ import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 import org.michaelbel.movies.persistence.database.typealiases.Query
 import org.michaelbel.movies.repository.MovieRepository
 import org.michaelbel.movies.repository.PagingKeyRepository
-import org.michaelbel.movies.repository.SearchRepository
 
 class MovieInteractorImpl(
     private val dispatchers: SharedDispatchers,
     private val localeInteractor: LocaleInteractor,
     private val movieRepository: MovieRepository,
-    private val searchRepository: SearchRepository,
+    private val searchMoviesResultUseCase: SearchMoviesResultUseCase,
     private val pagingKeyRepository: PagingKeyRepository,
     private val moviesDatabase: MoviesDatabase
 ): MovieInteractor {
@@ -79,7 +79,7 @@ class MovieInteractorImpl(
             remoteMediator = SearchMoviesRemoteMediator(
                 localeInteractor = localeInteractor,
                 pagingKeyRepository = pagingKeyRepository,
-                searchRepository = searchRepository,
+                searchMoviesResultUseCase = searchMoviesResultUseCase,
                 movieRepository = movieRepository,
                 moviesDatabase = moviesDatabase,
                 query = searchQuery

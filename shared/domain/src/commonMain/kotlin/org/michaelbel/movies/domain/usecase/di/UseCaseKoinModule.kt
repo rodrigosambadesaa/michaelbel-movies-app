@@ -23,6 +23,7 @@ import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
+import org.michaelbel.movies.domain.usecase.SearchMoviesResultUseCase
 import org.michaelbel.movies.domain.usecase.SelectFeedViewUseCase
 import org.michaelbel.movies.domain.usecase.SelectMovieListUseCase
 import org.michaelbel.movies.domain.usecase.SelectThemeUseCase
@@ -74,6 +75,7 @@ val useCaseKoinModule = module {
     singleOf(::NotificationExpireTimeUseCase)
     singleOf(::ResetNotificationExpireTimeUseCase)
     singleOf(::ResetSettingsUseCase)
+    singleOf(::SearchMoviesResultUseCase)
     singleOf(::SelectFeedViewUseCase)
     singleOf(::SelectMovieListUseCase)
     singleOf(::SelectThemeUseCase)

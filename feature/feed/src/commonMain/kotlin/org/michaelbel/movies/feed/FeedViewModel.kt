@@ -22,6 +22,7 @@ import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.log.log
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
+import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.domain.usecase.UpdateSuggestionsUseCase
@@ -49,7 +50,8 @@ class FeedViewModel(
     private val suggestionPojosFlowUseCase: SuggestionPojosFlowUseCase,
     private val moviesFlowUseCase: MoviesFlowUseCase,
     private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
-    private val updateSuggestionsUseCase: UpdateSuggestionsUseCase
+    private val updateSuggestionsUseCase: UpdateSuggestionsUseCase,
+    private val fetchAndInsertSearchMoviesUseCase: FetchAndInsertSearchMoviesUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -88,8 +90,8 @@ class FeedViewModel(
         when (intent) {
             is FeedIntent.CollectAccountPojo -> {
                 launch {
-                    accountPojoFlowUseCase(Unit).collectLatest { accountPojo ->
-                        reduce { it.copy(accountPojo = accountPojo) }
+                    accountPojoFlowUseCase(Unit).collectLatest { pojo ->
+                        reduce { it.copy(accountPojo = pojo) }
                     }
                 }
             }
@@ -188,7 +190,11 @@ class FeedViewModel(
                 searchFallbackJob = launch {
                     reduce { it.copy(isSearchLoading = true, searchFailure = null) }
                     try {
-                        interactor.fetchAndInsertSearchMovies(query)
+                        val params = FetchAndInsertSearchMoviesUseCase.Params(
+                            query = query,
+                            language = interactor.language
+                        )
+                        fetchAndInsertSearchMoviesUseCase(params).getOrThrow()
                         reduce { it.copy(isSearchLoading = false, searchFailure = null) }
                     } catch (throwable: Throwable) {
                         when (throwable) {

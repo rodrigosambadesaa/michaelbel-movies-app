@@ -9,15 +9,12 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.michaelbel.movies.common.dispatchers.SharedDispatchers
-import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.interactor.MovieInteractor
 import org.michaelbel.movies.interactor.ktx.nameOrLocalList
 import org.michaelbel.movies.interactor.remote.FeedMoviesRemoteMediator
 import org.michaelbel.movies.interactor.remote.SearchMoviesRemoteMediator
-import org.michaelbel.movies.network.ktx.isEmpty
-import org.michaelbel.movies.network.ktx.nextPage
 import org.michaelbel.movies.network.model.Movie
 import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.persistence.database.MoviesDatabase
@@ -109,26 +106,6 @@ class MovieInteractorImpl(
 
     override suspend fun updateFavorite(movieId: MovieId, favorite: Boolean) {
         return withContext(dispatchers.io) { movieRepository.updateFavorite(movieId, favorite) }
-    }
-
-    override suspend fun fetchAndInsertSearchMovies(query: Query) {
-        return withContext(dispatchers.io) {
-            if (query.isEmpty()) throw PageEmptyException()
-
-            val moviesResult = searchRepository.searchMoviesResult(query, localeInteractor.language, 1)
-
-            moviesDatabase.withTransaction {
-                pagingKeyRepository.removePagingKey(query)
-                movieRepository.removeMovies(query)
-
-                if (moviesResult.isEmpty) {
-                    throw PageEmptyException()
-                }
-
-                pagingKeyRepository.insertPagingKey(query, moviesResult.nextPage, moviesResult.totalPages)
-                movieRepository.insertMovies(query, moviesResult.page, moviesResult.results)
-            }
-        }
     }
 
     override suspend fun moviesResult(pagingKey: PagingKey): List<MoviePojo> {

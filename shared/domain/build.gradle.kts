@@ -16,6 +16,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(projects.shared.analytics)
             api(projects.shared.common)
             api(projects.shared.network)
             api(projects.shared.persistence)

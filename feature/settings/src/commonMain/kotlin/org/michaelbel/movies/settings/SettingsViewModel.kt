@@ -8,6 +8,11 @@ import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.common.notify.NotifyManager
 import org.michaelbel.movies.common.version.AppVersionData
+import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
+import org.michaelbel.movies.domain.usecase.SelectFeedViewUseCase
+import org.michaelbel.movies.domain.usecase.SelectMovieListUseCase
+import org.michaelbel.movies.domain.usecase.SelectThemeUseCase
+import org.michaelbel.movies.domain.usecase.SetDynamicColorsUseCase
 import org.michaelbel.movies.interactor.AboutInteractor
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
@@ -29,7 +34,12 @@ class SettingsViewModel(
     private val notifyManager: NotifyManager,
     private val interactor: Interactor,
     private val updateService: UpdateService,
-    private val appService: AppService
+    private val appService: AppService,
+    private val selectThemeUseCase: SelectThemeUseCase,
+    private val selectFeedViewUseCase: SelectFeedViewUseCase,
+    private val selectMovieListUseCase: SelectMovieListUseCase,
+    private val setDynamicColorsUseCase: SetDynamicColorsUseCase,
+    private val resetSettingsUseCase: ResetSettingsUseCase
 ): MoviesViewModel<SettingsModel, SettingsIntent, SettingsEvent>(SettingsModel()), DefaultLifecycleObserver {
 
     init {
@@ -54,8 +64,8 @@ class SettingsViewModel(
         when (intent) {
             is SettingsIntent.CollectThemeData -> {
                 launch {
-                    interactor.themeData.collectLatest { themeData ->
-                        reduce { it.copy(themeData = themeData) }
+                    interactor.themeData.collectLatest { data ->
+                        reduce { it.copy(themeData = data) }
                     }
                 }
             }
@@ -187,10 +197,10 @@ class SettingsViewModel(
                 launch { push(SettingsEvent.ShowPermissionSnackbar(intent.message, intent.actionLabel)) }
             }
             is SettingsIntent.SelectLanguage -> launch { interactor.selectLanguage(intent.language) }
-            is SettingsIntent.SelectTheme -> launch { interactor.selectTheme(intent.theme) }
-            is SettingsIntent.SelectFeedView -> launch { interactor.selectFeedView(intent.feedView) }
-            is SettingsIntent.SelectMovieList -> launch { interactor.selectMovieList(intent.movieList) }
-            is SettingsIntent.SetDynamicColors -> launch { interactor.setDynamicColors(intent.value) }
+            is SettingsIntent.SelectTheme -> launch { selectThemeUseCase(intent.theme).getOrThrow() }
+            is SettingsIntent.SelectFeedView -> launch { selectFeedViewUseCase(intent.feedView).getOrThrow() }
+            is SettingsIntent.SelectMovieList -> launch { selectMovieListUseCase(intent.movieList).getOrThrow() }
+            is SettingsIntent.SetDynamicColors -> launch { setDynamicColorsUseCase(intent.value).getOrThrow() }
             is SettingsIntent.SetPaletteColors -> launch { interactor.setPaletteColors(intent.value) }
             is SettingsIntent.SetPaletteKey -> launch { interactor.setPaletteKey(intent.paletteKey) }
             is SettingsIntent.SetSeedColor -> launch { interactor.setSeedColor(intent.seedColor) }
@@ -215,7 +225,7 @@ class SettingsViewModel(
             }
             is SettingsIntent.ResetSettings -> {
                 launch {
-                    interactor.resetSettings()
+                    resetSettingsUseCase(Unit).getOrThrow()
                     interactor.resetLanguage()
                     uiInteractor.setGrammaticalGender(GrammaticalGender.NotSpecified().value)
                     uiInteractor.setIcon(IconAlias.Red)

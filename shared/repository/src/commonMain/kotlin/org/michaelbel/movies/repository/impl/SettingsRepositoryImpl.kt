@@ -56,22 +56,6 @@ class SettingsRepositoryImpl(
         return preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceBiometricKey).orEmpty()
     }
 
-    override suspend fun selectTheme(appTheme: AppTheme) {
-        preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceThemeKey, appTheme.toString())
-    }
-
-    override suspend fun selectFeedView(feedView: FeedView) {
-        preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceFeedViewKey, feedView.toString())
-    }
-
-    override suspend fun selectMovieList(movieList: MovieList) {
-        preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceMovieListKey, movieList.toString())
-    }
-
-    override suspend fun setDynamicColors(value: Boolean) {
-        preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey, value)
-    }
-
     override suspend fun setPaletteColors(value: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey, value)
     }
@@ -90,19 +74,5 @@ class SettingsRepositoryImpl(
 
     override suspend fun setScreenshotBlockEnabled(enabled: Boolean) {
         preferences.setValue(MoviesPreferences.PreferenceKey.PreferenceScreenshotBlockKey, enabled)
-    }
-
-    override suspend fun resetSettings() {
-        preferences.removeValues(
-            MoviesPreferences.PreferenceKey.PreferenceThemeKey,
-            MoviesPreferences.PreferenceKey.PreferenceFeedViewKey,
-            MoviesPreferences.PreferenceKey.PreferenceMovieListKey,
-            MoviesPreferences.PreferenceKey.PreferenceDynamicColorsKey,
-            MoviesPreferences.PreferenceKey.PreferencePaletteColorsKey,
-            MoviesPreferences.PreferenceKey.PreferencePaletteKey,
-            MoviesPreferences.PreferenceKey.PreferenceSeedColorKey,
-            MoviesPreferences.PreferenceKey.PreferenceBiometricKey,
-            MoviesPreferences.PreferenceKey.PreferenceScreenshotBlockKey
-        )
     }
 }

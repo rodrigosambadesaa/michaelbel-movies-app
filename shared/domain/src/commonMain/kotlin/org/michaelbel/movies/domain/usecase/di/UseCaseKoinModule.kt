@@ -2,6 +2,7 @@ package org.michaelbel.movies.domain.usecase.di
 
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+import org.michaelbel.movies.analytics.di.moviesAnalyticsKoinModule
 import org.michaelbel.movies.common.dispatchers.di.dispatchersKoinModule
 import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
 import org.michaelbel.movies.domain.usecase.AccountExpireTimeUseCase
@@ -21,6 +22,11 @@ import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
+import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
+import org.michaelbel.movies.domain.usecase.SelectFeedViewUseCase
+import org.michaelbel.movies.domain.usecase.SelectMovieListUseCase
+import org.michaelbel.movies.domain.usecase.SelectThemeUseCase
+import org.michaelbel.movies.domain.usecase.SetDynamicColorsUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.domain.usecase.UpdateFavoriteUseCase
 import org.michaelbel.movies.domain.usecase.UpdateNotificationExpireTimeUseCase
@@ -38,6 +44,7 @@ import org.michaelbel.movies.persistence.datastore.di.moviesPreferencesKoinModul
 val useCaseKoinModule = module {
     includes(
         dispatchersKoinModule,
+        moviesAnalyticsKoinModule,
         moviesDatabaseKoinModule,
         moviesPreferencesKoinModule,
         persistenceKoinModule,
@@ -66,6 +73,11 @@ val useCaseKoinModule = module {
     singleOf(::FetchAndInsertSearchMoviesUseCase)
     singleOf(::NotificationExpireTimeUseCase)
     singleOf(::ResetNotificationExpireTimeUseCase)
+    singleOf(::ResetSettingsUseCase)
+    singleOf(::SelectFeedViewUseCase)
+    singleOf(::SelectMovieListUseCase)
+    singleOf(::SelectThemeUseCase)
+    singleOf(::SetDynamicColorsUseCase)
     singleOf(::UpdateFavoriteUseCase)
     singleOf(::UpdateNotificationExpireTimeUseCase)
     singleOf(::UpdateSuggestionsUseCase)

@@ -8,11 +8,12 @@ import org.michaelbel.movies.network.model.MovieResponse
 import org.michaelbel.movies.network.model.Result
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.Query
+import org.michaelbel.movies.domain.usecase.SearchMoviesResultUseCase.Params
 
 class SearchMoviesResultUseCase(
     private val searchNetworkService: SearchNetworkService,
     dispatchers: SharedDispatchers
-): UseCase<SearchMoviesResultUseCase.Params, Result<MovieResponse>>(dispatchers.io) {
+): UseCase<Params, Result<MovieResponse>>(dispatchers.io) {
 
     override suspend fun execute(params: Params): Result<MovieResponse> {
         if (isTmdbApiKeyEmpty) throw ApiKeyNotNullException()

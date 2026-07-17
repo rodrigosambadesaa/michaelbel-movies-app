@@ -14,6 +14,7 @@ import org.michaelbel.movies.persistence.database.ktx.orEmpty
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
+import org.michaelbel.movies.domain.usecase.MoviesResultUseCase.Params
 
 class MoviesResultUseCase(
     private val movieNetworkService: MovieNetworkService,
@@ -21,7 +22,7 @@ class MoviesResultUseCase(
     private val moviePersistence: MoviePersistence,
     private val preferences: MoviesPreferences,
     dispatchers: SharedDispatchers
-): UseCase<MoviesResultUseCase.Params, Result<MovieResponse>>(dispatchers.io) {
+): UseCase<Params, Result<MovieResponse>>(dispatchers.io) {
 
     override suspend fun execute(params: Params): Result<MovieResponse> {
         return when {

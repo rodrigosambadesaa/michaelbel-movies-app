@@ -15,6 +15,7 @@ import org.michaelbel.movies.persistence.database.MoviesDatabase
 import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.Query
+import org.michaelbel.movies.domain.usecase.SearchMoviesPagingDataUseCase.Params
 
 class SearchMoviesPagingDataUseCase(
     private val moviePersistence: MoviePersistence,
@@ -24,7 +25,7 @@ class SearchMoviesPagingDataUseCase(
     private val searchMoviesResultUseCase: SearchMoviesResultUseCase,
     private val moviesDatabase: MoviesDatabase,
     dispatchers: SharedDispatchers
-): FlowUseCase<SearchMoviesPagingDataUseCase.Params, PagingData<MoviePojo>>(dispatchers.io) {
+): FlowUseCase<Params, PagingData<MoviePojo>>(dispatchers.io) {
 
     override fun execute(params: Params): Flow<PagingData<MoviePojo>> {
         return Pager(

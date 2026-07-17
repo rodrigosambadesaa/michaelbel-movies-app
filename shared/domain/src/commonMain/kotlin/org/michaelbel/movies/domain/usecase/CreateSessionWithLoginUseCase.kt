@@ -1,15 +1,15 @@
 package org.michaelbel.movies.domain.usecase
 
 import org.michaelbel.movies.common.dispatchers.SharedDispatchers
-import org.michaelbel.movies.common.exceptions.CreateSessionWithLoginException
 import org.michaelbel.movies.network.AuthenticationNetworkService
 import org.michaelbel.movies.network.model.Token
 import org.michaelbel.movies.network.model.Username
+import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase.Params
 
 class CreateSessionWithLoginUseCase(
     private val authenticationNetworkService: AuthenticationNetworkService,
     dispatchers: SharedDispatchers
-): UseCase<CreateSessionWithLoginUseCase.Params, Token>(dispatchers.io) {
+): UseCase<Params, Token>(dispatchers.io) {
 
     override suspend fun execute(params: Params): Token {
         return try {

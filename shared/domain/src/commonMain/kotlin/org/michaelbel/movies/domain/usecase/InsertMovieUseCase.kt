@@ -8,11 +8,12 @@ import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import org.michaelbel.movies.domain.usecase.InsertMovieUseCase.Params
 
 class InsertMovieUseCase(
     private val moviePersistence: MoviePersistence,
     dispatchers: SharedDispatchers
-): UseCase<InsertMovieUseCase.Params, Unit>(dispatchers.io) {
+): UseCase<Params, Unit>(dispatchers.io) {
 
     override suspend fun execute(params: Params) {
         val maxPosition = moviePersistence.maxPosition(params.pagingKey)

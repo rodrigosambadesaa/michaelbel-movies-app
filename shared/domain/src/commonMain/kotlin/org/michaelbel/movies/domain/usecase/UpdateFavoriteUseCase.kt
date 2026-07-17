@@ -13,13 +13,14 @@ import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.datastore.MoviesPreferences
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import org.michaelbel.movies.domain.usecase.UpdateFavoriteUseCase.Params
 
 class UpdateFavoriteUseCase(
     private val accountNetworkService: AccountNetworkService,
     private val moviePersistence: MoviePersistence,
     private val preferences: MoviesPreferences,
     dispatchers: SharedDispatchers
-): UseCase<UpdateFavoriteUseCase.Params, Unit>(dispatchers.io) {
+): UseCase<Params, Unit>(dispatchers.io) {
 
     override suspend fun execute(params: Params) {
         val sessionId = preferences.getValue(MoviesPreferences.PreferenceKey.PreferenceSessionIdKey).orEmpty()

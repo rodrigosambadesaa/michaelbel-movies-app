@@ -6,11 +6,12 @@ import org.michaelbel.movies.persistence.database.dao.MovieDao
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
+import org.michaelbel.movies.domain.usecase.MovieFlowUseCase.Params
 
 class MovieFlowUseCase(
     private val movieDao: MovieDao,
     dispatchers: SharedDispatchers
-): FlowUseCase<MovieFlowUseCase.Params, MoviePojo?>(dispatchers.io) {
+): FlowUseCase<Params, MoviePojo?>(dispatchers.io) {
 
     override fun execute(params: Params): Flow<MoviePojo?> {
         return movieDao.movieFlow(params.pagingKey, params.movieId)

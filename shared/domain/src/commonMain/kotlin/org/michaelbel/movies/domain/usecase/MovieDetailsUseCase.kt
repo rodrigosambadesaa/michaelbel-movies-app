@@ -7,12 +7,13 @@ import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.typealiases.MovieId
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
+import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase.Params
 
 class MovieDetailsUseCase(
     private val movieNetworkService: MovieNetworkService,
     private val moviePersistence: MoviePersistence,
     dispatchers: SharedDispatchers
-): UseCase<MovieDetailsUseCase.Params, MoviePojo>(dispatchers.io) {
+): UseCase<Params, MoviePojo>(dispatchers.io) {
 
     override suspend fun execute(params: Params): MoviePojo {
         return try {

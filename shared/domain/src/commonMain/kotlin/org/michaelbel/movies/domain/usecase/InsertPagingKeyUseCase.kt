@@ -5,11 +5,12 @@ import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.PagingKeyPojo
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
+import org.michaelbel.movies.domain.usecase.InsertPagingKeyUseCase.Params
 
 class InsertPagingKeyUseCase(
     private val pagingKeyPersistence: PagingKeyPersistence,
     dispatchers: SharedDispatchers
-): UseCase<InsertPagingKeyUseCase.Params, Unit>(dispatchers.io) {
+): UseCase<Params, Unit>(dispatchers.io) {
 
     override suspend fun execute(params: Params) {
         pagingKeyPersistence.upsertPagingKey(

@@ -6,11 +6,12 @@ import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.typealiases.Page
 import org.michaelbel.movies.persistence.database.typealiases.PagingKey
+import org.michaelbel.movies.domain.usecase.InsertMoviesUseCase.Params
 
 class InsertMoviesUseCase(
     private val moviePersistence: MoviePersistence,
     dispatchers: SharedDispatchers
-): UseCase<InsertMoviesUseCase.Params, Unit>(dispatchers.io) {
+): UseCase<Params, Unit>(dispatchers.io) {
 
     override suspend fun execute(params: Params) {
         val maxPosition = moviePersistence.maxPosition(params.pagingKey)

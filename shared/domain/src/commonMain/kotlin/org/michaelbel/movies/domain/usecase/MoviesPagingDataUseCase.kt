@@ -16,6 +16,7 @@ import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.MoviesDatabase
 import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
+import org.michaelbel.movies.domain.usecase.MoviesPagingDataUseCase.Params
 
 class MoviesPagingDataUseCase(
     private val moviePersistence: MoviePersistence,
@@ -25,7 +26,7 @@ class MoviesPagingDataUseCase(
     private val moviesResultUseCase: MoviesResultUseCase,
     private val moviesDatabase: MoviesDatabase,
     dispatchers: SharedDispatchers
-): FlowUseCase<MoviesPagingDataUseCase.Params, PagingData<MoviePojo>>(dispatchers.io) {
+): FlowUseCase<Params, PagingData<MoviePojo>>(dispatchers.io) {
 
     override fun execute(params: Params): Flow<PagingData<MoviePojo>> {
         val pagingKey = MovieList.name(params.movieList)

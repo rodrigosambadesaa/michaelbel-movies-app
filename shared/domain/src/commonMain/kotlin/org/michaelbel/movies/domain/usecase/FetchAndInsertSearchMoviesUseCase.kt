@@ -13,6 +13,7 @@ import org.michaelbel.movies.persistence.database.PagingKeyPersistence
 import org.michaelbel.movies.persistence.database.entity.pojo.PagingKeyPojo
 import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.typealiases.Query
+import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase.Params
 
 class FetchAndInsertSearchMoviesUseCase(
     private val searchNetworkService: SearchNetworkService,
@@ -20,7 +21,7 @@ class FetchAndInsertSearchMoviesUseCase(
     private val pagingKeyPersistence: PagingKeyPersistence,
     private val moviesDatabase: MoviesDatabase,
     dispatchers: SharedDispatchers
-): UseCase<FetchAndInsertSearchMoviesUseCase.Params, Unit>(dispatchers.io) {
+): UseCase<Params, Unit>(dispatchers.io) {
 
     override suspend fun execute(params: Params) {
         if (params.query.isEmpty()) throw PageEmptyException()

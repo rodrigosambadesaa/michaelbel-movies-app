@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
 import org.michaelbel.movies.fave.intent.FaveIntent
 import org.michaelbel.movies.fave.model.FaveModel
 import org.michaelbel.movies.interactor.Interactor
@@ -20,7 +21,8 @@ import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class FaveViewModel(
     private val uiInteractor: UiInteractor,
-    private val interactor: Interactor
+    interactor: Interactor,
+    private val currentFeedViewFlowUseCase: CurrentFeedViewFlowUseCase
 ): MoviesViewModel<FaveModel, FaveIntent, Event>(FaveModel()) {
 
     val pagingDataFlow: Flow<PagingData<MoviePojo>> = interactor.favoriteMoviesPagingData()
@@ -38,13 +40,17 @@ class FaveViewModel(
         when (intent) {
             is FaveIntent.CollectFeedView -> {
                 launch {
-                    interactor.currentFeedView.collectLatest { feedView ->
+                    currentFeedViewFlowUseCase(Unit).collectLatest { feedView ->
                         reduce { it.copy(feedView = feedView) }
                     }
                 }
             }
-            is FaveIntent.CollectPageFailureButtonVisible -> reduce { it.copy(isPageFailureButtonVisible = uiInteractor.isPageFailureButtonVisible) }
-            is FaveIntent.MovieDetailsClick -> launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
+            is FaveIntent.CollectPageFailureButtonVisible -> {
+                reduce { it.copy(isPageFailureButtonVisible = uiInteractor.isPageFailureButtonVisible) }
+            }
+            is FaveIntent.MovieDetailsClick -> {
+                launch { MainNavigator.forward(DetailsDestination(intent.pagingKey, intent.movieId)) }
+            }
         }
     }
 }

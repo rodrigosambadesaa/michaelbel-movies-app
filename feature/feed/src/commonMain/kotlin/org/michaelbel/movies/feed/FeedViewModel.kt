@@ -22,6 +22,8 @@ import org.michaelbel.movies.common.list.MovieList
 import org.michaelbel.movies.common.log.log
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
+import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
+import org.michaelbel.movies.domain.usecase.CurrentMovieListFlowUseCase
 import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase
 import org.michaelbel.movies.domain.usecase.MovieUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
@@ -53,18 +55,20 @@ class FeedViewModel(
     private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
     private val updateSuggestionsUseCase: UpdateSuggestionsUseCase,
     private val fetchAndInsertSearchMoviesUseCase: FetchAndInsertSearchMoviesUseCase,
-    private val movieUseCase: MovieUseCase
+    private val movieUseCase: MovieUseCase,
+    private val currentFeedViewFlowUseCase: CurrentFeedViewFlowUseCase,
+    private val currentMovieListFlowUseCase: CurrentMovieListFlowUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
     private val searchQuery: StateFlow<String> get() = _searchQuery.asStateFlow()
     private var searchFallbackJob: Job? = null
 
-    private val currentMovieList: StateFlow<MovieList> = interactor.currentMovieList
+    private val currentMovieList: StateFlow<MovieList> = currentMovieListFlowUseCase(Unit)
         .stateIn(
             scope = this,
             started = SharingStarted.Lazily,
-            initialValue = runBlocking { interactor.currentMovieList.first() }
+            initialValue = runBlocking { currentMovieListFlowUseCase(Unit).first() }
         )
 
     val pagingDataFlow: Flow<PagingData<MoviePojo>> = currentMovieList
@@ -99,14 +103,14 @@ class FeedViewModel(
             }
             is FeedIntent.CollectFeedView -> {
                 launch {
-                    interactor.currentFeedView.collectLatest { feedView ->
+                    currentFeedViewFlowUseCase(Unit).collectLatest { feedView ->
                         reduce { it.copy(feedView = feedView) }
                     }
                 }
             }
             is FeedIntent.CollectMovieList -> {
                 launch {
-                    interactor.currentMovieList.collectLatest { movieList ->
+                    currentMovieListFlowUseCase(Unit).collectLatest { movieList ->
                         reduce { it.copy(movieList = movieList) }
                     }
                 }

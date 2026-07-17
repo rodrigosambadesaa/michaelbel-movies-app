@@ -8,11 +8,21 @@ import org.michaelbel.movies.common.gender.GrammaticalGender
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.common.notify.NotifyManager
 import org.michaelbel.movies.common.version.AppVersionData
+import org.michaelbel.movies.domain.usecase.BiometricEnabledFlowUseCase
+import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
+import org.michaelbel.movies.domain.usecase.CurrentMovieListFlowUseCase
 import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
+import org.michaelbel.movies.domain.usecase.ScreenshotBlockEnabledFlowUseCase
 import org.michaelbel.movies.domain.usecase.SelectFeedViewUseCase
 import org.michaelbel.movies.domain.usecase.SelectMovieListUseCase
 import org.michaelbel.movies.domain.usecase.SelectThemeUseCase
+import org.michaelbel.movies.domain.usecase.SetBiometricEnabledUseCase
 import org.michaelbel.movies.domain.usecase.SetDynamicColorsUseCase
+import org.michaelbel.movies.domain.usecase.SetPaletteColorsUseCase
+import org.michaelbel.movies.domain.usecase.SetPaletteKeyUseCase
+import org.michaelbel.movies.domain.usecase.SetScreenshotBlockEnabledUseCase
+import org.michaelbel.movies.domain.usecase.SetSeedColorUseCase
+import org.michaelbel.movies.domain.usecase.ThemeDataFlowUseCase
 import org.michaelbel.movies.interactor.AboutInteractor
 import org.michaelbel.movies.interactor.Interactor
 import org.michaelbel.movies.interactor.UiInteractor
@@ -39,7 +49,17 @@ class SettingsViewModel(
     private val selectFeedViewUseCase: SelectFeedViewUseCase,
     private val selectMovieListUseCase: SelectMovieListUseCase,
     private val setDynamicColorsUseCase: SetDynamicColorsUseCase,
-    private val resetSettingsUseCase: ResetSettingsUseCase
+    private val resetSettingsUseCase: ResetSettingsUseCase,
+    private val themeDataFlowUseCase: ThemeDataFlowUseCase,
+    private val currentFeedViewFlowUseCase: CurrentFeedViewFlowUseCase,
+    private val currentMovieListFlowUseCase: CurrentMovieListFlowUseCase,
+    private val biometricEnabledFlowUseCase: BiometricEnabledFlowUseCase,
+    private val screenshotBlockEnabledFlowUseCase: ScreenshotBlockEnabledFlowUseCase,
+    private val setPaletteColorsUseCase: SetPaletteColorsUseCase,
+    private val setPaletteKeyUseCase: SetPaletteKeyUseCase,
+    private val setSeedColorUseCase: SetSeedColorUseCase,
+    private val setBiometricEnabledUseCase: SetBiometricEnabledUseCase,
+    private val setScreenshotBlockEnabledUseCase: SetScreenshotBlockEnabledUseCase
 ): MoviesViewModel<SettingsModel, SettingsIntent, SettingsEvent>(SettingsModel()), DefaultLifecycleObserver {
 
     init {
@@ -64,21 +84,21 @@ class SettingsViewModel(
         when (intent) {
             is SettingsIntent.CollectThemeData -> {
                 launch {
-                    interactor.themeData.collectLatest { data ->
+                    themeDataFlowUseCase(uiInteractor.defaultDynamicColorsEnabled).collectLatest { data ->
                         reduce { it.copy(themeData = data) }
                     }
                 }
             }
             is SettingsIntent.CollectFeedView -> {
                 launch {
-                    interactor.currentFeedView.collectLatest { feedView ->
+                    currentFeedViewFlowUseCase(Unit).collectLatest { feedView ->
                         reduce { it.copy(feedView = feedView) }
                     }
                 }
             }
             is SettingsIntent.CollectMovieList -> {
                 launch {
-                    interactor.currentMovieList.collectLatest { movieList ->
+                    currentMovieListFlowUseCase(Unit).collectLatest { movieList ->
                         reduce { it.copy(movieList = movieList) }
                     }
                 }
@@ -112,14 +132,14 @@ class SettingsViewModel(
             }
             is SettingsIntent.CollectBiometricEnabled -> {
                 launch {
-                    interactor.isBiometricEnabled.collectLatest { isBiometricEnabled ->
+                    biometricEnabledFlowUseCase(Unit).collectLatest { isBiometricEnabled ->
                         reduce { it.copy(isBiometricEnabled = isBiometricEnabled) }
                     }
                 }
             }
             is SettingsIntent.CollectScreenshotBlockEnabled -> {
                 launch {
-                    interactor.isScreenshotBlockEnabled.collectLatest { isScreenshotBlockEnabled ->
+                    screenshotBlockEnabledFlowUseCase(Unit).collectLatest { isScreenshotBlockEnabled ->
                         reduce { it.copy(isScreenshotBlockEnabled = isScreenshotBlockEnabled) }
                     }
                 }
@@ -201,16 +221,16 @@ class SettingsViewModel(
             is SettingsIntent.SelectFeedView -> launch { selectFeedViewUseCase(intent.feedView).getOrThrow() }
             is SettingsIntent.SelectMovieList -> launch { selectMovieListUseCase(intent.movieList).getOrThrow() }
             is SettingsIntent.SetDynamicColors -> launch { setDynamicColorsUseCase(intent.value).getOrThrow() }
-            is SettingsIntent.SetPaletteColors -> launch { interactor.setPaletteColors(intent.value) }
-            is SettingsIntent.SetPaletteKey -> launch { interactor.setPaletteKey(intent.paletteKey) }
-            is SettingsIntent.SetSeedColor -> launch { interactor.setSeedColor(intent.seedColor) }
-            is SettingsIntent.SetBiometricEnabled -> launch { interactor.setBiometricEnabled(intent.enabled) }
+            is SettingsIntent.SetPaletteColors -> launch { setPaletteColorsUseCase(intent.value).getOrThrow() }
+            is SettingsIntent.SetPaletteKey -> launch { setPaletteKeyUseCase(intent.paletteKey).getOrThrow() }
+            is SettingsIntent.SetSeedColor -> launch { setSeedColorUseCase(intent.seedColor).getOrThrow() }
+            is SettingsIntent.SetBiometricEnabled -> launch { setBiometricEnabledUseCase(intent.enabled).getOrThrow() }
             is SettingsIntent.SetDoNotDisturbEnabled -> {
                 notifyManager.setDoNotDisturbEnabled(intent.enabled)
                 reduce { it.copy(isDoNotDisturbEnabled = notifyManager.isDoNotDisturbEnabled) }
             }
             is SettingsIntent.SetScreenshotBlockEnabled -> {
-                launch { interactor.setScreenshotBlockEnabled(intent.enabled) }
+                launch { setScreenshotBlockEnabledUseCase(intent.enabled).getOrThrow() }
             }
             is SettingsIntent.SetUpdateAvailable -> {
                 reduce { it.copy(isUpdateAvailable = intent.state) }

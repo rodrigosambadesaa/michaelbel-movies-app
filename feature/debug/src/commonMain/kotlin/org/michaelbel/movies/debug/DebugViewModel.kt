@@ -7,17 +7,19 @@ import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.debug.intent.DebugIntent
 import org.michaelbel.movies.debug.model.DebugModel
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
-import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.domain.usecase.ThemeDataFlowUseCase
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.platform.Flavor
 import org.michaelbel.movies.platform.app.AppService
 import org.michaelbel.movies.platform.messaging.MessagingService
 import org.michaelbel.movies.ui.navigation.MainNavigator
 
 class DebugViewModel(
-    private val interactor: Interactor,
+    private val uiInteractor: UiInteractor,
     private val appService: AppService,
     private val messagingService: MessagingService,
-    private val resetNotificationExpireTimeUseCase: ResetNotificationExpireTimeUseCase
+    private val resetNotificationExpireTimeUseCase: ResetNotificationExpireTimeUseCase,
+    private val themeDataFlowUseCase: ThemeDataFlowUseCase
 ): MoviesViewModel<DebugModel, DebugIntent, Event>(DebugModel()) {
 
     init {
@@ -30,7 +32,7 @@ class DebugViewModel(
             is DebugIntent.DismissRequest -> launch { MainNavigator.back() }
             is DebugIntent.CollectThemeData -> {
                 launch {
-                    interactor.themeData.collectLatest { data ->
+                    themeDataFlowUseCase(uiInteractor.defaultDynamicColorsEnabled).collectLatest { data ->
                         reduce { it.copy(themeData = data) }
                     }
                 }

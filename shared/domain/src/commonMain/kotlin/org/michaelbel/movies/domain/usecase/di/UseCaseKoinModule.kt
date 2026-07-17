@@ -8,13 +8,18 @@ import org.michaelbel.movies.domain.usecase.AccountDetailsUseCase
 import org.michaelbel.movies.domain.usecase.AccountExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.AccountIdUseCase
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
+import org.michaelbel.movies.domain.usecase.BiometricEnabledFlowUseCase
 import org.michaelbel.movies.domain.usecase.CreateRequestTokenUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionUseCase
 import org.michaelbel.movies.domain.usecase.CreateSessionWithLoginUseCase
+import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
+import org.michaelbel.movies.domain.usecase.CurrentMovieListFlowUseCase
+import org.michaelbel.movies.domain.usecase.CurrentThemeFlowUseCase
 import org.michaelbel.movies.domain.usecase.DeleteSessionUseCase
 import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.ImagesUseCase
+import org.michaelbel.movies.domain.usecase.IsBiometricEnabledUseCase
 import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieUseCase
@@ -23,12 +28,19 @@ import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
+import org.michaelbel.movies.domain.usecase.ScreenshotBlockEnabledFlowUseCase
 import org.michaelbel.movies.domain.usecase.SearchMoviesResultUseCase
 import org.michaelbel.movies.domain.usecase.SelectFeedViewUseCase
 import org.michaelbel.movies.domain.usecase.SelectMovieListUseCase
 import org.michaelbel.movies.domain.usecase.SelectThemeUseCase
+import org.michaelbel.movies.domain.usecase.SetBiometricEnabledUseCase
 import org.michaelbel.movies.domain.usecase.SetDynamicColorsUseCase
+import org.michaelbel.movies.domain.usecase.SetPaletteColorsUseCase
+import org.michaelbel.movies.domain.usecase.SetPaletteKeyUseCase
+import org.michaelbel.movies.domain.usecase.SetScreenshotBlockEnabledUseCase
+import org.michaelbel.movies.domain.usecase.SetSeedColorUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
+import org.michaelbel.movies.domain.usecase.ThemeDataFlowUseCase
 import org.michaelbel.movies.domain.usecase.UpdateFavoriteUseCase
 import org.michaelbel.movies.domain.usecase.UpdateNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.UpdateSuggestionsUseCase
@@ -67,19 +79,31 @@ val useCaseKoinModule = module {
     singleOf(::AccountIdUseCase)
     singleOf(::AccountExpireTimeUseCase)
     singleOf(::AccountDetailsUseCase)
+    singleOf(::BiometricEnabledFlowUseCase)
     singleOf(::CreateRequestTokenUseCase)
     singleOf(::CreateSessionUseCase)
     singleOf(::CreateSessionWithLoginUseCase)
+    singleOf(::CurrentFeedViewFlowUseCase)
+    singleOf(::CurrentMovieListFlowUseCase)
+    singleOf(::CurrentThemeFlowUseCase)
     singleOf(::DeleteSessionUseCase)
     singleOf(::FetchAndInsertSearchMoviesUseCase)
+    singleOf(::IsBiometricEnabledUseCase)
     singleOf(::NotificationExpireTimeUseCase)
     singleOf(::ResetNotificationExpireTimeUseCase)
     singleOf(::ResetSettingsUseCase)
+    singleOf(::ScreenshotBlockEnabledFlowUseCase)
     singleOf(::SearchMoviesResultUseCase)
     singleOf(::SelectFeedViewUseCase)
     singleOf(::SelectMovieListUseCase)
     singleOf(::SelectThemeUseCase)
+    singleOf(::SetBiometricEnabledUseCase)
     singleOf(::SetDynamicColorsUseCase)
+    singleOf(::SetPaletteColorsUseCase)
+    singleOf(::SetPaletteKeyUseCase)
+    singleOf(::SetScreenshotBlockEnabledUseCase)
+    singleOf(::SetSeedColorUseCase)
+    singleOf(::ThemeDataFlowUseCase)
     singleOf(::UpdateFavoriteUseCase)
     singleOf(::UpdateNotificationExpireTimeUseCase)
     singleOf(::UpdateSuggestionsUseCase)

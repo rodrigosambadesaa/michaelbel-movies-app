@@ -5,9 +5,12 @@ import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.biometric.BiometricInteractor
 import org.michaelbel.movies.common.biometric.BiometricListener
 import org.michaelbel.movies.common.mvi.MoviesViewModel
+import org.michaelbel.movies.domain.usecase.IsBiometricEnabledUseCase
+import org.michaelbel.movies.domain.usecase.ScreenshotBlockEnabledFlowUseCase
+import org.michaelbel.movies.domain.usecase.ThemeDataFlowUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
 import org.michaelbel.movies.feed.event.FeedEventManager
-import org.michaelbel.movies.interactor.Interactor
+import org.michaelbel.movies.interactor.UiInteractor
 import org.michaelbel.movies.main.event.MainEvent
 import org.michaelbel.movies.main.intent.MainIntent
 import org.michaelbel.movies.main.model.MainModel
@@ -21,12 +24,15 @@ import org.michaelbel.movies.ui.navigation.MainNavigator
 import org.michaelbel.movies.work.WorkManagerInteractor
 
 class MainViewModel(
-    private val interactor: Interactor,
+    private val uiInteractor: UiInteractor,
     private val biometricController: BiometricInteractor,
     private val workManagerInteractor: WorkManagerInteractor,
     private val configService: ConfigService,
     private val reviewService: ReviewService,
     private val updateService: UpdateService,
+    private val themeDataFlowUseCase: ThemeDataFlowUseCase,
+    private val screenshotBlockEnabledFlowUseCase: ScreenshotBlockEnabledFlowUseCase,
+    private val isBiometricEnabledUseCase: IsBiometricEnabledUseCase
 ): MoviesViewModel<MainModel, MainIntent, MainEvent>(MainModel()) {
 
     init {
@@ -45,14 +51,14 @@ class MainViewModel(
             is MainIntent.OpenSettings -> launch { MainTabsEventManager.push(MainEvent.OpenSettings) }
             is MainIntent.CollectThemeData -> {
                 launch {
-                    interactor.themeData.collectLatest { themeData ->
-                        reduce { it.copy(themeData = themeData) }
+                    themeDataFlowUseCase(uiInteractor.defaultDynamicColorsEnabled).collectLatest { data ->
+                        reduce { it.copy(themeData = data) }
                     }
                 }
             }
             is MainIntent.CollectScreenshotBlockEnabled -> {
                 launch {
-                    interactor.isScreenshotBlockEnabled.collectLatest { isScreenshotBlockEnabled ->
+                    screenshotBlockEnabledFlowUseCase(Unit).collectLatest { isScreenshotBlockEnabled ->
                         reduce { it.copy(isScreenshotBlockEnabled = isScreenshotBlockEnabled) }
                     }
                 }
@@ -61,7 +67,7 @@ class MainViewModel(
             is MainIntent.RequestUpdate -> updateService.startUpdate(intent.activity)
             is MainIntent.FetchBiometric -> {
                 launch {
-                    val isBiometricEnabled = interactor.isBiometricEnabledAsync()
+                    val isBiometricEnabled = isBiometricEnabledUseCase(Unit).getOrThrow()
                     reduce { it.copy(splashLoading = isBiometricEnabled) }
                     if (isBiometricEnabled) {
                         push(MainEvent.BiometricAuthenticate)
@@ -90,7 +96,9 @@ class MainViewModel(
                 }
                 biometricController.authenticate(intent.activity, biometricListener)
             }
-            is MainIntent.NavigateToDetails -> launch { MainNavigator.forward(DetailsDestination(movieList = null, movieId = intent.movieId)) }
+            is MainIntent.NavigateToDetails -> {
+                launch { MainNavigator.forward(DetailsDestination(movieList = null, movieId = intent.movieId)) }
+            }
             is MainIntent.NavigateToMain -> {
                 launch {
                     MainNavigator.back()

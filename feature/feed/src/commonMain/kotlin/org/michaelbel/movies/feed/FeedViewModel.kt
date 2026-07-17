@@ -25,8 +25,13 @@ import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
 import org.michaelbel.movies.domain.usecase.CurrentMovieListFlowUseCase
 import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase
-import org.michaelbel.movies.domain.usecase.MovieUseCase
+import org.michaelbel.movies.domain.usecase.InsertMovieUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
+import org.michaelbel.movies.domain.usecase.MoviesPagingDataUseCase
+import org.michaelbel.movies.domain.usecase.MovieUseCase
+import org.michaelbel.movies.domain.usecase.RemoveMovieUseCase
+import org.michaelbel.movies.domain.usecase.RemoveMoviesUseCase
+import org.michaelbel.movies.domain.usecase.SearchMoviesPagingDataUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.domain.usecase.UpdateSuggestionsUseCase
 import org.michaelbel.movies.feed.event.FeedEvent
@@ -57,7 +62,12 @@ class FeedViewModel(
     private val fetchAndInsertSearchMoviesUseCase: FetchAndInsertSearchMoviesUseCase,
     private val movieUseCase: MovieUseCase,
     private val currentFeedViewFlowUseCase: CurrentFeedViewFlowUseCase,
-    private val currentMovieListFlowUseCase: CurrentMovieListFlowUseCase
+    private val currentMovieListFlowUseCase: CurrentMovieListFlowUseCase,
+    private val moviesPagingDataUseCase: MoviesPagingDataUseCase,
+    private val searchMoviesPagingDataUseCase: SearchMoviesPagingDataUseCase,
+    private val removeMoviesUseCase: RemoveMoviesUseCase,
+    private val removeMovieUseCase: RemoveMovieUseCase,
+    private val insertMovieUseCase: InsertMovieUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -72,11 +82,15 @@ class FeedViewModel(
         )
 
     val pagingDataFlow: Flow<PagingData<MoviePojo>> = currentMovieList
-        .flatMapLatest { movieList -> interactor.moviesPagingData(movieList) }
+        .flatMapLatest { movieList ->
+            moviesPagingDataUseCase(MoviesPagingDataUseCase.Params(movieList, interactor.language))
+        }
         .cachedIn(this)
 
     val searchPagingDataFlow: Flow<PagingData<MoviePojo>> = searchQuery
-        .flatMapLatest(interactor::moviesPagingData)
+        .flatMapLatest { query ->
+            searchMoviesPagingDataUseCase(SearchMoviesPagingDataUseCase.Params(query, interactor.language))
+        }
         .cachedIn(this)
 
     init {
@@ -165,16 +179,20 @@ class FeedViewModel(
             }
             is FeedIntent.AccountClick -> launch { MainNavigator.forward(AccountDestination) }
             is FeedIntent.ClearSearchHistoryClick -> {
-                launch { interactor.removeMovies(MoviePojo.MOVIES_SEARCH_HISTORY) }
+                launch { removeMoviesUseCase(MoviePojo.MOVIES_SEARCH_HISTORY).getOrThrow() }
             }
             is FeedIntent.RemoveMovieFromHistoryClick -> {
-                launch { interactor.removeMovie(MoviePojo.MOVIES_SEARCH_HISTORY, intent.movieId) }
+                launch {
+                    val params = RemoveMovieUseCase.Params(MoviePojo.MOVIES_SEARCH_HISTORY, intent.movieId)
+                    removeMovieUseCase(params).getOrThrow()
+                }
             }
             is FeedIntent.SaveMovieToSearchHistoryClick -> {
                 launch {
                     val params = MovieUseCase.Params(searchQuery.value, intent.movieId)
                     val movie = movieUseCase(params).getOrThrow()
-                    interactor.insertMovie(MoviePojo.MOVIES_SEARCH_HISTORY, movie)
+                    val insertParams = InsertMovieUseCase.Params(MoviePojo.MOVIES_SEARCH_HISTORY, movie)
+                    insertMovieUseCase(insertParams).getOrThrow()
                 }
             }
             is FeedIntent.EnterSearchQuery -> { _searchQuery.value = intent.query }

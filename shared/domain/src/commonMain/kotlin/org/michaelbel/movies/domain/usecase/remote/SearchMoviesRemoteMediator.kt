@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalPagingApi::class)
 
-package org.michaelbel.movies.interactor.remote
+package org.michaelbel.movies.domain.usecase.remote
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -8,20 +8,20 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import org.michaelbel.movies.common.exceptions.PageEmptyException
 import org.michaelbel.movies.domain.usecase.SearchMoviesResultUseCase
-import org.michaelbel.movies.interactor.LocaleInteractor
 import org.michaelbel.movies.network.ktx.isEmpty
 import org.michaelbel.movies.network.ktx.isPaginationReached
 import org.michaelbel.movies.network.ktx.nextPage
+import org.michaelbel.movies.persistence.database.MoviePersistence
 import org.michaelbel.movies.persistence.database.MoviesDatabase
 import org.michaelbel.movies.persistence.database.entity.pojo.MoviePojo
+import org.michaelbel.movies.persistence.database.ktx.moviePojo
 import org.michaelbel.movies.persistence.database.typealiases.Query
-import org.michaelbel.movies.repository.MovieRepository
 import org.michaelbel.movies.repository.PagingKeyRepository
 
 class SearchMoviesRemoteMediator(
-    private val localeInteractor: LocaleInteractor,
+    private val language: String,
     private val pagingKeyRepository: PagingKeyRepository,
-    private val movieRepository: MovieRepository,
+    private val moviePersistence: MoviePersistence,
     private val searchMoviesResultUseCase: SearchMoviesResultUseCase,
     private val moviesDatabase: MoviesDatabase,
     private val query: Query
@@ -42,13 +42,13 @@ class SearchMoviesRemoteMediator(
                 throw PageEmptyException()
             }
 
-            val params = SearchMoviesResultUseCase.Params(query, localeInteractor.language, loadKey)
+            val params = SearchMoviesResultUseCase.Params(query, language, loadKey)
             val moviesResult = searchMoviesResultUseCase(params).getOrThrow()
 
             moviesDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     pagingKeyRepository.removePagingKey(query)
-                    movieRepository.removeMovies(query)
+                    moviePersistence.removeMovies(query)
                 }
 
                 if (moviesResult.isEmpty) {
@@ -56,7 +56,16 @@ class SearchMoviesRemoteMediator(
                 }
 
                 pagingKeyRepository.insertPagingKey(query, moviesResult.nextPage, moviesResult.totalPages)
-                movieRepository.insertMovies(query, moviesResult.page, moviesResult.results)
+
+                val maxPosition = moviePersistence.maxPosition(query)
+                val moviesDb = moviesResult.results.mapIndexed { index, movieResponse ->
+                    movieResponse.moviePojo(
+                        movieList = query,
+                        page = moviesResult.page,
+                        position = if (maxPosition == 0) index else maxPosition.plus(index).plus(1)
+                    )
+                }
+                moviePersistence.upsert(moviesDb)
             }
 
             MediatorResult.Success(endOfPaginationReached = moviesResult.isPaginationReached)

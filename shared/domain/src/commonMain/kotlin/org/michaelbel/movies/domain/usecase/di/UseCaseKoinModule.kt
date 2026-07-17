@@ -16,19 +16,27 @@ import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
 import org.michaelbel.movies.domain.usecase.CurrentMovieListFlowUseCase
 import org.michaelbel.movies.domain.usecase.CurrentThemeFlowUseCase
 import org.michaelbel.movies.domain.usecase.DeleteSessionUseCase
+import org.michaelbel.movies.domain.usecase.FavoriteMoviesPagingDataUseCase
 import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase
 import org.michaelbel.movies.domain.usecase.ImagesFlowUseCase
 import org.michaelbel.movies.domain.usecase.ImagesUseCase
+import org.michaelbel.movies.domain.usecase.InsertMovieUseCase
+import org.michaelbel.movies.domain.usecase.InsertMoviesUseCase
 import org.michaelbel.movies.domain.usecase.IsBiometricEnabledUseCase
 import org.michaelbel.movies.domain.usecase.MovieDetailsUseCase
 import org.michaelbel.movies.domain.usecase.MovieFlowUseCase
 import org.michaelbel.movies.domain.usecase.MovieUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
+import org.michaelbel.movies.domain.usecase.MoviesPagingDataUseCase
+import org.michaelbel.movies.domain.usecase.MoviesResultUseCase
 import org.michaelbel.movies.domain.usecase.MoviesWidgetUseCase
 import org.michaelbel.movies.domain.usecase.NotificationExpireTimeUseCase
+import org.michaelbel.movies.domain.usecase.RemoveMovieUseCase
+import org.michaelbel.movies.domain.usecase.RemoveMoviesUseCase
 import org.michaelbel.movies.domain.usecase.ResetNotificationExpireTimeUseCase
 import org.michaelbel.movies.domain.usecase.ResetSettingsUseCase
 import org.michaelbel.movies.domain.usecase.ScreenshotBlockEnabledFlowUseCase
+import org.michaelbel.movies.domain.usecase.SearchMoviesPagingDataUseCase
 import org.michaelbel.movies.domain.usecase.SearchMoviesResultUseCase
 import org.michaelbel.movies.domain.usecase.SelectFeedViewUseCase
 import org.michaelbel.movies.domain.usecase.SelectMovieListUseCase
@@ -53,6 +61,7 @@ import org.michaelbel.movies.persistence.database.dao.SuggestionDao
 import org.michaelbel.movies.persistence.database.di.moviesDatabaseKoinModule
 import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
 import org.michaelbel.movies.persistence.datastore.di.moviesPreferencesKoinModule
+import org.michaelbel.movies.repository.di.repositoryKoinModule
 
 val useCaseKoinModule = module {
     includes(
@@ -61,7 +70,8 @@ val useCaseKoinModule = module {
         moviesDatabaseKoinModule,
         moviesPreferencesKoinModule,
         persistenceKoinModule,
-        networkKoinModule
+        networkKoinModule,
+        repositoryKoinModule
     )
     single<SuggestionDao> { get<MoviesDatabase>().suggestionDao }
     single<ImageDao> { get<MoviesDatabase>().imageDao }
@@ -87,12 +97,20 @@ val useCaseKoinModule = module {
     singleOf(::CurrentMovieListFlowUseCase)
     singleOf(::CurrentThemeFlowUseCase)
     singleOf(::DeleteSessionUseCase)
+    singleOf(::FavoriteMoviesPagingDataUseCase)
     singleOf(::FetchAndInsertSearchMoviesUseCase)
+    singleOf(::InsertMovieUseCase)
+    singleOf(::InsertMoviesUseCase)
     singleOf(::IsBiometricEnabledUseCase)
+    singleOf(::MoviesPagingDataUseCase)
+    singleOf(::MoviesResultUseCase)
     singleOf(::NotificationExpireTimeUseCase)
+    singleOf(::RemoveMovieUseCase)
+    singleOf(::RemoveMoviesUseCase)
     singleOf(::ResetNotificationExpireTimeUseCase)
     singleOf(::ResetSettingsUseCase)
     singleOf(::ScreenshotBlockEnabledFlowUseCase)
+    singleOf(::SearchMoviesPagingDataUseCase)
     singleOf(::SearchMoviesResultUseCase)
     singleOf(::SelectFeedViewUseCase)
     singleOf(::SelectMovieListUseCase)

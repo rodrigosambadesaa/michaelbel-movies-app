@@ -20,6 +20,7 @@ kotlin {
             api(projects.shared.common)
             api(projects.shared.network)
             api(projects.shared.persistence)
+            api(projects.shared.repository)
         }
     }
 

@@ -6,9 +6,7 @@ import org.koin.dsl.module
 import org.michaelbel.movies.network.di.networkKoinModule
 import org.michaelbel.movies.persistence.database.di.persistenceKoinModule
 import org.michaelbel.movies.persistence.datastore.di.moviesPreferencesKoinModule
-import org.michaelbel.movies.repository.MovieRepository
 import org.michaelbel.movies.repository.PagingKeyRepository
-import org.michaelbel.movies.repository.impl.MovieRepositoryImpl
 import org.michaelbel.movies.repository.impl.PagingKeyRepositoryImpl
 
 val repositoryKoinModule = module {
@@ -17,6 +15,5 @@ val repositoryKoinModule = module {
         persistenceKoinModule,
         moviesPreferencesKoinModule
     )
-    singleOf(::MovieRepositoryImpl) { bind<MovieRepository>() }
     singleOf(::PagingKeyRepositoryImpl) { bind<PagingKeyRepository>() }
 }

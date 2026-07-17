@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.michaelbel.movies.common.mvi.Event
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.CurrentFeedViewFlowUseCase
+import org.michaelbel.movies.domain.usecase.FavoriteMoviesPagingDataUseCase
 import org.michaelbel.movies.fave.intent.FaveIntent
 import org.michaelbel.movies.fave.model.FaveModel
 import org.michaelbel.movies.interactor.Interactor
@@ -22,18 +23,16 @@ import org.michaelbel.movies.ui.navigation.MainNavigator
 class FaveViewModel(
     private val uiInteractor: UiInteractor,
     interactor: Interactor,
-    private val currentFeedViewFlowUseCase: CurrentFeedViewFlowUseCase
+    private val currentFeedViewFlowUseCase: CurrentFeedViewFlowUseCase,
+    favoriteMoviesPagingDataUseCase: FavoriteMoviesPagingDataUseCase
 ): MoviesViewModel<FaveModel, FaveIntent, Event>(FaveModel()) {
 
-    val pagingDataFlow: Flow<PagingData<MoviePojo>> = interactor.favoriteMoviesPagingData()
+    val pagingDataFlow: Flow<PagingData<MoviePojo>> = favoriteMoviesPagingDataUseCase(interactor.language)
         .cachedIn(this)
 
     init {
         dispatch(FaveIntent.CollectFeedView)
         dispatch(FaveIntent.CollectPageFailureButtonVisible)
-        launch {
-            pagingDataFlow.collect {}
-        }
     }
 
     override fun dispatch(intent: FaveIntent) {

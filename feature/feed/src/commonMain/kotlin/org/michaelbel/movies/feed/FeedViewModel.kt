@@ -23,6 +23,7 @@ import org.michaelbel.movies.common.log.log
 import org.michaelbel.movies.common.mvi.MoviesViewModel
 import org.michaelbel.movies.domain.usecase.AccountPojoFlowUseCase
 import org.michaelbel.movies.domain.usecase.FetchAndInsertSearchMoviesUseCase
+import org.michaelbel.movies.domain.usecase.MovieUseCase
 import org.michaelbel.movies.domain.usecase.MoviesFlowUseCase
 import org.michaelbel.movies.domain.usecase.SuggestionPojosFlowUseCase
 import org.michaelbel.movies.domain.usecase.UpdateSuggestionsUseCase
@@ -51,7 +52,8 @@ class FeedViewModel(
     private val moviesFlowUseCase: MoviesFlowUseCase,
     private val accountPojoFlowUseCase: AccountPojoFlowUseCase,
     private val updateSuggestionsUseCase: UpdateSuggestionsUseCase,
-    private val fetchAndInsertSearchMoviesUseCase: FetchAndInsertSearchMoviesUseCase
+    private val fetchAndInsertSearchMoviesUseCase: FetchAndInsertSearchMoviesUseCase,
+    private val movieUseCase: MovieUseCase
 ): MoviesViewModel<FeedModel, FeedIntent, FeedEvent>(FeedModel()) {
 
     private val _searchQuery: MutableStateFlow<String> = MutableStateFlow("")
@@ -166,7 +168,8 @@ class FeedViewModel(
             }
             is FeedIntent.SaveMovieToSearchHistoryClick -> {
                 launch {
-                    val movie = interactor.movie(searchQuery.value, intent.movieId)
+                    val params = MovieUseCase.Params(searchQuery.value, intent.movieId)
+                    val movie = movieUseCase(params).getOrThrow()
                     interactor.insertMovie(MoviePojo.MOVIES_SEARCH_HISTORY, movie)
                 }
             }

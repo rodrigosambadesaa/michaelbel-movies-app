@@ -47,10 +47,6 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
-        return moviePersistence.movieById(pagingKey, movieId).orEmpty
-    }
-
     override suspend fun removeMovies(pagingKey: PagingKey) {
         moviePersistence.removeMovies(pagingKey)
     }

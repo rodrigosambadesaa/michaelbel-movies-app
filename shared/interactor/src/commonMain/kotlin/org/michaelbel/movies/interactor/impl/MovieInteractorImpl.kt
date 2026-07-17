@@ -88,10 +88,6 @@ class MovieInteractorImpl(
         ).flow
     }
 
-    override suspend fun movie(pagingKey: PagingKey, movieId: MovieId): MoviePojo {
-        return withContext(dispatchers.io) { movieRepository.movie(pagingKey, movieId) }
-    }
-
     override suspend fun removeMovies(pagingKey: PagingKey) {
         return withContext(dispatchers.io) { movieRepository.removeMovies(pagingKey) }
     }

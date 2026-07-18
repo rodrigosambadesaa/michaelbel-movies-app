@@ -26,7 +26,6 @@ class UiInteractorImpl: UiInteractor {
     override val isAppIconFeatureEnabled: Boolean = false
     override val isAppOpenByDefaultFeatureEnabled: Boolean = false
     override val isScreenshotFeatureEnabled: Boolean = false
-    override val isEyeDropperFeatureEnabled: Boolean = true
     override val isGithubFeatureEnabled: Boolean = true
     override val isTelegramFeatureEnabled: Boolean = true
     override val isReviewAppFeatureEnabled: Boolean = false
@@ -75,9 +74,6 @@ class UiInteractorImpl: UiInteractor {
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
     ): () -> Unit = {}
-
-    @Composable
-    override fun rememberEyeDropperHandler(): (() -> Unit) = {}
 
     override val enabledIcon: IconAlias = IconAlias.Red
 

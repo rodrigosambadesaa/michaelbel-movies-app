@@ -100,7 +100,6 @@ import org.michaelbel.movies.ui.appicon.IconAlias
 import org.michaelbel.movies.ui.clickableWithoutRipple
 import org.michaelbel.movies.ui.collectAsStateCommon
 import org.michaelbel.movies.ui.icons.Cat
-import org.michaelbel.movies.ui.icons.DropperEye
 import org.michaelbel.movies.ui.icons.FrameBug
 import org.michaelbel.movies.ui.icons.Github
 import org.michaelbel.movies.ui.icons.GooglePlay
@@ -140,7 +139,6 @@ fun SettingsScreen(
         onPermissionGranted = { viewModel.dispatch(SettingsIntent.CollectNotificationsEnabled) },
         onPermissionDenied = { viewModel.dispatch(SettingsIntent.ShowPermissionSnackbar(permissionMessage, permissionAction)) }
     )
-    val requestEyeDropper = uiInteractor.rememberEyeDropperHandler()
     val onRequestTileService = requestTileService { message -> viewModel.dispatch(SettingsIntent.ShowSnackbar(message)) }
 
     ObserveAsEvents(
@@ -162,7 +160,6 @@ fun SettingsScreen(
             is SettingsEvent.RequestGithub -> navigateToGithubUrl()
             is SettingsEvent.RequestTelegram -> navigateToTelegramUrl()
             is SettingsEvent.RequestGooglePlay -> navigateToMoviemadeUrl()
-            is SettingsEvent.RequestEyeDropper -> requestEyeDropper()
             is SettingsEvent.ScrollToTop -> scope.launch { lazyListState.animateScrollToItem(0) }
             is SettingsEvent.ShowSnackbar -> {
                 snackbarHostState.currentSnackbarData?.dismiss()
@@ -337,7 +334,6 @@ private fun SettingsScreenContent(
             state.isScreenshotFeatureEnabled
         )
         val privacyCount = privacyVisible.count { it }
-        val toolsCount = if (state.isEyeDropperFeatureEnabled) 1 else 0
         val aboutVisible = listOf(
             state.isGithubFeatureEnabled,
             state.isTelegramFeatureEnabled,
@@ -1233,50 +1229,7 @@ private fun SettingsScreenContent(
                     }
                 }
             }
-            if (localizationCount + appearanceCount + feedCount + systemCount + integrationsCount + privacyCount > 0 && toolsCount > 0) {
-                item {
-                    Spacer(
-                        modifier = Modifier.height(12.dp)
-                    )
-                }
-            }
-            if (state.isEyeDropperFeatureEnabled) {
-                item {
-                    SegmentedListItem(
-                        onClick = { dispatch(SettingsIntent.RequestEyeDropper) },
-                        shapes = ListItemDefaults.segmentedShapes(
-                            index = 0,
-                            count = toolsCount
-                        ),
-                        leadingContent = {
-                            Icon(
-                                imageVector = MoviesIcons.DropperEye,
-                                contentDescription = null,
-                                modifier = Modifier.size(IconButtonDefaults.smallIconSize)
-                            )
-                        },
-                        supportingContent = {
-                            Text(
-                                text = stringResource(MoviesStrings.settings_eye_dropper_description),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        },
-                        colors = ListItemDefaults.segmentedColors(
-                            containerColor = MaterialTheme.colorScheme.inversePrimary,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            supportingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            leadingContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            trailingContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    ) {
-                        Text(
-                            text = stringResource(MoviesStrings.settings_eye_dropper),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-            if (localizationCount + appearanceCount + feedCount + systemCount + integrationsCount + privacyCount + toolsCount > 0 && (aboutCount > 0 || state.isAboutFeatureEnabled)) {
+            if (localizationCount + appearanceCount + feedCount + systemCount + integrationsCount + privacyCount > 0 && (aboutCount > 0 || state.isAboutFeatureEnabled)) {
                 item {
                     Spacer(
                         modifier = Modifier.height(12.dp)

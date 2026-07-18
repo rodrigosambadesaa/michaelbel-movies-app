@@ -144,8 +144,6 @@
     <string name="settings_update_not_available">Обновлений нет</string>
     <string name="settings_palette_colors">Палитра цветов</string>
     <string name="settings_palette_colors_description">Применить цвета из пилитры</string>
-    <string name="settings_eye_dropper">Пипетка</string>
-    <string name="settings_eye_dropper_description">Встроенный пикер цвета Android</string>
     <string name="settings_screenshots">Скриншоты</string>
     <string name="settings_screenshots_description">Запретить делать скриншоты</string>
 

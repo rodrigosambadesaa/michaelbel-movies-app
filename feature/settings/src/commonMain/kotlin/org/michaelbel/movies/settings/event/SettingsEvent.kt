@@ -8,7 +8,6 @@ sealed interface SettingsEvent: Event {
     data object RequestDoNotDisturbAccess: SettingsEvent
     data object RequestIgnoreBatteryOptimizations: SettingsEvent
     data object RequestTileService: SettingsEvent
-    data object RequestEyeDropper: SettingsEvent
     data object RequestGithub: SettingsEvent
     data object RequestTelegram: SettingsEvent
     data object RequestGooglePlay: SettingsEvent

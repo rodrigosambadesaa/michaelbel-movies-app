@@ -42,8 +42,6 @@ interface UiInteractor {
 
     val isScreenshotFeatureEnabled: Boolean
 
-    val isEyeDropperFeatureEnabled: Boolean
-
     val isGithubFeatureEnabled: Boolean
 
     val isTelegramFeatureEnabled: Boolean
@@ -102,9 +100,6 @@ interface UiInteractor {
         onPermissionGranted: () -> Unit,
         onPermissionDenied: () -> Unit
     ): () -> Unit
-
-    @Composable
-    fun rememberEyeDropperHandler(): (() -> Unit)
 
     val enabledIcon: IconAlias
 

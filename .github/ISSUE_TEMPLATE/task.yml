@@ -1,0 +1,56 @@
+name: Task / Feature
+description: An agent-ready work item. Fill in fully before moving the card to "Ready".
+labels: ["task"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome does this deliver, in one or two sentences?
+    validations:
+      required: true
+
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Behavior
+      description: Describe the expected user/system flow end to end.
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: Concrete implementation requirements (as a checklist).
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: Falsifiable, checkable conditions for "done".
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+        - [ ] project builds
+        - [ ] unit tests pass
+    validations:
+      required: true
+
+  - type: dropdown
+    id: executor
+    attributes:
+      label: Executor
+      description: Who should pick this up? (mirrors the Project board "Executor" field)
+      options:
+        - Me
+        - Claude
+        - Codex
+        - Other agent
+    validations:
+      required: false

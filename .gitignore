@@ -1,6 +1,7 @@
 .DS_Store
 /.github/movies.jks
 /.github/keystore.properties
+/.github/firebase-app-distribution.json
 .kotlin
 .gradle
 .idea

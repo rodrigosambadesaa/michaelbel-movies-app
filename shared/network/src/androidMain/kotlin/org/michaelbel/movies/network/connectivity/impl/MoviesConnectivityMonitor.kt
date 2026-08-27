@@ -46,7 +46,11 @@ data class MoviesConnectivityDiagnostic(
  * generates no DNS or HTTP traffic. Active diagnostics are started only after OkHttp/Ktor
  * reports a transport IOException. The real application request is never gated or replaced.
  *
- * Diagnostic order after such a failure:
+ * The observer is deliberately fail-safe. Connectivity diagnostics are auxiliary functionality
+ * and therefore must never prevent the application from starting if Android rejects a network
+ * callback registration or a vendor implementation throws while querying connectivity state.
+ *
+ * Diagnostic order after a transport failure:
  *  1. Resolve only domains used by Movies on the active Android Network.
  *  2. Probe only Movies/TMDb/Gravatar HTTPS destinations.
  *  3. Only if every application destination fails, run the generic DNS/HTTPS fallback from
@@ -57,11 +61,9 @@ class MoviesConnectivityMonitor(
 ) : Closeable {
     private val applicationContext = context.applicationContext ?: context
     private val connectivityManager =
-        applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
 
-    private val networkStateMutable = MutableStateFlow(
-        ConnectivityAndInternetAccess.snapshotNetworkState(applicationContext)
-    )
+    private val networkStateMutable = MutableStateFlow(snapshotNetworkStateSafely())
     val networkState: StateFlow<ConnectivityAndInternetAccess.NetworkState> =
         networkStateMutable.asStateFlow()
 
@@ -88,15 +90,44 @@ class MoviesConnectivityMonitor(
     private val lastDiagnosticStartedAt = AtomicLong(Long.MIN_VALUE)
     private val closed = AtomicBoolean(false)
 
-    private val observer = ConnectivityAndInternetAccess.observeNetwork(applicationContext) { state ->
-        networkStateMutable.value = state
-        Log.d(
-            TAG,
-            "default-network connected=${state.connected}, " +
-                "validated=${state.internetValidated}, " +
-                "captivePortal=${state.captivePortalDetected}"
-        )
+    private val observer: Closeable? = createObserverSafely()
+
+    private fun snapshotNetworkStateSafely(): ConnectivityAndInternetAccess.NetworkState {
+        return try {
+            ConnectivityAndInternetAccess.snapshotNetworkState(applicationContext)
+        } catch (runtime: RuntimeException) {
+            Log.e(TAG, "unable to read initial network state; continuing without blocking startup", runtime)
+            disconnectedFallbackState()
+        }
     }
+
+    private fun createObserverSafely(): Closeable? {
+        return try {
+            ConnectivityAndInternetAccess.observeNetwork(applicationContext) { state ->
+                networkStateMutable.value = state
+                Log.d(
+                    TAG,
+                    "default-network connected=${state.connected}, " +
+                        "validated=${state.internetValidated}, " +
+                        "captivePortal=${state.captivePortalDetected}"
+                )
+            }
+        } catch (runtime: RuntimeException) {
+            Log.e(
+                TAG,
+                "unable to register default-network observer; app will continue without passive updates",
+                runtime
+            )
+            null
+        }
+    }
+
+    private fun disconnectedFallbackState() = ConnectivityAndInternetAccess.NetworkState(
+        connected = false,
+        internetValidated = false,
+        captivePortalDetected = false,
+        observedAtElapsedRealtime = SystemClock.elapsedRealtime()
+    )
 
     fun onBackendTransportFailure(failedHost: String, failure: Throwable) {
         if (closed.get()) return
@@ -197,7 +228,13 @@ class MoviesConnectivityMonitor(
     }
 
     private fun resolveBackendDomains(): List<BackendDnsResult> {
-        val network = connectivityManager.activeNetwork
+        val network = try {
+            connectivityManager?.activeNetwork
+        } catch (runtime: RuntimeException) {
+            Log.e(TAG, "unable to obtain active network for backend DNS diagnostics", runtime)
+            null
+        }
+
         if (network == null) {
             return MoviesConnectivityTargets.backendDomains.map { domain ->
                 BackendDnsResult(domain, false, emptyList())
@@ -252,7 +289,11 @@ class MoviesConnectivityMonitor(
 
     override fun close() {
         if (!closed.compareAndSet(false, true)) return
-        observer.close()
+        try {
+            observer?.close()
+        } catch (runtime: RuntimeException) {
+            Log.w(TAG, "default-network observer cleanup failed", runtime)
+        }
         diagnosticExecutor.shutdownNow()
     }
 

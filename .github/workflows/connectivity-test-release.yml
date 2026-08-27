@@ -16,7 +16,7 @@ env:
 jobs:
   test-build-release:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - name: checkout repository
         uses: actions/checkout@v7
@@ -59,6 +59,66 @@ jobs:
           echo "APK_PATH=$APK_PATH" >> "$GITHUB_ENV"
           echo "APK_NAME=$(basename "$APK_PATH")" >> "$GITHUB_ENV"
 
+      - name: enable KVM
+        shell: bash
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Android 16 startup smoke test
+        uses: ReactiveCircus/android-emulator-runner@v2.38.0
+        with:
+          api-level: 36
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7_pro
+          disable-animations: true
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            set -euo pipefail
+            PACKAGE="org.michaelbel.moviemade.debug"
+            COMPONENT="${PACKAGE}/org.michaelbel.movies.MainActivity"
+
+            adb install -r "$APK_PATH"
+            adb logcat -c
+
+            set +e
+            START_OUTPUT=$(adb shell am start -W -n "$COMPONENT" 2>&1)
+            START_EXIT=$?
+            set -e
+            echo "$START_OUTPUT"
+
+            sleep 8
+            adb logcat -d > startup-logcat.txt
+            cat startup-logcat.txt | grep -E "AndroidRuntime|FATAL EXCEPTION|MoviesConnectivity|org.michaelbel" || true
+
+            if [ "$START_EXIT" -ne 0 ]; then
+              echo "::error::Activity launch command failed"
+              exit 1
+            fi
+
+            if ! adb shell pidof "$PACKAGE" >/dev/null 2>&1; then
+              echo "::error::Movies process is not alive after MainActivity launch"
+              exit 1
+            fi
+
+            if grep -A 30 -B 5 -E "FATAL EXCEPTION|Process: ${PACKAGE}" startup-logcat.txt | grep -q -E "FATAL EXCEPTION|Process: ${PACKAGE}"; then
+              echo "::error::Fatal exception detected while launching Movies"
+              grep -A 40 -B 10 -E "FATAL EXCEPTION|Process: ${PACKAGE}" startup-logcat.txt || true
+              exit 1
+            fi
+
+            echo "Startup smoke test passed: ${PACKAGE} is alive after MainActivity launch."
+
+      - name: upload startup logcat
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: movies-connectivity-startup-logcat
+          path: startup-logcat.txt
+          if-no-files-found: ignore
+
       - name: upload test APK artifact
         uses: actions/upload-artifact@v7
         with:
@@ -77,11 +137,13 @@ jobs:
           Connectivity diagnostics test build for commit ${GITHUB_SHA}.
 
           - Variant: GMS debug (recommended for Samsung Galaxy / Google Play Services devices)
+          - Android 16/API 36 startup smoke test: passed before publication
           - TMDb API key in CI: ${TMDB_KEY_STATUS}
           - Connectivity observer startup: fail-safe; observer failures cannot block app launch
           - Passive default-network observer: enabled
           - Active diagnostics: only after backend transport failure
           - Probe order: Movies domains/DNS first; generic gist endpoints only if all Movies endpoint probes fail
+          - Debug package: org.michaelbel.moviemade.debug
           - Logcat tag: MoviesConnectivity
 
           This is a prerelease intended only for validation before opening an upstream pull request.

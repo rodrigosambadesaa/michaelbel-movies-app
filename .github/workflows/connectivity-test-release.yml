@@ -39,7 +39,7 @@ jobs:
             echo "TMDB_KEY_STATUS=present" >> "$GITHUB_ENV"
           else
             echo "TMDB_KEY_STATUS=missing" >> "$GITHUB_ENV"
-            echo "::warning::TMDB_API_KEY is not configured in this fork. The APK will build, but authenticated TMDb content requests will return HTTP authorization errors."
+            echo "::warning::TMDB_API_KEY is not configured in this fork. The APK will build and launch, but TMDb-backed functionality will be limited."
           fi
 
       - name: detekt
@@ -48,13 +48,13 @@ jobs:
       - name: unit tests
         run: ./gradlew testFossDebugUnitTest
 
-      - name: assemble FOSS debug APK
-        run: ./gradlew androidApp:assembleFossDebug
+      - name: assemble GMS debug APK for Samsung/Google devices
+        run: ./gradlew androidApp:assembleGmsDebug
 
       - name: locate APK
         shell: bash
         run: |
-          APK_PATH=$(find androidApp/build/outputs/apk/foss/debug -name '*.apk' -type f | head -n 1)
+          APK_PATH=$(find androidApp/build/outputs/apk/gms/debug -name '*.apk' -type f | head -n 1)
           test -n "$APK_PATH"
           echo "APK_PATH=$APK_PATH" >> "$GITHUB_ENV"
           echo "APK_NAME=$(basename "$APK_PATH")" >> "$GITHUB_ENV"
@@ -62,7 +62,7 @@ jobs:
       - name: upload test APK artifact
         uses: actions/upload-artifact@v7
         with:
-          name: movies-connectivity-foss-debug
+          name: movies-connectivity-gms-debug
           path: ${{ env.APK_PATH }}
           if-no-files-found: error
 
@@ -76,8 +76,9 @@ jobs:
           cat > /tmp/release-notes.md <<EOF
           Connectivity diagnostics test build for commit ${GITHUB_SHA}.
 
-          - Variant: FOSS debug (debug-signed; installable on a real Android device)
+          - Variant: GMS debug (recommended for Samsung Galaxy / Google Play Services devices)
           - TMDb API key in CI: ${TMDB_KEY_STATUS}
+          - Connectivity observer startup: fail-safe; observer failures cannot block app launch
           - Passive default-network observer: enabled
           - Active diagnostics: only after backend transport failure
           - Probe order: Movies domains/DNS first; generic gist endpoints only if all Movies endpoint probes fail
@@ -87,6 +88,6 @@ jobs:
           EOF
           gh release create "$TAG" "${APK_PATH}#${APK_NAME}" \
             --target "$GITHUB_SHA" \
-            --title "Movies connectivity test ${SHORT_SHA}" \
+            --title "Movies connectivity GMS test ${SHORT_SHA}" \
             --notes-file /tmp/release-notes.md \
             --prerelease

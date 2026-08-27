@@ -76,7 +76,7 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            set -euo pipefail
+            set -eu
             PACKAGE="org.michaelbel.moviemade.debug"
             COMPONENT="${PACKAGE}/org.michaelbel.movies.MainActivity"
 
@@ -91,7 +91,7 @@ jobs:
 
             sleep 8
             adb logcat -d > startup-logcat.txt
-            cat startup-logcat.txt | grep -E "AndroidRuntime|FATAL EXCEPTION|MoviesConnectivity|org.michaelbel" || true
+            grep -E "AndroidRuntime|FATAL EXCEPTION|MoviesConnectivity|org.michaelbel" startup-logcat.txt || true
 
             if [ "$START_EXIT" -ne 0 ]; then
               echo "::error::Activity launch command failed"
@@ -103,7 +103,7 @@ jobs:
               exit 1
             fi
 
-            if grep -A 30 -B 5 -E "FATAL EXCEPTION|Process: ${PACKAGE}" startup-logcat.txt | grep -q -E "FATAL EXCEPTION|Process: ${PACKAGE}"; then
+            if grep -q "FATAL EXCEPTION" startup-logcat.txt && grep -q "Process: ${PACKAGE}" startup-logcat.txt; then
               echo "::error::Fatal exception detected while launching Movies"
               grep -A 40 -B 10 -E "FATAL EXCEPTION|Process: ${PACKAGE}" startup-logcat.txt || true
               exit 1

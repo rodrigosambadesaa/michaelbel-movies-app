@@ -108,9 +108,10 @@ jobs:
             exit 1
           fi
 
-          if ! adb shell dumpsys activity activities | grep -q "mResumedActivity.*${PACKAGE}/${ACTIVITY}"; then
+          ACTIVITY_DUMP=$(adb shell dumpsys activity activities)
+          if ! printf '%s\n' "$ACTIVITY_DUMP" | grep -Eq "(topResumedActivity|ResumedActivity|Resumed:).*${PACKAGE}/${ACTIVITY}"; then
             echo "::error::Movies MainActivity is not the resumed foreground activity"
-            adb shell dumpsys activity activities | grep -E "mResumedActivity|${PACKAGE}" || true
+            printf '%s\n' "$ACTIVITY_DUMP" | grep -E "topResumedActivity|ResumedActivity|Resumed:|mFocusedApp|${PACKAGE}" || true
             exit 1
           fi
 

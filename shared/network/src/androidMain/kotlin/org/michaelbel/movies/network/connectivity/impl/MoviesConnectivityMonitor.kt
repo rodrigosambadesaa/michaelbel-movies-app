@@ -77,6 +77,9 @@ class MoviesConnectivityMonitor(
     // own domains is collected separately immediately before these HTTPS probes.
     private val applicationConnectivity = ConnectivityAndInternetAccess.Builder()
         .setDnsResolvers(emptyList())
+        .setTcpTargets(emptyList())
+        .setNtpTargets(emptyList())
+        .setTlsTargets(emptyList())
         .setHosts(MoviesConnectivityTargets.backendProbeUrls)
         .build()
 
@@ -257,7 +260,7 @@ class MoviesConnectivityMonitor(
                             BackendDnsResult(
                                 domain = domain,
                                 resolved = addresses.isNotEmpty(),
-                                addresses = addresses.map(InetAddress::getHostAddress)
+                                addresses = addresses.mapNotNull(InetAddress::getHostAddress)
                             )
                         } catch (_: Exception) {
                             BackendDnsResult(domain, false, emptyList())
